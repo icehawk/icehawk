@@ -1,0 +1,14 @@
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# vagrant
+.vagrant/
+vagrant
+!env/vagrant
+
+# composer
+vendor
+!dist/public/vendor
+composer.lock

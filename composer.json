@@ -1,0 +1,23 @@
+{
+  "name": "fortuneglobe/icehawk",
+  "description": "Fast and reliable frontend framework",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Holger Woltersdorf",
+      "email": "h.woltersdorf@fortuneglobe.com"
+    },
+    {
+      "name": "Tobias Mißner",
+      "email": "t.missner@fortuneglobe.com"
+    }
+  ],
+  "require": {
+    "php-64bit": ">=5.5",
+    "twig/twig": "@stable"
+  },
+  "require-dev": {
+    "hollodotme/treemdown": "~1.0"
+  }
+}

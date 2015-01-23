@@ -1,0 +1,22 @@
+<phpunit
+        bootstrap="./bootstrap.php"
+        verbose="true"
+        checkForUnintentionallyCoveredCode="false"
+        beStrictAboutOutputDuringTests="true"
+        beStrictAboutTestSize="true"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true">
+    <filter>
+        <blacklist>
+            <directory suffix=".php">./</directory>
+            <directory>./Fixures</directory>
+            <directory>../../vendor</directory>
+        </blacklist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="../../doc/Coverage" lowUpperBound="35" highLowerBound="70"/>
+        <log type="testdox-html" target="../../doc/TestDox/index.html"/>
+    </logging>
+</phpunit>

@@ -1,0 +1,4 @@
+# Accept all host keys
+Host *
+    StrictHostKeyChecking no
+    UserKnownHostsFile=/dev/null

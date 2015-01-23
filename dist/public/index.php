@@ -7,4 +7,14 @@ namespace Fortunglobe\IceHawk;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-echo "Hello, this is your distribution subdomain. Place your production code here!";
+use Fortuneglobe\IceHawk\IceHawk;
+use Fortuneglobe\IceHawk\Responses\Page;
+
+error_reporting( E_ALL );
+ini_set( 'display_errors', 1 );
+
+$icehawk = IceHawk::fromSky();
+$icehawk->init();
+
+$page = new Page( 'Test.twig', [ 'world' => 'Welt' ] );
+$page->respond();

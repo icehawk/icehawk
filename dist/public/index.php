@@ -3,7 +3,7 @@
  * @author h.woltersdorf
  */
 
-namespace Fortunglobe\ProjectTemplate;
+namespace Fortunglobe\IceHawk;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 

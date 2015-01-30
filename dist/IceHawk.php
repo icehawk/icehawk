@@ -66,4 +66,44 @@ final class IceHawk
 			$this->template_engine = $this->config_delegate->getTemplateEngine( $search_paths, $cache_path );
 		}
 	}
+
+	/**
+	 * @return RequestHandler
+	 */
+	public function getRequestHandler()
+	{
+		$request_info = RequestInfo::fromEnv();
+
+		$request_handler_delegate = new RequestHandlerDelegate(
+			$this->getUriRewriter(),
+			$this->getUriResolver(),
+			$this->getProjectNamespace()
+		);
+
+		return new RequestHandler( $request_info, $request_handler_delegate, $_GET, $_POST, $_FILES );
+	}
+
+	/**
+	 * @return Interfaces\RewritesUri
+	 */
+	private function getUriRewriter()
+	{
+		return $this->config_delegate->getUriRewriter();
+	}
+
+	/**
+	 * @return Interfaces\ResolvesUri
+	 */
+	private function getUriResolver()
+	{
+		return $this->config_delegate->getUriResolver();
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getProjectNamespace()
+	{
+		return $this->config_delegate->getProjectNamespace();
+	}
 }

@@ -8,6 +8,21 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 interface ServesAppConfiguration
 {
 	/**
+	 * @return string
+	 */
+	public function getProjectNamespace();
+
+	/**
+	 * @return RewritesUri
+	 */
+	public function getUriRewriter();
+
+	/**
+	 * @return ResolvesUri
+	 */
+	public function getUriResolver();
+
+	/**
 	 * @return array
 	 */
 	public function getTemplateSearchPaths();

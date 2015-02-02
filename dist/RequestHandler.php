@@ -173,7 +173,8 @@ final class RequestHandler
 			return new CommandHandler(
 				$api,
 				$this->uri_components->getDomain(),
-				$this->uri_components->getCommand()
+				$this->uri_components->getCommand(),
+				$this->config_delegate->getProjectNamespace()
 			);
 		}
 		else
@@ -181,7 +182,8 @@ final class RequestHandler
 			return new QueryHandler(
 				$api,
 				$this->uri_components->getDomain(),
-				$this->uri_components->getCommand()
+				$this->uri_components->getCommand(),
+				$this->config_delegate->getProjectNamespace()
 			);
 		}
 	}

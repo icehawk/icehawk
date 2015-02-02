@@ -30,7 +30,7 @@ abstract class DomainCommand implements ServesCommandData
 	/** @var PostRequestValidator */
 	protected $validator;
 
-	/** @var Responde */
+	/** @var Responder */
 	protected $responder;
 
 	/**
@@ -137,5 +137,13 @@ abstract class DomainCommand implements ServesCommandData
 	public function getRedirectTarget()
 	{
 		return $this->getRequestValue( 'redirect_target' );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isExecutable()
+	{
+		return true;
 	}
 }

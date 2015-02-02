@@ -7,7 +7,9 @@
 namespace Fortuneglobe\IceHawk\DomainRequestHandlers;
 
 use Fortuneglobe\IceHawk\Api;
+use Fortuneglobe\IceHawk\DomainCommandBuilders\CommandBuilder;
 use Fortuneglobe\IceHawk\DomainRequestHandler;
+use Fortuneglobe\IceHawk\Exceptions\InvalidDomainCommand;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
@@ -31,10 +33,9 @@ final class CommandHandler extends DomainRequestHandler
 	{
 		$this->guardRequestType( $request );
 
-		$builder = new CommandBuilder( $this->api, $this->domain, $this->command, $this->project_namespace );
-		$command = $builder->buildCommand( $request );
+		$command = $this->buildCommandByRequest( $request );
 
-		if ( $this->isExecutable( $command ) )
+		if ( $command->isExecutable() )
 		{
 			if ( $command->isValid() )
 			{
@@ -64,5 +65,18 @@ final class CommandHandler extends DomainRequestHandler
 		{
 			throw new InvalidRequestType( get_class( $request ) );
 		}
+	}
+
+	/**
+	 * @param ServesRequestData $request
+	 *
+	 * @return \Fortuneglobe\IceHawk\DomainCommand
+	 * @throws \Fortuneglobe\IceHawk\Exceptions\DomainCommandNotFound
+	 */
+	private function buildCommandByRequest( ServesRequestData $request )
+	{
+		$builder = new CommandBuilder( $this->api, $this->domain, $this->command, $this->project_namespace );
+
+		return $builder->buildCommand( $request );
 	}
 }

@@ -4,11 +4,11 @@
  * @author hollodotme
  */
 
-namespace Dreiwolt\Backlog;
+namespace Fortuneglobe\IceHawk;
 
-use Dreiwolt\Backlog\Interfaces\ServesApiData;
-use Dreiwolt\Backlog\Interfaces\ServesCommandData;
-use Dreiwolt\Backlog\Requests\GetRequest;
+use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
+use Fortuneglobe\IceHawk\Interfaces\ServesCommandData;
+use Fortuneglobe\IceHawk\Requests\GetRequest;
 
 /**
  * Class DomainQuery
@@ -119,5 +119,13 @@ abstract class DomainQuery implements ServesCommandData
 	public function getResponder()
 	{
 		return $this->responder;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isExecutable()
+	{
+		return true;
 	}
 }

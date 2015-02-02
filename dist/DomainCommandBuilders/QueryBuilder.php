@@ -7,6 +7,7 @@
 namespace Fortuneglobe\IceHawk\DomainCommandBuilders;
 
 use Fortuneglobe\IceHawk\DomainCommandBuilder;
+use Fortuneglobe\IceHawk\DomainQuery;
 use Fortuneglobe\IceHawk\Exceptions\DomainQueryNotFound;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 

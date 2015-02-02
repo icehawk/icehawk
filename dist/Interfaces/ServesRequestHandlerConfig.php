@@ -21,4 +21,9 @@ interface ServesRequestHandlerConfig
 	 * @return ResolvesUri
 	 */
 	public function getUriResolver();
+
+	/**
+	 * @return string
+	 */
+	public function getProjectNamespace();
 }

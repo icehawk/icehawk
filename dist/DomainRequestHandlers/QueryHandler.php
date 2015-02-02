@@ -6,7 +6,9 @@
 
 namespace Fortuneglobe\IceHawk\DomainRequestHandlers;
 
+use Fortuneglobe\IceHawk\DomainCommandBuilders\QueryBuilder;
 use Fortuneglobe\IceHawk\DomainRequestHandler;
+use Fortuneglobe\IceHawk\Exceptions\InvalidDomainQuery;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
@@ -28,10 +30,9 @@ final class QueryHandler extends DomainRequestHandler
 	{
 		$this->guardRequestType( $request );
 
-		$builder = new QueryBuilder( $this->api, $this->domain, $this->command, $this->project_namespace );
-		$query   = $builder->buildCommand( $request );
+		$query = $this->buildQueryByRequest( $request );
 
-		if ( $this->isExecutable( $query ) )
+		if ( $query->isExecutable() )
 		{
 			if ( $query->isValid() )
 			{
@@ -44,7 +45,7 @@ final class QueryHandler extends DomainRequestHandler
 		}
 		else
 		{
-			$query->getResponder()->addBadRequest( "Query is not executable." );
+			$query->getResponder()->addBadRequest( [ "Query is not executable." ] );
 		}
 
 		$query->getResponder()->respond();
@@ -61,5 +62,18 @@ final class QueryHandler extends DomainRequestHandler
 		{
 			throw new InvalidRequestType( get_class( $request ) );
 		}
+	}
+
+	/**
+	 * @param ServesRequestData $request
+	 *
+	 * @return \Fortuneglobe\IceHawk\DomainQuery
+	 * @throws \Fortuneglobe\IceHawk\Exceptions\DomainQueryNotFound
+	 */
+	private function buildQueryByRequest( ServesRequestData $request )
+	{
+		$builder = new QueryBuilder( $this->api, $this->domain, $this->command, $this->project_namespace );
+
+		return $builder->buildCommand( $request );
 	}
 }

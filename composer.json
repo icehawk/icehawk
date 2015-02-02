@@ -1,7 +1,7 @@
 {
   "name": "fortuneglobe/icehawk",
   "description": "Fast and reliable frontend framework",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "proprietary",
   "authors": [
     {
@@ -13,9 +13,16 @@
       "email": "t.missner@fortuneglobe.com"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@gitlab.fortuneglobe.com:fortunesolutions/validation.git"
+    }
+  ],
   "require": {
     "php-64bit": ">=5.5",
-    "twig/twig": "@stable"
+    "twig/twig": "@stable",
+    "fortuneglobe/validation": "dev-development"
   },
   "require-dev": {
     "hollodotme/treemdown": "~1.0"

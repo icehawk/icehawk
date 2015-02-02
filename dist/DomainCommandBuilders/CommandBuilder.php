@@ -4,8 +4,9 @@
  * @author hollodotme
  */
 
-namespace Dreiwolt\Backlog\DomainCommandBuilders;
+namespace Fortuneglobe\IceHawk\DomainCommandBuilders;
 
+use Fortuneglobe\IceHawk\DomainCommand;
 use Fortuneglobe\IceHawk\DomainCommandBuilder;
 use Fortuneglobe\IceHawk\Exceptions\DomainCommandNotFound;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
@@ -13,7 +14,7 @@ use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 /**
  * Class CommandBuilder
  *
- * @package Dreiwolt\Backlog\DomainCommandBuilders
+ * @package Fortuneglobe\IceHawk\DomainCommandBuilders
  */
 final class CommandBuilder extends DomainCommandBuilder
 {

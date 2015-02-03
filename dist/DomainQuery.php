@@ -9,6 +9,7 @@ namespace Fortuneglobe\IceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
 use Fortuneglobe\IceHawk\Interfaces\ServesCommandData;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
+use Fortuneglobe\IceHawk\RequestValidators\GetRequestValidator;
 
 /**
  * Class DomainQuery
@@ -92,7 +93,7 @@ abstract class DomainQuery implements ServesCommandData
 	 */
 	protected function getValidator()
 	{
-		return new RequestValidator( $this->request );
+		return new GetRequestValidator( $this->request );
 	}
 
 	/**
@@ -103,14 +104,6 @@ abstract class DomainQuery implements ServesCommandData
 	protected function getRequestValue( $key )
 	{
 		return $this->request->get( $key );
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function needsLoggedInUser()
-	{
-		return true;
 	}
 
 	/**

@@ -9,6 +9,7 @@ namespace Fortuneglobe\IceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
 use Fortuneglobe\IceHawk\Interfaces\ServesCommandData;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
+use Fortuneglobe\IceHawk\RequestValidators\PostRequestValidator;
 
 /**
  * Class DomainCommand
@@ -17,6 +18,10 @@ use Fortuneglobe\IceHawk\Requests\PostRequest;
  */
 abstract class DomainCommand implements ServesCommandData
 {
+
+	const KEY_SUCCESS_URL = 'success_url';
+
+	const KEY_FAIL_URL    = 'fail_url';
 
 	/** @var ServesApiData */
 	protected $api;
@@ -71,7 +76,8 @@ abstract class DomainCommand implements ServesCommandData
 		$this->validator->reset();
 		$this->validate( $this->validator );
 
-		$this->validator->notEmptyStringOrNull( 'redirect_target', 'Invalid redirect target.' );
+		$this->validator->isNonEmptyStringOrNull( self::KEY_SUCCESS_URL, 'Invalid redirect target for success url.' );
+		$this->validator->isNonEmptyStringOrNull( self::KEY_FAIL_URL, 'Invalid redirect target for fail url.' );
 
 		return $this->validator->getBoolResult();
 	}
@@ -106,15 +112,7 @@ abstract class DomainCommand implements ServesCommandData
 	{
 		return $this->request->get( $key );
 	}
-
-	/**
-	 * @return bool
-	 */
-	public function needsLoggedInUser()
-	{
-		return true;
-	}
-
+	
 	/**
 	 * @return Responder
 	 */
@@ -126,17 +124,33 @@ abstract class DomainCommand implements ServesCommandData
 	/**
 	 * @return bool
 	 */
-	public function hasRedirectTarget()
+	public function hasSuccessUrl()
 	{
-		return !is_null( $this->getRedirectTarget() );
+		return !is_null( $this->getSuccessUrl() );
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getRedirectTarget()
+	public function getSuccessUrl()
 	{
-		return $this->getRequestValue( 'redirect_target' );
+		return $this->getRequestValue( self::KEY_SUCCESS_URL );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasFailUrl()
+	{
+		return !is_null( $this->getFailUrl() );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFailUrl()
+	{
+		return $this->getRequestValue( self::KEY_FAIL_URL );
 	}
 
 	/**

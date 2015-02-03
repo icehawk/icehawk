@@ -84,12 +84,12 @@ abstract class DomainQuery implements ServesCommandData
 	}
 
 	/**
-	 * @param RequestValidator $validator
+	 * @param GetRequestValidator $validator
 	 */
-	abstract protected function validate( RequestValidator $validator );
+	abstract protected function validate( GetRequestValidator $validator );
 
 	/**
-	 * @return RequestValidator
+	 * @return GetRequestValidator
 	 */
 	protected function getValidator()
 	{

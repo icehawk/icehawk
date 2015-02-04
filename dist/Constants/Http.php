@@ -23,4 +23,6 @@ abstract class Http
 
 	const FORBIDDEN         = 'HTTP/1.1 403 Forbidden';
 
+	const BAD_REQUEST = 'HTTP/1.1 400 Bad Request';
+
 }

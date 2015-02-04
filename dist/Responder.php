@@ -6,6 +6,7 @@
 
 namespace Fortuneglobe\IceHawk;
 
+use Fortuneglobe\IceHawk\Exceptions\ResponderIsMissingAResponseForApi;
 use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 
@@ -63,19 +64,6 @@ class Responder implements ServesResponse
 	private function addResponse( ServesApiData $api, ServesResponse $response )
 	{
 		$this->responses[ $api->getIdentifier() ] = $response;
-	}
-
-	/**
-	 * @param array $messages
-	 */
-	public function addBadRequest( array $messages )
-	{
-		$this->add(
-			Api::WEB,
-			new BadWebRequest( __DIR__ . '/Frontend/Pages/Error/BadRequest.twig', [ 'messages' => $messages ] )
-		);
-
-		$this->add( Api::JSON, new BadJsonDataRequest( [ 'messages' => $messages ] ) );
 	}
 
 	/**

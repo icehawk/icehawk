@@ -9,6 +9,7 @@ namespace Fortuneglobe\IceHawk;
 use Fortuneglobe\IceHawk\Constants\Http;
 use Fortuneglobe\IceHawk\DomainRequestHandlers\CommandHandler;
 use Fortuneglobe\IceHawk\DomainRequestHandlers\QueryHandler;
+use Fortuneglobe\IceHawk\Exceptions\IceHawkException;
 use Fortuneglobe\IceHawk\Exceptions\InvalidApiCalled;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestMethod;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
@@ -19,6 +20,8 @@ use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFiles;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
+use Fortuneglobe\IceHawk\Responses\BadRequest;
+use Fortuneglobe\IceHawk\Responses\NotFound;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 
 /**
@@ -76,30 +79,39 @@ final class RequestHandler
 		$this->uploaded_files  = $uploaded_files;
 	}
 
-	/**
-	 * @return ServesUriComponents
-	 */
-	private function getUriComponents()
-	{
-		$uri_resolver = $this->config_delegate->getUriResolver();
-
-		return $uri_resolver->resolveUri( $this->request_info );
-	}
-
 	public function handle()
 	{
-		$this->guardValidRequestMethod();
+		try
+		{
+			$this->guardValidRequestMethod();
 
-		$this->redirectIfNeeded();
+			$this->redirectIfNeeded();
 
-		$this->uri_components = $this->getUriComponents();
+			$this->uri_components = $this->getUriComponents();
 
-		$this->guardValidApi();
+			$this->guardValidApi();
 
-		$request                = $this->getRequest();
-		$domain_request_handler = $this->getDomainRequestHandler();
+			$request                = $this->getRequest();
+			$domain_request_handler = $this->getDomainRequestHandler();
 
-		$domain_request_handler->handleRequest( $request );
+			$domain_request_handler->handleRequest( $request );
+		}
+		catch ( InvalidRequestMethod $e )
+		{
+			( new BadRequest( [ 'Invalid request method.' ] ) )->respond();
+		}
+		catch ( InvalidApiCalled $e )
+		{
+			( new NotFound() )->respond();
+		}
+		catch ( MalformedRequestUri $e )
+		{
+			( new NotFound() )->respond();
+		}
+		catch ( IceHawkException $e )
+		{
+			( new BadRequest( [ $e->getMessage() ] ) )->respond();
+		}
 	}
 
 	/**
@@ -131,6 +143,16 @@ final class RequestHandler
 		{
 			( new Redirect( $rewritten_uri, Http::MOVED_PERMANENTLY ) )->respond();
 		}
+	}
+
+	/**
+	 * @return ServesUriComponents
+	 */
+	private function getUriComponents()
+	{
+		$uri_resolver = $this->config_delegate->getUriResolver();
+
+		return $uri_resolver->resolveUri( $this->request_info );
 	}
 
 	/**

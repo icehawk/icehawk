@@ -25,4 +25,6 @@ abstract class Http
 
 	const BAD_REQUEST = 'HTTP/1.1 400 Bad Request';
 
+	const NOT_FOUND   = 'HTTP/1.1 404 Not Found';
+
 }

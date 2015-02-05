@@ -13,6 +13,8 @@ use Fortuneglobe\IceHawk\Exceptions\InvalidDomainCommand;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
+use Fortuneglobe\IceHawk\Responses\BadJsonRequest;
+use Fortuneglobe\IceHawk\Responses\BadRequest;
 use Fortuneglobe\IceHawk\Responses\Forbidden;
 
 /**
@@ -33,7 +35,8 @@ final class CommandHandler extends DomainRequestHandler
 	{
 		$this->guardRequestType( $request );
 
-		$command = $this->buildCommandByRequest( $request );
+		$command   = $this->buildCommandByRequest( $request );
+		$responder = $command->getResponder();
 
 		if ( $command->isExecutable() )
 		{
@@ -43,15 +46,16 @@ final class CommandHandler extends DomainRequestHandler
 			}
 			else
 			{
-				$command->getResponder()->addBadRequest( $command->getValidationMessages() );
+				$responder->add( Api::WEB, new BadRequest( $command->getValidationMessages() ) );
+				$responder->add( Api::JSON, new BadJsonRequest( $command->getValidationMessages() ) );
 			}
 		}
 		else
 		{
-			$command->getResponder()->add( Api::ALL, new Forbidden() );
+			$responder->add( Api::ALL, new Forbidden() );
 		}
 
-		$command->getResponder()->respond();
+		$responder->respond();
 	}
 
 	/**

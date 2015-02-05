@@ -6,12 +6,15 @@
 
 namespace Fortuneglobe\IceHawk\DomainRequestHandlers;
 
+use Fortuneglobe\IceHawk\Api;
 use Fortuneglobe\IceHawk\DomainCommandBuilders\QueryBuilder;
 use Fortuneglobe\IceHawk\DomainRequestHandler;
 use Fortuneglobe\IceHawk\Exceptions\InvalidDomainQuery;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
+use Fortuneglobe\IceHawk\Responses\BadJsonRequest;
+use Fortuneglobe\IceHawk\Responses\BadRequest;
 
 /**
  * Class QueryHandler
@@ -30,7 +33,8 @@ final class QueryHandler extends DomainRequestHandler
 	{
 		$this->guardRequestType( $request );
 
-		$query = $this->buildQueryByRequest( $request );
+		$query     = $this->buildQueryByRequest( $request );
+		$responder = $query->getResponder();
 
 		if ( $query->isExecutable() )
 		{
@@ -40,15 +44,17 @@ final class QueryHandler extends DomainRequestHandler
 			}
 			else
 			{
-				$query->getResponder()->addBadRequest( $query->getValidationMessages() );
+				$responder->add( Api::WEB, new BadRequest( $query->getValidationMessages() ) );
+				$responder->add( Api::JSON, new BadJsonRequest( $query->getValidationMessages() ) );
 			}
 		}
 		else
 		{
-			$query->getResponder()->addBadRequest( [ "Query is not executable." ] );
+			$responder->add( Api::WEB, new BadRequest( [ "Query is not executable." ] ) );
+			$responder->add( Api::JSON, new BadJsonRequest( [ "Query is not executable." ] ) );
 		}
 
-		$query->getResponder()->respond();
+		$responder->respond();
 	}
 
 	/**

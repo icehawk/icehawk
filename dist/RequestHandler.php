@@ -129,7 +129,7 @@ final class RequestHandler
 
 		if ( $rewritten_uri != $this->request_info->getUri() )
 		{
-			( new Redirect( $rewritten_uri, Http::MOVED_PERMANENTLY ) );
+			( new Redirect( $rewritten_uri, Http::MOVED_PERMANENTLY ) )->respond();
 		}
 	}
 

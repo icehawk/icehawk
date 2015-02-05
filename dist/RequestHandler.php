@@ -74,10 +74,6 @@ final class RequestHandler
 		$this->get_data        = $get_data;
 		$this->post_data       = $post_data;
 		$this->uploaded_files  = $uploaded_files;
-		$this->uri_components  = $this->getUriComponents();
-
-		$this->guardValidRequestMethod();
-		$this->guardValidApi();
 	}
 
 	/**
@@ -88,6 +84,22 @@ final class RequestHandler
 		$uri_resolver = $this->config_delegate->getUriResolver();
 
 		return $uri_resolver->resolveUri( $this->request_info );
+	}
+
+	public function handle()
+	{
+		$this->guardValidRequestMethod();
+
+		$this->redirectIfNeeded();
+
+		$this->uri_components = $this->getUriComponents();
+
+		$this->guardValidApi();
+
+		$request                = $this->getRequest();
+		$domain_request_handler = $this->getDomainRequestHandler();
+
+		$domain_request_handler->handleRequest( $request );
 	}
 
 	/**
@@ -110,6 +122,17 @@ final class RequestHandler
 		return strtoupper( $this->request_info->getMethod() );
 	}
 
+	private function redirectIfNeeded()
+	{
+		$uri_rewriter  = $this->config_delegate->getUriRewriter();
+		$rewritten_uri = $uri_rewriter->rewrite( $this->request_info );
+
+		if ( $rewritten_uri != $this->request_info->getUri() )
+		{
+			( new Redirect( $rewritten_uri, Http::MOVED_PERMANENTLY ) );
+		}
+	}
+
 	/**
 	 * @throws InvalidApiCalled
 	 */
@@ -119,27 +142,6 @@ final class RequestHandler
 		if ( !in_array( $api, Api::getAll() ) )
 		{
 			throw new InvalidApiCalled( $api );
-		}
-	}
-
-	public function handle()
-	{
-		$this->redirectIfNeeded();
-
-		$request                = $this->getRequest();
-		$domain_request_handler = $this->getDomainRequestHandler();
-
-		$domain_request_handler->handleRequest( $request );
-	}
-
-	private function redirectIfNeeded()
-	{
-		$uri_rewriter  = $this->config_delegate->getUriRewriter();
-		$rewritten_uri = $uri_rewriter->rewrite( $this->request_info );
-
-		if ( $rewritten_uri != $this->request_info->getUri() )
-		{
-			( new Redirect( $rewritten_uri, Http::MOVED_PERMANENTLY ) );
 		}
 	}
 

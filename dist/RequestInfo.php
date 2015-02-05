@@ -50,7 +50,7 @@ final class RequestInfo implements ServesRequestInfo
 	{
 		$uri = $this->get( 'REQUEST_URI' );
 
-		return preg_replace( '#\/+#', '/', $uri );
+		return preg_replace( [ '#\/+#', '#\?.*$#' ], '/', $uri );
 	}
 
 	/**

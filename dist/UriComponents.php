@@ -25,26 +25,26 @@ class UriComponents implements ServesUriComponents
 	private $domain;
 
 	/** @var string */
-	private $command;
+	private $demand;
 
 	/**
 	 * @param string $api
 	 * @param string $api_version
 	 * @param string $domain
-	 * @param string $command
+	 * @param string $demand
 	 */
-	public function __construct( $api, $api_version, $domain, $command )
+	public function __construct( $api, $api_version, $domain, $demand )
 	{
 		$this->api         = $api;
 		$this->api_version = $api_version;
 		$this->domain      = $domain;
-		$this->command     = $command;
+		$this->demand = $demand;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getApi()
+	public function getApiName()
 	{
 		return $this->api;
 	}
@@ -68,8 +68,8 @@ class UriComponents implements ServesUriComponents
 	/**
 	 * @return string
 	 */
-	public function getCommand()
+	public function getDemand()
 	{
-		return $this->command;
+		return $this->demand;
 	}
 }

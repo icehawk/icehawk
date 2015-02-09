@@ -7,15 +7,14 @@
 
 namespace Fortuneglobe\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFiles;
+use Fortuneglobe\IceHawk\Interfaces\ServesWriteRequestData;
 
 /**
  * Class PostRequest
  *
  * @package Fortuneglobe\IceHawk\Requests
  */
-final class PostRequest implements ServesRequestData, ServesUploadedFiles
+final class PostRequest implements ServesWriteRequestData
 {
 
 	/** @var array */

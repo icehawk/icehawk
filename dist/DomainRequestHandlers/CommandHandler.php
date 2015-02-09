@@ -7,15 +7,21 @@
 namespace Fortuneglobe\IceHawk\DomainRequestHandlers;
 
 use Fortuneglobe\IceHawk\Api;
-use Fortuneglobe\IceHawk\DomainCommandBuilders\CommandBuilder;
+use Fortuneglobe\IceHawk\Builders\CommandBuilder;
+use Fortuneglobe\IceHawk\Builders\CommandExecutorBuilder;
+use Fortuneglobe\IceHawk\DomainCommand;
 use Fortuneglobe\IceHawk\DomainRequestHandler;
+use Fortuneglobe\IceHawk\Exceptions\DomainCommandExecutorNotFound;
+use Fortuneglobe\IceHawk\Exceptions\DomainCommandNotFound;
 use Fortuneglobe\IceHawk\Exceptions\InvalidDomainCommand;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
-use Fortuneglobe\IceHawk\Requests\PostRequest;
+use Fortuneglobe\IceHawk\Interfaces\ExecutesDomainCommands;
+use Fortuneglobe\IceHawk\Interfaces\ServesWriteRequestData;
+use Fortuneglobe\IceHawk\Responder;
 use Fortuneglobe\IceHawk\Responses\BadJsonRequest;
 use Fortuneglobe\IceHawk\Responses\BadRequest;
 use Fortuneglobe\IceHawk\Responses\Forbidden;
+use Fortuneglobe\IceHawk\Responses\NotFound;
 
 /**
  * Class CommandHandler
@@ -26,23 +32,52 @@ final class CommandHandler extends DomainRequestHandler
 {
 
 	/**
-	 * @param ServesRequestData $request
+	 * @param ServesWriteRequestData $request
 	 *
 	 * @throws InvalidRequestType
 	 * @throws InvalidDomainCommand
 	 */
-	public function handleRequest( ServesRequestData $request )
+	public function handleRequest( ServesWriteRequestData $request )
 	{
-		$this->guardRequestType( $request );
+		$responder = new Responder( $this->api );
 
-		$command   = $this->buildCommandByRequest( $request );
-		$responder = $command->getResponder();
+		try
+		{
+			$command = $this->buildCommandByRequest( $request );
+			$this->validateAndExecuteCommand( $command, $responder );
+		}
+		catch ( DomainCommandNotFound $e )
+		{
+			$responder->add( Api::ALL, new NotFound() );
+		}
 
+		$responder->respond();
+	}
+
+	/**
+	 * @param ServesWriteRequestData $request
+	 *
+	 * @throws \Fortuneglobe\IceHawk\Exceptions\DomainCommandNotFound
+	 * @return \Fortuneglobe\IceHawk\DomainCommand
+	 */
+	private function buildCommandByRequest( ServesWriteRequestData $request )
+	{
+		$builder = new CommandBuilder( $this->domain, $this->demand, $this->project_namespace );
+
+		return $builder->buildCommand( $request );
+	}
+
+	/**
+	 * @param DomainCommand $command
+	 * @param Responder     $responder
+	 */
+	private function validateAndExecuteCommand( DomainCommand $command, Responder $responder )
+	{
 		if ( $command->isExecutable() )
 		{
 			if ( $command->isValid() )
 			{
-				$command->execute();
+				$this->executeCommand( $command, $responder );
 			}
 			else
 			{
@@ -54,33 +89,34 @@ final class CommandHandler extends DomainRequestHandler
 		{
 			$responder->add( Api::ALL, new Forbidden() );
 		}
-
-		$responder->respond();
 	}
 
 	/**
-	 * @param ServesRequestData $request
-	 *
-	 * @throws InvalidRequestType
+	 * @param DomainCommand $command
+	 * @param Responder     $responder
 	 */
-	private function guardRequestType( ServesRequestData $request )
+	private function executeCommand( DomainCommand $command, Responder $responder )
 	{
-		if ( !($request instanceof PostRequest) )
+		try
 		{
-			throw new InvalidRequestType( get_class( $request ) );
+			$executor = $this->buildCommandExecutor();
+			$executor->execute( $command, $responder );
+		}
+		catch ( DomainCommandExecutorNotFound $e )
+		{
+			$responder->add( Api::WEB, new BadRequest( [ $e->getMessage() ] ) );
+			$responder->add( Api::JSON, new BadJsonRequest( [ $e->getMessage() ] ) );
 		}
 	}
 
 	/**
-	 * @param ServesRequestData $request
-	 *
-	 * @return \Fortuneglobe\IceHawk\DomainCommand
-	 * @throws \Fortuneglobe\IceHawk\Exceptions\DomainCommandNotFound
+	 * @throws DomainCommandExecutorNotFound
+	 * @return ExecutesDomainCommands
 	 */
-	private function buildCommandByRequest( ServesRequestData $request )
+	private function buildCommandExecutor()
 	{
-		$builder = new CommandBuilder( $this->api, $this->domain, $this->command, $this->project_namespace );
+		$builder = new CommandExecutorBuilder( $this->domain, $this->demand, $this->project_namespace );
 
-		return $builder->buildCommand( $request );
+		return $builder->buildCommandExecutor();
 	}
 }

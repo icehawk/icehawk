@@ -6,9 +6,8 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
-use Fortuneglobe\IceHawk\Interfaces\ServesCommandData;
-use Fortuneglobe\IceHawk\Requests\GetRequest;
+use Fortuneglobe\IceHawk\Interfaces\ServesDemandData;
+use Fortuneglobe\IceHawk\Interfaces\ServesReadRequestData;
 use Fortuneglobe\IceHawk\RequestValidators\GetRequestValidator;
 
 /**
@@ -16,44 +15,27 @@ use Fortuneglobe\IceHawk\RequestValidators\GetRequestValidator;
  *
  * @package Dreiwolt\Backlog
  */
-abstract class DomainQuery implements ServesCommandData
+abstract class DomainQuery implements ServesDemandData
 {
-
-	/** @var ServesApiData */
-	protected $api;
 
 	/** @var string */
 	protected $domain;
 
-	/** @var GetRequest */
+	/** @var ServesReadRequestData */
 	protected $request;
 
 	/** @var RequestValidator */
 	protected $validator;
 
-	/** @var Responder */
-	protected $responder;
-
 	/**
-	 * @param ServesApiData $api
-	 * @param string        $domain
-	 * @param GetRequest    $request
+	 * @param string                $domain
+	 * @param ServesReadRequestData $request
 	 */
-	final public function __construct( ServesApiData $api, $domain, GetRequest $request )
+	final public function __construct( $domain, ServesReadRequestData $request )
 	{
-		$this->api       = $api;
 		$this->domain    = $domain;
 		$this->request   = $request;
-		$this->validator = $this->getValidator();
-		$this->responder = new Responder( $api );
-	}
-
-	/**
-	 * @return ServesApiData
-	 */
-	public function getApi()
-	{
-		return $this->api;
+		$this->validator = new GetRequestValidator( $this->request );
 	}
 
 	/**
@@ -89,14 +71,6 @@ abstract class DomainQuery implements ServesCommandData
 	abstract protected function validate( GetRequestValidator $validator );
 
 	/**
-	 * @return GetRequestValidator
-	 */
-	protected function getValidator()
-	{
-		return new GetRequestValidator( $this->request );
-	}
-
-	/**
 	 * @param string $key
 	 *
 	 * @return array|null|string
@@ -104,14 +78,6 @@ abstract class DomainQuery implements ServesCommandData
 	protected function getRequestValue( $key )
 	{
 		return $this->request->get( $key );
-	}
-
-	/**
-	 * @return Responder
-	 */
-	public function getResponder()
-	{
-		return $this->responder;
 	}
 
 	/**

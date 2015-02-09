@@ -7,6 +7,7 @@
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Exceptions\ResponderIsMissingAResponseForApi;
+use Fortuneglobe\IceHawk\Interfaces\CollectsResponses;
 use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 
@@ -15,7 +16,7 @@ use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
  *
  * @package Fortuneglobe\IceHawk
  */
-class Responder implements ServesResponse
+class Responder implements CollectsResponses
 {
 
 	/** @var ServesApiData */

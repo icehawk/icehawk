@@ -10,7 +10,7 @@ interface ServesUriComponents
 	/**
 	 * @return string
 	 */
-	public function getApi();
+	public function getApiName();
 
 	/**
 	 * @return string
@@ -25,5 +25,5 @@ interface ServesUriComponents
 	/**
 	 * @return string
 	 */
-	public function getCommand();
+	public function getDemand();
 }

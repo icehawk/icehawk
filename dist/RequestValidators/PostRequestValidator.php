@@ -6,7 +6,7 @@
 
 namespace Fortuneglobe\IceHawk\RequestValidators;
 
-use Fortuneglobe\IceHawk\Requests\PostRequest;
+use Fortuneglobe\IceHawk\Interfaces\ServesWriteRequestData;
 use Fortuneglobe\IceHawk\RequestValidator;
 
 /**
@@ -20,7 +20,7 @@ use Fortuneglobe\IceHawk\RequestValidator;
 final class PostRequestValidator extends RequestValidator
 {
 
-	/** @var PostRequest */
+	/** @var ServesWriteRequestData */
 	protected $request;
 
 	/**

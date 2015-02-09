@@ -7,14 +7,14 @@
 
 namespace Fortuneglobe\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesReadRequestData;
 
 /**
  * Class GetRequest
  *
  * @package Fortuneglobe\IceHawk\Requests
  */
-final class GetRequest implements ServesRequestData
+final class GetRequest implements ServesReadRequestData
 {
 
 	/** @var array */

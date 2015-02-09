@@ -6,40 +6,32 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\BuildsDomainCommands;
-use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
-
 /**
- * Class DomainCommandBuilder
+ * Class DomainDemandBuilder
  *
  * @package Fortuneglobe\IceHawk
  */
-abstract class DomainCommandBuilder implements BuildsDomainCommands
+abstract class DomainDemandBuilder
 {
-
-	/** @var ServesApiData */
-	protected $api;
 
 	/** @var string */
 	protected $domain;
 
 	/** @var string */
-	protected $command;
+	protected $demand;
 
 	/** @var string */
 	protected $project_namespace;
 
 	/**
-	 * @param ServesApiData $api
-	 * @param string        $domain
-	 * @param string        $command
-	 * @param string        $project_namespace
+	 * @param string $domain
+	 * @param string $demand
+	 * @param string $project_namespace
 	 */
-	public function __construct( ServesApiData $api, $domain, $command, $project_namespace )
+	public function __construct( $domain, $demand, $project_namespace )
 	{
-		$this->api               = $api;
 		$this->domain            = $domain;
-		$this->command           = $command;
+		$this->demand = $demand;
 		$this->project_namespace = $project_namespace;
 	}
 
@@ -54,9 +46,9 @@ abstract class DomainCommandBuilder implements BuildsDomainCommands
 	/**
 	 * @return string
 	 */
-	protected function getCommandCamelCase()
+	protected function getActionCamelCase()
 	{
-		return $this->getStringToCamelCase( $this->command );
+		return $this->getStringToCamelCase( $this->demand );
 	}
 
 	/**

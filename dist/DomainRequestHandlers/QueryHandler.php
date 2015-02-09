@@ -7,14 +7,20 @@
 namespace Fortuneglobe\IceHawk\DomainRequestHandlers;
 
 use Fortuneglobe\IceHawk\Api;
-use Fortuneglobe\IceHawk\DomainCommandBuilders\QueryBuilder;
+use Fortuneglobe\IceHawk\Builders\QueryBuilder;
+use Fortuneglobe\IceHawk\Builders\QueryExecutorBuilder;
+use Fortuneglobe\IceHawk\DomainQuery;
 use Fortuneglobe\IceHawk\DomainRequestHandler;
+use Fortuneglobe\IceHawk\Exceptions\DomainQueryExecutorNotFound;
+use Fortuneglobe\IceHawk\Exceptions\DomainQueryNotFound;
 use Fortuneglobe\IceHawk\Exceptions\InvalidDomainQuery;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
-use Fortuneglobe\IceHawk\Requests\GetRequest;
+use Fortuneglobe\IceHawk\Interfaces\ExecutesDomainQueries;
+use Fortuneglobe\IceHawk\Interfaces\ServesReadRequestData;
+use Fortuneglobe\IceHawk\Responder;
 use Fortuneglobe\IceHawk\Responses\BadJsonRequest;
 use Fortuneglobe\IceHawk\Responses\BadRequest;
+use Fortuneglobe\IceHawk\Responses\NotFound;
 
 /**
  * Class QueryHandler
@@ -24,23 +30,52 @@ use Fortuneglobe\IceHawk\Responses\BadRequest;
 final class QueryHandler extends DomainRequestHandler
 {
 	/**
-	 * @param ServesRequestData $request
+	 * @param ServesReadRequestData $request
 	 *
 	 * @throws InvalidRequestType
 	 * @throws InvalidDomainQuery
 	 */
-	public function handleRequest( ServesRequestData $request )
+	public function handleRequest( ServesReadRequestData $request )
 	{
-		$this->guardRequestType( $request );
+		$responder = new Responder( $this->api );
 
-		$query     = $this->buildQueryByRequest( $request );
-		$responder = $query->getResponder();
+		try
+		{
+			$query = $this->buildQueryByRequest( $request );
+			$this->validateAndExecuteQuery( $query, $responder );
+		}
+		catch ( DomainQueryNotFound $e )
+		{
+			$responder->add( Api::ALL, new NotFound() );
+		}
 
+		$responder->respond();
+	}
+
+	/**
+	 * @param ServesReadRequestData $request
+	 *
+	 * @throws \Fortuneglobe\IceHawk\Exceptions\DomainQueryNotFound
+	 * @return \Fortuneglobe\IceHawk\DomainQuery
+	 */
+	private function buildQueryByRequest( ServesReadRequestData $request )
+	{
+		$builder = new QueryBuilder( $this->domain, $this->demand, $this->project_namespace );
+
+		return $builder->buildQuery( $request );
+	}
+
+	/**
+	 * @param DomainQuery $query
+	 * @param Responder   $responder
+	 */
+	private function validateAndExecuteQuery( DomainQuery $query, Responder $responder )
+	{
 		if ( $query->isExecutable() )
 		{
 			if ( $query->isValid() )
 			{
-				$query->execute();
+				$this->executeQuery( $query, $responder );
 			}
 			else
 			{
@@ -53,33 +88,34 @@ final class QueryHandler extends DomainRequestHandler
 			$responder->add( Api::WEB, new BadRequest( [ "Query is not executable." ] ) );
 			$responder->add( Api::JSON, new BadJsonRequest( [ "Query is not executable." ] ) );
 		}
-
-		$responder->respond();
 	}
 
 	/**
-	 * @param ServesRequestData $request
-	 *
-	 * @throws InvalidRequestType
+	 * @param DomainQuery $query
+	 * @param Responder   $responder
 	 */
-	private function guardRequestType( ServesRequestData $request )
+	private function executeQuery( DomainQuery $query, Responder $responder )
 	{
-		if ( !($request instanceof GetRequest) )
+		try
 		{
-			throw new InvalidRequestType( get_class( $request ) );
+			$executor = $this->buildQueryExecutor();
+			$executor->execute( $query, $responder );
+		}
+		catch ( DomainQueryExecutorNotFound $e )
+		{
+			$responder->add( Api::WEB, new BadRequest( [ $e->getMessage() ] ) );
+			$responder->add( Api::JSON, new BadJsonRequest( [ $e->getMessage() ] ) );
 		}
 	}
 
 	/**
-	 * @param ServesRequestData $request
-	 *
-	 * @return \Fortuneglobe\IceHawk\DomainQuery
-	 * @throws \Fortuneglobe\IceHawk\Exceptions\DomainQueryNotFound
+	 * @throws \Fortuneglobe\IceHawk\Exceptions\DomainQueryExecutorNotFound
+	 * @return ExecutesDomainQueries
 	 */
-	private function buildQueryByRequest( ServesRequestData $request )
+	private function buildQueryExecutor()
 	{
-		$builder = new QueryBuilder( $this->api, $this->domain, $this->command, $this->project_namespace );
+		$builder = new QueryExecutorBuilder( $this->domain, $this->demand, $this->project_namespace );
 
-		return $builder->buildCommand( $request );
+		return $builder->buildQueryExecutor();
 	}
 }

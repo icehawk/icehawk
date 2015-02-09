@@ -6,12 +6,14 @@
 
 namespace Fortuneglobe\IceHawk\Requests;
 
+use Fortuneglobe\IceHawk\Interfaces\WrapsDataOfUploadedFile;
+
 /**
  * Class UploadedFileInfo
  *
  * @package Fortuneglobe\IceHawk\Requests
  */
-final class UploadedFileInfo
+final class UploadedFileInfo implements WrapsDataOfUploadedFile
 {
 
 	/** @var string */

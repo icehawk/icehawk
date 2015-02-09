@@ -6,11 +6,11 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
- * Interface ServesCommandData
+ * Interface ServesQueryData
  *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface ServesCommandData extends ServesDemandData
+interface ServesQueryData extends ServesDemandData
 {
 
 }

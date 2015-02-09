@@ -6,7 +6,6 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
 
 /**
@@ -14,7 +13,7 @@ use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
  *
  * @package Fortuneglobe\IceHawk
  */
-abstract class DomainRequestHandler implements HandlesDomainRequests
+abstract class DomainRequestHandler
 {
 
 	/** @var ServesApiData */
@@ -24,7 +23,7 @@ abstract class DomainRequestHandler implements HandlesDomainRequests
 	protected $domain;
 
 	/** @var string */
-	protected $command;
+	protected $demand;
 
 	/** @var string */
 	protected $project_namespace;
@@ -32,14 +31,14 @@ abstract class DomainRequestHandler implements HandlesDomainRequests
 	/**
 	 * @param ServesApiData $api
 	 * @param string        $domain
-	 * @param string        $command
+	 * @param string        $demand
 	 * @param string        $project_namespace
 	 */
-	public function __construct( ServesApiData $api, $domain, $command, $project_namespace )
+	public function __construct( ServesApiData $api, $domain, $demand, $project_namespace )
 	{
 		$this->api               = $api;
 		$this->domain            = $domain;
-		$this->command           = $command;
+		$this->demand = $demand;
 		$this->project_namespace = $project_namespace;
 	}
 }

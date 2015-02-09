@@ -6,9 +6,8 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesApiData;
-use Fortuneglobe\IceHawk\Interfaces\ServesCommandData;
-use Fortuneglobe\IceHawk\Requests\PostRequest;
+use Fortuneglobe\IceHawk\Interfaces\ServesDemandData;
+use Fortuneglobe\IceHawk\Interfaces\ServesWriteRequestData;
 use Fortuneglobe\IceHawk\RequestValidators\PostRequestValidator;
 
 /**
@@ -16,48 +15,28 @@ use Fortuneglobe\IceHawk\RequestValidators\PostRequestValidator;
  *
  * @package Fortuneglobe\IceHawk
  */
-abstract class DomainCommand implements ServesCommandData
+abstract class DomainCommand implements ServesDemandData
 {
 
 	const KEY_SUCCESS_URL = 'success_url';
 
 	const KEY_FAIL_URL    = 'fail_url';
 
-	/** @var ServesApiData */
-	protected $api;
-
 	/** @var string */
 	protected $domain;
 
-	/** @var PostRequest */
+	/** @var ServesWriteRequestData */
 	protected $request;
 
-	/** @var PostRequestValidator */
-	protected $validator;
-
-	/** @var Responder */
-	protected $responder;
-
 	/**
-	 * @param ServesApiData $api
-	 * @param string        $domain
-	 * @param PostRequest   $request
+	 * @param string                 $domain
+	 * @param ServesWriteRequestData $request
 	 */
-	final public function __construct( ServesApiData $api, $domain, PostRequest $request )
+	final public function __construct( $domain, ServesWriteRequestData $request )
 	{
-		$this->api       = $api;
 		$this->domain    = $domain;
 		$this->request   = $request;
-		$this->validator = $this->getValidator();
-		$this->responder = new Responder( $api );
-	}
-
-	/**
-	 * @return ServesApiData
-	 */
-	public function getApi()
-	{
-		return $this->api;
+		$this->validator = new PostRequestValidator( $this->request );
 	}
 
 	/**
@@ -96,14 +75,6 @@ abstract class DomainCommand implements ServesCommandData
 	abstract protected function validate( PostRequestValidator $validator );
 
 	/**
-	 * @return PostRequestValidator
-	 */
-	protected function getValidator()
-	{
-		return new PostRequestValidator( $this->request );
-	}
-
-	/**
 	 * @param string $key
 	 *
 	 * @return array|null|string
@@ -111,14 +82,6 @@ abstract class DomainCommand implements ServesCommandData
 	protected function getRequestValue( $key )
 	{
 		return $this->request->get( $key );
-	}
-	
-	/**
-	 * @return Responder
-	 */
-	public function getResponder()
-	{
-		return $this->responder;
 	}
 
 	/**

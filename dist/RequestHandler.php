@@ -119,10 +119,11 @@ final class RequestHandler
 	 */
 	private function guardValidRequestMethod()
 	{
-		$method = $this->getRequestMethodUpperCase();
-		if ( !in_array( $method, self::$valid_methods ) )
+		$request_method = $this->getRequestMethodUpperCase();
+
+		if ( !in_array( $request_method, self::$valid_methods ) )
 		{
-			throw new InvalidRequestMethod( $method );
+			throw new InvalidRequestMethod( $request_method );
 		}
 	}
 
@@ -160,10 +161,10 @@ final class RequestHandler
 	 */
 	private function guardValidApi()
 	{
-		$api = $this->uri_components->getApi();
-		if ( !in_array( $api, Api::getAll() ) )
+		$api_name = $this->uri_components->getApiName();
+		if ( !in_array( $api_name, Api::getAll() ) )
 		{
-			throw new InvalidApiCalled( $api );
+			throw new InvalidApiCalled( $api_name );
 		}
 	}
 
@@ -172,8 +173,9 @@ final class RequestHandler
 	 */
 	private function getRequest()
 	{
-		$method = $this->getRequestMethodUpperCase();
-		if ( $method == Http::METHOD_POST )
+		$request_method = $this->getRequestMethodUpperCase();
+
+		if ( $request_method == Http::METHOD_POST )
 		{
 			return new PostRequest( $this->post_data, $this->uploaded_files );
 		}
@@ -189,24 +191,23 @@ final class RequestHandler
 	 */
 	private function getDomainRequestHandler()
 	{
-		$api    = $this->getApi();
-		$method = $this->getRequestMethodUpperCase();
+		$request_method = $this->getRequestMethodUpperCase();
 
-		if ( $method == Http::METHOD_POST )
+		if ( $request_method == Http::METHOD_POST )
 		{
 			return new CommandHandler(
-				$api,
+				$this->getApi(),
 				$this->uri_components->getDomain(),
-				$this->uri_components->getCommand(),
+				$this->uri_components->getDemand(),
 				$this->config_delegate->getProjectNamespace()
 			);
 		}
 		else
 		{
 			return new QueryHandler(
-				$api,
+				$this->getApi(),
 				$this->uri_components->getDomain(),
-				$this->uri_components->getCommand(),
+				$this->uri_components->getDemand(),
 				$this->config_delegate->getProjectNamespace()
 			);
 		}
@@ -219,7 +220,7 @@ final class RequestHandler
 	private function getApi()
 	{
 		return Api::factory(
-			$this->uri_components->getApi(),
+			$this->uri_components->getApiName(),
 			$this->uri_components->getApiVersion()
 		);
 	}

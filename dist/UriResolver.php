@@ -31,12 +31,12 @@ class UriResolver implements ResolvesUri
 
 		if ( preg_match( $pattern, $uri, $matches ) )
 		{
-			$api         = ($matches[1] !== '') ? strtolower( $matches[1] ) : Api::COMMON;
+			$api_name = ($matches[1] !== '') ? strtolower( $matches[1] ) : Api::COMMON;
 			$api_version = $matches[2] ?: Api::VERSION_DEFAULT;
 			$domain      = strtolower( $matches[3] );
-			$command     = strtolower( $matches[4] );
+			$demand   = strtolower( $matches[4] );
 
-			return new UriComponents( $api, $api_version, $domain, $command );
+			return new UriComponents( $api_name, $api_version, $domain, $demand );
 		}
 		else
 		{

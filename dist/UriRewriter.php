@@ -7,6 +7,7 @@ namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Responses\Redirect;
 
 /**
  * Class UriRewriter
@@ -18,33 +19,33 @@ class UriRewriter implements RewritesUri
 	/**
 	 * @param ServesRequestInfo $request_info
 	 *
-	 * @return string
+	 * @return Redirect
 	 */
 	public function rewrite( ServesRequestInfo $request_info )
 	{
-		return $request_info->getUri();
+		return $this->rewriteUriBySimpleMap( $request_info, [ ] );
 	}
 
 	/**
 	 * @param string $request_uri
 	 * @param array  $simple_map
 	 *
-	 * @return string
+	 * @return Redirect
 	 */
 	protected function rewriteUriBySimpleMap( $request_uri, array $simple_map )
 	{
-		$mapped_uri = $request_uri;
+		$redirect = new Redirect( $request_uri );
 
-		foreach ( $simple_map as $pattern => $uri )
+		foreach ( $simple_map as $pattern => list( $redirect_uri, $redirect_code ) )
 		{
 			if ( $this->uriMatchesPattern( $request_uri, $pattern ) )
 			{
-				$mapped_uri = $uri;
+				$redirect = $this->buildRedirect( $redirect_uri, $redirect_code );
 				break;
 			}
 		}
 
-		return $mapped_uri;
+		return $redirect;
 	}
 
 	/**
@@ -66,6 +67,24 @@ class UriRewriter implements RewritesUri
 		else
 		{
 			return false;
+		}
+	}
+
+	/**
+	 * @param string      $redirect_uri
+	 * @param string|null $redirect_code
+	 *
+	 * @return Redirect
+	 */
+	private function buildRedirect( $redirect_uri, $redirect_code )
+	{
+		if ( is_null( $redirect_code ) )
+		{
+			return new Redirect( $redirect_uri );
+		}
+		else
+		{
+			return new Redirect( $redirect_uri, $redirect_code );
 		}
 	}
 }

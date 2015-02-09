@@ -52,6 +52,16 @@ class Redirect extends BaseResponse
 	 */
 	public function urlEquals( $string )
 	{
-		return $string == $this->redirect_url;
+		return ($string == $this->redirect_url);
+	}
+
+	/**
+	 * @param string $string
+	 *
+	 * @return bool
+	 */
+	public function codeEquals( $string )
+	{
+		return ($string == $this->redirect_code);
 	}
 }

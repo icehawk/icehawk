@@ -26,7 +26,7 @@ class Redirect extends BaseResponse
 	 * @param string $redirect_url
 	 * @param string $redirect_code
 	 */
-	public function __construct( $redirect_url, $redirect_code = Http::MOVED_TEMPORARILY )
+	public function __construct( $redirect_url, $redirect_code = Http::MOVED_PERMANENTLY )
 	{
 		$this->redirect_url  = $redirect_url;
 		$this->redirect_code = $redirect_code;
@@ -43,5 +43,15 @@ class Redirect extends BaseResponse
 
 		header( 'Location: ' . $this->redirect_url );
 		exit();
+	}
+
+	/**
+	 * @param string $string
+	 *
+	 * @return bool
+	 */
+	public function urlEquals( $string )
+	{
+		return $string == $this->redirect_url;
 	}
 }

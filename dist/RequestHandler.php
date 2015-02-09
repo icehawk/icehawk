@@ -22,7 +22,6 @@ use Fortuneglobe\IceHawk\Requests\GetRequest;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
 use Fortuneglobe\IceHawk\Responses\BadRequest;
 use Fortuneglobe\IceHawk\Responses\NotFound;
-use Fortuneglobe\IceHawk\Responses\Redirect;
 
 /**
  * Class RequestHandler
@@ -137,12 +136,12 @@ final class RequestHandler
 
 	private function redirectIfNeeded()
 	{
-		$uri_rewriter  = $this->config_delegate->getUriRewriter();
-		$rewritten_uri = $uri_rewriter->rewrite( $this->request_info );
+		$uri_rewriter = $this->config_delegate->getUriRewriter();
+		$redirect     = $uri_rewriter->rewrite( $this->request_info );
 
-		if ( $rewritten_uri != $this->request_info->getUri() )
+		if ( !$redirect->urlEquals( $this->request_info->getUri() ) )
 		{
-			( new Redirect( $rewritten_uri, Http::MOVED_PERMANENTLY ) )->respond();
+			$redirect->respond();
 		}
 	}
 

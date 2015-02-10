@@ -13,6 +13,9 @@ final class IceHawk
 	/** @var ServesAppConfiguration */
 	private $config_delegate;
 
+	/** @var SessionRegistry */
+	private $session_registry;
+
 	/** @var Interfaces\RendersTemplate */
 	private $template_engine;
 
@@ -44,6 +47,43 @@ final class IceHawk
 		{
 			$this->config_delegate = $config_delegate;
 		}
+
+		$this->configure();
+	}
+
+	private function configure()
+	{
+		$this->configureErrorHandling();
+		$this->configureSession();
+	}
+
+	private function configureErrorHandling()
+	{
+		$this->config_delegate->configureErrorHandling();
+	}
+
+	private function configureSession()
+	{
+		$this->config_delegate->configureSession();
+	}
+
+	/**
+	 * @return SessionRegistry
+	 */
+	public function getSessionRegistry()
+	{
+		$this->initSessionRegistryIfNeeded();
+
+		return $this->session_registry;
+	}
+
+	private function initSessionRegistryIfNeeded()
+	{
+		if ( is_null( $this->session_registry ) )
+		{
+			session_start();
+			$this->session_registry = $this->config_delegate->getSessionRegistry();
+		}
 	}
 
 	/**
@@ -60,10 +100,7 @@ final class IceHawk
 	{
 		if ( is_null( $this->template_engine ) )
 		{
-			$search_paths = $this->config_delegate->getTemplateSearchPaths();
-			$cache_path   = $this->config_delegate->getTemplateCachePath();
-
-			$this->template_engine = $this->config_delegate->getTemplateEngine( $search_paths, $cache_path );
+			$this->template_engine = $this->config_delegate->getTemplateEngine();
 		}
 	}
 

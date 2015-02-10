@@ -56,9 +56,57 @@ final class RequestInfo implements ServesRequestInfo
 	/**
 	 * @return string
 	 */
-	public function getServerName()
+	public function getHost()
 	{
-		return $this->get( 'SERVER_NAME' );
+		return $this->get( 'HTTP_HOST' );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getUserAgent()
+	{
+		return $this->get( 'USER_AGENT' );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getServerAddress()
+	{
+		return $this->get( 'SERVER_ADDR' );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getClientAddress()
+	{
+		return $this->get( 'REMOTE_ADDR' );
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getRequestTimeFloat()
+	{
+		return floatval( $this->get( 'REQUEST_TIME_FLOAT' ) );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function acceptsContentTypes()
+	{
+		return $this->get( 'HTTP_ACCEPT' );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getQueryString()
+	{
+		return $this->get( 'QUERY_STRING' );
 	}
 
 	/**

@@ -47,7 +47,7 @@ class IceHawkDelegate implements ServesAppConfiguration
 	public function configureSession()
 	{
 		ini_set( 'session.name', 'ihsid' );
-		ini_set( 'session.save_handler', 'memcachd' );
+		ini_set( 'session.save_handler', 'memcached' );
 		ini_set( 'session.save_path', '127.0.0.1:11211' );
 		ini_set( 'session.cookie_httponly', true );
 		ini_set( 'session.cookie_lifetime', 60 * 60 * 24 );

@@ -54,4 +54,14 @@ class Redirect extends BaseResponse
 	{
 		return ($string == $this->redirectUrl);
 	}
+
+	/**
+	 * @param $string
+	 *
+	 * @return bool
+	 */
+	public function codeEquals( $string )
+	{
+		return ($string == $this->redirectCode);
+	}
 }

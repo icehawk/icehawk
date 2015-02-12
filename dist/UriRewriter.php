@@ -5,6 +5,7 @@
 
 namespace Fortuneglobe\IceHawk;
 
+use Fortuneglobe\IceHawk\Constants\Http;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\Responses\Redirect;
@@ -23,7 +24,7 @@ class UriRewriter implements RewritesUri
 	 */
 	public function rewrite( ServesRequestInfo $requestInfo )
 	{
-		return $this->rewriteUriBySimpleMap( $requestInfo, [ ] );
+		return $this->rewriteUriBySimpleMap( $requestInfo->getUri(), [ ] );
 	}
 
 	/**
@@ -34,7 +35,7 @@ class UriRewriter implements RewritesUri
 	 */
 	protected function rewriteUriBySimpleMap( $requestUri, array $simpleMap )
 	{
-		$redirect = new Redirect( $requestUri );
+		$redirect = $this->buildRedirect( $requestUri, Http::MOVED_PERMANENTLY );
 
 		foreach ( $simpleMap as $pattern => list( $redirectUri, $redirectCode ) )
 		{

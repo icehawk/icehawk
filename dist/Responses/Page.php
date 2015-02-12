@@ -28,9 +28,9 @@ class Page extends BaseResponse
 
 	public function respond()
 	{
-		$template_engine = IceHawk::fromSky()->getTemplateEngine();
+		$templateEngine = IceHawk::fromSky()->getTemplateEngine();
 
 		header( 'Content-Type: text/html; charset=utf-8' );
-		echo $template_engine->renderWithData( $this->template, $this->data );
+		echo $templateEngine->renderWithData( $this->template, $this->data );
 	}
 }

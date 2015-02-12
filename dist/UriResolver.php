@@ -18,25 +18,23 @@ use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 class UriResolver implements ResolvesUri
 {
 	/**
-	 * @param ServesRequestInfo $request_info
+	 * @param ServesRequestInfo $requestInfo
 	 *
 	 * @throws MalformedRequestUri
 	 * @return ServesUriComponents
 	 */
-	public function resolveUri( ServesRequestInfo $request_info )
+	public function resolveUri( ServesRequestInfo $requestInfo )
 	{
-		$uri     = $request_info->getUri();
-		$pattern = "#^\/(?:([^\/\?\#]+)\/)?(?:v([0-9\.]+)\/)?([^\/\?\#]+)\/([^\/\?\#]+)\/?#";
+		$uri     = $requestInfo->getUri();
+		$pattern = "#^\/([^\/\?\#]+)\/([^\/\?\#]+)\/?#";
 		$matches = [ ];
 
 		if ( preg_match( $pattern, $uri, $matches ) )
 		{
-			$api_name = ($matches[1] !== '') ? strtolower( $matches[1] ) : Api::COMMON;
-			$api_version = $matches[2] ?: Api::VERSION_DEFAULT;
-			$domain      = strtolower( $matches[3] );
-			$demand   = strtolower( $matches[4] );
+			$domain = strtolower( $matches[1] );
+			$demand = strtolower( $matches[2] );
 
-			return new UriComponents( $api_name, $api_version, $domain, $demand );
+			return new UriComponents( $domain, $demand );
 		}
 		else
 		{

@@ -6,73 +6,30 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesDemandData;
-use Fortuneglobe\IceHawk\Interfaces\ServesWriteRequestData;
-use Fortuneglobe\IceHawk\RequestValidators\PostRequestValidator;
+use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
 
 /**
  * Class DomainCommand
  *
  * @package Fortuneglobe\IceHawk
  */
-abstract class DomainCommand implements ServesDemandData
+abstract class DomainCommand
 {
 
 	const KEY_SUCCESS_URL = 'success_url';
 
 	const KEY_FAIL_URL    = 'fail_url';
 
-	/** @var string */
-	protected $domain;
-
-	/** @var ServesWriteRequestData */
+	/** @var ServesPostRequestData */
 	protected $request;
 
 	/**
-	 * @param string                 $domain
-	 * @param ServesWriteRequestData $request
+	 * @param ServesPostRequestData $request
 	 */
-	final public function __construct( $domain, ServesWriteRequestData $request )
+	public function __construct( ServesPostRequestData $request )
 	{
-		$this->domain    = $domain;
-		$this->request   = $request;
-		$this->validator = new PostRequestValidator( $this->request );
+		$this->request = $request;
 	}
-
-	/**
-	 * @return string
-	 */
-	public function getDomain()
-	{
-		return $this->domain;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isValid()
-	{
-		$this->validator->reset();
-		$this->validate( $this->validator );
-
-		$this->validator->isNonEmptyStringOrNull( self::KEY_SUCCESS_URL, 'Invalid redirect target for success url.' );
-		$this->validator->isNonEmptyStringOrNull( self::KEY_FAIL_URL, 'Invalid redirect target for fail url.' );
-
-		return $this->validator->getBoolResult();
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getValidationMessages()
-	{
-		return $this->validator->getMessages();
-	}
-
-	/**
-	 * @param PostRequestValidator $validator
-	 */
-	abstract protected function validate( PostRequestValidator $validator );
 
 	/**
 	 * @param string $key
@@ -114,13 +71,5 @@ abstract class DomainCommand implements ServesDemandData
 	public function getFailUrl()
 	{
 		return $this->getRequestValue( self::KEY_FAIL_URL );
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isExecutable()
-	{
-		return true;
 	}
 }

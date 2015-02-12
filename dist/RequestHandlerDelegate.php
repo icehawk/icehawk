@@ -18,24 +18,24 @@ final class RequestHandlerDelegate implements ServesRequestHandlerConfig
 {
 
 	/** @var RewritesUri */
-	private $uri_rewriter;
+	private $uriRewriter;
 
 	/** @var ResolvesUri */
-	private $uri_resolver;
+	private $uriResolver;
 
 	/** @var string */
-	private $project_namespace;
+	private $projectNamespace;
 
 	/**
-	 * @param RewritesUri $rewrite_map
-	 * @param ResolvesUri $uri_component_resolver
-	 * @param string      $project_namespace
+	 * @param RewritesUri $uriRewriter
+	 * @param ResolvesUri $uriResolver
+	 * @param string      $projectNamespace
 	 */
-	public function __construct( RewritesUri $rewrite_map, ResolvesUri $uri_component_resolver, $project_namespace )
+	public function __construct( RewritesUri $uriRewriter, ResolvesUri $uriResolver, $projectNamespace )
 	{
-		$this->uri_rewriter      = $rewrite_map;
-		$this->uri_resolver      = $uri_component_resolver;
-		$this->project_namespace = $project_namespace;
+		$this->uriRewriter      = $uriRewriter;
+		$this->uriResolver      = $uriResolver;
+		$this->projectNamespace = $projectNamespace;
 	}
 
 	/**
@@ -43,7 +43,7 @@ final class RequestHandlerDelegate implements ServesRequestHandlerConfig
 	 */
 	public function getUriRewriter()
 	{
-		return $this->uri_rewriter;
+		return $this->uriRewriter;
 	}
 
 	/**
@@ -51,7 +51,7 @@ final class RequestHandlerDelegate implements ServesRequestHandlerConfig
 	 */
 	public function getUriResolver()
 	{
-		return $this->uri_resolver;
+		return $this->uriResolver;
 	}
 
 	/**
@@ -59,6 +59,6 @@ final class RequestHandlerDelegate implements ServesRequestHandlerConfig
 	 */
 	public function getProjectNamespace()
 	{
-		return $this->project_namespace;
+		return $this->projectNamespace;
 	}
 }

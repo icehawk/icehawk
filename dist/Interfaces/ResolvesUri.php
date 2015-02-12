@@ -8,9 +8,9 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 interface ResolvesUri
 {
 	/**
-	 * @param ServesRequestInfo $request_info
+	 * @param ServesRequestInfo $requestInfo
 	 *
 	 * @return ServesUriComponents
 	 */
-	public function resolveUri( ServesRequestInfo $request_info );
+	public function resolveUri( ServesRequestInfo $requestInfo );
 }

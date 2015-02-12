@@ -6,7 +6,7 @@
 
 namespace Fortuneglobe\IceHawk\RequestValidators;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesWriteRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
 use Fortuneglobe\IceHawk\RequestValidator;
 
 /**
@@ -20,7 +20,7 @@ use Fortuneglobe\IceHawk\RequestValidator;
 final class PostRequestValidator extends RequestValidator
 {
 
-	/** @var ServesWriteRequestData */
+	/** @var ServesPostRequestData */
 	protected $request;
 
 	/**
@@ -53,13 +53,13 @@ final class PostRequestValidator extends RequestValidator
 
 		if ( !empty($files) )
 		{
-			$bool_result = true;
-			foreach ( $files as $file_info )
+			$boolResult = true;
+			foreach ( $files as $fileInfo )
 			{
-				$bool_result |= $file_info->didUploadSucceed();
+				$boolResult |= $fileInfo->didUploadSucceed();
 			}
 
-			return $bool_result;
+			return $boolResult;
 		}
 		else
 		{

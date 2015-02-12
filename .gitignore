@@ -12,3 +12,7 @@ vagrant
 vendor
 !dist/public/vendor
 composer.lock
+
+# locally generated docs
+doc/Coverage/
+doc/TestDox/

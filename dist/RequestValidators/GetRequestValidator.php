@@ -6,7 +6,7 @@
 
 namespace Fortuneglobe\IceHawk\RequestValidators;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesReadRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
 use Fortuneglobe\IceHawk\RequestValidator;
 
 /**
@@ -17,7 +17,7 @@ use Fortuneglobe\IceHawk\RequestValidator;
 final class GetRequestValidator extends RequestValidator
 {
 
-	/** @var ServesReadRequestData */
+	/** @var ServesGetRequestData */
 	protected $request;
 
 }

@@ -7,30 +7,30 @@
 
 namespace Fortuneglobe\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesWriteRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
 
 /**
  * Class PostRequest
  *
  * @package Fortuneglobe\IceHawk\Requests
  */
-final class PostRequest implements ServesWriteRequestData
+final class PostRequest implements ServesPostRequestData
 {
 
 	/** @var array */
-	private $post_data = [ ];
+	private $postData = [ ];
 
 	/** @var array */
-	private $uploaded_files = [ ];
+	private $uploadedFiles = [ ];
 
 	/**
-	 * @param array $post_data
-	 * @param array $uploaded_files
+	 * @param array $postData
+	 * @param array $uploadedFiles
 	 */
-	public function __construct( array $post_data, array $uploaded_files )
+	public function __construct( array $postData, array $uploadedFiles )
 	{
-		$this->post_data      = $post_data;
-		$this->uploaded_files = $uploaded_files;
+		$this->postData      = $postData;
+		$this->uploadedFiles = $uploadedFiles;
 	}
 
 	/**
@@ -38,7 +38,7 @@ final class PostRequest implements ServesWriteRequestData
 	 */
 	public function getData()
 	{
-		return $this->post_data;
+		return $this->postData;
 	}
 
 	/**
@@ -50,17 +50,17 @@ final class PostRequest implements ServesWriteRequestData
 	}
 
 	/**
-	 * @param $field_key
+	 * @param $fieldKey
 	 *
 	 * @return UploadedFileInfo[]
 	 */
-	public function getFiles( $field_key )
+	public function getFiles( $fieldKey )
 	{
 		$all_files = $this->getAllFiles();
 
-		if ( isset($all_files[ $field_key ]) )
+		if ( isset($all_files[ $fieldKey ]) )
 		{
-			return $all_files[ $field_key ];
+			return $all_files[ $fieldKey ];
 		}
 		else
 		{
@@ -69,18 +69,18 @@ final class PostRequest implements ServesWriteRequestData
 	}
 
 	/**
-	 * @param string $field_key
-	 * @param int    $file_index
+	 * @param string $fieldKey
+	 * @param int    $fileIndex
 	 *
 	 * @return UploadedFileInfo|null
 	 */
-	public function getOneFile( $field_key, $file_index = 0 )
+	public function getOneFile( $fieldKey, $fileIndex = 0 )
 	{
-		$files = $this->getFiles( $field_key );
+		$files = $this->getFiles( $fieldKey );
 
-		if ( isset($files[ intval( $file_index ) ]) )
+		if ( isset($files[ intval( $fileIndex ) ]) )
 		{
-			return $files[ $file_index ];
+			return $files[ $fileIndex ];
 		}
 		else
 		{
@@ -93,18 +93,18 @@ final class PostRequest implements ServesWriteRequestData
 	 */
 	private function getFilesAsInfoObjects()
 	{
-		$files        = $this->getFilesAsNameIndexedArray();
-		$info_objects = [ ];
+		$files       = $this->getFilesAsNameIndexedArray();
+		$infoObjects = [ ];
 
-		foreach ( $files as $field_name => $files_array )
+		foreach ( $files as $fieldName => $filesArray )
 		{
-			$info_objects[ $field_name ] = array_merge(
-				isset($info_objects[ $field_name ]) ? $info_objects[ $field_name ] : [ ],
-				array_map( [ UploadedFileInfo::class, 'fromFileArray' ], $files_array )
+			$infoObjects[ $fieldName ] = array_merge(
+				isset($infoObjects[ $fieldName ]) ? $infoObjects[ $fieldName ] : [ ],
+				array_map( [ UploadedFileInfo::class, 'fromFileArray' ], $filesArray )
 			);
 		}
 
-		return $info_objects;
+		return $infoObjects;
 	}
 
 	/**
@@ -112,27 +112,27 @@ final class PostRequest implements ServesWriteRequestData
 	 */
 	private function getFilesAsNameIndexedArray()
 	{
-		$flat_array = [ ];
+		$flatArray = [ ];
 
-		foreach ( $this->uploaded_files as $field => $file_infos )
+		foreach ( $this->uploadedFiles as $field => $fileInfos )
 		{
-			foreach ( $file_infos as $key_field => $values )
+			foreach ( $fileInfos as $keyField => $values )
 			{
 				if ( is_array( $values ) )
 				{
 					foreach ( $values as $index => $value )
 					{
-						$flat_array[ $field ][ $index ][ $key_field ] = $value;
+						$flatArray[ $field ][ $index ][ $keyField ] = $value;
 					}
 				}
 				else
 				{
-					$flat_array[ $field ][0][ $key_field ] = $values;
+					$flatArray[ $field ][0][ $keyField ] = $values;
 				}
 			}
 		}
 
-		return $flat_array;
+		return $flatArray;
 	}
 
 	/**
@@ -142,9 +142,9 @@ final class PostRequest implements ServesWriteRequestData
 	 */
 	public function get( $key )
 	{
-		if ( isset($this->post_data[ $key ]) )
+		if ( isset($this->postData[ $key ]) )
 		{
-			return $this->post_data[ $key ];
+			return $this->postData[ $key ];
 		}
 		else
 		{

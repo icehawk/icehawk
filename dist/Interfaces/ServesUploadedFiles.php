@@ -19,17 +19,17 @@ interface ServesUploadedFiles
 	public function getAllFiles();
 
 	/**
-	 * @param string $field_key
+	 * @param string $fieldKey
 	 *
 	 * @return WrapsDataOfUploadedFile[]
 	 */
-	public function getFiles( $field_key );
+	public function getFiles( $fieldKey );
 
 	/**
-	 * @param string $field_key
-	 * @param int    $file_index
+	 * @param string $fieldKey
+	 * @param int    $fileIndex
 	 *
 	 * @return WrapsDataOfUploadedFile|null
 	 */
-	public function getOneFile( $field_key, $file_index );
+	public function getOneFile( $fieldKey, $fileIndex );
 }

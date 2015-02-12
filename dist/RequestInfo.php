@@ -17,14 +17,14 @@ final class RequestInfo implements ServesRequestInfo
 {
 
 	/** @var array */
-	private $server_data = [ ];
+	private $serverData = [ ];
 
 	/**
-	 * @param array $server_data
+	 * @param array $serverData
 	 */
-	public function __construct( array $server_data )
+	public function __construct( array $serverData )
 	{
-		$this->server_data = $server_data;
+		$this->serverData = $serverData;
 	}
 
 	/**
@@ -40,7 +40,7 @@ final class RequestInfo implements ServesRequestInfo
 	 */
 	public function getMethod()
 	{
-		return $this->get( 'REQUEST_METHOD' );
+		return strtoupper( $this->get( 'REQUEST_METHOD' ) );
 	}
 
 	/**
@@ -116,9 +116,9 @@ final class RequestInfo implements ServesRequestInfo
 	 */
 	private function get( $key )
 	{
-		if ( isset($this->server_data[ $key ]) )
+		if ( isset($this->serverData[ $key ]) )
 		{
-			return $this->server_data[ $key ];
+			return $this->serverData[ $key ];
 		}
 		else
 		{

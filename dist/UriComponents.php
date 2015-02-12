@@ -16,45 +16,19 @@ class UriComponents implements ServesUriComponents
 {
 
 	/** @var string */
-	private $api;
-
-	/** @var string */
-	private $api_version;
-
-	/** @var string */
 	private $domain;
 
 	/** @var string */
 	private $demand;
 
 	/**
-	 * @param string $api
-	 * @param string $api_version
 	 * @param string $domain
 	 * @param string $demand
 	 */
-	public function __construct( $api, $api_version, $domain, $demand )
+	public function __construct( $domain, $demand )
 	{
-		$this->api         = $api;
-		$this->api_version = $api_version;
-		$this->domain      = $domain;
+		$this->domain = $domain;
 		$this->demand = $demand;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getApiName()
-	{
-		return $this->api;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getApiVersion()
-	{
-		return $this->api_version;
 	}
 
 	/**

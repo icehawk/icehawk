@@ -5,19 +5,21 @@
 
 namespace Fortuneglobe\IceHawk;
 
+use Fortuneglobe\IceHawk\Builders\RequestBuilder;
 use Fortuneglobe\IceHawk\Interfaces\ServesAppConfiguration;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 
 final class IceHawk
 {
 
 	/** @var ServesAppConfiguration */
-	private $config_delegate;
+	private $configDelegate;
 
 	/** @var SessionRegistry */
-	private $session_registry;
+	private $sessionRegistry;
 
 	/** @var Interfaces\RendersTemplate */
-	private $template_engine;
+	private $templateEngine;
 
 	/**
 	 * @return IceHawk
@@ -35,17 +37,17 @@ final class IceHawk
 	}
 
 	/**
-	 * @param ServesAppConfiguration $config_delegate
+	 * @param ServesAppConfiguration $configDelegate
 	 */
-	public function init( ServesAppConfiguration $config_delegate = null )
+	public function init( ServesAppConfiguration $configDelegate = null )
 	{
-		if ( is_null( $config_delegate ) )
+		if ( is_null( $configDelegate ) )
 		{
-			$this->config_delegate = new IceHawkDelegate();
+			$this->configDelegate = new IceHawkDelegate();
 		}
 		else
 		{
-			$this->config_delegate = $config_delegate;
+			$this->configDelegate = $configDelegate;
 		}
 
 		$this->configure();
@@ -59,12 +61,12 @@ final class IceHawk
 
 	private function configureErrorHandling()
 	{
-		$this->config_delegate->configureErrorHandling();
+		$this->configDelegate->configureErrorHandling();
 	}
 
 	private function configureSession()
 	{
-		$this->config_delegate->configureSession();
+		$this->configDelegate->configureSession();
 	}
 
 	/**
@@ -74,15 +76,15 @@ final class IceHawk
 	{
 		$this->initSessionRegistryIfNeeded();
 
-		return $this->session_registry;
+		return $this->sessionRegistry;
 	}
 
 	private function initSessionRegistryIfNeeded()
 	{
-		if ( is_null( $this->session_registry ) )
+		if ( is_null( $this->sessionRegistry ) )
 		{
 			session_start();
-			$this->session_registry = $this->config_delegate->getSessionRegistry();
+			$this->sessionRegistry = $this->configDelegate->getSessionRegistry();
 		}
 	}
 
@@ -93,14 +95,14 @@ final class IceHawk
 	{
 		$this->initTemplateEngineIfNeeded();
 
-		return $this->template_engine;
+		return $this->templateEngine;
 	}
 
 	private function initTemplateEngineIfNeeded()
 	{
-		if ( is_null( $this->template_engine ) )
+		if ( is_null( $this->templateEngine ) )
 		{
-			$this->template_engine = $this->config_delegate->getTemplateEngine();
+			$this->templateEngine = $this->configDelegate->getTemplateEngine();
 		}
 	}
 
@@ -109,15 +111,16 @@ final class IceHawk
 	 */
 	public function getRequestHandler()
 	{
-		$request_info = RequestInfo::fromEnv();
+		$requestInfo = RequestInfo::fromEnv();
+		$request     = $this->getRequest( $requestInfo );
 
-		$request_handler_delegate = new RequestHandlerDelegate(
+		$requestHandlerDelegate = new RequestHandlerDelegate(
 			$this->getUriRewriter(),
 			$this->getUriResolver(),
 			$this->getProjectNamespace()
 		);
 
-		return new RequestHandler( $request_info, $request_handler_delegate, $_GET, $_POST, $_FILES );
+		return new RequestHandler( $requestInfo, $requestHandlerDelegate, $request );
 	}
 
 	/**
@@ -125,7 +128,7 @@ final class IceHawk
 	 */
 	private function getUriRewriter()
 	{
-		return $this->config_delegate->getUriRewriter();
+		return $this->configDelegate->getUriRewriter();
 	}
 
 	/**
@@ -133,7 +136,7 @@ final class IceHawk
 	 */
 	private function getUriResolver()
 	{
-		return $this->config_delegate->getUriResolver();
+		return $this->configDelegate->getUriResolver();
 	}
 
 	/**
@@ -141,6 +144,19 @@ final class IceHawk
 	 */
 	private function getProjectNamespace()
 	{
-		return $this->config_delegate->getProjectNamespace();
+		return $this->configDelegate->getProjectNamespace();
+	}
+
+	/**
+	 * @param ServesRequestInfo $requestInfo
+	 *
+	 * @throws Exceptions\InvalidRequestMethod
+	 * @return Interfaces\ServesGetRequestData|Interfaces\ServesPostRequestData
+	 */
+	private function getRequest( ServesRequestInfo $requestInfo )
+	{
+		$requestBuilder = new RequestBuilder( $requestInfo );
+
+		return $requestBuilder->buildRequest( $_GET, $_POST, $_FILES );
 	}
 }

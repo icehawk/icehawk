@@ -17,31 +17,31 @@ class Redirect extends BaseResponse
 {
 
 	/** @var string */
-	private $redirect_url;
+	private $redirectUrl;
 
 	/** @var string */
-	private $redirect_code;
+	private $redirectCode;
 
 	/**
-	 * @param string $redirect_url
-	 * @param string $redirect_code
+	 * @param string $redirectUrl
+	 * @param string $redirectCode
 	 */
-	public function __construct( $redirect_url, $redirect_code = Http::MOVED_PERMANENTLY )
+	public function __construct( $redirectUrl, $redirectCode = Http::MOVED_PERMANENTLY )
 	{
-		$this->redirect_url  = $redirect_url;
-		$this->redirect_code = $redirect_code;
+		$this->redirectUrl  = $redirectUrl;
+		$this->redirectCode = $redirectCode;
 	}
 
 	public function respond()
 	{
 		session_write_close();
 
-		if ( !empty($this->redirect_code) )
+		if ( !empty($this->redirectCode) )
 		{
-			header( $this->redirect_code );
+			header( $this->redirectCode );
 		}
 
-		header( 'Location: ' . $this->redirect_url );
+		header( 'Location: ' . $this->redirectUrl );
 		exit();
 	}
 
@@ -52,16 +52,6 @@ class Redirect extends BaseResponse
 	 */
 	public function urlEquals( $string )
 	{
-		return ($string == $this->redirect_url);
-	}
-
-	/**
-	 * @param string $string
-	 *
-	 * @return bool
-	 */
-	public function codeEquals( $string )
-	{
-		return ($string == $this->redirect_code);
+		return ($string == $this->redirectUrl);
 	}
 }

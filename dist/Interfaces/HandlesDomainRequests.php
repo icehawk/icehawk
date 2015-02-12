@@ -6,11 +6,11 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
- * Interface CollectsResponses
+ * Interface HandlesDomainRequests
  *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface CollectsResponses extends ServesResponse
+interface HandlesDomainRequests
 {
-
+	public function handleRequest();
 }

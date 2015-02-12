@@ -14,14 +14,14 @@ class SessionRegistry
 {
 
 	/** @var array */
-	private $session_data;
+	private $sessionData;
 
 	/**
-	 * @param array $session_data
+	 * @param array $sessionData
 	 */
-	public function __construct( array &$session_data )
+	public function __construct( array &$sessionData )
 	{
-		$this->session_data = &$session_data;
+		$this->sessionData = &$sessionData;
 	}
 
 	/**
@@ -30,7 +30,7 @@ class SessionRegistry
 	 */
 	final protected function setSessionValue( $key, $value )
 	{
-		$this->session_data[ $key ] = $value;
+		$this->sessionData[ $key ] = $value;
 	}
 
 	/**
@@ -42,7 +42,7 @@ class SessionRegistry
 	{
 		if ( $this->isSessionKeySet( $key ) )
 		{
-			return $this->session_data[ $key ];
+			return $this->sessionData[ $key ];
 		}
 		else
 		{
@@ -57,7 +57,7 @@ class SessionRegistry
 	 */
 	final protected function isSessionKeySet( $key )
 	{
-		return isset($this->session_data[ $key ]);
+		return isset($this->sessionData[ $key ]);
 	}
 
 	/**
@@ -67,7 +67,7 @@ class SessionRegistry
 	{
 		if ( $this->isSessionKeySet( $key ) )
 		{
-			unset($this->session_data[ $key ]);
+			unset($this->sessionData[ $key ]);
 		}
 	}
 }

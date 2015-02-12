@@ -6,11 +6,11 @@
 namespace Fortuneglobe\IceHawk\Exceptions;
 
 /**
- * Class DomainCommandExecutorNotFound
+ * Class BuildingDomainRequestHandlerFailed
  *
  * @package Fortuneglobe\IceHawk\Exceptions
  */
-final class DomainCommandExecutorNotFound extends IceHawkException
+final class BuildingDomainRequestHandlerFailed extends IceHawkException
 {
 
 }

@@ -20,7 +20,7 @@ final class UploadedFileInfo implements WrapsDataOfUploadedFile
 	private $name;
 
 	/** @var string */
-	private $tmp_name;
+	private $tmpName;
 
 	/** @var int */
 	private $error;
@@ -33,33 +33,33 @@ final class UploadedFileInfo implements WrapsDataOfUploadedFile
 
 	/**
 	 * @param string $name
-	 * @param string $tmp_name
+	 * @param string $tmpName
 	 * @param string $type
 	 * @param int    $size
 	 * @param int    $error
 	 */
-	public function __construct( $name, $tmp_name, $type, $size, $error )
+	public function __construct( $name, $tmpName, $type, $size, $error )
 	{
 		$this->name     = $name;
-		$this->tmp_name = $tmp_name;
+		$this->tmpName = $tmpName;
 		$this->type     = $type;
 		$this->size     = $size;
 		$this->error    = $error;
 	}
 
 	/**
-	 * @param array $file_array
+	 * @param array $fileArray
 	 *
 	 * @return UploadedFileInfo
 	 */
-	public static function fromFileArray( array $file_array )
+	public static function fromFileArray( array $fileArray )
 	{
 		return new self(
-			$file_array['name'],
-			$file_array['tmp_name'],
-			$file_array['type'],
-			$file_array['size'],
-			$file_array['error']
+			$fileArray['name'],
+			$fileArray['tmp_name'],
+			$fileArray['type'],
+			$fileArray['size'],
+			$fileArray['error']
 		);
 	}
 
@@ -92,7 +92,7 @@ final class UploadedFileInfo implements WrapsDataOfUploadedFile
 	 */
 	public function getTmpName()
 	{
-		return $this->tmp_name;
+		return $this->tmpName;
 	}
 
 	/**
@@ -108,7 +108,7 @@ final class UploadedFileInfo implements WrapsDataOfUploadedFile
 	 */
 	public function getRealType()
 	{
-		return ( new \finfo( FILEINFO_MIME_TYPE ) )->file( $this->tmp_name );
+		return ( new \finfo( FILEINFO_MIME_TYPE ) )->file( $this->tmpName );
 	}
 
 	/**
@@ -116,7 +116,7 @@ final class UploadedFileInfo implements WrapsDataOfUploadedFile
 	 */
 	public function getEncoding()
 	{
-		return ( new \finfo( FILEINFO_MIME_ENCODING ) )->file( $this->tmp_name );
+		return ( new \finfo( FILEINFO_MIME_ENCODING ) )->file( $this->tmpName );
 	}
 
 	/**

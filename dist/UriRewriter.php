@@ -17,30 +17,30 @@ use Fortuneglobe\IceHawk\Responses\Redirect;
 class UriRewriter implements RewritesUri
 {
 	/**
-	 * @param ServesRequestInfo $request_info
+	 * @param ServesRequestInfo $requestInfo
 	 *
 	 * @return Redirect
 	 */
-	public function rewrite( ServesRequestInfo $request_info )
+	public function rewrite( ServesRequestInfo $requestInfo )
 	{
-		return $this->rewriteUriBySimpleMap( $request_info, [ ] );
+		return $this->rewriteUriBySimpleMap( $requestInfo, [ ] );
 	}
 
 	/**
-	 * @param string $request_uri
-	 * @param array  $simple_map
+	 * @param string $requestUri
+	 * @param array  $simpleMap
 	 *
 	 * @return Redirect
 	 */
-	protected function rewriteUriBySimpleMap( $request_uri, array $simple_map )
+	protected function rewriteUriBySimpleMap( $requestUri, array $simpleMap )
 	{
-		$redirect = new Redirect( $request_uri );
+		$redirect = new Redirect( $requestUri );
 
-		foreach ( $simple_map as $pattern => list( $redirect_uri, $redirect_code ) )
+		foreach ( $simpleMap as $pattern => list( $redirectUri, $redirectCode ) )
 		{
-			if ( $this->uriMatchesPattern( $request_uri, $pattern ) )
+			if ( $this->uriMatchesPattern( $requestUri, $pattern ) )
 			{
-				$redirect = $this->buildRedirect( $redirect_uri, $redirect_code );
+				$redirect = $this->buildRedirect( $redirectUri, $redirectCode );
 				break;
 			}
 		}
@@ -49,20 +49,20 @@ class UriRewriter implements RewritesUri
 	}
 
 	/**
-	 * @param string $request_uri
+	 * @param string $requestUri
 	 * @param string $pattern
 	 *
 	 * @return bool
 	 */
-	private function uriMatchesPattern( $request_uri, $pattern )
+	private function uriMatchesPattern( $requestUri, $pattern )
 	{
-		if ( $request_uri == $pattern )
+		if ( $requestUri == $pattern )
 		{
 			return true;
 		}
 		elseif ( @preg_match( $pattern, '' ) !== false )
 		{
-			return boolval( preg_match( $pattern, $request_uri ) );
+			return boolval( preg_match( $pattern, $requestUri ) );
 		}
 		else
 		{
@@ -71,20 +71,20 @@ class UriRewriter implements RewritesUri
 	}
 
 	/**
-	 * @param string      $redirect_uri
-	 * @param string|null $redirect_code
+	 * @param string      $redirectUri
+	 * @param string|null $redirectCode
 	 *
 	 * @return Redirect
 	 */
-	private function buildRedirect( $redirect_uri, $redirect_code )
+	private function buildRedirect( $redirectUri, $redirectCode )
 	{
-		if ( is_null( $redirect_code ) )
+		if ( is_null( $redirectCode ) )
 		{
-			return new Redirect( $redirect_uri );
+			return new Redirect( $redirectUri );
 		}
 		else
 		{
-			return new Redirect( $redirect_uri, $redirect_code );
+			return new Redirect( $redirectUri, $redirectCode );
 		}
 	}
 }

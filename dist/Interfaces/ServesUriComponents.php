@@ -10,16 +10,6 @@ interface ServesUriComponents
 	/**
 	 * @return string
 	 */
-	public function getApiName();
-
-	/**
-	 * @return string
-	 */
-	public function getApiVersion();
-
-	/**
-	 * @return string
-	 */
 	public function getDomain();
 
 	/**

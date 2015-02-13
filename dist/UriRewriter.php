@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Constants\Http;
+use Fortuneglobe\IceHawk\Exceptions\MissingRedirectUrlInRewriteMap;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\Responses\Redirect;
@@ -35,13 +35,18 @@ class UriRewriter implements RewritesUri
 	 */
 	protected function rewriteUriBySimpleMap( $requestUri, array $simpleMap )
 	{
-		$redirect = $this->buildRedirect( $requestUri, Http::MOVED_PERMANENTLY );
+		$redirect = $this->buildRedirect( $requestUri, null );
 
-		foreach ( $simpleMap as $pattern => list( $redirectUri, $redirectCode ) )
+		foreach ( $simpleMap as $pattern => $redirectData )
 		{
 			if ( $this->uriMatchesPattern( $requestUri, $pattern ) )
 			{
-				$redirect = $this->buildRedirect( $redirectUri, $redirectCode );
+				$this->guardRedirectUrlIsSetInMap( $redirectData );
+
+				$redirectUrl  = $redirectData[0];
+				$redirectCode = isset($redirectData[1]) ? $redirectData[1] : null;
+
+				$redirect = $this->buildRedirect( $redirectUrl, $redirectCode );
 				break;
 			}
 		}
@@ -50,20 +55,37 @@ class UriRewriter implements RewritesUri
 	}
 
 	/**
-	 * @param string $requestUri
+	 * @param mixed $redirectData
+	 *
+	 * @throws MissingRedirectUrlInRewriteMap
+	 */
+	private function guardRedirectUrlIsSetInMap( $redirectData )
+	{
+		if ( !is_array( $redirectData ) )
+		{
+			throw new MissingRedirectUrlInRewriteMap( 'Redirect data is not an array.' );
+		}
+		elseif ( !isset($redirectData[0]) )
+		{
+			throw new MissingRedirectUrlInRewriteMap();
+		}
+	}
+
+	/**
+	 * @param string $requestUrl
 	 * @param string $pattern
 	 *
 	 * @return bool
 	 */
-	private function uriMatchesPattern( $requestUri, $pattern )
+	private function uriMatchesPattern( $requestUrl, $pattern )
 	{
-		if ( $requestUri == $pattern )
+		if ( $requestUrl == $pattern )
 		{
 			return true;
 		}
 		elseif ( @preg_match( $pattern, '' ) !== false )
 		{
-			return boolval( preg_match( $pattern, $requestUri ) );
+			return boolval( preg_match( $pattern, $requestUrl ) );
 		}
 		else
 		{
@@ -72,20 +94,20 @@ class UriRewriter implements RewritesUri
 	}
 
 	/**
-	 * @param string      $redirectUri
+	 * @param string $redirectUrl
 	 * @param string|null $redirectCode
 	 *
 	 * @return Redirect
 	 */
-	private function buildRedirect( $redirectUri, $redirectCode )
+	private function buildRedirect( $redirectUrl, $redirectCode )
 	{
 		if ( is_null( $redirectCode ) )
 		{
-			return new Redirect( $redirectUri );
+			return new Redirect( $redirectUrl );
 		}
 		else
 		{
-			return new Redirect( $redirectUri, $redirectCode );
+			return new Redirect( $redirectUrl, $redirectCode );
 		}
 	}
 }

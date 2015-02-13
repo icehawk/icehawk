@@ -50,7 +50,7 @@ interface ServesRequestInfo
 	/**
 	 * @return string
 	 */
-	public function acceptsContentTypes();
+	public function getAcceptedContentTypes();
 
 	/**
 	 * @return string

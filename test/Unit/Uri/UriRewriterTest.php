@@ -9,6 +9,8 @@ use Fortuneglobe\IceHawk\Constants\Http;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Responses\Redirect;
+use Fortuneglobe\IceHawk\Test\Unit\Fixures\UriRewriterWithInvalidMap;
+use Fortuneglobe\IceHawk\Test\Unit\Fixures\UriRewriterWithValidMap;
 use Fortuneglobe\IceHawk\UriRewriter;
 
 class UriRewriterTest extends \PHPUnit_Framework_TestCase
@@ -36,6 +38,54 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 			[ 'unit-test' ],
 			[ '/unit-test' ],
 			[ 'unit/test' ],
+		];
+	}
+
+	/**
+	 * @dataProvider validMapUriProvider
+	 */
+	public function testRewriteWithValidMap( $uri, $exprectedRedirectUrl, $expectedRedirectCode )
+	{
+		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => $uri ] );
+
+		$rewriter = new UriRewriterWithValidMap();
+		$redirect = $rewriter->rewrite( $requestInfo );
+
+		$this->assertInstanceOf( ServesResponse::class, $redirect );
+		$this->assertInstanceOf( Redirect::class, $redirect );
+
+		$this->assertTrue( $redirect->urlEquals( $exprectedRedirectUrl ) );
+		$this->assertTrue( $redirect->codeEquals( $expectedRedirectCode ) );
+	}
+
+	public function validMapUriProvider()
+	{
+		return [
+			[ '/non/regex/rewrite', '/non_regex_rewrite', Http::MOVED_PERMANENTLY ],
+			[ '/non/regex/no/code', '/non_regex_no_code', Http::MOVED_PERMANENTLY ],
+			[ '/regex/rewrite', '/regex_rewrite', Http::MOVED_TEMPORARILY ],
+			[ '/regex/rewrite/', '/regex_rewrite', Http::MOVED_TEMPORARILY ],
+			[ '/not/existing/in/map', '/not/existing/in/map', Http::MOVED_PERMANENTLY ],
+		];
+	}
+
+	/**
+	 * @dataProvider invalidMapUriProvider
+	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\MissingRedirectUrlInRewriteMap
+	 */
+	public function testRewriteWithInvalidMap( $uri )
+	{
+		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => $uri ] );
+
+		$rewriter = new UriRewriterWithInvalidMap();
+		$rewriter->rewrite( $requestInfo );
+	}
+
+	public function invalidMapUriProvider()
+	{
+		return [
+			[ '/empty/redirect/data' ],
+			[ '/non/array/redirect/data' ],
 		];
 	}
 }

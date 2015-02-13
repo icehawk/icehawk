@@ -40,7 +40,16 @@ final class RequestInfo implements ServesRequestInfo
 	 */
 	public function getMethod()
 	{
-		return strtoupper( $this->get( 'REQUEST_METHOD' ) );
+		$method = $this->get( 'REQUEST_METHOD' );
+
+		if ( !is_null( $method ) )
+		{
+			return strtoupper( $method );
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -50,7 +59,14 @@ final class RequestInfo implements ServesRequestInfo
 	{
 		$uri = $this->get( 'REQUEST_URI' );
 
-		return preg_replace( [ '#\/+#', '#\?.*$#' ], [ '/', '' ], $uri );
+		if ( !is_null( $uri ) )
+		{
+			return preg_replace( [ '#\/+#', '#\?.*$#' ], [ '/', '' ], $uri );
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -90,13 +106,22 @@ final class RequestInfo implements ServesRequestInfo
 	 */
 	public function getRequestTimeFloat()
 	{
-		return floatval( $this->get( 'REQUEST_TIME_FLOAT' ) );
+		$requestTime = $this->get( 'REQUEST_TIME_FLOAT' );
+
+		if ( !is_null( $requestTime ) )
+		{
+			return floatval( $requestTime );
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
 	 * @return string
 	 */
-	public function acceptsContentTypes()
+	public function getAcceptedContentTypes()
 	{
 		return $this->get( 'HTTP_ACCEPT' );
 	}

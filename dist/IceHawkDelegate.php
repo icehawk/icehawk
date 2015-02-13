@@ -8,18 +8,9 @@ namespace Fortuneglobe\IceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\ServesAppConfiguration;
-use Fortuneglobe\IceHawk\TemplateEngines\Twig;
 
 class IceHawkDelegate implements ServesAppConfiguration
 {
-	/**
-	 * @return Twig
-	 */
-	public function getTemplateEngine()
-	{
-		return new Twig( [ __DIR__ ], '/tmp/twig/cache' );
-	}
-
 	/**
 	 * @return RewritesUri
 	 */

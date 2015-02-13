@@ -26,10 +26,5 @@ interface ServesAppConfiguration
 	 */
 	public function getUriResolver();
 
-	/**
-	 * @return RendersTemplate
-	 */
-	public function getTemplateEngine();
-
 	public function getSessionRegistry();
 }

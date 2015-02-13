@@ -18,9 +18,6 @@ final class IceHawk
 	/** @var SessionRegistry */
 	private $sessionRegistry;
 
-	/** @var Interfaces\RendersTemplate */
-	private $templateEngine;
-
 	/**
 	 * @return IceHawk
 	 */
@@ -85,24 +82,6 @@ final class IceHawk
 		{
 			session_start();
 			$this->sessionRegistry = $this->configDelegate->getSessionRegistry();
-		}
-	}
-
-	/**
-	 * @return Interfaces\RendersTemplate
-	 */
-	public function getTemplateEngine()
-	{
-		$this->initTemplateEngineIfNeeded();
-
-		return $this->templateEngine;
-	}
-
-	private function initTemplateEngineIfNeeded()
-	{
-		if ( is_null( $this->templateEngine ) )
-		{
-			$this->templateEngine = $this->configDelegate->getTemplateEngine();
 		}
 	}
 

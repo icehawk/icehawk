@@ -31,5 +31,10 @@
     "psr-4": {
       "Fortuneglobe\\IceHawk\\": "dist/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Fortuneglobe\\IceHawk\\Test\\Unit\\": "test/Unit/"
+    }
   }
 }

@@ -6,6 +6,7 @@
 namespace Fortuneglobe\IceHawk\Builders;
 
 use Fortuneglobe\IceHawk\Exceptions\BuildingDomainRequestHandlerFailed;
+use Fortuneglobe\IceHawk\Exceptions\MissingInterfaceImplementationForHandlingDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\BuildsDomainRequestHandlers;
 use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
@@ -34,6 +35,7 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	 * @param ServesUriComponents $uriComponents
 	 * @param ServesRequestData   $request
 	 *
+	 * @throws MissingInterfaceImplementationForHandlingDomainRequests
 	 * @throws BuildingDomainRequestHandlerFailed
 	 * @return HandlesDomainRequests
 	 */
@@ -46,11 +48,14 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 
 		if ( class_exists( $className, true ) )
 		{
-			return new $className( $request );
+			$handlerInstance = new $className( $request );
+			$this->guardInstanceImplementsHandlerInterface( $handlerInstance );
+
+			return $handlerInstance;
 		}
 		else
 		{
-			throw new BuildingDomainRequestHandlerFailed();
+			throw new BuildingDomainRequestHandlerFailed( $className );
 		}
 	}
 
@@ -62,8 +67,21 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	private function getStringToCamelCase( $string )
 	{
 		$words = preg_split( "#[^a-z0-9]#i", $string );
-		$words = array_map( 'ucwords', $words );
+		$words = array_map( 'ucfirst', $words );
 
 		return join( '', $words );
+	}
+
+	/**
+	 * @param object $instance
+	 *
+	 * @throws MissingInterfaceImplementationForHandlingDomainRequests
+	 */
+	private function guardInstanceImplementsHandlerInterface( $instance )
+	{
+		if ( !($instance instanceof HandlesDomainRequests) )
+		{
+			throw new MissingInterfaceImplementationForHandlingDomainRequests();
+		}
 	}
 }

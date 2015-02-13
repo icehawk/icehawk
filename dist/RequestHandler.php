@@ -8,6 +8,7 @@ namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Builders\DomainRequestHandlerBuilder;
 use Fortuneglobe\IceHawk\Exceptions\BuildingDomainRequestHandlerFailed;
+use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
 use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
@@ -70,6 +71,10 @@ final class RequestHandler
 		{
 			( new NotFound() )->respond();
 		}
+		catch ( InvalidRequestType $e )
+		{
+			( new BadRequest( [ $e->getMessage() ] ) )->respond();
+		}
 		catch ( \Exception $e )
 		{
 			( new BadRequest( [ $e->getMessage() ] ) )->respond();
@@ -89,6 +94,7 @@ final class RequestHandler
 
 	/**
 	 * @throws BuildingDomainRequestHandlerFailed
+	 * @throws InvalidRequestType
 	 * @return HandlesDomainRequests
 	 */
 	private function getDomainRequestHandler()

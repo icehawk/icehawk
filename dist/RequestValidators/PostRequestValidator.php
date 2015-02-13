@@ -7,7 +7,7 @@
 namespace Fortuneglobe\IceHawk\RequestValidators;
 
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
-use Fortuneglobe\IceHawk\RequestValidator;
+use Fortuneglobe\Validation\FluidValidator;
 
 /**
  * Class PostRequestValidator
@@ -17,11 +17,29 @@ use Fortuneglobe\IceHawk\RequestValidator;
  * @method PostRequestValidator uploadedOneFile($var, $message)
  * @method PostRequestValidator uploadedMultipleFiles($var, $message)
  */
-final class PostRequestValidator extends RequestValidator
+final class PostRequestValidator extends FluidValidator
 {
 
 	/** @var ServesPostRequestData */
 	protected $request;
+
+	/**
+	 * @param ServesPostRequestData $request
+	 */
+	public function __construct( ServesPostRequestData $request )
+	{
+		$this->request = $request;
+	}
+
+	/**
+	 * @param string $var
+	 *
+	 * @return array|mixed|null|string
+	 */
+	protected function getValue( $var )
+	{
+		return $this->request->get( $var );
+	}
 
 	/**
 	 * @param string $var

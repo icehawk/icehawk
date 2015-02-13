@@ -29,6 +29,6 @@ final class NotFound extends BaseResponse
 	public function respond()
 	{
 		header( 'Content-Type: text/plain; charset=' . $this->charset, true, Http::NOT_FOUND );
-		echo "Not found.";
+		echo "Not Found.";
 	}
 }

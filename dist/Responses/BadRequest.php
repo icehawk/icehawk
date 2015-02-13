@@ -18,18 +18,22 @@ class BadRequest extends BaseResponse
 	/** @var array */
 	private $messages;
 
+	/** @var string */
+	private $charset;
+
 	/**
-	 * @param array $messages
+	 * @param array  $messages
+	 * @param string $charset
 	 */
-	public function __construct( array $messages )
+	public function __construct( array $messages, $charset = 'utf-8' )
 	{
 		$this->messages = $messages;
+		$this->charset = $charset;
 	}
 
 	public function respond()
 	{
-		header( Http::BAD_REQUEST );
+		header( 'Content-Type: text/plain; charset=' . $this->charset, true, Http::BAD_REQUEST );
 		echo join( "\n", $this->messages );
-		exit();
 	}
 }

@@ -32,7 +32,7 @@ class JsonData
 
 	public function respond()
 	{
-		header( 'Content-Type: application/json; charset=' . $this->charset );
+		header( 'Content-Type: application/json; charset=' . $this->charset, true );
 		echo json_encode( $this->jsonData );
 	}
 }

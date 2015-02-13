@@ -19,12 +19,12 @@ class Redirect extends BaseResponse
 	/** @var string */
 	private $redirectUrl;
 
-	/** @var string */
+	/** @var int */
 	private $redirectCode;
 
 	/**
 	 * @param string $redirectUrl
-	 * @param string $redirectCode
+	 * @param int    $redirectCode
 	 */
 	public function __construct( $redirectUrl, $redirectCode = Http::MOVED_PERMANENTLY )
 	{
@@ -36,13 +36,7 @@ class Redirect extends BaseResponse
 	{
 		session_write_close();
 
-		if ( !empty($this->redirectCode) )
-		{
-			header( $this->redirectCode );
-		}
-
-		header( 'Location: ' . $this->redirectUrl );
-		exit();
+		header( 'Location: ' . $this->redirectUrl, true, $this->redirectCode ?: Http::MOVED_PERMANENTLY );
 	}
 
 	/**

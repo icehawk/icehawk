@@ -15,10 +15,21 @@ use Fortuneglobe\IceHawk\Constants\Http;
  */
 final class Forbidden extends BaseResponse
 {
+
+	/** @var string */
+	private $charset;
+
+	/**
+	 * @param string $charset
+	 */
+	public function __construct( $charset = 'utf-8' )
+	{
+		$this->charset = $charset;
+	}
+
 	public function respond()
 	{
-		header( Http::FORBIDDEN );
+		header( 'Content-Type: text/plain; charset=' . $this->charset, true, Http::FORBIDDEN );
 		echo "Forbidden!";
-		exit();
 	}
 }

@@ -13,6 +13,11 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 interface ServesRequestHandlerConfig
 {
 	/**
+	 * @return string
+	 */
+	public function getRequestMethod();
+
+	/**
 	 * @return RewritesUri
 	 */
 	public function getUriRewriter();

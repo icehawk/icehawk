@@ -94,6 +94,7 @@ final class IceHawk
 		$request     = $this->getRequest( $requestInfo );
 
 		$requestHandlerDelegate = new RequestHandlerDelegate(
+			$requestInfo->getMethod(),
 			$this->getUriRewriter(),
 			$this->getUriResolver(),
 			$this->getProjectNamespace()

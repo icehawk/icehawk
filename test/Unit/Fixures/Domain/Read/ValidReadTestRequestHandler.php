@@ -3,16 +3,16 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Test\Unit\Fixures\Domain;
+namespace Fortuneglobe\IceHawk\Test\Unit\Fixures\Domain\Read;
 
 use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
 
 /**
- * Class ValidTestRequestHandler
+ * Class ValidReadTestRequestHandler
  *
  * @package Fortuneglobe\IceHawk\Test\Unit\Fixures\Domain
  */
-class ValidTestRequestHandler implements HandlesDomainRequests
+class ValidReadTestRequestHandler implements HandlesDomainRequests
 {
 	public function handleRequest()
 	{

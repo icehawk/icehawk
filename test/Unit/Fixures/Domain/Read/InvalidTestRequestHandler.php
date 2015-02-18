@@ -3,7 +3,7 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Test\Unit\Fixures\Domain;
+namespace Fortuneglobe\IceHawk\Test\Unit\Fixures\Domain\Read;
 
 /**
  * Class InvalidTestRequestHandler

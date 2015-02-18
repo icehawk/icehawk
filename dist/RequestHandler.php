@@ -89,6 +89,7 @@ final class RequestHandler
 		if ( !$redirect->urlEquals( $this->requestInfo->getUri() ) )
 		{
 			$redirect->respond();
+			exit();
 		}
 	}
 
@@ -100,7 +101,10 @@ final class RequestHandler
 	private function getDomainRequestHandler()
 	{
 		$uriComponents               = $this->getUriComponents();
-		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder( $this->configDelegate->getProjectNamespace() );
+		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
+			$this->configDelegate->getProjectNamespace(),
+			$this->configDelegate->getRequestMethod()
+		);
 
 		return $domainRequestHandlerBuilder->buildDomainRequestHandler( $uriComponents, $this->request );
 	}

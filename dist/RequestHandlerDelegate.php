@@ -17,6 +17,9 @@ use Fortuneglobe\IceHawk\Interfaces\ServesRequestHandlerConfig;
 final class RequestHandlerDelegate implements ServesRequestHandlerConfig
 {
 
+	/** @var string */
+	private $requestMethod;
+
 	/** @var RewritesUri */
 	private $uriRewriter;
 
@@ -27,15 +30,25 @@ final class RequestHandlerDelegate implements ServesRequestHandlerConfig
 	private $projectNamespace;
 
 	/**
+	 * @param string $requestMethod
 	 * @param RewritesUri $uriRewriter
 	 * @param ResolvesUri $uriResolver
 	 * @param string      $projectNamespace
 	 */
-	public function __construct( RewritesUri $uriRewriter, ResolvesUri $uriResolver, $projectNamespace )
+	public function __construct( $requestMethod, RewritesUri $uriRewriter, ResolvesUri $uriResolver, $projectNamespace )
 	{
+		$this->requestMethod = $requestMethod;
 		$this->uriRewriter      = $uriRewriter;
 		$this->uriResolver      = $uriResolver;
 		$this->projectNamespace = $projectNamespace;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRequestMethod()
+	{
+		return $this->requestMethod;
 	}
 
 	/**

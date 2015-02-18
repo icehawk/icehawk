@@ -5,6 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Builders;
 
+use Fortuneglobe\IceHawk\Constants\Http;
 use Fortuneglobe\IceHawk\Exceptions\BuildingDomainRequestHandlerFailed;
 use Fortuneglobe\IceHawk\Exceptions\MissingInterfaceImplementationForHandlingDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\BuildsDomainRequestHandlers;
@@ -23,12 +24,17 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	/** @var string */
 	private $projectNamespace;
 
+	/** @var string */
+	private $requestMethod;
+
 	/**
 	 * @param string $projectNamespace
+	 * @param string $requestMethod
 	 */
-	public function __construct( $projectNamespace )
+	public function __construct( $projectNamespace, $requestMethod )
 	{
 		$this->projectNamespace = $projectNamespace;
+		$this->requestMethod = $requestMethod;
 	}
 
 	/**
@@ -41,10 +47,17 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	 */
 	public function buildDomainRequestHandler( ServesUriComponents $uriComponents, ServesRequestData $request )
 	{
-		$domainName = $this->getStringToCamelCase( $uriComponents->getDomain() );
-		$demandName = $this->getStringToCamelCase( $uriComponents->getDemand() );
+		$domainName              = $this->getStringToCamelCase( $uriComponents->getDomain() );
+		$demandName              = $this->getStringToCamelCase( $uriComponents->getDemand() );
+		$subnamespaceReadOrWrite = $this->getSubnamespaceReadOrWrite();
 
-		$className = sprintf( "%s\\%s\\%sRequestHandler", $this->projectNamespace, $domainName, $demandName );
+		$className = sprintf(
+			"%s\\%s\\%s\\%sRequestHandler",
+			$this->projectNamespace,
+			$domainName,
+			$subnamespaceReadOrWrite,
+			$demandName
+		);
 
 		if ( class_exists( $className, true ) )
 		{
@@ -70,6 +83,21 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 		$words = array_map( 'ucfirst', $words );
 
 		return join( '', $words );
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getSubnamespaceReadOrWrite()
+	{
+		if ( $this->requestMethod == Http::METHOD_POST )
+		{
+			return 'Write';
+		}
+		else
+		{
+			return 'Read';
+		}
 	}
 
 	/**

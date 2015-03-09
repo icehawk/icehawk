@@ -5,9 +5,7 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Builders\RequestBuilder;
 use Fortuneglobe\IceHawk\Interfaces\ServesAppConfiguration;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 
 final class IceHawk
 {
@@ -91,7 +89,6 @@ final class IceHawk
 	public function getRequestHandler()
 	{
 		$requestInfo = RequestInfo::fromEnv();
-		$request     = $this->getRequest( $requestInfo );
 
 		$requestHandlerDelegate = new RequestHandlerDelegate(
 			$requestInfo->getMethod(),
@@ -100,7 +97,7 @@ final class IceHawk
 			$this->getProjectNamespace()
 		);
 
-		return new RequestHandler( $requestInfo, $requestHandlerDelegate, $request );
+		return new RequestHandler( $requestInfo, $requestHandlerDelegate );
 	}
 
 	/**
@@ -125,18 +122,5 @@ final class IceHawk
 	private function getProjectNamespace()
 	{
 		return $this->configDelegate->getProjectNamespace();
-	}
-
-	/**
-	 * @param ServesRequestInfo $requestInfo
-	 *
-	 * @throws Exceptions\InvalidRequestMethod
-	 * @return Interfaces\ServesGetRequestData|Interfaces\ServesPostRequestData
-	 */
-	private function getRequest( ServesRequestInfo $requestInfo )
-	{
-		$requestBuilder = new RequestBuilder( $requestInfo );
-
-		return $requestBuilder->buildRequest( $_GET, $_POST, $_FILES );
 	}
 }

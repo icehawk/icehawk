@@ -11,6 +11,7 @@ use Fortuneglobe\IceHawk\Interfaces\BuildsRequests;
 use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
 
@@ -25,12 +26,17 @@ final class RequestBuilder implements BuildsRequests
 	/** @var ServesRequestInfo */
 	private $requestInfo;
 
+	/** @var ServesUriComponents */
+	private $uriComponents;
+
 	/**
-	 * @param ServesRequestInfo $requestInfo
+	 * @param ServesRequestInfo   $requestInfo
+	 * @param ServesUriComponents $uriComponents
 	 */
-	public function __construct( ServesRequestInfo $requestInfo )
+	public function __construct( ServesRequestInfo $requestInfo, ServesUriComponents $uriComponents )
 	{
-		$this->requestInfo = $requestInfo;
+		$this->requestInfo   = $requestInfo;
+		$this->uriComponents = $uriComponents;
 	}
 
 	/**
@@ -45,15 +51,25 @@ final class RequestBuilder implements BuildsRequests
 	{
 		if ( $this->requestInfo->getMethod() == Http::METHOD_POST )
 		{
-			return new PostRequest( $postData, $uploadedFiles );
+			return new PostRequest( $this->getMergedData( $postData ), $uploadedFiles );
 		}
 		elseif ( $this->requestInfo->getMethod() == Http::METHOD_GET )
 		{
-			return new GetRequest( $getData );
+			return new GetRequest( $this->getMergedData( $getData ) );
 		}
 		else
 		{
 			throw new InvalidRequestMethod( $this->requestInfo->getMethod() );
 		}
+	}
+
+	/**
+	 * @param array $requestData
+	 *
+	 * @return array
+	 */
+	private function getMergedData( array $requestData )
+	{
+		return array_merge( $requestData, $this->uriComponents->getParams() );
 	}
 }

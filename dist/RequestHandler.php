@@ -7,11 +7,11 @@
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Builders\DomainRequestHandlerBuilder;
+use Fortuneglobe\IceHawk\Builders\RequestBuilder;
 use Fortuneglobe\IceHawk\Exceptions\BuildingDomainRequestHandlerFailed;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
 use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestHandlerConfig;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
@@ -32,25 +32,19 @@ final class RequestHandler
 	/** @var ServesRequestHandlerConfig */
 	private $configDelegate;
 
-	/** @var ServesRequestData */
-	private $request;
-
 	/**
 	 * @param ServesRequestInfo          $requestInfo
 	 * @param ServesRequestHandlerConfig $configDelegate
-	 * @param ServesRequestData          $request
 	 *
 	 * @throws MalformedRequestUri
 	 */
 	public function __construct(
 		ServesRequestInfo $requestInfo,
-		ServesRequestHandlerConfig $configDelegate,
-		ServesRequestData $request
+		ServesRequestHandlerConfig $configDelegate
 	)
 	{
 		$this->requestInfo    = $requestInfo;
 		$this->configDelegate = $configDelegate;
-		$this->request        = $request;
 	}
 
 	public function handle()
@@ -106,7 +100,9 @@ final class RequestHandler
 			$this->configDelegate->getRequestMethod()
 		);
 
-		return $domainRequestHandlerBuilder->buildDomainRequestHandler( $uriComponents, $this->request );
+		$request = $this->getRequest( $this->requestInfo, $uriComponents );
+
+		return $domainRequestHandlerBuilder->buildDomainRequestHandler( $uriComponents, $request );
 	}
 
 	/**
@@ -118,5 +114,19 @@ final class RequestHandler
 		$uriResolver = $this->configDelegate->getUriResolver();
 
 		return $uriResolver->resolveUri( $this->requestInfo );
+	}
+
+	/**
+	 * @param ServesRequestInfo   $requestInfo
+	 * @param ServesUriComponents $uriComponents
+	 *
+	 * @throws Exceptions\InvalidRequestMethod
+	 * @return Interfaces\ServesGetRequestData|Interfaces\ServesPostRequestData
+	 */
+	private function getRequest( ServesRequestInfo $requestInfo, ServesUriComponents $uriComponents )
+	{
+		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
+
+		return $requestBuilder->buildRequest( $_GET, $_POST, $_FILES );
 	}
 }

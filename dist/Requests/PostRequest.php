@@ -56,11 +56,11 @@ final class PostRequest implements ServesPostRequestData
 	 */
 	public function getFiles( $fieldKey )
 	{
-		$all_files = $this->getAllFiles();
+		$allFiles = $this->getAllFiles();
 
-		if ( isset($all_files[ $fieldKey ]) )
+		if ( isset($allFiles[ $fieldKey ]) )
 		{
-			return $all_files[ $fieldKey ];
+			return $allFiles[ $fieldKey ];
 		}
 		else
 		{

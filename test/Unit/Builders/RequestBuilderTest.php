@@ -12,6 +12,7 @@ use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFiles;
 use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
+use Fortuneglobe\IceHawk\UriComponents;
 
 class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +23,8 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildingRequestWithInvalidRequestMethodThrowsException( $requestMethod )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$requestBuilder = new RequestBuilder( $requestInfo );
+		$uriComponents = new UriComponents( 'Unit', 'Test', [ ] );
+		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
 		$requestBuilder->buildRequest( [ ], [ ], [ ] );
 	}
@@ -46,7 +48,8 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildsRequestInstanceWithValidRequestMethod( $requestMethod, $excpectedClassName )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$requestBuilder = new RequestBuilder( $requestInfo );
+		$uriComponents = new UriComponents( 'Unit', 'Test', [ ] );
+		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
 		$request = $requestBuilder->buildRequest( [ ], [ ], [ ] );
 
@@ -61,6 +64,64 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 			[ 'POST', PostRequest::class ],
 			[ 'POST', ServesPostRequestData::class ],
 			[ 'POST', ServesUploadedFiles::class ],
+		];
+	}
+
+	/**
+	 * @dataProvider uriComponentsParamsProvider
+	 */
+	public function testRequestHasParamsFromUriComponents( $requestMethod, array $params )
+	{
+		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
+		$uriComponents  = new UriComponents( 'Unit', 'Test', $params );
+		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
+
+		$request = $requestBuilder->buildRequest( [ ], [ ], [ ] );
+
+		$this->assertSame( $params, $request->getData() );
+	}
+
+	public function uriComponentsParamsProvider()
+	{
+		return [
+			[ 'GET', [ 'unit' => 'test', 'test' => 'unit' ] ],
+			[ 'POST', [ 'unit' => 'test', 'test' => 'unit' ] ],
+		];
+	}
+
+	/**
+	 * @dataProvider uriComponentsParamsOverrideProvider
+	 */
+	public function testUriComponentsParamsOverrideRequestParams(
+		$requestMethod, array $getData, array $postData, array $params, array $expectedData
+	)
+	{
+		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
+		$uriComponents  = new UriComponents( 'Unit', 'Test', $params );
+		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
+
+		$request = $requestBuilder->buildRequest( $getData, $postData, [ ] );
+
+		$this->assertSame( $expectedData, $request->getData() );
+	}
+
+	public function uriComponentsParamsOverrideProvider()
+	{
+		return [
+			[
+				'GET',
+				[ 'unit' => 'unit', 'blubb' => 'bla' ],
+				[ ],
+				[ 'unit' => 'test', 'test' => 'unit' ],
+				[ 'unit' => 'test', 'blubb' => 'bla', 'test' => 'unit' ]
+			],
+			[
+				'POST',
+				[ ],
+				[ 'unit' => 'unit', 'blubb' => 'bla' ],
+				[ 'unit' => 'test', 'test' => 'unit' ],
+				[ 'unit' => 'test', 'blubb' => 'bla', 'test' => 'unit' ]
+			],
 		];
 	}
 }

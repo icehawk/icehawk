@@ -16,4 +16,9 @@ interface ServesUriComponents
 	 * @return string
 	 */
 	public function getDemand();
+
+	/**
+	 * @return array
+	 */
+	public function getParams();
 }

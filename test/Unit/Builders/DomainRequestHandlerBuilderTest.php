@@ -24,7 +24,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixures',
 			Http::METHOD_GET
 		);
-		$uriComponents               = new UriComponents( 'not', 'existing' );
+		$uriComponents = new UriComponents( 'not', 'existing', [ ] );
 		$request                     = new GetRequest( [ ] );
 
 		$domainRequestHandlerBuilder->buildDomainRequestHandler( $uriComponents, $request );
@@ -39,7 +39,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixures',
 			Http::METHOD_GET
 		);
-		$uriComponents               = new UriComponents( 'domain', 'invalid-test' );
+		$uriComponents = new UriComponents( 'domain', 'invalid-test', [ ] );
 		$request                     = new GetRequest( [ ] );
 
 		$domainRequestHandlerBuilder->buildDomainRequestHandler( $uriComponents, $request );
@@ -51,7 +51,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixures',
 			Http::METHOD_GET
 		);
-		$uriComponents               = new UriComponents( 'domain', 'valid-read-test' );
+		$uriComponents = new UriComponents( 'domain', 'valid-read-test', [ ] );
 		$request                     = new GetRequest( [ ] );
 
 		$handler = $domainRequestHandlerBuilder->buildDomainRequestHandler( $uriComponents, $request );
@@ -65,7 +65,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixures',
 			Http::METHOD_POST
 		);
-		$uriComponents               = new UriComponents( 'domain', 'valid-write-test' );
+		$uriComponents = new UriComponents( 'domain', 'valid-write-test', [ ] );
 		$request                     = new PostRequest( [ ], [ ] );
 
 		$handler = $domainRequestHandlerBuilder->buildDomainRequestHandler( $uriComponents, $request );

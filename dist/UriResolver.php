@@ -34,7 +34,7 @@ class UriResolver implements ResolvesUri
 			$domain = strtolower( $matches[1] );
 			$demand = strtolower( $matches[2] );
 
-			return new UriComponents( $domain, $demand );
+			return new UriComponents( $domain, $demand, [ ] );
 		}
 		else
 		{

@@ -22,7 +22,7 @@
   "require": {
     "php-64bit": ">=5.5",
     "twig/twig": "@stable",
-    "fortuneglobe/validation": "dev-development"
+    "fortuneglobe/validation": "~1.0.0"
   },
   "require-dev": {
     "hollodotme/treemdown": "~1.0"

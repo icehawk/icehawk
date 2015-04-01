@@ -46,6 +46,8 @@ final class Twig implements RendersTemplate
 				'autoescape' => true,
 			]
 		);
+
+		$this->renderer->addExtension( new \Twig_Extension_Debug() );
 	}
 
 	/**

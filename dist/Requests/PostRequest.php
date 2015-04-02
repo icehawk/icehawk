@@ -2,7 +2,7 @@
 /**
  * POST request wrapper
  *
- * @author hollodotme
+ * @author h.woltersdorf
  */
 
 namespace Fortuneglobe\IceHawk\Requests;

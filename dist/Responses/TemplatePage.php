@@ -1,12 +1,17 @@
 <?php
 /**
- * @author hollodotme
+ * @author h.woltersdorf
  */
 
 namespace Fortuneglobe\IceHawk\Responses;
 
 use Fortuneglobe\IceHawk\Interfaces\RendersTemplate;
 
+/**
+ * Class TemplatePage
+ *
+ * @package Fortuneglobe\IceHawk\Responses
+ */
 class TemplatePage extends BaseResponse
 {
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author hollodotme
+ * @author h.woltersdorf
  */
 
 namespace Fortuneglobe\IceHawk\Responses;

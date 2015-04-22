@@ -13,6 +13,11 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 interface ServesRequestInfo
 {
 	/**
+	 * @return bool
+	 */
+	public function isSecure();
+
+	/**
 	 * @return string
 	 */
 	public function getMethod();

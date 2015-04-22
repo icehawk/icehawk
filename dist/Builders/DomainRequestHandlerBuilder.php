@@ -27,35 +27,39 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	/** @var string */
 	private $requestMethod;
 
+	/** @var ServesUriComponents */
+	private $uriComponents;
+
 	/**
-	 * @param string $projectNamespace
-	 * @param string $requestMethod
+	 * @param string              $projectNamespace
+	 * @param string              $requestMethod
+	 * @param ServesUriComponents $uriComponents
 	 */
-	public function __construct( $projectNamespace, $requestMethod )
+	public function __construct( $projectNamespace, $requestMethod, ServesUriComponents $uriComponents )
 	{
 		$this->projectNamespace = $projectNamespace;
 		$this->requestMethod = $requestMethod;
+		$this->uriComponents = $uriComponents;
 	}
 
 	/**
-	 * @param ServesUriComponents $uriComponents
 	 * @param ServesRequestData   $request
 	 *
 	 * @throws MissingInterfaceImplementationForHandlingDomainRequests
 	 * @throws BuildingDomainRequestHandlerFailed
 	 * @return HandlesDomainRequests
 	 */
-	public function buildDomainRequestHandler( ServesUriComponents $uriComponents, ServesRequestData $request )
+	public function buildDomainRequestHandler( ServesRequestData $request )
 	{
-		$domainName              = $this->getStringToCamelCase( $uriComponents->getDomain() );
-		$demandName              = $this->getStringToCamelCase( $uriComponents->getDemand() );
-		$subnamespaceReadOrWrite = $this->getSubnamespaceReadOrWrite();
+		$domainName              = $this->getStringToCamelCase( $this->uriComponents->getDomain() );
+		$demandName              = $this->getStringToCamelCase( $this->uriComponents->getDemand() );
+		$subNamespaceReadOrWrite = $this->getSubNamespaceReadOrWrite();
 
 		$className = sprintf(
 			"%s\\%s\\%s\\%sRequestHandler",
 			$this->projectNamespace,
 			$domainName,
-			$subnamespaceReadOrWrite,
+			$subNamespaceReadOrWrite,
 			$demandName
 		);
 
@@ -88,7 +92,7 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	/**
 	 * @return string
 	 */
-	private function getSubnamespaceReadOrWrite()
+	private function getSubNamespaceReadOrWrite()
 	{
 		if ( $this->requestMethod == Http::METHOD_POST )
 		{

@@ -6,16 +6,16 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
- * Interface ServesRequestHandlerConfig
+ * Interface ServesIceHawkConfig
  *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface ServesRequestHandlerConfig
+interface ServesIceHawkConfig
 {
 	/**
 	 * @return string
 	 */
-	public function getRequestMethod();
+	public function getProjectNamespace();
 
 	/**
 	 * @return RewritesUri
@@ -28,7 +28,12 @@ interface ServesRequestHandlerConfig
 	public function getUriResolver();
 
 	/**
-	 * @return string
+	 * @return array|ListensToIceHawkEvents[]
 	 */
-	public function getProjectNamespace();
+	public function getEventListeners();
+
+	/**
+	 * @return ServesRequestInfo
+	 */
+	public function getRequestInfo();
 }

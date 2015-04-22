@@ -8,10 +8,9 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 interface BuildsDomainRequestHandlers
 {
 	/**
-	 * @param ServesUriComponents $uriComponents
-	 * @param ServesRequestData   $request
+	 * @param ServesRequestData $request
 	 *
 	 * @return HandlesDomainRequests
 	 */
-	public function buildDomainRequestHandler( ServesUriComponents $uriComponents, ServesRequestData $request );
+	public function buildDomainRequestHandler( ServesRequestData $request );
 }

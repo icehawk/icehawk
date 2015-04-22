@@ -7,16 +7,13 @@
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Builders\DomainRequestHandlerBuilder;
-use Fortuneglobe\IceHawk\Builders\RequestBuilder;
 use Fortuneglobe\IceHawk\Exceptions\BuildingDomainRequestHandlerFailed;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
 use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestHandlerConfig;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
-use Fortuneglobe\IceHawk\Responses\BadRequest;
-use Fortuneglobe\IceHawk\Responses\NotFound;
 
 /**
  * Class RequestHandler
@@ -29,104 +26,55 @@ final class RequestHandler
 	/** @var ServesRequestInfo */
 	private $requestInfo;
 
-	/** @var ServesRequestHandlerConfig */
-	private $configDelegate;
+	/** @var ServesUriComponents */
+	private $uriComponents;
+
+	/** @var string */
+	private $projectNamespace;
 
 	/**
-	 * @param ServesRequestInfo          $requestInfo
-	 * @param ServesRequestHandlerConfig $configDelegate
+	 * @param ServesRequestInfo   $requestInfo
+	 * @param ServesUriComponents $uriComponents
+	 * @param string              $projectNamespace
 	 *
 	 * @throws MalformedRequestUri
 	 */
 	public function __construct(
 		ServesRequestInfo $requestInfo,
-		ServesRequestHandlerConfig $configDelegate
+		ServesUriComponents $uriComponents,
+		$projectNamespace
 	)
 	{
-		$this->requestInfo    = $requestInfo;
-		$this->configDelegate = $configDelegate;
-	}
-
-	public function handle()
-	{
-		try
-		{
-			$this->redirectIfNeeded();
-
-			$domainRequestHandler = $this->getDomainRequestHandler();
-
-			$domainRequestHandler->handleRequest();
-		}
-		catch ( MalformedRequestUri $e )
-		{
-			( new NotFound() )->respond();
-		}
-		catch ( BuildingDomainRequestHandlerFailed $e )
-		{
-			( new NotFound() )->respond();
-		}
-		catch ( InvalidRequestType $e )
-		{
-			( new BadRequest( [ $e->getMessage() ] ) )->respond();
-		}
-		catch ( \Exception $e )
-		{
-			( new BadRequest( [ $e->getMessage() ] ) )->respond();
-		}
-	}
-
-	private function redirectIfNeeded()
-	{
-		$uriRewriter = $this->configDelegate->getUriRewriter();
-		$redirect    = $uriRewriter->rewrite( $this->requestInfo );
-
-		if ( !$redirect->urlEquals( $this->requestInfo->getUri() ) )
-		{
-			$redirect->respond();
-			exit();
-		}
+		$this->requestInfo      = $requestInfo;
+		$this->uriComponents    = $uriComponents;
+		$this->projectNamespace = $projectNamespace;
 	}
 
 	/**
+	 * @param ServesRequestData $request
+	 */
+	public function handle( ServesRequestData $request )
+	{
+		$domainRequestHandler = $this->buildDomainRequestHandler( $request );
+
+		$domainRequestHandler->handleRequest();
+	}
+
+	/**
+	 * @param ServesRequestData $request
+	 *
 	 * @throws BuildingDomainRequestHandlerFailed
 	 * @throws InvalidRequestType
 	 * @return HandlesDomainRequests
 	 */
-	private function getDomainRequestHandler()
+	private function buildDomainRequestHandler( ServesRequestData $request )
 	{
-		$uriComponents               = $this->getUriComponents();
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
-			$this->configDelegate->getProjectNamespace(),
-			$this->configDelegate->getRequestMethod()
+			$this->projectNamespace,
+			$this->requestInfo->getMethod(),
+			$this->uriComponents
 		);
 
-		$request = $this->getRequest( $this->requestInfo, $uriComponents );
-
-		return $domainRequestHandlerBuilder->buildDomainRequestHandler( $uriComponents, $request );
-	}
-
-	/**
-	 * @throws MalformedRequestUri
-	 * @return ServesUriComponents
-	 */
-	private function getUriComponents()
-	{
-		$uriResolver = $this->configDelegate->getUriResolver();
-
-		return $uriResolver->resolveUri( $this->requestInfo );
-	}
-
-	/**
-	 * @param ServesRequestInfo   $requestInfo
-	 * @param ServesUriComponents $uriComponents
-	 *
-	 * @throws Exceptions\InvalidRequestMethod
-	 * @return Interfaces\ServesGetRequestData|Interfaces\ServesPostRequestData
-	 */
-	private function getRequest( ServesRequestInfo $requestInfo, ServesUriComponents $uriComponents )
-	{
-		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
-
-		return $requestBuilder->buildRequest( $_GET, $_POST, $_FILES );
+		return $domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
 	}
 }

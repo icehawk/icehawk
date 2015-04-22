@@ -1,40 +1,20 @@
 <?php
 /**
+ *
  * @author h.woltersdorf
  */
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
-use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
-use Fortuneglobe\IceHawk\Interfaces\ServesAppConfiguration;
+use Fortuneglobe\IceHawk\Interfaces\HandlesIceHawkTasks;
 
-class IceHawkDelegate implements ServesAppConfiguration
+/**
+ * Class IceHawkDelegate
+ *
+ * @package Fortuneglobe\IceHawk
+ */
+class IceHawkDelegate implements HandlesIceHawkTasks
 {
-	/**
-	 * @return RewritesUri
-	 */
-	public function getUriRewriter()
-	{
-		return new UriRewriter();
-	}
-
-	/**
-	 * @return ResolvesUri
-	 */
-	public function getUriResolver()
-	{
-		return new UriResolver();
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getProjectNamespace()
-	{
-		return __NAMESPACE__;
-	}
-
 	public function configureSession()
 	{
 		ini_set( 'session.name', 'ihsid' );
@@ -51,10 +31,12 @@ class IceHawkDelegate implements ServesAppConfiguration
 	}
 
 	/**
-	 * @return SessionRegistry
+	 * @param \Exception $exception
+	 *
+	 * @throws \Exception
 	 */
-	public function getSessionRegistry()
+	public function handleUncaughtException( \Exception $exception )
 	{
-		return new SessionRegistry( $_SESSION );
+		throw $exception;
 	}
 }

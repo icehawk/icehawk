@@ -36,6 +36,14 @@ final class RequestInfo implements ServesRequestInfo
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isSecure()
+	{
+		return ($this->get( 'HTTPS' ) == 'on');
+	}
+
+	/**
 	 * @return string|null
 	 */
 	public function getMethod()

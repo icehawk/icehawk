@@ -5,122 +5,140 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesAppConfiguration;
+use Fortuneglobe\IceHawk\Builders\RequestBuilder;
+use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
+use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
+use Fortuneglobe\IceHawk\Events\RequestWasHandledEvent;
+use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
+use Fortuneglobe\IceHawk\Interfaces\HandlesIceHawkTasks;
+use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
+use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkEventData;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 
 final class IceHawk
 {
 
-	/** @var ServesAppConfiguration */
-	private $configDelegate;
+	/** @var ServesIceHawkConfig */
+	private $config;
 
-	/** @var SessionRegistry */
-	private $sessionRegistry;
+	/** @var HandlesIceHawkTasks */
+	private $delegate;
 
 	/**
-	 * @return IceHawk
+	 * @param ServesIceHawkConfig $config
+	 * @param HandlesIceHawkTasks $delegate
 	 */
-	public static function fromSky()
+	public function __construct( ServesIceHawkConfig $config, HandlesIceHawkTasks $delegate )
 	{
-		static $instance = null;
+		$this->config   = $config;
+		$this->delegate = $delegate;
+	}
 
-		if ( is_null( $instance ) )
-		{
-			$instance = new self();
-		}
+	public function init()
+	{
+		$this->delegate->configureErrorHandling();
+		$this->delegate->configureSession();
 
-		return $instance;
+		$initializedEvent = new IceHawkWasInitializedEvent();
+		$this->publishEvent( $initializedEvent );
 	}
 
 	/**
-	 * @param ServesAppConfiguration $configDelegate
+	 * @param ServesIceHawkEventData $event
 	 */
-	public function init( ServesAppConfiguration $configDelegate = null )
+	private function publishEvent( ServesIceHawkEventData $event )
 	{
-		if ( is_null( $configDelegate ) )
+		foreach ( $this->config->getEventListeners() as $listener )
 		{
-			$this->configDelegate = new IceHawkDelegate();
+			if ( $listener->acceptsEvent( $event ) )
+			{
+				$listener->notify( $event );
+			}
+		}
+	}
+
+	public function handleRequest()
+	{
+		try
+		{
+			$this->redirectOrHandleRequest();
+		}
+		catch ( \Exception $uncaughtException )
+		{
+			$this->delegate->handleUncaughtException( $uncaughtException );
+		}
+	}
+
+	/**
+	 * @throws \Exception
+	 */
+	private function redirectOrHandleRequest()
+	{
+		$requestInfo = $this->config->getRequestInfo();
+
+		$uriRewriter = $this->config->getUriRewriter();
+		$redirect    = $uriRewriter->rewrite( $requestInfo );
+
+		if ( $redirect->urlEquals( $requestInfo->getUri() ) )
+		{
+			$uriComponents = $this->getUriComponents( $requestInfo );
+			$request       = $this->getRequest( $requestInfo, $uriComponents );
+
+			$handlingRequestEvent = new HandlingRequestEvent( $requestInfo, $request );
+			$this->publishEvent( $handlingRequestEvent );
+
+			$requestHandler = $this->getRequestHandler( $requestInfo, $uriComponents );
+			$requestHandler->handle( $request );
+
+			$requestWasHandledEvent = new RequestWasHandledEvent( $requestInfo, $request );
+			$this->publishEvent( $requestWasHandledEvent );
 		}
 		else
 		{
-			$this->configDelegate = $configDelegate;
+			$redirect->respond();
 		}
-
-		$this->configure();
-	}
-
-	private function configure()
-	{
-		$this->configureErrorHandling();
-		$this->configureSession();
-	}
-
-	private function configureErrorHandling()
-	{
-		$this->configDelegate->configureErrorHandling();
-	}
-
-	private function configureSession()
-	{
-		$this->configDelegate->configureSession();
 	}
 
 	/**
-	 * @return SessionRegistry
+	 * @param ServesRequestInfo $requestInfo
+	 *
+	 * @throws MalformedRequestUri
+	 * @return ServesUriComponents
 	 */
-	public function getSessionRegistry()
+	private function getUriComponents( ServesRequestInfo $requestInfo )
 	{
-		$this->initSessionRegistryIfNeeded();
+		$uriResolver = $this->config->getUriResolver();
 
-		return $this->sessionRegistry;
-	}
-
-	private function initSessionRegistryIfNeeded()
-	{
-		if ( is_null( $this->sessionRegistry ) )
-		{
-			session_start();
-			$this->sessionRegistry = $this->configDelegate->getSessionRegistry();
-		}
+		return $uriResolver->resolveUri( $requestInfo );
 	}
 
 	/**
+	 * @param ServesRequestInfo   $requestInfo
+	 * @param ServesUriComponents $uriComponents
+	 *
+	 * @throws Exceptions\InvalidRequestMethod
+	 * @return Interfaces\ServesGetRequestData|Interfaces\ServesPostRequestData
+	 */
+	private function getRequest( ServesRequestInfo $requestInfo, ServesUriComponents $uriComponents )
+	{
+		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
+
+		return $requestBuilder->buildRequest( $_GET, $_POST, $_FILES );
+	}
+
+	/**
+	 * @param ServesRequestInfo   $requestInfo
+	 * @param ServesUriComponents $uriComponents
+	 *
 	 * @return RequestHandler
 	 */
-	public function getRequestHandler()
+	private function getRequestHandler( ServesRequestInfo $requestInfo, ServesUriComponents $uriComponents )
 	{
-		$requestInfo = RequestInfo::fromEnv();
-
-		$requestHandlerDelegate = new RequestHandlerDelegate(
-			$requestInfo->getMethod(),
-			$this->getUriRewriter(),
-			$this->getUriResolver(),
-			$this->getProjectNamespace()
+		return new RequestHandler(
+			$requestInfo,
+			$uriComponents,
+			$this->config->getProjectNamespace()
 		);
-
-		return new RequestHandler( $requestInfo, $requestHandlerDelegate );
-	}
-
-	/**
-	 * @return Interfaces\RewritesUri
-	 */
-	private function getUriRewriter()
-	{
-		return $this->configDelegate->getUriRewriter();
-	}
-
-	/**
-	 * @return Interfaces\ResolvesUri
-	 */
-	private function getUriResolver()
-	{
-		return $this->configDelegate->getUriResolver();
-	}
-
-	/**
-	 * @return string
-	 */
-	private function getProjectNamespace()
-	{
-		return $this->configDelegate->getProjectNamespace();
 	}
 }

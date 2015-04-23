@@ -34,7 +34,8 @@ abstract class IceHawkEventListener implements ListensToIceHawkEvents
 	 */
 	public function notify( ServesIceHawkEventData $event )
 	{
-		$methodName = sprintf( 'when', preg_replace( '#Event$#', '', get_class( $event ) ) );
+		$namespaceComponents = explode( "\\", get_class( $event ) );
+		$methodName          = sprintf( 'when%s', preg_replace( "#Event$#", '', end( $namespaceComponents ) ) );
 
 		if ( is_callable( [ $this, $methodName ] ) )
 		{

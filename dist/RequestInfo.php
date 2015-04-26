@@ -90,7 +90,7 @@ final class RequestInfo implements ServesRequestInfo
 	 */
 	public function getUserAgent()
 	{
-		return $this->get( 'USER_AGENT' );
+		return $this->get( 'HTTP_USER_AGENT' );
 	}
 
 	/**

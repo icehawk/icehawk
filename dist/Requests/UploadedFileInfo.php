@@ -40,11 +40,11 @@ final class UploadedFileInfo implements WrapsDataOfUploadedFile
 	 */
 	public function __construct( $name, $tmpName, $type, $size, $error )
 	{
-		$this->name     = $name;
+		$this->name    = $name;
 		$this->tmpName = $tmpName;
-		$this->type     = $type;
-		$this->size     = $size;
-		$this->error    = $error;
+		$this->type    = $type;
+		$this->size    = $size;
+		$this->error   = intval( $error );
 	}
 
 	/**
@@ -124,7 +124,7 @@ final class UploadedFileInfo implements WrapsDataOfUploadedFile
 	 */
 	public function didUploadSucceed()
 	{
-		return ($this->error == UPLOAD_ERR_OK);
+		return ($this->error === UPLOAD_ERR_OK);
 	}
 
 	/**

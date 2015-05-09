@@ -3,8 +3,9 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk;
+namespace Fortuneglobe\IceHawk\DomainRequestHandlers;
 
+use Fortuneglobe\IceHawk\DomainRequestHandler;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
@@ -19,7 +20,7 @@ abstract class PostRequestHandler extends DomainRequestHandler implements Handle
 	/**
 	 * @throws InvalidRequestType
 	 */
-	protected function guardValidRequestHandlerType()
+	final protected function guardValidRequestHandlerType()
 	{
 		if ( !($this->request instanceof ServesPostRequestData) )
 		{
@@ -27,7 +28,7 @@ abstract class PostRequestHandler extends DomainRequestHandler implements Handle
 		}
 	}
 
-	public function handleRequest()
+	final public function handleRequest()
 	{
 		/** @var ServesPostRequestData $request */
 		$request = $this->request;

@@ -18,6 +18,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$_SERVER['QUERY_STRING']       = 'unit=test';
 		$_SERVER['HTTP_USER_AGENT'] = 'phpunit cli';
 		$_SERVER['HTTP_HOST']          = 'www.icehawk.de';
+		$_SERVER['HTTP_REFERER'] = 'http://www.example.com';
 		$_SERVER['HTTP_ACCEPT']        = 'text/html; charset=utf-8';
 		$_SERVER['SERVER_ADDR']        = '127.0.0.1';
 		$_SERVER['REMOTE_ADDR']        = '192.168.0.10';
@@ -33,6 +34,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals( 'unit=test', $requestInfo->getQueryString() );
 		$this->assertEquals( 'phpunit cli', $requestInfo->getUserAgent() );
 		$this->assertEquals( 'www.icehawk.de', $requestInfo->getHost() );
+		$this->assertEquals( 'http://www.example.com', $requestInfo->getReferer() );
 		$this->assertEquals( 'text/html; charset=utf-8', $requestInfo->getAcceptedContentTypes() );
 		$this->assertEquals( '127.0.0.1', $requestInfo->getServerAddress() );
 		$this->assertEquals( '192.168.0.10', $requestInfo->getClientAddress() );
@@ -49,6 +51,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$this->assertNull( $requestInfo->getQueryString() );
 		$this->assertNull( $requestInfo->getUserAgent() );
 		$this->assertNull( $requestInfo->getHost() );
+		$this->assertNull( $requestInfo->getReferer() );
 		$this->assertNull( $requestInfo->getAcceptedContentTypes() );
 		$this->assertNull( $requestInfo->getServerAddress() );
 		$this->assertNull( $requestInfo->getClientAddress() );

@@ -143,6 +143,14 @@ final class RequestInfo implements ServesRequestInfo
 	}
 
 	/**
+	 * @return null|string
+	 */
+	public function getReferer()
+	{
+		return $this->get( 'HTTP_REFERER' );
+	}
+
+	/**
 	 * @param string $key
 	 *
 	 * @return null|string

@@ -28,7 +28,9 @@ final class Unauthorized extends BaseResponse
 
 	public function respond()
 	{
+		header( 'WWW-Authenticate: Basic realm="Authentication"' );
 		header( 'Content-Type: text/plain; charset=' . $this->charset, true, Http::UNAUTHORIZED );
 		echo "Unauthorized.";
+		exit();
 	}
 }

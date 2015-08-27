@@ -35,7 +35,6 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 			[ 'PUT' ],
 			[ 'PATCH' ],
 			[ 'DELETE' ],
-			[ 'HEAD' ],
 			[ 'OPTIONS' ],
 			[ 'TRACE' ],
 			[ 'CONNECT' ],
@@ -61,6 +60,8 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 		return [
 			[ 'GET', GetRequest::class ],
 			[ 'GET', ServesGetRequestData::class ],
+			[ 'HEAD', GetRequest::class ],
+			[ 'HEAD', ServesGetRequestData::class ],
 			[ 'POST', PostRequest::class ],
 			[ 'POST', ServesPostRequestData::class ],
 			[ 'POST', ServesUploadedFiles::class ],
@@ -85,6 +86,7 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[ 'GET', [ 'unit' => 'test', 'test' => 'unit' ] ],
+			[ 'HEAD', [ 'unit' => 'test', 'test' => 'unit' ] ],
 			[ 'POST', [ 'unit' => 'test', 'test' => 'unit' ] ],
 		];
 	}
@@ -110,6 +112,13 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 		return [
 			[
 				'GET',
+				[ 'unit' => 'unit', 'blubb' => 'bla' ],
+				[ ],
+				[ 'unit' => 'test', 'test' => 'unit' ],
+				[ 'unit' => 'test', 'blubb' => 'bla', 'test' => 'unit' ]
+			],
+			[
+				'HEAD',
 				[ 'unit' => 'unit', 'blubb' => 'bla' ],
 				[ ],
 				[ 'unit' => 'test', 'test' => 'unit' ],

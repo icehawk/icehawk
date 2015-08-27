@@ -13,18 +13,23 @@ namespace Fortuneglobe\IceHawk\Constants;
 abstract class Http
 {
 
-	const METHOD_POST       = 'POST';
+	const METHOD_POST        = 'POST';
 
-	const METHOD_GET        = 'GET';
+	const METHOD_GET         = 'GET';
 
-	const MOVED_PERMANENTLY = 301;
+	const METHOD_HEAD        = 'HEAD';
 
-	const MOVED_TEMPORARILY = 302;
+	const MOVED_PERMANENTLY  = 301;
 
-	const FORBIDDEN         = 403;
+	const MOVED_TEMPORARILY  = 302;
 
-	const BAD_REQUEST       = 400;
+	const FORBIDDEN          = 403;
 
-	const NOT_FOUND         = 404;
+	const BAD_REQUEST        = 400;
 
+	const NOT_FOUND          = 404;
+
+	const UNAUTHORIZED       = 401;
+
+	const METHOD_NOT_ALLOWED = 405;
 }

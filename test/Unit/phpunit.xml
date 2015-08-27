@@ -9,6 +9,9 @@
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true">
     <filter>
+        <whitelist>
+            <directory suffix=".php">../../dist</directory>
+        </whitelist>
         <blacklist>
             <directory suffix=".php">./</directory>
             <directory>./Fixures</directory>

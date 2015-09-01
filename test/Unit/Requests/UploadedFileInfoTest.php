@@ -134,8 +134,8 @@ class UploadedFileInfoTest extends \PHPUnit_Framework_TestCase
 	public function filePathRealTypeProvider()
 	{
 		return [
-			[ __DIR__ . '/../Fixures/UploadedFiles/UnitTest.png', 'image/png' ],
-			[ __DIR__ . '/../Fixures/UploadedFiles/UnitTest.txt', 'text/plain' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'image/png' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'text/plain' ],
 		];
 	}
 
@@ -157,8 +157,8 @@ class UploadedFileInfoTest extends \PHPUnit_Framework_TestCase
 	public function filePathEncodingProvider()
 	{
 		return [
-			[ __DIR__ . '/../Fixures/UploadedFiles/UnitTest.png', 'binary' ],
-			[ __DIR__ . '/../Fixures/UploadedFiles/UnitTest.txt', 'utf-8' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'binary' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'utf-8' ],
 		];
 	}
 }

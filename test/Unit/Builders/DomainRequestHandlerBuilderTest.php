@@ -10,8 +10,8 @@ use Fortuneglobe\IceHawk\Constants\Http;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
-use Fortuneglobe\IceHawk\Test\Unit\Fixures\Domain\Read\ValidReadTestRequestHandler;
-use Fortuneglobe\IceHawk\Test\Unit\Fixures\Domain\Write\ValidWriteTestRequestHandler;
+use Fortuneglobe\IceHawk\Test\Unit\Fixtures\Domain\Read\ValidReadTestRequestHandler;
+use Fortuneglobe\IceHawk\Test\Unit\Fixtures\Domain\Write\ValidWriteTestRequestHandler;
 
 class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		$uriComponents               = $this->getUriComponentsMock( 'not', 'existing', [ ] );
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
-			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixures',
+			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixtures',
 			Http::METHOD_GET,
 			$uriComponents
 		);
@@ -59,7 +59,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'invalid-test', [ ] );
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
-			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixures',
+			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixtures',
 			Http::METHOD_GET,
 			$uriComponents
 		);
@@ -73,7 +73,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'valid-read-test', [ ] );
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
-			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixures',
+			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixtures',
 			Http::METHOD_GET,
 			$uriComponents
 		);
@@ -89,7 +89,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'valid-write-test', [ ] );
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
-			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixures',
+			'Fortuneglobe\\IceHawk\\Test\\Unit\\Fixtures',
 			Http::METHOD_POST,
 			$uriComponents
 		);

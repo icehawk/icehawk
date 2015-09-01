@@ -25,12 +25,15 @@ abstract class DomainRequestHandler implements HandlesDomainRequests
 	 */
 	final public function __construct( ServesRequestData $request )
 	{
+		$this->guardValidRequestType( $request );
+
 		$this->request = $request;
-		$this->guardValidRequestHandlerType();
 	}
 
 	/**
+	 * @param ServesRequestData $request
+	 *
 	 * @throws InvalidRequestType
 	 */
-	abstract protected function guardValidRequestHandlerType();
+	abstract protected function guardValidRequestType( ServesRequestData $request );
 }

@@ -7,6 +7,7 @@
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
+use Fortuneglobe\IceHawk\Interfaces\WrapsDataOfUploadedFile;
 
 /**
  * Class DomainCommand
@@ -15,10 +16,6 @@ use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
  */
 abstract class DomainCommand
 {
-
-	const KEY_SUCCESS_URL = 'success_url';
-
-	const KEY_FAIL_URL    = 'fail_url';
 
 	/** @var ServesPostRequestData */
 	protected $request;
@@ -42,34 +39,47 @@ abstract class DomainCommand
 	}
 
 	/**
-	 * @return bool
+	 * @return array
 	 */
-	public function hasSuccessUrl()
+	protected function getRequestData()
 	{
-		return !is_null( $this->getSuccessUrl() );
+		return $this->request->getData();
 	}
 
 	/**
-	 * @return string
+	 * @return null|string
 	 */
-	public function getSuccessUrl()
+	protected function getRequestRawData()
 	{
-		return $this->getRequestValue( self::KEY_SUCCESS_URL );
+		return $this->request->getRawData();
 	}
 
 	/**
-	 * @return bool
+	 * @return array|WrapsDataOfUploadedFile[][]
 	 */
-	public function hasFailUrl()
+	protected function getAllUploadedFiles()
 	{
-		return !is_null( $this->getFailUrl() );
+		return $this->request->getAllFiles();
 	}
 
 	/**
-	 * @return string
+	 * @param string $key
+	 *
+	 * @return array|WrapsDataOfUploadedFile[]
 	 */
-	public function getFailUrl()
+	protected function getUploadedFiles( $key )
 	{
-		return $this->getRequestValue( self::KEY_FAIL_URL );
+		return $this->request->getFiles( $key );
+	}
+
+	/**
+	 * @param string $key
+	 * @param int    $fileIndex
+	 *
+	 * @return WrapsDataOfUploadedFile|null
+	 */
+	protected function getOneUploadedFile( $key, $fileIndex = 0 )
+	{
+		return $this->request->getOneFile( $key, $fileIndex );
 	}
 }

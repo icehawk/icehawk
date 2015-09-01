@@ -9,8 +9,8 @@ use Fortuneglobe\IceHawk\Constants\Http;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Responses\Redirect;
-use Fortuneglobe\IceHawk\Test\Unit\Fixures\UriRewriterWithInvalidMap;
-use Fortuneglobe\IceHawk\Test\Unit\Fixures\UriRewriterWithValidMap;
+use Fortuneglobe\IceHawk\Test\Unit\Fixtures\UriRewriterWithInvalidMap;
+use Fortuneglobe\IceHawk\Test\Unit\Fixtures\UriRewriterWithValidMap;
 use Fortuneglobe\IceHawk\UriRewriter;
 
 class UriRewriterTest extends \PHPUnit_Framework_TestCase

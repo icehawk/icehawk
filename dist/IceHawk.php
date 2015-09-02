@@ -10,9 +10,17 @@ use Fortuneglobe\IceHawk\Builders\RequestBuilder;
 use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
 use Fortuneglobe\IceHawk\Events\RequestWasHandledEvent;
+use Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection;
+use Fortuneglobe\IceHawk\Exceptions\InvalidProjectNamespace;
+use Fortuneglobe\IceHawk\Exceptions\InvalidRequestInfoImplementation;
+use Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation;
+use Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
 use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\HandlesIceHawkTasks;
+use Fortuneglobe\IceHawk\Interfaces\ListensToIceHawkEvents;
+use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
+use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
 use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkEventData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
@@ -27,8 +35,20 @@ use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 final class IceHawk
 {
 
-	/** @var ServesIceHawkConfig */
-	private $config;
+	/** @var RewritesUri */
+	private $uriRewriter;
+
+	/** @var ResolvesUri */
+	private $uriResolver;
+
+	/** @var string */
+	private $projectNamespace;
+
+	/** @var array|ListensToIceHawkEvents[] */
+	private $eventListeners;
+
+	/** @var ServesRequestInfo */
+	private $requestInfo;
 
 	/** @var HandlesIceHawkTasks */
 	private $delegate;
@@ -39,17 +59,75 @@ final class IceHawk
 	 */
 	public function __construct( ServesIceHawkConfig $config, HandlesIceHawkTasks $delegate )
 	{
-		$this->config   = $config;
-		$this->delegate = $delegate;
+		$this->uriRewriter      = $config->getUriRewriter();
+		$this->uriResolver      = $config->getUriResolver();
+		$this->projectNamespace = $config->getProjectNamespace();
+		$this->eventListeners   = $config->getEventListeners();
+		$this->requestInfo      = $config->getRequestInfo();
+		$this->delegate         = $delegate;
 	}
 
+	/**
+	 * @throws InvalidEventListenerCollection
+	 * @throws InvalidProjectNamespace
+	 * @throws InvalidRequestInfoImplementation
+	 * @throws InvalidUriResolverImplementation
+	 * @throws InvalidUriRewriterImplementation
+	 */
 	public function init()
 	{
 		$this->delegate->configureErrorHandling();
 		$this->delegate->configureSession();
 
+		$this->guardConfigIsValid();
+
 		$initializedEvent = new IceHawkWasInitializedEvent();
 		$this->publishEvent( $initializedEvent );
+	}
+
+	/**
+	 * @throws InvalidEventListenerCollection
+	 * @throws InvalidProjectNamespace
+	 * @throws InvalidRequestInfoImplementation
+	 * @throws InvalidUriResolverImplementation
+	 * @throws InvalidUriRewriterImplementation
+	 */
+	private function guardConfigIsValid()
+	{
+		if ( !($this->uriRewriter instanceof RewritesUri) )
+		{
+			throw new InvalidUriRewriterImplementation();
+		}
+
+		if ( !($this->uriResolver instanceof ResolvesUri) )
+		{
+			throw new InvalidUriResolverImplementation();
+		}
+
+		if ( !($this->requestInfo instanceof ServesRequestInfo) )
+		{
+			throw new InvalidRequestInfoImplementation();
+		}
+
+		if ( empty($this->projectNamespace) || !is_string( $this->projectNamespace ) )
+		{
+			throw new InvalidProjectNamespace();
+		}
+
+		if ( !is_array( $this->eventListeners ) && !($this->eventListeners instanceof \Traversable) )
+		{
+			throw new InvalidEventListenerCollection();
+		}
+		else
+		{
+			foreach ( $this->eventListeners as $eventListener )
+			{
+				if ( !($eventListener instanceof ListensToIceHawkEvents) )
+				{
+					throw new InvalidEventListenerCollection();
+				}
+			}
+		}
 	}
 
 	/**
@@ -57,7 +135,7 @@ final class IceHawk
 	 */
 	private function publishEvent( ServesIceHawkEventData $event )
 	{
-		foreach ( $this->config->getEventListeners() as $listener )
+		foreach ( $this->eventListeners as $listener )
 		{
 			if ( $listener->acceptsEvent( $event ) )
 			{
@@ -83,23 +161,20 @@ final class IceHawk
 	 */
 	private function redirectOrHandleRequest()
 	{
-		$requestInfo = $this->config->getRequestInfo();
+		$redirect = $this->getRedirect();
 
-		$uriRewriter = $this->config->getUriRewriter();
-		$redirect    = $uriRewriter->rewrite( $requestInfo );
-
-		if ( $redirect->urlEquals( $requestInfo->getUri() ) )
+		if ( $redirect->urlEquals( $this->requestInfo->getUri() ) )
 		{
-			$uriComponents = $this->getUriComponents( $requestInfo );
-			$request       = $this->getRequest( $requestInfo, $uriComponents );
+			$uriComponents = $this->getUriComponents();
+			$request       = $this->getRequest( $uriComponents );
 
-			$handlingRequestEvent = new HandlingRequestEvent( $requestInfo, $request );
+			$handlingRequestEvent = new HandlingRequestEvent( $this->requestInfo, $request );
 			$this->publishEvent( $handlingRequestEvent );
 
-			$requestHandler = $this->getDomainRequestHandler( $requestInfo, $uriComponents, $request );
+			$requestHandler = $this->getDomainRequestHandler( $uriComponents, $request );
 			$requestHandler->handleRequest();
 
-			$requestWasHandledEvent = new RequestWasHandledEvent( $requestInfo, $request );
+			$requestWasHandledEvent = new RequestWasHandledEvent( $this->requestInfo, $request );
 			$this->publishEvent( $requestWasHandledEvent );
 		}
 		else
@@ -109,48 +184,46 @@ final class IceHawk
 	}
 
 	/**
-	 * @param ServesRequestInfo $requestInfo
-	 *
-	 * @throws MalformedRequestUri
-	 * @return ServesUriComponents
+	 * @return Responses\Redirect
 	 */
-	private function getUriComponents( ServesRequestInfo $requestInfo )
+	private function getRedirect()
 	{
-		$uriResolver = $this->config->getUriResolver();
-
-		return $uriResolver->resolveUri( $requestInfo );
+		return $this->uriRewriter->rewrite( $this->requestInfo );
 	}
 
 	/**
-	 * @param ServesRequestInfo   $requestInfo
+	 * @throws MalformedRequestUri
+	 * @return ServesUriComponents
+	 */
+	private function getUriComponents()
+	{
+		return $this->uriResolver->resolveUri( $this->requestInfo );
+	}
+
+	/**
 	 * @param ServesUriComponents $uriComponents
 	 *
 	 * @throws Exceptions\InvalidRequestMethod
 	 * @return Interfaces\ServesGetRequestData|Interfaces\ServesPostRequestData
 	 */
-	private function getRequest( ServesRequestInfo $requestInfo, ServesUriComponents $uriComponents )
+	private function getRequest( ServesUriComponents $uriComponents )
 	{
-		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
+		$requestBuilder = new RequestBuilder( $this->requestInfo, $uriComponents );
 
 		return $requestBuilder->buildRequest( $_GET, $_POST, $_FILES );
 	}
 
 	/**
-	 * @param ServesRequestInfo   $requestInfo
 	 * @param ServesUriComponents $uriComponents
 	 * @param ServesRequestData   $request
 	 *
 	 * @return HandlesDomainRequests
 	 */
-	private function getDomainRequestHandler(
-		ServesRequestInfo $requestInfo,
-		ServesUriComponents $uriComponents,
-		ServesRequestData $request
-	)
+	private function getDomainRequestHandler( ServesUriComponents $uriComponents, ServesRequestData $request )
 	{
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
-			$this->config->getProjectNamespace(),
-			$requestInfo->getMethod(),
+			$this->projectNamespace,
+			$this->requestInfo->getMethod(),
 			$uriComponents
 		);
 

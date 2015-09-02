@@ -23,6 +23,8 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$_SERVER['REMOTE_ADDR']        = '192.168.0.10';
 		$_SERVER['REQUEST_TIME_FLOAT'] = $requestTimeFloat;
 		$_SERVER['HTTPS'] = 'on';
+		$_SERVER['PHP_AUTH_USER'] = 'Unit';
+		$_SERVER['PHP_AUTH_PW'] = 'Test';
 
 		$requestInfo = RequestInfo::fromEnv();
 
@@ -36,6 +38,9 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals( 'text/html; charset=utf-8', $requestInfo->getAcceptedContentTypes() );
 		$this->assertEquals( '127.0.0.1', $requestInfo->getServerAddress() );
 		$this->assertEquals( '192.168.0.10', $requestInfo->getClientAddress() );
+		$this->assertEquals( $requestTimeFloat, $requestInfo->getRequestTimeFloat() );
+		$this->assertEquals( 'Unit', $requestInfo->getAuthUser() );
+		$this->assertEquals( 'Test', $requestInfo->getAuthPassword() );
 		$this->assertEquals( $requestTimeFloat, $requestInfo->getRequestTimeFloat() );
 		$this->assertTrue( $requestInfo->isSecure() );
 	}

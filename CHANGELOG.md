@@ -31,3 +31,5 @@
  * Removed hard coded default setup for error handling and session in `IceHawkDelegate`. Now these settings are based on the system's php defaults.
  
  * Added more unit tests and clover code coverage.
+ 
+ * Removed internal class `RequestHandler` because it is obsolete.

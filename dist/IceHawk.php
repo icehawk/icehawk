@@ -5,17 +5,25 @@
 
 namespace Fortuneglobe\IceHawk;
 
+use Fortuneglobe\IceHawk\Builders\DomainRequestHandlerBuilder;
 use Fortuneglobe\IceHawk\Builders\RequestBuilder;
 use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
 use Fortuneglobe\IceHawk\Events\RequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
+use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\HandlesIceHawkTasks;
 use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
 use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkEventData;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 
+/**
+ * Class IceHawk
+ *
+ * @package Fortuneglobe\IceHawk
+ */
 final class IceHawk
 {
 
@@ -88,8 +96,8 @@ final class IceHawk
 			$handlingRequestEvent = new HandlingRequestEvent( $requestInfo, $request );
 			$this->publishEvent( $handlingRequestEvent );
 
-			$requestHandler = $this->getRequestHandler( $requestInfo, $uriComponents );
-			$requestHandler->handle( $request );
+			$requestHandler = $this->getDomainRequestHandler( $requestInfo, $uriComponents, $request );
+			$requestHandler->handleRequest();
 
 			$requestWasHandledEvent = new RequestWasHandledEvent( $requestInfo, $request );
 			$this->publishEvent( $requestWasHandledEvent );
@@ -130,15 +138,22 @@ final class IceHawk
 	/**
 	 * @param ServesRequestInfo   $requestInfo
 	 * @param ServesUriComponents $uriComponents
+	 * @param ServesRequestData   $request
 	 *
-	 * @return RequestHandler
+	 * @return HandlesDomainRequests
 	 */
-	private function getRequestHandler( ServesRequestInfo $requestInfo, ServesUriComponents $uriComponents )
+	private function getDomainRequestHandler(
+		ServesRequestInfo $requestInfo,
+		ServesUriComponents $uriComponents,
+		ServesRequestData $request
+	)
 	{
-		return new RequestHandler(
-			$requestInfo,
-			$uriComponents,
-			$this->config->getProjectNamespace()
+		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
+			$this->config->getProjectNamespace(),
+			$requestInfo->getMethod(),
+			$uriComponents
 		);
+
+		return $domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
 	}
 }

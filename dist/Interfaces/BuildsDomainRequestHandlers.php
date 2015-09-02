@@ -5,6 +5,11 @@
 
 namespace Fortuneglobe\IceHawk\Interfaces;
 
+/**
+ * Interface BuildsDomainRequestHandlers
+ *
+ * @package Fortuneglobe\IceHawk\Interfaces
+ */
 interface BuildsDomainRequestHandlers
 {
 	/**

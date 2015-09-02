@@ -52,17 +52,17 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		              ->method( 'notify' )
 		              ->with( $this->equalTo( $initEvent ) );
 
-		$config = $this->getMockBuilder( ServesIceHawkConfig::class )
-		               ->setMethods( [ 'getEventListeners' ] )
-		               ->getMockForAbstractClass();
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
 
+		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
+		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getProjectNamespace' )->willReturn( __NAMESPACE__ );
+		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( RequestInfo::fromEnv() );
 		$config->expects( $this->once() )
 		       ->method( 'getEventListeners' )
 		       ->willReturn( [ $eventListener ] );
 
-		$delegate = new IceHawkDelegate();
-
-		$iceHawk = new IceHawk( $config, $delegate );
+		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
 		$iceHawk->init();
 	}
 
@@ -82,15 +82,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 	public function testCanCallHandlerForGetRequest()
 	{
-		$config = $this->getMockBuilder( ServesIceHawkConfig::class )
-		               ->setMethods(
-			               [
-				               'getProjectNamespace', 'getRequestInfo', 'getUriRewriter', 'getUriResolver',
-				               'getEventListeners'
-			               ]
-		               )
-		               ->getMockForAbstractClass();
-
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
 			[
 				'REQUEST_METHOD' => 'GET',
@@ -102,7 +94,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
 		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
-		$config->expects( $this->exactly( 3 ) )->method( 'getEventListeners' )->willReturn( [ ] );
+		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( [ ] );
 
 		$delegate = new IceHawkDelegate();
 
@@ -115,15 +107,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 	public function testCanCallHandlerForPostRequest()
 	{
-		$config = $this->getMockBuilder( ServesIceHawkConfig::class )
-		               ->setMethods(
-			               [
-				               'getProjectNamespace', 'getRequestInfo', 'getUriRewriter', 'getUriResolver',
-				               'getEventListeners'
-			               ]
-		               )
-		               ->getMockForAbstractClass();
-
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
 			[
 				'REQUEST_METHOD' => 'POST',
@@ -135,7 +119,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
 		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
-		$config->expects( $this->exactly( 3 ) )->method( 'getEventListeners' )->willReturn( [ ] );
+		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( [ ] );
 
 		$delegate = new IceHawkDelegate();
 
@@ -151,9 +135,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCanRewriteUrl()
 	{
-		$config = $this->getMockBuilder( ServesIceHawkConfig::class )
-		               ->setMethods( [ 'getRequestInfo', 'getUriRewriter', 'getEventListeners' ] )
-		               ->getMockForAbstractClass();
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
 
 		$requestInfo = new RequestInfo(
 			[
@@ -167,8 +149,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			new Redirect( '/domain/rewritten', Http::MOVED_PERMANENTLY )
 		);
 
+		$config->expects( $this->once() )->method( 'getProjectNamespace' )->willReturn( __NAMESPACE__ );
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( $uriRewriter );
+		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
 		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( [ ] );
 
 		$delegate = new IceHawkDelegate();
@@ -183,15 +167,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 	public function testPublishesEventsWhenHandlingRequest()
 	{
-		$config = $this->getMockBuilder( ServesIceHawkConfig::class )
-		               ->setMethods(
-			               [
-				               'getProjectNamespace', 'getRequestInfo', 'getUriRewriter', 'getUriResolver',
-				               'getEventListeners'
-			               ]
-		               )
-		               ->getMockForAbstractClass();
-
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
 			[
 				'REQUEST_METHOD' => 'GET',
@@ -228,12 +204,124 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
 		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
-		$config->expects( $this->exactly( 3 ) )->method( 'getEventListeners' )->willReturn( [ $eventListener ] );
+		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( [ $eventListener ] );
 
 		$delegate = new IceHawkDelegate();
 
 		$iceHawk = new IceHawk( $config, $delegate );
 		$iceHawk->init();
 		$iceHawk->handleRequest();
+	}
+
+	/**
+	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation
+	 */
+	public function testInvalidUriRewriterFromConfigThrowsException()
+	{
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
+		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new \stdClass() );
+
+		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
+		$iceHawk->init();
+	}
+
+	/**
+	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation
+	 */
+	public function testInvalidUriResolverFromConfigThrowsException()
+	{
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
+		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
+		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new \stdClass() );
+
+		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
+		$iceHawk->init();
+	}
+
+	/**
+	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\InvalidRequestInfoImplementation
+	 */
+	public function testInvalidRequestInfoFromConfigThrowsException()
+	{
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
+		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
+		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( new \stdClass() );
+
+		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
+		$iceHawk->init();
+	}
+
+	/**
+	 * @param mixed $projectNamespace
+	 *
+	 * @dataProvider invalidProjectNamespaceProvider
+	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\InvalidProjectNamespace
+	 */
+	public function testInvalidProjectNamespaceFromConfigThrowsException( $projectNamespace )
+	{
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
+		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
+		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( RequestInfo::fromEnv() );
+		$config->expects( $this->once() )->method( 'getProjectNamespace' )->willReturn( $projectNamespace );
+
+		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
+		$iceHawk->init();
+	}
+
+	public function invalidProjectNamespaceProvider()
+	{
+		return [
+			[ null ],
+			[ false ],
+			[ true ],
+			[ 123 ],
+			[ 12.3 ],
+			[ '' ],
+			[ [ ] ],
+			[ new \stdClass() ],
+		];
+	}
+
+	/**
+	 * @param mixed $eventListeners
+	 *
+	 * @dataProvider invalidEventListenersProvider
+	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection
+	 */
+	public function testInvalidEventListenersFromConfigThrowsException( $eventListeners )
+	{
+		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
+		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
+		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( RequestInfo::fromEnv() );
+		$config->expects( $this->once() )->method( 'getProjectNamespace' )->willReturn( __NAMESPACE__ );
+		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( $eventListeners );
+
+		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
+		$iceHawk->init();
+	}
+
+	public function invalidEventListenersProvider()
+	{
+		return [
+			# invalid types, not traversable
+			[ null ],
+			[ false ],
+			[ true ],
+			[ 123 ],
+			[ 12.3 ],
+			[ '' ],
+			[ new \stdClass() ],
+
+			# invalid lists
+			[
+				[
+					$this->getMockForAbstractClass( ListensToIceHawkEvents::class ),
+					new \stdClass(),
+				]
+			]
+		];
 	}
 }

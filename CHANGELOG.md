@@ -33,3 +33,10 @@
  * Added more unit tests and clover code coverage.
  
  * Removed internal class `RequestHandler` because it is obsolete.
+ 
+ * Method `IceHawk->init()` now checks the values served by the injected config object an can throw the following exceptions:
+   * `Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation`
+   * `Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation`
+   * `Fortuneglobe\IceHawk\Exceptions\InvalidRequestInfoImplementation`
+   * `Fortuneglobe\IceHawk\Exceptions\InvalidProjectNamespace`
+   * `Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection`

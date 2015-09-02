@@ -44,6 +44,23 @@ final class RequestInfo implements ServesRequestInfo
 	}
 
 	/**
+	 * @param string $key
+	 *
+	 * @return null|string
+	 */
+	private function get( $key )
+	{
+		if ( isset($this->serverData[ $key ]) )
+		{
+			return $this->serverData[ $key ];
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
 	 * @return string|null
 	 */
 	public function getMethod()
@@ -143,19 +160,18 @@ final class RequestInfo implements ServesRequestInfo
 	}
 
 	/**
-	 * @param string $key
-	 *
 	 * @return null|string
 	 */
-	private function get( $key )
+	public function getAuthUser()
 	{
-		if ( isset($this->serverData[ $key ]) )
-		{
-			return $this->serverData[ $key ];
-		}
-		else
-		{
-			return null;
-		}
+		return $this->get( 'PHP_AUTH_USER' );
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getAuthPassword()
+	{
+		return $this->get( 'PHP_AUTH_PW' );
 	}
 }

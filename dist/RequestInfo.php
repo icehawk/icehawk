@@ -162,6 +162,14 @@ final class RequestInfo implements ServesRequestInfo
 	/**
 	 * @return null|string
 	 */
+	public function getReferer()
+	{
+		return $this->get( 'HTTP_REFERER' );
+	}
+
+	/**
+	 * @return null|string
+	 */
 	public function getAuthUser()
 	{
 		return $this->get( 'PHP_AUTH_USER' );

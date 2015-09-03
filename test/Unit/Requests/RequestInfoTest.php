@@ -22,8 +22,11 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$_SERVER['HTTP_ACCEPT']        = 'text/html; charset=utf-8';
 		$_SERVER['SERVER_ADDR']        = '127.0.0.1';
 		$_SERVER['REMOTE_ADDR']        = '192.168.0.10';
+		$_SERVER['HTTP_REFERER'] = 'http://www.example.com';
 		$_SERVER['REQUEST_TIME_FLOAT'] = $requestTimeFloat;
 		$_SERVER['HTTPS'] = 'on';
+		$_SERVER['PHP_AUTH_USER'] = 'Unit';
+		$_SERVER['PHP_AUTH_PW'] = 'Test';
 
 		$requestInfo = RequestInfo::fromEnv();
 
@@ -38,6 +41,10 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals( 'text/html; charset=utf-8', $requestInfo->getAcceptedContentTypes() );
 		$this->assertEquals( '127.0.0.1', $requestInfo->getServerAddress() );
 		$this->assertEquals( '192.168.0.10', $requestInfo->getClientAddress() );
+		$this->assertEquals( 'http://www.example.com', $requestInfo->getReferer() );
+		$this->assertEquals( $requestTimeFloat, $requestInfo->getRequestTimeFloat() );
+		$this->assertEquals( 'Unit', $requestInfo->getAuthUser() );
+		$this->assertEquals( 'Test', $requestInfo->getAuthPassword() );
 		$this->assertEquals( $requestTimeFloat, $requestInfo->getRequestTimeFloat() );
 		$this->assertTrue( $requestInfo->isSecure() );
 	}
@@ -55,6 +62,9 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$this->assertNull( $requestInfo->getAcceptedContentTypes() );
 		$this->assertNull( $requestInfo->getServerAddress() );
 		$this->assertNull( $requestInfo->getClientAddress() );
+		$this->assertNull( $requestInfo->getReferer() );
+		$this->assertNull( $requestInfo->getAuthUser() );
+		$this->assertNull( $requestInfo->getAuthPassword() );
 		$this->assertNull( $requestInfo->getRequestTimeFloat() );
 	}
 
@@ -83,6 +93,8 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 			[ 'get', 'GET' ],
 			[ 'Get', 'GET' ],
 			[ 'GeT', 'GET' ],
+			[ 'head', 'HEAD' ],
+			[ 'HeaD', 'HEAD' ],
 			[ 'post', 'POST' ],
 			[ 'pOSt', 'POST' ],
 		];

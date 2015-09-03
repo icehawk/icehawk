@@ -5,6 +5,11 @@
 
 namespace Fortuneglobe\IceHawk\Interfaces;
 
+/**
+ * Interface ResolvesUri
+ *
+ * @package Fortuneglobe\IceHawk\Interfaces
+ */
 interface ResolvesUri
 {
 	/**

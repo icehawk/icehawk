@@ -3,7 +3,7 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Test\Unit\Fixures;
+namespace Fortuneglobe\IceHawk\Test\Unit\Fixtures;
 
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\UriRewriter;
@@ -11,7 +11,7 @@ use Fortuneglobe\IceHawk\UriRewriter;
 /**
  * Class UriRewriterWithInvalidMap
  *
- * @package Fortuneglobe\IceHawk\Test\Unit\Fixures
+ * @package Fortuneglobe\IceHawk\Test\Unit\Fixtures
  */
 class UriRewriterWithInvalidMap extends UriRewriter
 {

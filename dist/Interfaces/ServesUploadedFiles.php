@@ -14,14 +14,14 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 interface ServesUploadedFiles
 {
 	/**
-	 * @return array
+	 * @return array|WrapsDataOfUploadedFile[][]
 	 */
 	public function getAllFiles();
 
 	/**
 	 * @param string $fieldKey
 	 *
-	 * @return WrapsDataOfUploadedFile[]
+	 * @return array|WrapsDataOfUploadedFile[]
 	 */
 	public function getFiles( $fieldKey );
 

@@ -9,6 +9,7 @@ use Fortuneglobe\IceHawk\DomainRequestHandler;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
 use Fortuneglobe\IceHawk\Interfaces\HandlesGetRequest;
 use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 
 /**
  * Class GetRequestHandler
@@ -18,11 +19,13 @@ use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
 abstract class GetRequestHandler extends DomainRequestHandler implements HandlesGetRequest
 {
 	/**
+	 * @param ServesRequestData $request
+	 *
 	 * @throws InvalidRequestType
 	 */
-	final protected function guardValidRequestHandlerType()
+	final protected function guardValidRequestType( ServesRequestData $request )
 	{
-		if ( !($this->request instanceof ServesGetRequestData) )
+		if ( !($request instanceof ServesGetRequestData) )
 		{
 			throw new InvalidRequestType( "Expected get request, got " . get_class( $this->request ) );
 		}

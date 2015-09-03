@@ -42,6 +42,16 @@ final class PostRequest implements ServesPostRequestData
 	}
 
 	/**
+	 * @return null|string
+	 */
+	public function getRawData()
+	{
+		$rawData = file_get_contents( 'php://input' );
+
+		return $rawData ?: null;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getAllFiles()

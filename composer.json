@@ -3,7 +3,7 @@
   "description": "Fast and reliable frontend framework",
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Holger Woltersdorf",
@@ -19,7 +19,7 @@
     "source": "http://gitlab.fortuneglobe.com/fortunesolutions/icehawk"
   },
   "require": {
-    "php-64bit": ">=5.5"
+    "php": ">=5.5"
   },
   "require-dev": {
     "hollodotme/treemdown": "~1.0"

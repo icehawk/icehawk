@@ -36,4 +36,12 @@ abstract class DomainQuery
 	{
 		return $this->request->get( $key );
 	}
+
+	/**
+	 * @return array
+	 */
+	protected function getRequestData()
+	{
+		return $this->request->getData();
+	}
 }

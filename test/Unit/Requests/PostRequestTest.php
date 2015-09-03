@@ -7,6 +7,7 @@ namespace Fortuneglobe\IceHawk\Test\Unit\Requests;
 
 use Fortuneglobe\IceHawk\Requests\PostRequest;
 use Fortuneglobe\IceHawk\Requests\UploadedFileInfo;
+use Fortuneglobe\IceHawk\Test\Unit\Mocks\PhpStreamMock;
 
 class PostRequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -186,12 +187,32 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 		$this->assertNull( $oneFile );
 	}
 
-	public function getFilesReturnsEmptyArrayIfFieldKeyIsNotSet()
+	public function testGetFilesReturnsEmptyArrayIfFieldKeyIsNotSet()
 	{
 		$postRequest = new PostRequest( [ ], [ ] );
 		$files       = $postRequest->getFiles( 'test' );
 
 		$this->assertInternalType( 'array', $files );
 		$this->assertEmpty( $files );
+	}
+
+	public function testCanGetRawPostDataFromInputStream()
+	{
+		stream_wrapper_unregister( "php" );
+		stream_wrapper_register( "php", PhpStreamMock::class );
+		file_put_contents( 'php://input', 'Unit-Test' );
+
+		$postRequest = new PostRequest( [ ], [ ] );
+
+		$this->assertEquals( 'Unit-Test', $postRequest->getRawData() );
+
+		stream_wrapper_restore( "php" );
+	}
+
+	public function testGetRawDataReturnNullIfEmpty()
+	{
+		$postRequest = new PostRequest( [ ], [ ] );
+
+		$this->assertNull( $postRequest->getRawData() );
 	}
 }

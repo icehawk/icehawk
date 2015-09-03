@@ -10,7 +10,7 @@ namespace Fortuneglobe\IceHawk;
  *
  * @package Fortuneglobe\IceHawk
  */
-class SessionRegistry
+abstract class SessionRegistry
 {
 
 	/** @var array */

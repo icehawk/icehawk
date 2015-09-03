@@ -31,6 +31,5 @@ final class Unauthorized extends BaseResponse
 		header( 'WWW-Authenticate: Basic realm="Authentication"' );
 		header( 'Content-Type: text/plain; charset=' . $this->charset, true, Http::UNAUTHORIZED );
 		echo "Unauthorized.";
-		exit();
 	}
 }

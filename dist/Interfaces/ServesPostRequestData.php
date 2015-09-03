@@ -12,5 +12,8 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface ServesPostRequestData extends ServesRequestData, ServesUploadedFiles
 {
-
+	/**
+	 * @return string|null
+	 */
+	public function getRawData();
 }

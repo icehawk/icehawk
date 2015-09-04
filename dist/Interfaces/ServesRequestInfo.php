@@ -61,4 +61,14 @@ interface ServesRequestInfo
 	 * @return string
 	 */
 	public function getQueryString();
+
+	/**
+	 * @return string|null
+	 */
+	public function getAuthUser();
+
+	/**
+	 * @return string|null
+	 */
+	public function getAuthPassword();
 }

@@ -12,7 +12,7 @@ Fast and reliable PHP frontend framework respecting CQRS.
 Add this to your `composer.json`:
 
 ```json
-require: {
+"require": {
     "fortuneglobe/icehawk": "1.3.0"
 }
 ```

@@ -22,4 +22,4 @@ We accept contributions via pull requests on [GitLab](http://gitlab.fortuneglobe
 
 ## Running Tests
 
-    $ phpunit -c test/Unit/phpunit.xml test/Unit/
+    $ php build/tools/phpunit.phar -c build

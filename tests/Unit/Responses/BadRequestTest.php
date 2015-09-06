@@ -13,7 +13,7 @@ class BadRequestTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @runInSeparateProcess
 	 */
-	public function testRespondsPlainTextWithHttpCode500()
+	public function testRespondsPlainTextWithHttpCode400()
 	{
 		$messages = [
 			'This is a unit test.',

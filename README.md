@@ -1,4 +1,4 @@
-# ![Ice Hawk](./icehawk-logo.png)
+# ![Ice Hawk](icehawk-logo.png)
 
 Fast and reliable PHP frontend framework respecting CQRS.
 

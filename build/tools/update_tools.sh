@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Composer
+curl -sS 'https://getcomposer.org/installer' | php --
+chmod +x composer.phar
+
 # PHPUNIT
 wget -c https://phar.phpunit.de/phpunit.phar
 chmod +x phpunit.phar

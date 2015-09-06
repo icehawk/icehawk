@@ -19,7 +19,7 @@ Add this to your `composer.json`:
 
 ## Getting started
 
-[We provide a seperate github-repository with usage and config examples.](https://github.com/fortuneglobe/icehawk-examples)
+[We provide a seperate github-repository with documentation, usage and config examples.](https://github.com/fortuneglobe/icehawk-examples)
  
 ## Contributing
 

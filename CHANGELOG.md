@@ -2,6 +2,10 @@
 
 ## Changes in Version 1.3.0
 
+ * Restructured the project directories to fit best practice.
+ 
+ * Added PHP QA tools
+
  * Added `getRawData()` method to `PostRequest`, serving the raw POST data (`php://input`).
 
  * Removed the following methods from `DomainCommand` to avoid hard coded POST parameter names:
@@ -42,3 +46,5 @@
    * `Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection`
    
  * Renamed `ServesIceHawkConfig`'s `getProjectNamespace` to `getDomainNamespace`.
+ 
+ * Added `InternalServerError` response class and HTTP code in `Http` class.

@@ -63,6 +63,11 @@ interface ServesRequestInfo
 	public function getQueryString();
 
 	/**
+	 * @return null|string
+	 */
+	public function getReferer();
+
+	/**
 	 * @return string|null
 	 */
 	public function getAuthUser();

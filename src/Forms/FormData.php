@@ -46,6 +46,20 @@ class FormData
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getAllMessages()
+	{
+		$allMessages = [ ];
+		foreach ( $this->feedbacks as $feedback )
+		{
+			$allMessages = array_merge( $allMessages, $feedback->getMessages() );
+		}
+
+		return $allMessages;
+	}
+
+	/**
 	 * @param string $key
 	 *
 	 * @return bool

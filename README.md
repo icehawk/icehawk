@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/fortuneglobe/icehawk.svg)](https://travis-ci.org/fortuneglobe/icehawk)
-[![Coverage Status](https://coveralls.io/repos/fortuneglobe/icehawk/badge.svg?service=github)](https://coveralls.io/github/fortuneglobe/icehawk)
+[![Coverage Status](https://coveralls.io/repos/fortuneglobe/icehawk/badge.svg?branch=%28detached+from+ad1825c%29&service=github)](https://coveralls.io/github/fortuneglobe/icehawk)
 
 # ![Ice Hawk](icehawk-logo.png)
 

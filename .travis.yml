@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - hhvm
+
+before_script:
+ - php build/tools/composer.phar install -o --no-interaction
+
+script:
+ - php build/tools/phpunit.phar -c build/
+
+after_script:
+ - php vendor/bin/coveralls -v

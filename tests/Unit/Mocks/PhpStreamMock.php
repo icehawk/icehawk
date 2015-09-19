@@ -37,7 +37,7 @@ class PhpStreamMock
 
 	protected function buffer_filename()
 	{
-		return sys_get_temp_dir() . '\php_input.txt';
+		return sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'php_input.txt';
 	}
 
 	public function stream_open( $path, $mode, $options, &$opened_path )

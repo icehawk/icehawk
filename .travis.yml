@@ -7,9 +7,11 @@ php:
 
 before_script:
  - php build/tools/composer.phar install -o --no-interaction
+ - wget -c https://phar.phpunit.de/phpunit.phar
+ - chmod +x phpunit.phar
 
 script:
- - php build/tools/phpunit.phar -c build/
+ - php phpunit.phar -c build/
 
 after_script:
  - php vendor/bin/coveralls -v

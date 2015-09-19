@@ -1,6 +1,6 @@
 {
   "name": "fortuneglobe/icehawk",
-  "description": "Fast and reliable frontend framework",
+  "description": "Fast and reliable PHP frontend framework respecting CQRS",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "license": "MIT",
@@ -22,16 +22,16 @@
     "php": ">=5.5"
   },
   "require-dev": {
-    "hollodotme/treemdown": "~1.0"
+    "satooshi/php-coveralls": "dev-master"
   },
   "autoload": {
     "psr-4": {
-      "Fortuneglobe\\IceHawk\\": "dist/"
+      "Fortuneglobe\\IceHawk\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Fortuneglobe\\IceHawk\\Test\\Unit\\": "test/Unit/"
+      "Fortuneglobe\\IceHawk\\Tests\\Unit\\": "tests/Unit/"
     }
   }
 }

@@ -1,4 +1,3 @@
-*.iml
 .idea/
 *.ipr
 *.iws
@@ -10,9 +9,9 @@ vagrant
 
 # composer
 vendor
-!dist/public/vendor
 composer.lock
 
 # locally generated docs
-doc/Coverage/
-doc/TestDox/
+build/api/
+build/phpdox/
+build/logs/

@@ -71,4 +71,15 @@ class FormDataTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals( FormFeedback::NONE, $formData->getSeverity( 'unit.test' ) );
 	}
+
+	public function testCanGetAllMessages()
+	{
+		$formData         = new FormData();
+		$expectedMessages = [ 'Message 1', 'Message 2', 'Message 3', 'Message 4' ];
+
+		$formData->addFeedback( 'unit.test.1', [ 'Message 1', 'Message 2' ] );
+		$formData->addFeedback( 'unit.test.2', [ 'Message 3', 'Message 4' ] );
+
+		$this->assertEquals( $expectedMessages, $formData->getAllMessages() );
+	}
 }

@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\ListensToIceHawkEvents;
+use Fortuneglobe\IceHawk\Interfaces\ListensToEvents;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
@@ -43,7 +43,7 @@ class IceHawkConfig implements ServesIceHawkConfig
 	}
 
 	/**
-	 * @return array|ListensToIceHawkEvents[]
+	 * @return array|ListensToEvents[]
 	 */
 	public function getEventListeners()
 	{

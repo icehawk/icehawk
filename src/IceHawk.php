@@ -16,13 +16,13 @@ use Fortuneglobe\IceHawk\Exceptions\InvalidRequestInfoImplementation;
 use Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation;
 use Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
+use Fortuneglobe\IceHawk\Interfaces\ControlsHandlingBehaviour;
 use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
-use Fortuneglobe\IceHawk\Interfaces\HandlesIceHawkTasks;
-use Fortuneglobe\IceHawk\Interfaces\ListensToIceHawkEvents;
+use Fortuneglobe\IceHawk\Interfaces\ListensToEvents;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
+use Fortuneglobe\IceHawk\Interfaces\ServesEventData;
 use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
-use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkEventData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
@@ -44,20 +44,20 @@ final class IceHawk
 	/** @var string */
 	private $domainNamespace;
 
-	/** @var array|ListensToIceHawkEvents[] */
+	/** @var array|ListensToEvents[] */
 	private $eventListeners;
 
 	/** @var ServesRequestInfo */
 	private $requestInfo;
 
-	/** @var HandlesIceHawkTasks */
+	/** @var ControlsHandlingBehaviour */
 	private $delegate;
 
 	/**
 	 * @param ServesIceHawkConfig $config
-	 * @param HandlesIceHawkTasks $delegate
+	 * @param ControlsHandlingBehaviour $delegate
 	 */
-	public function __construct( ServesIceHawkConfig $config, HandlesIceHawkTasks $delegate )
+	public function __construct( ServesIceHawkConfig $config, ControlsHandlingBehaviour $delegate )
 	{
 		$this->uriRewriter     = $config->getUriRewriter();
 		$this->uriResolver     = $config->getUriResolver();
@@ -76,8 +76,8 @@ final class IceHawk
 	 */
 	public function init()
 	{
-		$this->delegate->configureErrorHandling();
-		$this->delegate->configureSession();
+		$this->delegate->setUpErrorHandling();
+		$this->delegate->setUpSessionHandling();
 
 		$this->guardConfigIsValid();
 
@@ -122,7 +122,7 @@ final class IceHawk
 		{
 			foreach ( $this->eventListeners as $eventListener )
 			{
-				if ( !($eventListener instanceof ListensToIceHawkEvents) )
+				if ( !($eventListener instanceof ListensToEvents) )
 				{
 					throw new InvalidEventListenerCollection();
 				}
@@ -131,9 +131,9 @@ final class IceHawk
 	}
 
 	/**
-	 * @param ServesIceHawkEventData $event
+	 * @param ServesEventData $event
 	 */
-	private function publishEvent( ServesIceHawkEventData $event )
+	private function publishEvent( ServesEventData $event )
 	{
 		foreach ( $this->eventListeners as $listener )
 		{

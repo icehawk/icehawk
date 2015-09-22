@@ -6,20 +6,20 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesIceHawkTasks;
+use Fortuneglobe\IceHawk\Interfaces\ControlsHandlingBehaviour;
 
 /**
  * Class IceHawkDelegate
  *
  * @package Fortuneglobe\IceHawk
  */
-class IceHawkDelegate implements HandlesIceHawkTasks
+class IceHawkDelegate implements ControlsHandlingBehaviour
 {
-	public function configureSession()
+	public function setUpSessionHandling()
 	{
 	}
 
-	public function configureErrorHandling()
+	public function setUpErrorHandling()
 	{
 	}
 

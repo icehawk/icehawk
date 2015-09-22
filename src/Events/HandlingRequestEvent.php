@@ -6,8 +6,8 @@
 
 namespace Fortuneglobe\IceHawk\Events;
 
+use Fortuneglobe\IceHawk\Interfaces\ServesEventData;
 use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkEventData;
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
@@ -17,7 +17,7 @@ use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
  *
  * @package Fortuneglobe\IceHawk\Events
  */
-final class HandlingRequestEvent implements ServesIceHawkEventData
+final class HandlingRequestEvent implements ServesEventData
 {
 
 	/** @var ServesRequestInfo */

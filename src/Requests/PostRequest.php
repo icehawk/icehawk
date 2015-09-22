@@ -62,7 +62,7 @@ final class PostRequest implements ServesPostRequestData
 	/**
 	 * @param $fieldKey
 	 *
-	 * @return UploadedFileInfo[]
+	 * @return UploadedFile[]
 	 */
 	public function getFiles( $fieldKey )
 	{
@@ -82,7 +82,7 @@ final class PostRequest implements ServesPostRequestData
 	 * @param string $fieldKey
 	 * @param int    $fileIndex
 	 *
-	 * @return UploadedFileInfo|null
+	 * @return UploadedFile|null
 	 */
 	public function getOneFile( $fieldKey, $fileIndex = 0 )
 	{
@@ -110,7 +110,7 @@ final class PostRequest implements ServesPostRequestData
 		{
 			$infoObjects[ $fieldName ] = array_merge(
 				isset($infoObjects[ $fieldName ]) ? $infoObjects[ $fieldName ] : [ ],
-				array_map( [ UploadedFileInfo::class, 'fromFileArray' ], $filesArray )
+				array_map( [ UploadedFile::class, 'fromFileArray' ], $filesArray )
 			);
 		}
 

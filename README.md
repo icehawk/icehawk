@@ -1,4 +1,5 @@
 [![Build Status](http://img.shields.io/travis/fortuneglobe/icehawk.svg)](https://travis-ci.org/fortuneglobe/icehawk)
+[![Code coverage](http://img.shields.io/coveralls/fortuneglobe/icehawk/master.svg)](https://coveralls.io/github/fortuneglobe/icehawk)
 [![Current version](http://img.shields.io/packagist/v/fortuneglobe/icehawk.svg)](https://packagist.org/fortuneglobe/icehawk)
 [![Installs](http://img.shields.io/packagist/dm/fortuneglobe/icehawk.svg)](https://packagist.org/fortuneglobe/icehawk)
 

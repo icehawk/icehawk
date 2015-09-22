@@ -8,11 +8,11 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 use Fortuneglobe\IceHawk\DomainQuery;
 
 /**
- * Class TestQuery
+ * Class TestDomainQuery
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class TestQuery extends DomainQuery
+class TestDomainQuery extends DomainQuery
 {
 	public function getTestValue()
 	{

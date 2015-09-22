@@ -7,7 +7,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Commands;
 
 use Fortuneglobe\IceHawk\Requests\PostRequest;
 use Fortuneglobe\IceHawk\Requests\UploadedFileInfo;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestCommand;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestDomainCommand;
 use Fortuneglobe\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
 class DomainCommandTest extends \PHPUnit_Framework_TestCase
@@ -17,7 +17,7 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 		$postData    = [ 'testValue' => 'Unit-Test' ];
 		$postRequest = new PostRequest( $postData, [ ] );
 
-		$command = new TestCommand( $postRequest );
+		$command = new TestDomainCommand( $postRequest );
 
 		$this->assertEquals( 'Unit-Test', $command->getTestValue() );
 		$this->assertEquals( $postData, $command->getTestData() );
@@ -55,7 +55,7 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 
 		$postRequest = new PostRequest( [ ], $uploadedFilesArray );
 
-		$command = new TestCommand( $postRequest );
+		$command = new TestDomainCommand( $postRequest );
 
 		$this->assertEquals( $expectedUploadedFiles, $command->getAllTestFiles() );
 		$this->assertEquals( $expectedUploadedFiles['testFiles'], $command->getTestFiles() );
@@ -69,7 +69,7 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 		file_put_contents( 'php://input', 'Unit-Test' );
 
 		$postRequest = new PostRequest( [ ], [ ] );
-		$command     = new TestCommand( $postRequest );
+		$command = new TestDomainCommand( $postRequest );
 
 		$this->assertEquals( 'Unit-Test', $command->getBody() );
 

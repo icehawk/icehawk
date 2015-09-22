@@ -10,11 +10,11 @@ use Fortuneglobe\IceHawk\DomainRequestHandlers\GetRequestHandler as BaseGetReque
 use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
 
 /**
- * Class GetRequestHandler
+ * Class TestGetRequestHandler
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class GetRequestHandler extends BaseGetRequestHandler
+class TestGetRequestHandler extends BaseGetRequestHandler
 {
 	public function handle( ServesGetRequestData $request )
 	{

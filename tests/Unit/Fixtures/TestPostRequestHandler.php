@@ -10,11 +10,11 @@ use Fortuneglobe\IceHawk\DomainRequestHandlers\PostRequestHandler as BasePostReq
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
 
 /**
- * Class PostRequestHandler
+ * Class TestPostRequestHandler
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class PostRequestHandler extends BasePostRequestHandler
+class TestPostRequestHandler extends BasePostRequestHandler
 {
 	public function handle( ServesPostRequestData $request )
 	{

@@ -21,6 +21,9 @@
   "require": {
     "php": ">=5.5"
   },
+  "require-dev": {
+    "satooshi/php-coveralls": "dev-master"
+  },
   "autoload": {
     "psr-4": {
       "Fortuneglobe\\IceHawk\\": "src/"

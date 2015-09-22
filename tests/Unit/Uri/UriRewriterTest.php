@@ -9,8 +9,8 @@ use Fortuneglobe\IceHawk\Constants\Http;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Responses\Redirect;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\UriRewriterWithInvalidMap;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\UriRewriterWithValidMap;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestUriRewriterWithInvalidMap;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestUriRewriterWithValidMap;
 use Fortuneglobe\IceHawk\UriRewriter;
 
 class UriRewriterTest extends \PHPUnit_Framework_TestCase
@@ -48,7 +48,7 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 	{
 		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => $uri ] );
 
-		$rewriter = new UriRewriterWithValidMap();
+		$rewriter = new TestUriRewriterWithValidMap();
 		$redirect = $rewriter->rewrite( $requestInfo );
 
 		$this->assertInstanceOf( ServesResponse::class, $redirect );
@@ -77,7 +77,7 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 	{
 		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => $uri ] );
 
-		$rewriter = new UriRewriterWithInvalidMap();
+		$rewriter = new TestUriRewriterWithInvalidMap();
 		$rewriter->rewrite( $requestInfo );
 	}
 

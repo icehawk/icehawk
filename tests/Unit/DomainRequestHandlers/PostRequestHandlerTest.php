@@ -8,7 +8,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\DomainRequestHandlers;
 
 use Fortuneglobe\IceHawk\Requests\GetRequest;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\PostRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestPostRequestHandler;
 
 class PostRequestHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,14 +19,14 @@ class PostRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	{
 		$getRequest = new GetRequest( [ ] );
 
-		new PostRequestHandler( $getRequest );
+		new TestPostRequestHandler( $getRequest );
 	}
 
 	public function testCanHandleValidRequest()
 	{
 		$postRequest = new PostRequest( [ ], [ ] );
 
-		$handler = new PostRequestHandler( $postRequest );
+		$handler = new TestPostRequestHandler( $postRequest );
 		$handler->handleRequest();
 
 		$this->expectOutputString( 'Request handled.' );

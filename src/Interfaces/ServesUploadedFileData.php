@@ -5,11 +5,11 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
- * Class UploadedFileInfo
+ * Class UploadedFile
  *
  * @package Fortuneglobe\IceHawk\Requests
  */
-interface WrapsDataOfUploadedFile
+interface ServesUploadedFileData
 {
 	/**
 	 * @return int

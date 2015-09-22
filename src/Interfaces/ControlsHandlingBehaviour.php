@@ -7,15 +7,15 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
- * Interface HandlesIceHawkTasks
+ * Interface ControlsHandlingBehaviour
  *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface HandlesIceHawkTasks
+interface ControlsHandlingBehaviour
 {
-	public function configureSession();
+	public function setUpErrorHandling();
 
-	public function configureErrorHandling();
+	public function setUpSessionHandling();
 
 	/**
 	 * @param \Exception $exception

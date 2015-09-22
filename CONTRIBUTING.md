@@ -2,7 +2,7 @@
 
 Contributions are **welcome** and will be fully **credited**.
 
-We accept contributions via pull requests on [GitLab](http://gitlab.fortuneglobe.com/fortunesolutions/icehawk).
+We accept contributions via pull requests on [GitHub](http://github.com/fortuneglobe/icehawk).
 
 
 ## Pull Requests

@@ -6,7 +6,7 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Requests;
 
 use Fortuneglobe\IceHawk\Requests\PostRequest;
-use Fortuneglobe\IceHawk\Requests\UploadedFileInfo;
+use Fortuneglobe\IceHawk\Requests\UploadedFile;
 use Fortuneglobe\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
 class PostRequestTest extends \PHPUnit_Framework_TestCase
@@ -82,7 +82,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 		$postRequest = new PostRequest( [ ], $uploadedFiles );
 		$oneFile     = $postRequest->getOneFile( $fieldKey, $fileIndex );
 
-		$this->assertInstanceOf( UploadedFileInfo::class, $oneFile );
+		$this->assertInstanceOf( UploadedFile::class, $oneFile );
 		$this->assertEquals( $expectedFileName, $oneFile->getName() );
 		$this->assertEquals( $expectedType, $oneFile->getType() );
 		$this->assertEquals( $expectedSize, $oneFile->getSize() );

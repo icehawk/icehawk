@@ -6,14 +6,14 @@
 
 namespace Fortuneglobe\IceHawk\Events;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkEventData;
+use Fortuneglobe\IceHawk\Interfaces\ServesEventData;
 
 /**
  * Class IceHawkWasInitializedEvent
  *
  * @package Fortuneglobe\IceHawk\Events
  */
-final class IceHawkWasInitializedEvent implements ServesIceHawkEventData
+final class IceHawkWasInitializedEvent implements ServesEventData
 {
 
 }

@@ -5,9 +5,9 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
 
+use Fortuneglobe\IceHawk\EventListener;
 use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
-use Fortuneglobe\IceHawk\IceHawkEventListener;
 use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
 
@@ -18,7 +18,7 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 		$initEvent     = new IceHawkWasInitializedEvent();
 		$handlingEvent = new HandlingRequestEvent( RequestInfo::fromEnv(), new GetRequest( [ ] ) );
 
-		$mock = $this->getMockBuilder( IceHawkEventListener::class )
+		$mock = $this->getMockBuilder( EventListener::class )
 		             ->setMethods( [ 'getAcceptedEvents' ] )
 		             ->getMockForAbstractClass();
 
@@ -26,7 +26,7 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 		     ->method( 'getAcceptedEvents' )
 		     ->willReturn( [ IceHawkWasInitializedEvent::class ] );
 
-		/** @var IceHawkEventListener $mock */
+		/** @var EventListener $mock */
 		$this->assertTrue( $mock->acceptsEvent( $initEvent ) );
 		$this->assertFalse( $mock->acceptsEvent( $handlingEvent ) );
 	}
@@ -38,11 +38,11 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 	{
 		$initEvent = new IceHawkWasInitializedEvent();
 
-		$mock = $this->getMockBuilder( IceHawkEventListener::class )
+		$mock = $this->getMockBuilder( EventListener::class )
 		             ->setMethods( [ 'getAcceptedEvents' ] )
 		             ->getMockForAbstractClass();
 
-		/** @var IceHawkEventListener $mock */
+		/** @var EventListener $mock */
 		$mock->notify( $initEvent );
 	}
 
@@ -50,13 +50,13 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 	{
 		$initEvent = new IceHawkWasInitializedEvent();
 
-		$mock = $this->getMockBuilder( IceHawkEventListener::class )
+		$mock = $this->getMockBuilder( EventListener::class )
 		             ->setMethods( [ 'getAcceptedEvents', 'whenIceHawkWasInitialized' ] )
 		             ->getMockForAbstractClass();
 
 		$mock->expects( $this->once() )->method( 'whenIceHawkWasInitialized' )->with( $initEvent );
 
-		/** @var IceHawkEventListener $mock */
+		/** @var EventListener $mock */
 		$mock->notify( $initEvent );
 	}
 }

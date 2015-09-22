@@ -7,7 +7,7 @@
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
-use Fortuneglobe\IceHawk\Interfaces\WrapsDataOfUploadedFile;
+use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFileData;
 
 /**
  * Class DomainCommand
@@ -55,7 +55,7 @@ abstract class DomainCommand
 	}
 
 	/**
-	 * @return array|WrapsDataOfUploadedFile[][]
+	 * @return array|ServesUploadedFileData[][]
 	 */
 	protected function getAllUploadedFiles()
 	{
@@ -65,7 +65,7 @@ abstract class DomainCommand
 	/**
 	 * @param string $key
 	 *
-	 * @return array|WrapsDataOfUploadedFile[]
+	 * @return array|ServesUploadedFileData[]
 	 */
 	protected function getUploadedFiles( $key )
 	{
@@ -76,7 +76,7 @@ abstract class DomainCommand
 	 * @param string $key
 	 * @param int    $fileIndex
 	 *
-	 * @return WrapsDataOfUploadedFile|null
+	 * @return ServesUploadedFileData|null
 	 */
 	protected function getOneUploadedFile( $key, $fileIndex = 0 )
 	{

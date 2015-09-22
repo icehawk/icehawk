@@ -28,7 +28,7 @@ interface ServesIceHawkConfig
 	public function getUriResolver();
 
 	/**
-	 * @return array|ListensToIceHawkEvents[]
+	 * @return array|ListensToEvents[]
 	 */
 	public function getEventListeners();
 

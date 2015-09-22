@@ -7,32 +7,32 @@
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Exceptions\EventListenerMethodNotCallable;
-use Fortuneglobe\IceHawk\Interfaces\ListensToIceHawkEvents;
-use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkEventData;
+use Fortuneglobe\IceHawk\Interfaces\ListensToEvents;
+use Fortuneglobe\IceHawk\Interfaces\ServesEventData;
 
 /**
- * Class IceHawkEventListener
+ * Class EventListener
  *
  * @package Fortuneglobe\IceHawk
  */
-abstract class IceHawkEventListener implements ListensToIceHawkEvents
+abstract class EventListener implements ListensToEvents
 {
 	/**
-	 * @param ServesIceHawkEventData $event
+	 * @param ServesEventData $event
 	 *
 	 * @return bool
 	 */
-	public function acceptsEvent( ServesIceHawkEventData $event )
+	public function acceptsEvent( ServesEventData $event )
 	{
 		return in_array( get_class( $event ), $this->getAcceptedEvents() );
 	}
 
 	/**
-	 * @param ServesIceHawkEventData $event
+	 * @param ServesEventData $event
 	 *
 	 * @throws EventListenerMethodNotCallable
 	 */
-	public function notify( ServesIceHawkEventData $event )
+	public function notify( ServesEventData $event )
 	{
 		$namespaceComponents = explode( "\\", get_class( $event ) );
 		$methodName          = sprintf( 'when%s', preg_replace( "#Event$#", '', end( $namespaceComponents ) ) );

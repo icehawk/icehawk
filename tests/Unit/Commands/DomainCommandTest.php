@@ -6,7 +6,7 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Commands;
 
 use Fortuneglobe\IceHawk\Requests\PostRequest;
-use Fortuneglobe\IceHawk\Requests\UploadedFileInfo;
+use Fortuneglobe\IceHawk\Requests\UploadedFile;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestDomainCommand;
 use Fortuneglobe\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
@@ -44,12 +44,12 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 
 		$expectedUploadedFiles = [
 			'testFiles' => [
-				new UploadedFileInfo( 'test1.file', '/tmp/test1.file', 'text/plain', 1024, UPLOAD_ERR_OK ),
-				new UploadedFileInfo( 'test2.file', '/tmp/test2.file', 'text/plain', 2048, UPLOAD_ERR_OK ),
+				new UploadedFile( 'test1.file', '/tmp/test1.file', 'text/plain', 1024, UPLOAD_ERR_OK ),
+				new UploadedFile( 'test2.file', '/tmp/test2.file', 'text/plain', 2048, UPLOAD_ERR_OK ),
 			],
 			'fileTests' => [
-				new UploadedFileInfo( 'test3.file', '/tmp/test3.file', 'text/plain', 3072, UPLOAD_ERR_OK ),
-				new UploadedFileInfo( 'test4.file', '/tmp/test4.file', 'text/plain', 4096, UPLOAD_ERR_OK ),
+				new UploadedFile( 'test3.file', '/tmp/test3.file', 'text/plain', 3072, UPLOAD_ERR_OK ),
+				new UploadedFile( 'test4.file', '/tmp/test4.file', 'text/plain', 4096, UPLOAD_ERR_OK ),
 			],
 		];
 

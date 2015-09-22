@@ -6,14 +6,14 @@
 
 namespace Fortuneglobe\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\WrapsDataOfUploadedFile;
+use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFileData;
 
 /**
- * Class UploadedFileInfo
+ * Class UploadedFile
  *
  * @package Fortuneglobe\IceHawk\Requests
  */
-final class UploadedFileInfo implements WrapsDataOfUploadedFile
+final class UploadedFile implements ServesUploadedFileData
 {
 
 	/** @var string */
@@ -50,7 +50,7 @@ final class UploadedFileInfo implements WrapsDataOfUploadedFile
 	/**
 	 * @param array $fileArray
 	 *
-	 * @return UploadedFileInfo
+	 * @return UploadedFile
 	 */
 	public static function fromFileArray( array $fileArray )
 	{

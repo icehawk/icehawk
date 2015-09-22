@@ -12,8 +12,8 @@ use Fortuneglobe\IceHawk\Events\RequestWasHandledEvent;
 use Fortuneglobe\IceHawk\IceHawk;
 use Fortuneglobe\IceHawk\IceHawkConfig;
 use Fortuneglobe\IceHawk\IceHawkDelegate;
-use Fortuneglobe\IceHawk\Interfaces\HandlesIceHawkTasks;
-use Fortuneglobe\IceHawk\Interfaces\ListensToIceHawkEvents;
+use Fortuneglobe\IceHawk\Interfaces\ControlsHandlingBehaviour;
+use Fortuneglobe\IceHawk\Interfaces\ListensToEvents;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
 use Fortuneglobe\IceHawk\RequestInfo;
@@ -27,10 +27,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	public function testDelegateMethodsWillBeCalledDuringInitialization()
 	{
 		$config   = new IceHawkConfig();
-		$delegate = $this->prophesize( HandlesIceHawkTasks::class );
+		$delegate = $this->prophesize( ControlsHandlingBehaviour::class );
 
-		$delegate->configureErrorHandling()->shouldBeCalled();
-		$delegate->configureSession()->shouldBeCalled();
+		$delegate->setUpErrorHandling()->shouldBeCalled();
+		$delegate->setUpSessionHandling()->shouldBeCalled();
 
 		$iceHawk = new IceHawk( $config, $delegate->reveal() );
 		$iceHawk->init();
@@ -39,7 +39,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	public function testPublishesEventWhenInitializationIsDone()
 	{
 		$initEvent     = new IceHawkWasInitializedEvent();
-		$eventListener = $this->getMockBuilder( ListensToIceHawkEvents::class )
+		$eventListener = $this->getMockBuilder( ListensToEvents::class )
 		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )
 		                      ->getMockForAbstractClass();
 
@@ -183,7 +183,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$handlingEvent = new HandlingRequestEvent( $requestInfo, new GetRequest( [ ] ) );
 		$handledEvent  = new RequestWasHandledEvent( $requestInfo, new GetRequest( [ ] ) );
 
-		$eventListener = $this->getMockBuilder( ListensToIceHawkEvents::class )
+		$eventListener = $this->getMockBuilder( ListensToEvents::class )
 		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )
 		                      ->getMockForAbstractClass();
 
@@ -324,7 +324,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			# invalid lists
 			[
 				[
-					$this->getMockForAbstractClass( ListensToIceHawkEvents::class ),
+					$this->getMockForAbstractClass( ListensToEvents::class ),
 					new \stdClass(),
 				]
 			]

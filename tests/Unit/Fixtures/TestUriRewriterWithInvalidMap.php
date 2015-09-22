@@ -9,11 +9,11 @@ use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\UriRewriter;
 
 /**
- * Class UriRewriterWithInvalidMap
+ * Class TestUriRewriterWithInvalidMap
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class UriRewriterWithInvalidMap extends UriRewriter
+class TestUriRewriterWithInvalidMap extends UriRewriter
 {
 
 	private static $simpleMap = [

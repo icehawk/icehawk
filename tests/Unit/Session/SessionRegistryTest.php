@@ -6,24 +6,24 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Session;
 
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\SessionRegistry;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestSessionRegistry;
 
 class SessionRegistryTest extends \PHPUnit_Framework_TestCase
 {
 	public function testValuesAreSetByReference()
 	{
 		$dataArray       = [ ];
-		$sessionRegistry = new SessionRegistry( $dataArray );
+		$sessionRegistry = new TestSessionRegistry( $dataArray );
 
 		$sessionRegistry->setTestValue( 'Unit-Test' );
 
-		$this->assertEquals( [ SessionRegistry::TEST_VALUE => 'Unit-Test' ], $dataArray );
+		$this->assertEquals( [ TestSessionRegistry::TEST_VALUE => 'Unit-Test' ], $dataArray );
 	}
 
 	public function testCanSetAndGetValues()
 	{
 		$dataArray       = [ ];
-		$sessionRegistry = new SessionRegistry( $dataArray );
+		$sessionRegistry = new TestSessionRegistry( $dataArray );
 
 		$sessionRegistry->setTestValue( 'Unit-Test' );
 
@@ -33,7 +33,7 @@ class SessionRegistryTest extends \PHPUnit_Framework_TestCase
 	public function testCanUnsetValues()
 	{
 		$dataArray       = [ ];
-		$sessionRegistry = new SessionRegistry( $dataArray );
+		$sessionRegistry = new TestSessionRegistry( $dataArray );
 
 		$sessionRegistry->setTestValue( 'Unit-Test' );
 		$sessionRegistry->unsetTestValue();
@@ -44,7 +44,7 @@ class SessionRegistryTest extends \PHPUnit_Framework_TestCase
 	public function testNotSetValuesReturnNull()
 	{
 		$dataArray       = [ ];
-		$sessionRegistry = new SessionRegistry( $dataArray );
+		$sessionRegistry = new TestSessionRegistry( $dataArray );
 
 		$this->assertNull( $sessionRegistry->getTestValue() );
 	}
@@ -52,7 +52,7 @@ class SessionRegistryTest extends \PHPUnit_Framework_TestCase
 	public function testCanCheckIfValueIsSet()
 	{
 		$dataArray       = [ ];
-		$sessionRegistry = new SessionRegistry( $dataArray );
+		$sessionRegistry = new TestSessionRegistry( $dataArray );
 
 		$sessionRegistry->setTestValue( 'Unit-Test' );
 

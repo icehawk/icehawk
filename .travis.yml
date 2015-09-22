@@ -10,3 +10,6 @@ before_script:
 
 script:
  - phpunit -c build/
+
+after_script:
+ - php vendor/bin/coveralls -c ./.coveralls.yml -v --exclude-no-stmt

@@ -9,11 +9,11 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 use Fortuneglobe\IceHawk\SessionRegistry as BaseSessionRegistry;
 
 /**
- * Class SessionRegistry
+ * Class TestSessionRegistry
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-final class SessionRegistry extends BaseSessionRegistry
+final class TestSessionRegistry extends BaseSessionRegistry
 {
 	const TEST_VALUE = 'testValue';
 

@@ -1,8 +1,9 @@
-[![Build Status](http://img.shields.io/travis/fortuneglobe/icehawk.svg)](https://travis-ci.org/fortuneglobe/icehawk)
-[![Code coverage](http://img.shields.io/coveralls/fortuneglobe/icehawk/master.svg)](https://coveralls.io/github/fortuneglobe/icehawk)
-[![Current version](http://img.shields.io/packagist/v/fortuneglobe/icehawk.svg)](https://packagist.org/fortuneglobe/icehawk)
-[![Installs](http://img.shields.io/packagist/dm/fortuneglobe/icehawk.svg)](https://packagist.org/fortuneglobe/icehawk)
-
+[![Build Status](https://travis-ci.org/fortuneglobe/icehawk.svg?branch=master)](https://travis-ci.org/fortuneglobe/icehawk)
+[![Coverage Status](https://coveralls.io/repos/fortuneglobe/icehawk/badge.svg?branch=master&service=github)](https://coveralls.io/github/fortuneglobe/icehawk?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/fortuneglobe/icehawk/v/stable)](https://packagist.org/packages/fortuneglobe/icehawk) 
+[![Total Downloads](https://poser.pugx.org/fortuneglobe/icehawk/downloads)](https://packagist.org/packages/fortuneglobe/icehawk) 
+[![Latest Unstable Version](https://poser.pugx.org/fortuneglobe/icehawk/v/unstable)](https://packagist.org/packages/fortuneglobe/icehawk) 
+[![License](https://poser.pugx.org/fortuneglobe/icehawk/license)](https://packagist.org/packages/fortuneglobe/icehawk)
 
 # ![Ice Hawk](icehawk-logo.png)
 

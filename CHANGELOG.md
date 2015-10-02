@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Changes in Version 1.3.1
+
+ * Fixed filename of class `EventListener`
+
 ## Changes in Version 1.3.0
 
  * Restructured the project directories to fit best practice.

@@ -8,7 +8,7 @@ vagrant
 !env/vagrant
 
 # composer
-vendor
+vendor/
 composer.lock
 
 # locally generated docs

@@ -12,7 +12,8 @@ Fast and reliable PHP frontend framework respecting CQRS.
 ## Requirements
 
  * PHP >= 5.5
- * xdebug extension for running the tests
+ * [xdebug extension](https://pecl.php.net/package/Xdebug) for running the tests
+ * [fileinfo extension](https://pecl.php.net/package/Fileinfo) for running the tests
 
 ## Installation
 
@@ -21,6 +22,15 @@ Add this to your `composer.json`:
 ```json
 "require": {
     "fortuneglobe/icehawk": "~1.3.0"
+}
+```
+
+To run the tests, you should add this to your `composer.json` too:
+
+```json
+"require-dev": {
+    "ext-xdebug": "*",
+    "ext-fileinfo": "*"
 }
 ```
 

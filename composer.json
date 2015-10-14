@@ -22,6 +22,8 @@
     "php": ">=5.5"
   },
   "require-dev": {
+    "ext-fileinfo": "*",
+    "ext-xdebug": "*",
     "satooshi/php-coveralls": "dev-master"
   },
   "autoload": {

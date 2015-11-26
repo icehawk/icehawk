@@ -31,7 +31,7 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	private $uriComponents;
 
 	/**
-	 * @param string $domainNamespace
+	 * @param string              $domainNamespace
 	 * @param string              $requestMethod
 	 * @param ServesUriComponents $uriComponents
 	 */
@@ -51,15 +51,15 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	 */
 	public function buildDomainRequestHandler( ServesRequestData $request )
 	{
-		$domainName              = $this->getStringToCamelCase( $this->uriComponents->getDomain() );
-		$demandName              = $this->getStringToCamelCase( $this->uriComponents->getDemand() );
-		$subNamespaceReadOrWrite = $this->getSubNamespaceReadOrWrite();
+		$domainName   = $this->getStringToCamelCase( $this->uriComponents->getDomain() );
+		$demandName   = $this->getStringToCamelCase( $this->uriComponents->getDemand() );
+		$subNamespace = $this->getSubNamespaceReadOrWrite();
 
 		$className = sprintf(
 			"%s\\%s\\%s\\%sRequestHandler",
 			$this->domainNamespace,
 			$domainName,
-			$subNamespaceReadOrWrite,
+				$subNamespace,
 			$demandName
 		);
 

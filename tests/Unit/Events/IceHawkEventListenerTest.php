@@ -15,8 +15,10 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanCheckForExceptedEvents()
 	{
-		$initEvent     = new IceHawkWasInitializedEvent();
-		$handlingEvent = new HandlingRequestEvent( RequestInfo::fromEnv(), new GetRequest( [ ] ) );
+		$requestInfo   = RequestInfo::fromEnv();
+		$initEvent     = new IceHawkWasInitializedEvent( $requestInfo );
+		$getRequest    = new GetRequest( $requestInfo, [ ] );
+		$handlingEvent = new HandlingRequestEvent( $getRequest );
 
 		$mock = $this->getMockBuilder( EventListener::class )
 		             ->setMethods( [ 'getAcceptedEvents' ] )
@@ -36,7 +38,8 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testNotImplementedListenerMethodThrowsException()
 	{
-		$initEvent = new IceHawkWasInitializedEvent();
+		$requestInfo = RequestInfo::fromEnv();
+		$initEvent   = new IceHawkWasInitializedEvent( $requestInfo );
 
 		$mock = $this->getMockBuilder( EventListener::class )
 		             ->setMethods( [ 'getAcceptedEvents' ] )
@@ -48,7 +51,8 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 
 	public function testCanHandleEventInListenerMethod()
 	{
-		$initEvent = new IceHawkWasInitializedEvent();
+		$requestInfo = RequestInfo::fromEnv();
+		$initEvent   = new IceHawkWasInitializedEvent( $requestInfo );
 
 		$mock = $this->getMockBuilder( EventListener::class )
 		             ->setMethods( [ 'getAcceptedEvents', 'whenIceHawkWasInitialized' ] )

@@ -24,4 +24,9 @@ interface ServesRequestData
 	 * @return null|string|array
 	 */
 	public function get( $key );
+
+	/**
+	 * @return ServesRequestInfo
+	 */
+	public function getRequestInfo();
 } 

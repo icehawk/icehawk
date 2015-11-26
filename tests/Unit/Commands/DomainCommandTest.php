@@ -5,6 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Commands;
 
+use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
 use Fortuneglobe\IceHawk\Requests\UploadedFile;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestDomainCommand;
@@ -15,7 +16,7 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 	public function testCanAccessValuesFromRequest()
 	{
 		$postData    = [ 'testValue' => 'Unit-Test' ];
-		$postRequest = new PostRequest( $postData, [ ] );
+		$postRequest = new PostRequest( RequestInfo::fromEnv(), $postData, [ ] );
 
 		$command = new TestDomainCommand( $postRequest );
 
@@ -53,7 +54,7 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 
-		$postRequest = new PostRequest( [ ], $uploadedFilesArray );
+		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], $uploadedFilesArray );
 
 		$command = new TestDomainCommand( $postRequest );
 
@@ -68,11 +69,20 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 		stream_wrapper_register( "php", PhpStreamMock::class );
 		file_put_contents( 'php://input', 'Unit-Test' );
 
-		$postRequest = new PostRequest( [ ], [ ] );
-		$command = new TestDomainCommand( $postRequest );
+		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], [ ] );
+		$command     = new TestDomainCommand( $postRequest );
 
 		$this->assertEquals( 'Unit-Test', $command->getBody() );
 
 		stream_wrapper_restore( "php" );
+	}
+
+	public function testCanAccessRequestInfoFromRequest()
+	{
+		$requestInfo = RequestInfo::fromEnv();
+		$postRequest = new PostRequest( $requestInfo, [ ], [ ] );
+		$command     = new TestDomainCommand( $postRequest );
+
+		$this->assertSame( $requestInfo, $command->getRequestInfo() );
 	}
 }

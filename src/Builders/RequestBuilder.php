@@ -51,11 +51,18 @@ final class RequestBuilder implements BuildsRequests
 	{
 		if ( $this->requestInfo->getMethod() == Http::METHOD_POST )
 		{
-			return new PostRequest( $this->getMergedData( $postData ), $uploadedFiles );
+			$mergedPostData = $this->getMergedData( $postData );
+			$postRequest    = new PostRequest( $this->requestInfo, $mergedPostData, $uploadedFiles );
+
+			return $postRequest;
 		}
 		elseif ( in_array( $this->requestInfo->getMethod(), [ Http::METHOD_GET, Http::METHOD_HEAD ] ) )
 		{
-			return new GetRequest( $this->getMergedData( $getData ) );
+			$mergedGetData = $this->getMergedData( $getData );
+
+			$getRequest = new GetRequest( $this->requestInfo, $mergedGetData );
+
+			return $getRequest;
 		}
 		else
 		{

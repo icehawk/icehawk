@@ -13,5 +13,8 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface ServesEventData
 {
-
+	/**
+	 * @return ServesRequestInfo
+	 */
+	public function getRequestInfo();
 }

@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## Changes in Version 1.4.0
+
+ * Fixed issue #1, added "ext-fileinfo": "*" to composer's require block and a hint to the README.  
+ * Closed issue #2, added `setUpEnvironment()` to interface `ControlsHandlingBehaviour` and default class `IceHawkDelegate`.  
+ Order of IceHawk initialization is now:
+    1. setUpErrorHandling()
+    2. setUpSessionHandling()
+    3. setUpEnvironment()
+ * Added `getRequestInfo()` to interface `ServesEventData`
+ * `IceHawkWasInitializedEvent` now provides the `RequestInfo` instance, too.
+ * Added internal wrapper for the IceHawk config to make sure all of its provided instances were initialized only once 
+ * Refactored internal validation of the IceHawk config
+ * Added `getRequestInfo()` to interface `ServesRequestData`
+ * `GetRequest` and `PostRequest`, as well as the `DomainQuery` and `DomainCommand` objects now provide the `RequestInfo` instance, too.
+ * Refactored `HandlingRequestEvent` and `RequestWasHandledEvent`, only request object is injected
+ * Updated tool script `build/tools/update_tools.sh`
+ * Removed tool-phars from `build/tools`
+ * Updated travis config
+
 ## Changes in Version 1.3.1
 
  * Fixed filename of class `EventListener`

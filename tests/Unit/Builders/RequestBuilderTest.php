@@ -17,13 +17,15 @@ use Fortuneglobe\IceHawk\UriComponents;
 class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 {
 	/**
+	 * @param string $requestMethod
+	 *
 	 * @dataProvider invalidRequestMethodProvider
 	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\InvalidRequestMethod
 	 */
 	public function testBuildingRequestWithInvalidRequestMethodThrowsException( $requestMethod )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents = new UriComponents( 'Unit', 'Test', [ ] );
+		$uriComponents  = new UriComponents( 'Unit', 'Test', [ ] );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
 		$requestBuilder->buildRequest( [ ], [ ], [ ] );
@@ -42,12 +44,16 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 *
+	 * @param string $requestMethod
+	 * @param string $excpectedClassName
+	 *
 	 * @dataProvider validRequestMethodsProvider
 	 */
 	public function testBuildsRequestInstanceWithValidRequestMethod( $requestMethod, $excpectedClassName )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents = new UriComponents( 'Unit', 'Test', [ ] );
+		$uriComponents  = new UriComponents( 'Unit', 'Test', [ ] );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
 		$request = $requestBuilder->buildRequest( [ ], [ ], [ ] );
@@ -92,6 +98,14 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 *
+	 * @param string $requestMethod
+	 * @param array  $getData
+	 * @param array  $postData
+	 * @param array  $params
+	 * @param array  $expectedData
+	 *
+	 * @throws \Fortuneglobe\IceHawk\Exceptions\InvalidRequestMethod
 	 * @dataProvider uriComponentsParamsOverrideProvider
 	 */
 	public function testUriComponentsParamsOverrideRequestParams(

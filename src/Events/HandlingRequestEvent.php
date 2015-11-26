@@ -20,20 +20,15 @@ use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 final class HandlingRequestEvent implements ServesEventData
 {
 
-	/** @var ServesRequestInfo */
-	private $requestInfo;
-
 	/** @var ServesPostRequestData|ServesGetRequestData */
 	private $request;
 
 	/**
-	 * @param ServesRequestInfo $requestInfo
 	 * @param ServesRequestData $request
 	 */
-	public function __construct( ServesRequestInfo $requestInfo, ServesRequestData $request )
+	public function __construct( ServesRequestData $request )
 	{
-		$this->requestInfo = $requestInfo;
-		$this->request     = $request;
+		$this->request = $request;
 	}
 
 	/**
@@ -41,7 +36,7 @@ final class HandlingRequestEvent implements ServesEventData
 	 */
 	public function getRequestInfo()
 	{
-		return $this->requestInfo;
+		return $this->request->getRequestInfo();
 	}
 
 	/**

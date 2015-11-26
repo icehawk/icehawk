@@ -15,11 +15,15 @@ use Fortuneglobe\IceHawk\Interfaces\ControlsHandlingBehaviour;
  */
 class IceHawkDelegate implements ControlsHandlingBehaviour
 {
+	public function setUpErrorHandling()
+	{
+	}
+
 	public function setUpSessionHandling()
 	{
 	}
 
-	public function setUpErrorHandling()
+	public function setUpEnvironment()
 	{
 	}
 

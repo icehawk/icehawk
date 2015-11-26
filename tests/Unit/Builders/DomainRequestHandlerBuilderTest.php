@@ -8,6 +8,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Builders;
 use Fortuneglobe\IceHawk\Builders\DomainRequestHandlerBuilder;
 use Fortuneglobe\IceHawk\Constants\Http;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
+use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
 use Fortuneglobe\IceHawk\Requests\PostRequest;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidReadTestRequestHandler;
@@ -27,7 +28,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 			$uriComponents
 		);
 
-		$request = new GetRequest( [ ] );
+		$request = new GetRequest( RequestInfo::fromEnv(), [ ] );
 
 		$domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
 	}
@@ -64,7 +65,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 			$uriComponents
 		);
 
-		$request = new GetRequest( [ ] );
+		$request = new GetRequest( RequestInfo::fromEnv(), [ ] );
 
 		$domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
 	}
@@ -78,7 +79,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 			$uriComponents
 		);
 
-		$request = new GetRequest( [ ] );
+		$request = new GetRequest( RequestInfo::fromEnv(), [ ] );
 
 		$handler = $domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
 
@@ -94,7 +95,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 			$uriComponents
 		);
 
-		$request = new PostRequest( [ ], [ ] );
+		$request = new PostRequest( RequestInfo::fromEnv(), [ ], [ ] );
 
 		$handler = $domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
 

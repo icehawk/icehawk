@@ -31,6 +31,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 		$delegate->setUpErrorHandling()->shouldBeCalled();
 		$delegate->setUpSessionHandling()->shouldBeCalled();
+		$delegate->setUpEnvironment()->shouldBeCalled();
 
 		$iceHawk = new IceHawk( $config, $delegate->reveal() );
 		$iceHawk->init();
@@ -38,7 +39,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 	public function testPublishesEventWhenInitializationIsDone()
 	{
-		$initEvent     = new IceHawkWasInitializedEvent();
+		$requestInfo   = RequestInfo::fromEnv();
+		$initEvent     = new IceHawkWasInitializedEvent( $requestInfo );
 		$eventListener = $this->getMockBuilder( ListensToEvents::class )
 		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )
 		                      ->getMockForAbstractClass();
@@ -82,7 +84,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 	public function testCanCallHandlerForGetRequest()
 	{
-		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
+		$config      = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
 			[
 				'REQUEST_METHOD' => 'GET',
@@ -109,7 +111,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 	public function testCanCallHandlerForPostRequest()
 	{
-		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
+		$config      = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
 			[
 				'REQUEST_METHOD' => 'POST',
@@ -171,7 +173,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 	public function testPublishesEventsWhenHandlingRequest()
 	{
-		$config = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
+		$config      = $this->getMockBuilder( ServesIceHawkConfig::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
 			[
 				'REQUEST_METHOD' => 'GET',
@@ -179,9 +181,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$initEvent     = new IceHawkWasInitializedEvent();
-		$handlingEvent = new HandlingRequestEvent( $requestInfo, new GetRequest( [ ] ) );
-		$handledEvent  = new RequestWasHandledEvent( $requestInfo, new GetRequest( [ ] ) );
+		$initEvent     = new IceHawkWasInitializedEvent( $requestInfo );
+		$getRequest    = new GetRequest( $requestInfo, [ ] );
+		$handlingEvent = new HandlingRequestEvent( $getRequest );
+		$handledEvent  = new RequestWasHandledEvent( $getRequest );
 
 		$eventListener = $this->getMockBuilder( ListensToEvents::class )
 		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )

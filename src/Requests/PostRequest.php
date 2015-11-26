@@ -8,6 +8,8 @@
 namespace Fortuneglobe\IceHawk\Requests;
 
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFileData;
 
 /**
  * Class PostRequest
@@ -16,19 +18,25 @@ use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
  */
 final class PostRequest implements ServesPostRequestData
 {
+	/** @var ServesRequestInfo */
+	private $requestInfo;
 
 	/** @var array */
 	private $postData = [ ];
 
-	/** @var array */
+	/** @var array|ServesUploadedFileData[] */
 	private $uploadedFiles = [ ];
 
 	/**
-	 * @param array $postData
-	 * @param array $uploadedFiles
+	 * PostRequest constructor.
+	 *
+	 * @param ServesRequestInfo              $requestInfo
+	 * @param array                          $postData
+	 * @param array|ServesUploadedFileData[] $uploadedFiles
 	 */
-	public function __construct( array $postData, array $uploadedFiles )
+	public function __construct( ServesRequestInfo $requestInfo, array $postData, array $uploadedFiles )
 	{
+		$this->requestInfo   = $requestInfo;
 		$this->postData      = $postData;
 		$this->uploadedFiles = $uploadedFiles;
 	}
@@ -60,9 +68,9 @@ final class PostRequest implements ServesPostRequestData
 	}
 
 	/**
-	 * @param $fieldKey
+	 * @param string $fieldKey
 	 *
-	 * @return UploadedFile[]
+	 * @return ServesUploadedFileData[]
 	 */
 	public function getFiles( $fieldKey )
 	{
@@ -82,7 +90,7 @@ final class PostRequest implements ServesPostRequestData
 	 * @param string $fieldKey
 	 * @param int    $fileIndex
 	 *
-	 * @return UploadedFile|null
+	 * @return ServesUploadedFileData|null
 	 */
 	public function getOneFile( $fieldKey, $fileIndex = 0 )
 	{
@@ -99,7 +107,7 @@ final class PostRequest implements ServesPostRequestData
 	}
 
 	/**
-	 * @return array
+	 * @return array|ServesUploadedFileData[]
 	 */
 	private function getFilesAsInfoObjects()
 	{
@@ -160,5 +168,13 @@ final class PostRequest implements ServesPostRequestData
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * @return ServesRequestInfo
+	 */
+	public function getRequestInfo()
+	{
+		return $this->requestInfo;
 	}
 }

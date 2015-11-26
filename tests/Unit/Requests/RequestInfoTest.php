@@ -16,17 +16,17 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$_SERVER['REQUEST_URI']        = '/unit/test';
 		$_SERVER['REQUEST_METHOD']     = 'POST';
 		$_SERVER['QUERY_STRING']       = 'unit=test';
-		$_SERVER['HTTP_USER_AGENT'] = 'phpunit cli';
+		$_SERVER['HTTP_USER_AGENT']    = 'phpunit cli';
 		$_SERVER['HTTP_HOST']          = 'www.icehawk.de';
-		$_SERVER['HTTP_REFERER'] = 'http://www.example.com';
+		$_SERVER['HTTP_REFERER']       = 'http://www.example.com';
 		$_SERVER['HTTP_ACCEPT']        = 'text/html; charset=utf-8';
 		$_SERVER['SERVER_ADDR']        = '127.0.0.1';
 		$_SERVER['REMOTE_ADDR']        = '192.168.0.10';
-		$_SERVER['HTTP_REFERER'] = 'http://www.example.com';
+		$_SERVER['HTTP_REFERER']       = 'http://www.example.com';
 		$_SERVER['REQUEST_TIME_FLOAT'] = $requestTimeFloat;
-		$_SERVER['HTTPS'] = 'on';
-		$_SERVER['PHP_AUTH_USER'] = 'Unit';
-		$_SERVER['PHP_AUTH_PW'] = 'Test';
+		$_SERVER['HTTPS']              = 'on';
+		$_SERVER['PHP_AUTH_USER']      = 'Unit';
+		$_SERVER['PHP_AUTH_PW']        = 'Test';
 
 		$requestInfo = RequestInfo::fromEnv();
 

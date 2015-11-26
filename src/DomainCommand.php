@@ -7,6 +7,7 @@
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFileData;
 
 /**
@@ -81,5 +82,13 @@ abstract class DomainCommand
 	protected function getOneUploadedFile( $key, $fileIndex = 0 )
 	{
 		return $this->request->getOneFile( $key, $fileIndex );
+	}
+
+	/**
+	 * @return ServesRequestInfo
+	 */
+	final public function getRequestInfo()
+	{
+		return $this->request->getRequestInfo();
 	}
 }

@@ -14,9 +14,9 @@ class HandlingRequestEventTest extends \PHPUnit_Framework_TestCase
 	public function testCanRetrieveInjectedObjects()
 	{
 		$requestInfo = RequestInfo::fromEnv();
-		$getRequest  = new GetRequest( [ ] );
+		$getRequest  = new GetRequest( $requestInfo, [ ] );
 
-		$event = new HandlingRequestEvent( $requestInfo, $getRequest );
+		$event = new HandlingRequestEvent( $getRequest );
 
 		$this->assertSame( $requestInfo, $event->getRequestInfo() );
 		$this->assertSame( $getRequest, $event->getRequest() );

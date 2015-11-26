@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-# Absolute path to this script, e.g. /home/user/bin/foo.sh
-SCRIPT=$(readlink -f "$0")
-# Absolute path this script is in, thus /home/user/bin
-SCRIPTPATH=$(dirname "$SCRIPT")
+cd "$(dirname "$0")"
 
-cd $SCRIPTPATH
+for toolFile in `ls -1 ./*.phar`; do rm -rf "$toolFile"; done
 
 # Composer
 rm -f composer.phar
@@ -14,7 +11,8 @@ chmod +x composer.phar
 
 # PHPUNIT
 rm -f phpunit.phar
-wget -c https://phar.phpunit.de/phpunit.phar
+wget -c https://phar.phpunit.de/phpunit-old.phar
+mv phpunit-old.phar phpunit.phar
 chmod +x phpunit.phar
 
 # PHPLOC
@@ -45,6 +43,6 @@ chmod +x phpcpd.phar
 # PHP Dox
 PHPDOX_VERSION='0.8.0'
 rm -f phpdox.phar
-wget https://github.com/theseer/phpdox/releases/download/0.8.0/phpdox-$PHPDOX_VERSION.phar
-mv phpdox-$PHPDOX_VERSION.phar phpdox.phar
+wget "https://github.com/theseer/phpdox/releases/download/0.8.0/phpdox-$PHPDOX_VERSION.phar"
+mv "phpdox-$PHPDOX_VERSION.phar" phpdox.phar
 chmod +x phpdox.phar

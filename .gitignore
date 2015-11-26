@@ -1,11 +1,11 @@
 .idea/
-*.ipr
-*.iws
 
 # vagrant
 .vagrant/
 vagrant
-!env/vagrant
+
+# tools
+build/tools/*.phar
 
 # composer
 vendor/

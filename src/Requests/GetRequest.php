@@ -8,6 +8,7 @@
 namespace Fortuneglobe\IceHawk\Requests;
 
 use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 
 /**
  * Class GetRequest
@@ -16,16 +17,20 @@ use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
  */
 final class GetRequest implements ServesGetRequestData
 {
+	/** @var ServesRequestInfo */
+	private $requestInfo;
 
 	/** @var array */
 	private $getData = [ ];
 
 	/**
-	 * @param array $getData
+	 * @param ServesRequestInfo $requestInfo
+	 * @param array             $getData
 	 */
-	public function __construct( array $getData )
+	public function __construct( ServesRequestInfo $requestInfo, array $getData )
 	{
-		$this->getData = $getData;
+		$this->requestInfo = $requestInfo;
+		$this->getData     = $getData;
 	}
 
 	/**
@@ -51,5 +56,13 @@ final class GetRequest implements ServesGetRequestData
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * @return ServesRequestInfo
+	 */
+	public function getRequestInfo()
+	{
+		return $this->requestInfo;
 	}
 }

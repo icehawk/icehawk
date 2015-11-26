@@ -7,6 +7,7 @@
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 
 /**
  * Class DomainQuery
@@ -43,5 +44,13 @@ abstract class DomainQuery
 	protected function getRequestData()
 	{
 		return $this->request->getData();
+	}
+
+	/**
+	 * @return ServesRequestInfo
+	 */
+	final public function getRequestInfo()
+	{
+		return $this->request->getRequestInfo();
 	}
 }

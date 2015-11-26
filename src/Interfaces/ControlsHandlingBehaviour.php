@@ -17,6 +17,8 @@ interface ControlsHandlingBehaviour
 
 	public function setUpSessionHandling();
 
+	public function setUpEnvironment();
+
 	/**
 	 * @param \Exception $exception
 	 */

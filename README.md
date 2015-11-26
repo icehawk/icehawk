@@ -12,8 +12,8 @@ Fast and reliable PHP frontend framework respecting CQRS.
 ## Requirements
 
  * PHP >= 5.5
+ * [fileinfo extension](https://pecl.php.net/package/Fileinfo) for handling uploaded files correctly
  * [xdebug extension](https://pecl.php.net/package/Xdebug) for running the tests
- * [fileinfo extension](https://pecl.php.net/package/Fileinfo) for running the tests
 
 ## Installation
 
@@ -29,8 +29,7 @@ To run the tests, you should add this to your `composer.json` too:
 
 ```json
 "require-dev": {
-    "ext-xdebug": "*",
-    "ext-fileinfo": "*"
+    "ext-xdebug": "*"
 }
 ```
 

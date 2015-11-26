@@ -12,11 +12,12 @@ branches:
 
 before_script:
  - git checkout $TRAVIS_BRANCH
+ - sh build/tools/update_tools.sh
  - php build/tools/composer.phar install --prefer-dist -o --no-interaction
  - mkdir build/logs
 
 script:
- - phpunit -c build/
+ - php build/tools/phpunit.phar -c build/
 
 after_script:
  - php vendor/bin/coveralls -c ./.coveralls.yml -v --exclude-no-stmt

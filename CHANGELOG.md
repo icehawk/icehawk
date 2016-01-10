@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Changes in Version 1.4.1
+
+ * Fixed regex pattern replacement in UriRewriter class
+
 ## Changes in Version 1.4.0
 
  * Fixed issue #1, added "ext-fileinfo": "*" to composer's require block and a hint to the README.  

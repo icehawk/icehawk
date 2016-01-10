@@ -21,7 +21,7 @@ Add this to your `composer.json`:
 
 ```json
 "require": {
-    "fortuneglobe/icehawk": "~1.3.0"
+    "fortuneglobe/icehawk": "~1.4.0"
 }
 ```
 

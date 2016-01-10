@@ -65,6 +65,8 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 			[ '/non/regex/no/code', '/non_regex_no_code', Http::MOVED_PERMANENTLY ],
 			[ '/regex/rewrite', '/regex_rewrite', Http::MOVED_TEMPORARILY ],
 			[ '/regex/rewrite/', '/regex_rewrite', Http::MOVED_TEMPORARILY ],
+			[ '/regex/param/test', '/regex_param_test', Http::MOVED_TEMPORARILY ],
+			[ '/regex/param/test/', '/regex_param_test', Http::MOVED_TEMPORARILY ],
 			[ '/not/existing/in/map', '/not/existing/in/map', Http::MOVED_PERMANENTLY ],
 		];
 	}

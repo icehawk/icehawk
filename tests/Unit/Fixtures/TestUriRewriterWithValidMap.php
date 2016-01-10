@@ -18,9 +18,10 @@ class TestUriRewriterWithValidMap extends UriRewriter
 {
 
 	private static $simpleMap = [
-		"/non/regex/rewrite"     => [ '/non_regex_rewrite', Http::MOVED_PERMANENTLY ],
-		"/non/regex/no/code"     => [ '/non_regex_no_code' ],
-		"#^\/regex\/rewrite\/?#" => [ '/regex_rewrite', Http::MOVED_TEMPORARILY ],
+		"#/non/regex/rewrite#"      => [ '/non_regex_rewrite', Http::MOVED_PERMANENTLY ],
+		"#/non/regex/no/code#"      => [ '/non_regex_no_code' ],
+		"#^/regex/rewrite/?#"       => [ '/regex_rewrite', Http::MOVED_TEMPORARILY ],
+		"#^/regex/param/([^/]+)/?#" => [ '/regex_param_$1', Http::MOVED_TEMPORARILY ],
 	];
 
 	public function rewrite( ServesRequestInfo $requestInfo )

@@ -43,7 +43,7 @@ class UriRewriter implements RewritesUri
 			{
 				$this->guardRedirectUrlIsSetInMap( $redirectData );
 
-				$redirectUrl  = $redirectData[0];
+				$redirectUrl  = preg_replace( $pattern, $redirectData[0], $requestUri );
 				$redirectCode = isset($redirectData[1]) ? $redirectData[1] : null;
 
 				$redirect = $this->buildRedirect( $redirectUrl, $redirectCode );
@@ -94,7 +94,7 @@ class UriRewriter implements RewritesUri
 	}
 
 	/**
-	 * @param string $redirectUrl
+	 * @param string      $redirectUrl
 	 * @param string|null $redirectCode
 	 *
 	 * @return Redirect

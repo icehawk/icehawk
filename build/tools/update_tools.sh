@@ -2,7 +2,7 @@
 
 cd "$(dirname "$0")"
 
-for toolFile in `ls -1 ./*.phar`; do rm -rf "$toolFile"; done
+rm -rf ./*.phar
 
 # Composer
 rm -f composer.phar
@@ -11,8 +11,7 @@ chmod +x composer.phar
 
 # PHPUNIT
 rm -f phpunit.phar
-wget -c https://phar.phpunit.de/phpunit-old.phar
-mv phpunit-old.phar phpunit.phar
+wget -c https://phar.phpunit.de/phpunit.phar
 chmod +x phpunit.phar
 
 # PHPLOC
@@ -41,8 +40,13 @@ wget -c https://phar.phpunit.de/phpcpd.phar
 chmod +x phpcpd.phar
 
 # PHP Dox
-PHPDOX_VERSION='0.8.0'
+PHPDOX_VERSION='0.8.1.1'
 rm -f phpdox.phar
-wget "https://github.com/theseer/phpdox/releases/download/0.8.0/phpdox-$PHPDOX_VERSION.phar"
+wget "https://github.com/theseer/phpdox/releases/download/$PHPDOX_VERSION/phpdox-$PHPDOX_VERSION.phar"
 mv "phpdox-$PHPDOX_VERSION.phar" phpdox.phar
 chmod +x phpdox.phar
+
+# Coveralls
+COVERALLS_VERSION='v1.0.1'
+wget "https://github.com/satooshi/php-coveralls/releases/download/$COVERALLS_VERSION/coveralls.phar"
+chmod +x coveralls.phar

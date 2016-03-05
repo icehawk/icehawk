@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Changes in Version 2.0.0
+
+ * Requires php >= 7.0.0
+
 ## Changes in Version 1.4.1
 
  * Fixed regex pattern replacement in UriRewriter class

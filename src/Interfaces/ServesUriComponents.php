@@ -7,23 +7,13 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
  * Interface ServesUriComponents
- *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
 interface ServesUriComponents
 {
-	/**
-	 * @return string
-	 */
-	public function getDomain();
+	public function getDomain() : string;
 
-	/**
-	 * @return string
-	 */
-	public function getDemand();
+	public function getDemand() : string;
 
-	/**
-	 * @return array
-	 */
-	public function getParams();
+	public function getParams() : array;
 }

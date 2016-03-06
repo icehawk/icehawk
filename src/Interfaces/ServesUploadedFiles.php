@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * @author h.woltersdorf
  */
 
@@ -8,7 +7,6 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
  * Interface ServesUploadedFiles
- *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
 interface ServesUploadedFiles
@@ -16,20 +14,14 @@ interface ServesUploadedFiles
 	/**
 	 * @return array|ServesUploadedFileData[][]
 	 */
-	public function getAllFiles();
+	public function getAllFiles() : array;
 
 	/**
 	 * @param string $fieldKey
 	 *
 	 * @return array|ServesUploadedFileData[]
 	 */
-	public function getFiles( $fieldKey );
+	public function getFiles( string $fieldKey ) : array;
 
-	/**
-	 * @param string $fieldKey
-	 * @param int    $fileIndex
-	 *
-	 * @return ServesUploadedFileData|null
-	 */
-	public function getOneFile( $fieldKey, $fileIndex );
+	public function getOneFile( string $fieldKey, int $fileIndex ) : ServesUploadedFileData;
 }

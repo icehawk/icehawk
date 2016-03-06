@@ -9,15 +9,9 @@ use Fortuneglobe\IceHawk\Responses\Redirect;
 
 /**
  * Interface RewritesUri
- *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
 interface RewritesUri
 {
-	/**
-	 * @param ServesRequestInfo $requestInfo
-	 *
-	 * @return Redirect
-	 */
-	public function rewrite( ServesRequestInfo $requestInfo );
+	public function rewrite( ServesRequestInfo $requestInfo ) : Redirect;
 }

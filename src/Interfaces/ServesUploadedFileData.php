@@ -6,7 +6,6 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
  * Class UploadedFile
- *
  * @package Fortuneglobe\IceHawk\Requests
  */
 interface ServesUploadedFileData
@@ -14,45 +13,45 @@ interface ServesUploadedFileData
 	/**
 	 * @return int
 	 */
-	public function getError();
+	public function getError() : int;
 
 	/**
 	 * @return string
 	 */
-	public function getName();
+	public function getName() : string;
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getSize();
-
-	/**
-	 * @return string
-	 */
-	public function getTmpName();
+	public function getSize() : float;
 
 	/**
 	 * @return string
 	 */
-	public function getType();
+	public function getTmpName() : string;
 
 	/**
 	 * @return string
 	 */
-	public function getRealType();
+	public function getType() : string;
 
 	/**
 	 * @return string
 	 */
-	public function getEncoding();
+	public function getRealType() : string;
+
+	/**
+	 * @return string
+	 */
+	public function getEncoding() : string;
 
 	/**
 	 * @return bool
 	 */
-	public function didUploadSucceed();
+	public function didUploadSucceed() : bool;
 
 	/**
 	 * @return string
 	 */
-	public function getErrorMessage();
+	public function getErrorMessage() : string;
 }

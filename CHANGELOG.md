@@ -2,7 +2,29 @@
 
 ## Changes in Version 2.0.0
 
- * Requires php >= 7.0.0
+**CAUTION** This release has major interface changes and is not backward compatible with prior versions.
+
+### Added / Moved / Renamed
+
+* Requires php >= 7.0.0
+* Added scalar type hints and return types to all interfaces
+* Renamed/moved pub/sub related classes and interfaces
+  * EventListener => PubSub\AbstractEventSubscriber
+  * Interfaces\ListensToEvents => PubSub\Interfaces\SubscribesToEvents
+  * Interfaces\ServesEventData => PubSub\Interfaces\CarriesEventData
+* Added exceptions in pub/sub context:
+  * PubSubException
+  * EventSubscriberMethodNotCallable
+* Added interfaces for event publisher
+* Added EventPublisher as a singleton class
+* Added UncaughtExceptionWasThrownEvent that is emitted instead of calling handleUncaughtException on the delegate
+* Added RedirectingEvent that is emitted before a redirecting to another URI
+
+### Removed
+
+* Removed Interfaces/RendersTemplate
+* Removed Responses/TemplatePage
+* Removed handleUncaughtExcpetion from delegate interface
 
 ## Changes in Version 1.4.1
 

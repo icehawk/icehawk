@@ -45,7 +45,7 @@ class IceHawkConfig implements ServesIceHawkConfig
 	/**
 	 * @return array|ListensToEvents[]
 	 */
-	public function getEventListeners()
+	public function getEventSubscribers()
 	{
 		return [ ];
 	}

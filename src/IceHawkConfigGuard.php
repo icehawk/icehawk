@@ -108,7 +108,7 @@ final class IceHawkConfigGuard
 	 */
 	private function guardEventListenersAreValid()
 	{
-		$eventListeners = $this->config->getEventListeners();
+		$eventListeners = $this->config->getEventSubscribers();
 
 		if ( !is_array( $eventListeners ) && !($eventListeners instanceof \Traversable) )
 		{

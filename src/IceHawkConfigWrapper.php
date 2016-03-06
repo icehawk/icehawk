@@ -6,11 +6,11 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Interfaces\ListensToEvents;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
 /**
  * Class IceHawkConfigWrapper
@@ -28,60 +28,45 @@ final class IceHawkConfigWrapper implements ServesIceHawkConfig
 	/** @var RewritesUri */
 	private $uriRewriter;
 
-	/** @var array|ListensToEvents */
-	private $eventListeners;
+	/** @var array|SubscribesToEvents[] */
+	private $eventSubscribers;
 
 	/** @var string */
 	private $domainNamespace;
 
-	/**
-	 * @param ServesIceHawkConfig $config
-	 */
 	public function __construct( ServesIceHawkConfig $config )
 	{
-		$this->requestInfo     = $config->getRequestInfo();
-		$this->uriResolver     = $config->getUriResolver();
-		$this->uriRewriter     = $config->getUriRewriter();
-		$this->eventListeners  = $config->getEventListeners();
-		$this->domainNamespace = $config->getDomainNamespace();
+		$this->requestInfo      = $config->getRequestInfo();
+		$this->uriResolver      = $config->getUriResolver();
+		$this->uriRewriter      = $config->getUriRewriter();
+		$this->eventSubscribers = $config->getEventSubscribers();
+		$this->domainNamespace  = $config->getDomainNamespace();
 	}
 
-	/**
-	 * @return ServesRequestInfo
-	 */
-	public function getRequestInfo()
+	public function getRequestInfo() : ServesRequestInfo
 	{
 		return $this->requestInfo;
 	}
 
-	/**
-	 * @return ResolvesUri
-	 */
-	public function getUriResolver()
+	public function getUriResolver() : ResolvesUri
 	{
 		return $this->uriResolver;
 	}
 
-	/**
-	 * @return RewritesUri
-	 */
-	public function getUriRewriter()
+	public function getUriRewriter() : RewritesUri
 	{
 		return $this->uriRewriter;
 	}
 
 	/**
-	 * @return array|ListensToEvents
+	 * @return array|SubscribesToEvents[]
 	 */
-	public function getEventListeners()
+	public function getEventSubscribers() : array
 	{
-		return $this->eventListeners;
+		return $this->eventSubscribers;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getDomainNamespace()
+	public function getDomainNamespace() : string
 	{
 		return $this->domainNamespace;
 	}

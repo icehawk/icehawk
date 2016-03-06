@@ -7,73 +7,33 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
  * Interface ServesRequestInfo
- *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
 interface ServesRequestInfo
 {
-	/**
-	 * @return bool
-	 */
-	public function isSecure();
+	public function isSecure() : bool;
 
-	/**
-	 * @return string
-	 */
-	public function getMethod();
+	public function getMethod() : string;
 
-	/**
-	 * @return string
-	 */
-	public function getUri();
+	public function getUri() : string;
 
-	/**
-	 * @return string
-	 */
-	public function getHost();
+	public function getHost() : string;
 
-	/**
-	 * @return string
-	 */
-	public function getUserAgent();
+	public function getUserAgent() : string;
 
-	/**
-	 * @return string
-	 */
-	public function getServerAddress();
+	public function getServerAddress() : string;
 
-	/**
-	 * @return string
-	 */
-	public function getClientAddress();
+	public function getClientAddress() : string;
 
-	/**
-	 * @return float
-	 */
-	public function getRequestTimeFloat();
+	public function getRequestTimeFloat() : float;
 
-	/**
-	 * @return string
-	 */
-	public function getAcceptedContentTypes();
+	public function getAcceptedContentTypes() : string;
 
-	/**
-	 * @return string
-	 */
-	public function getQueryString();
+	public function getQueryString() : string;
 
-	/**
-	 * @return null|string
-	 */
-	public function getReferer();
+	public function getReferer() : string;
 
-	/**
-	 * @return string|null
-	 */
-	public function getAuthUser();
+	public function getAuthUser() : string;
 
-	/**
-	 * @return string|null
-	 */
-	public function getAuthPassword();
+	public function getAuthPassword() : string;
 }

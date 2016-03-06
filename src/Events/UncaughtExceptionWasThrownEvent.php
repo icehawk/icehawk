@@ -1,6 +1,6 @@
 <?php
 /**
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk\Events;
@@ -9,25 +9,28 @@ use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
- * Class IceHawkWasInitializedEvent
+ * Class UncaughtExceptionWasThrownEvent
  * @package Fortuneglobe\IceHawk\Events
  */
-final class IceHawkWasInitializedEvent implements CarriesEventData
+final class UncaughtExceptionWasThrownEvent implements CarriesEventData
 {
+	/** @var \Throwable */
+	private $throwable;
+
 	/** @var ServesRequestInfo */
 	private $requestInfo;
 
-	/**
-	 * @param ServesRequestInfo $requestInfo
-	 */
-	public function __construct( ServesRequestInfo $requestInfo )
+	public function __construct( \Throwable $throwable, ServesRequestInfo $requestInfo )
 	{
+		$this->throwable   = $throwable;
 		$this->requestInfo = $requestInfo;
 	}
 
-	/**
-	 * @return ServesRequestInfo
-	 */
+	public function getThrowable() : \Throwable
+	{
+		return $this->throwable;
+	}
+
 	public function getRequestInfo() : ServesRequestInfo
 	{
 		return $this->requestInfo;

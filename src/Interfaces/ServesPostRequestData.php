@@ -7,13 +7,9 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
  * Interface ServesPostRequestData
- *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
 interface ServesPostRequestData extends ServesRequestData, ServesUploadedFiles
 {
-	/**
-	 * @return string|null
-	 */
-	public function getRawData();
+	public function getRawData() : string;
 }

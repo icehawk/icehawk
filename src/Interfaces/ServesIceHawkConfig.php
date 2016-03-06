@@ -5,35 +5,24 @@
 
 namespace Fortuneglobe\IceHawk\Interfaces;
 
+use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+
 /**
  * Interface ServesIceHawkConfig
- *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
 interface ServesIceHawkConfig
 {
-	/**
-	 * @return string
-	 */
-	public function getDomainNamespace();
+	public function getDomainNamespace() : string;
+
+	public function getUriRewriter() : RewritesUri;
+
+	public function getUriResolver() : ResolvesUri;
 
 	/**
-	 * @return RewritesUri
+	 * @return array|SubscribesToEvents[]
 	 */
-	public function getUriRewriter();
+	public function getEventSubscribers() : array;
 
-	/**
-	 * @return ResolvesUri
-	 */
-	public function getUriResolver();
-
-	/**
-	 * @return array|ListensToEvents[]
-	 */
-	public function getEventListeners();
-
-	/**
-	 * @return ServesRequestInfo
-	 */
-	public function getRequestInfo();
+	public function getRequestInfo() : ServesRequestInfo;
 }

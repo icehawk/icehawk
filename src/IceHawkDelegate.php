@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * @author h.woltersdorf
  */
 
@@ -10,7 +9,6 @@ use Fortuneglobe\IceHawk\Interfaces\ControlsHandlingBehaviour;
 
 /**
  * Class IceHawkDelegate
- *
  * @package Fortuneglobe\IceHawk
  */
 class IceHawkDelegate implements ControlsHandlingBehaviour
@@ -25,15 +23,5 @@ class IceHawkDelegate implements ControlsHandlingBehaviour
 
 	public function setUpEnvironment()
 	{
-	}
-
-	/**
-	 * @param \Exception $exception
-	 *
-	 * @throws \Exception
-	 */
-	public function handleUncaughtException( \Exception $exception )
-	{
-		throw $exception;
 	}
 }

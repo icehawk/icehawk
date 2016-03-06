@@ -16,7 +16,7 @@ class IceHawkConfigTest extends \PHPUnit_Framework_TestCase
 	{
 		$config = new IceHawkConfig();
 
-		$this->assertEquals( [ ], $config->getEventListeners() );
+		$this->assertEquals( [ ], $config->getEventSubscribers() );
 		$this->assertEquals( 'Fortuneglobe\\IceHawk', $config->getDomainNamespace() );
 		$this->assertEquals( new UriResolver(), $config->getUriResolver() );
 		$this->assertEquals( new UriRewriter(), $config->getUriRewriter() );

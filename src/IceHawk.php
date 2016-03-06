@@ -20,13 +20,13 @@ use Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation;
 use Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
 use Fortuneglobe\IceHawk\Exceptions\MissingInterfaceImplementationForHandlingDomainRequests;
-use Fortuneglobe\IceHawk\Interfaces\ControlsHandlingBehaviour;
+use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
 use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
+use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
 use Fortuneglobe\IceHawk\PubSub\EventPublisher;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
 use Fortuneglobe\IceHawk\Responses\Redirect;
@@ -37,17 +37,17 @@ use Fortuneglobe\IceHawk\Responses\Redirect;
  */
 final class IceHawk
 {
-	/** @var ServesIceHawkConfig */
+	/** @var ConfiguresIceHawk */
 	private $config;
 
-	/** @var ControlsHandlingBehaviour */
+	/** @var SetsUpEnvironment */
 	private $delegate;
 
 	/**
-	 * @param ServesIceHawkConfig       $config
-	 * @param ControlsHandlingBehaviour $delegate
+	 * @param ConfiguresIceHawk $config
+	 * @param SetsUpEnvironment $delegate
 	 */
-	public function __construct( ServesIceHawkConfig $config, ControlsHandlingBehaviour $delegate )
+	public function __construct( ConfiguresIceHawk $config, SetsUpEnvironment $delegate )
 	{
 		$this->config   = $config;
 		$this->delegate = $delegate;
@@ -64,7 +64,7 @@ final class IceHawk
 	{
 		$this->delegate->setUpErrorHandling();
 		$this->delegate->setUpSessionHandling();
-		$this->delegate->setUpEnvironment();
+		$this->delegate->setUpGlobalVars();
 
 		$this->config = new IceHawkConfigWrapper( $this->config );
 

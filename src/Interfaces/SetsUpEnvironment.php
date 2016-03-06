@@ -6,14 +6,14 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
- * Interface ControlsHandlingBehaviour
+ * Interface SetsUpEnvironment
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface ControlsHandlingBehaviour
+interface SetsUpEnvironment
 {
 	public function setUpErrorHandling();
 
 	public function setUpSessionHandling();
 
-	public function setUpEnvironment();
+	public function setUpGlobalVars();
 }

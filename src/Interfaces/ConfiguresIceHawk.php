@@ -8,10 +8,10 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
 /**
- * Interface ServesIceHawkConfig
+ * Interface ConfiguresIceHawk
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface ServesIceHawkConfig
+interface ConfiguresIceHawk
 {
 	public function getDomainNamespace() : string;
 

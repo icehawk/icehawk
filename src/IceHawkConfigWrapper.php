@@ -6,9 +6,9 @@
 
 namespace Fortuneglobe\IceHawk;
 
+use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
-use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
@@ -17,7 +17,7 @@ use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
  *
  * @package Fortuneglobe\IceHawk
  */
-final class IceHawkConfigWrapper implements ServesIceHawkConfig
+final class IceHawkConfigWrapper implements ConfiguresIceHawk
 {
 	/** @var ServesRequestInfo */
 	private $requestInfo;
@@ -34,7 +34,7 @@ final class IceHawkConfigWrapper implements ServesIceHawkConfig
 	/** @var string */
 	private $domainNamespace;
 
-	public function __construct( ServesIceHawkConfig $config )
+	public function __construct( ConfiguresIceHawk $config )
 	{
 		$this->requestInfo      = $config->getRequestInfo();
 		$this->uriResolver      = $config->getUriResolver();

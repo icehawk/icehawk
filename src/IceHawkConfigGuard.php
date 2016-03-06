@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * @author hollodotme
  */
 
@@ -11,26 +10,25 @@ use Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestInfoImplementation;
 use Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation;
 use Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation;
-use Fortuneglobe\IceHawk\Interfaces\ListensToEvents;
+use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
-use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
 /**
  * Class IceHawkConfigGuard
- *
  * @package Fortuneglobe\IceHawk
  */
 final class IceHawkConfigGuard
 {
-	/** @var ServesIceHawkConfig */
+	/** @var ConfiguresIceHawk */
 	private $config;
 
 	/**
-	 * @param ServesIceHawkConfig $config
+	 * @param ConfiguresIceHawk $config
 	 */
-	public function __construct( ServesIceHawkConfig $config )
+	public function __construct( ConfiguresIceHawk $config )
 	{
 		$this->config = $config;
 	}
@@ -118,7 +116,7 @@ final class IceHawkConfigGuard
 		{
 			foreach ( $eventListeners as $eventListener )
 			{
-				if ( !($eventListener instanceof ListensToEvents) )
+				if ( !($eventListener instanceof SubscribesToEvents) )
 				{
 					throw new InvalidEventListenerCollection();
 				}

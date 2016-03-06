@@ -3,20 +3,19 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk;
+namespace Fortuneglobe\IceHawk\Defaults;
 
-use Fortuneglobe\IceHawk\Interfaces\ListensToEvents;
+use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
-use Fortuneglobe\IceHawk\Interfaces\ServesIceHawkConfig;
 use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
 /**
  * Class IceHawkConfig
- *
  * @package Fortuneglobe\IceHawk
  */
-class IceHawkConfig implements ServesIceHawkConfig
+class IceHawkConfig implements ConfiguresIceHawk
 {
 	/**
 	 * @return RewritesUri
@@ -43,11 +42,13 @@ class IceHawkConfig implements ServesIceHawkConfig
 	}
 
 	/**
-	 * @return array|ListensToEvents[]
+	 * @return array|SubscribesToEvents[]
 	 */
 	public function getEventSubscribers()
 	{
-		return [ ];
+		return [
+			new EventSubscriber(),
+		];
 	}
 
 	/**

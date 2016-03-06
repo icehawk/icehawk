@@ -19,6 +19,11 @@
 * Added EventPublisher as a singleton class
 * Added UncaughtExceptionWasThrownEvent that is emitted instead of calling handleUncaughtException on the delegate
 * Added RedirectingEvent that is emitted before a redirecting to another URI
+* Renamed ServceIceHawkContig interface to ConfiguresIceHawk
+* Renamed ControlsHandlingBehaviour interface to SetsUpEnvironment
+* Moved default IceHawkConfig to Defaults/IceHawkConfig
+* Moved default IceHawkDelegate to Defaults/IceHawkDelegate
+* Added Defaults/IceHawkEventSubscriber
 
 ### Removed
 

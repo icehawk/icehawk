@@ -1,39 +1,27 @@
 <?php
 /**
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk;
 
 use Fortuneglobe\IceHawk\Exceptions\MissingRedirectUrlInRewriteMap;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 
 /**
- * Class UriRewriter
- *
+ * Class AbstractUriRewriter
  * @package Fortuneglobe\IceHawk
  */
-class UriRewriter implements RewritesUri
+abstract class AbstractUriRewriter implements RewritesUri
 {
-	/**
-	 * @param ServesRequestInfo $requestInfo
-	 *
-	 * @return Redirect
-	 */
-	public function rewrite( ServesRequestInfo $requestInfo )
-	{
-		return $this->rewriteUriBySimpleMap( $requestInfo->getUri(), [ ] );
-	}
-
 	/**
 	 * @param string $requestUri
 	 * @param array  $simpleMap
 	 *
 	 * @return Redirect
 	 */
-	protected function rewriteUriBySimpleMap( $requestUri, array $simpleMap )
+	protected function rewriteUriBySimpleMap( string $requestUri, array $simpleMap ) : Redirect
 	{
 		$redirect = $this->buildRedirect( $requestUri, null );
 

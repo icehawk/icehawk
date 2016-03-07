@@ -1,8 +1,7 @@
 <?php
 /**
  * GET request wrapper
- *
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk\Requests;
@@ -12,7 +11,6 @@ use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 
 /**
  * Class GetRequest
- *
  * @package Fortuneglobe\IceHawk\Requests
  */
 final class GetRequest implements ServesGetRequestData
@@ -46,7 +44,7 @@ final class GetRequest implements ServesGetRequestData
 	 *
 	 * @return null|string|array
 	 */
-	public function get( $key )
+	public function get( string $key )
 	{
 		if ( isset($this->getData[ $key ]) )
 		{

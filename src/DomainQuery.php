@@ -1,7 +1,6 @@
 <?php
 /**
- *
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk;

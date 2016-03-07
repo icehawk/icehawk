@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Responses;
 
-use Fortuneglobe\IceHawk\Constants\Http;
+use Fortuneglobe\IceHawk\Constants\HttpCode;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 
 class RedirectTest extends \PHPUnit_Framework_TestCase
@@ -30,9 +30,9 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 	public function locationCodeProvider()
 	{
 		return [
-			[ '/unit/test', null, 'Location: /unit/test', Http::MOVED_PERMANENTLY ],
-			[ '/unit/test', Http::MOVED_PERMANENTLY, 'Location: /unit/test', Http::MOVED_PERMANENTLY ],
-			[ '/unit/test', Http::MOVED_TEMPORARILY, 'Location: /unit/test', Http::MOVED_TEMPORARILY ],
+			[ '/unit/test', null, 'Location: /unit/test', HttpCode::MOVED_PERMANENTLY ],
+			[ '/unit/test', HttpCode::MOVED_PERMANENTLY, 'Location: /unit/test', HttpCode::MOVED_PERMANENTLY ],
+			[ '/unit/test', HttpCode::FOUND, 'Location: /unit/test', HttpCode::FOUND ],
 		];
 	}
 
@@ -41,7 +41,7 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSessionIsClosedWhenResponded()
 	{
-		$redirect = new Redirect( '/unit/test', Http::MOVED_PERMANENTLY );
+		$redirect = new Redirect( '/unit/test', HttpCode::MOVED_PERMANENTLY );
 
 		session_start();
 

@@ -1,11 +1,11 @@
 <?php
 /**
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk\Builders;
 
-use Fortuneglobe\IceHawk\Constants\Http;
+use Fortuneglobe\IceHawk\Constants\HttpMethod;
 use Fortuneglobe\IceHawk\Exceptions\BuildingDomainRequestHandlerFailed;
 use Fortuneglobe\IceHawk\Exceptions\MissingInterfaceImplementationForHandlingDomainRequests;
 use Fortuneglobe\IceHawk\Interfaces\BuildsDomainRequestHandlers;
@@ -15,7 +15,6 @@ use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 
 /**
  * Class DomainRequestHandlerBuilder
- *
  * @package Fortuneglobe\IceHawk\Builders
  */
 final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
@@ -59,7 +58,7 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 			"%s\\%s\\%s\\%sRequestHandler",
 			$this->domainNamespace,
 			$domainName,
-				$subNamespace,
+			$subNamespace,
 			$demandName
 		);
 
@@ -94,7 +93,7 @@ final class DomainRequestHandlerBuilder implements BuildsDomainRequestHandlers
 	 */
 	private function getSubNamespaceReadOrWrite()
 	{
-		if ( $this->requestMethod == Http::METHOD_POST )
+		if ( $this->requestMethod == HttpMethod::POST )
 		{
 			return 'Write';
 		}

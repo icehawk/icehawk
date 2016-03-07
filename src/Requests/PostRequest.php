@@ -1,8 +1,6 @@
 <?php
 /**
- * POST request wrapper
- *
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk\Requests;
@@ -13,7 +11,6 @@ use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFileData;
 
 /**
  * Class PostRequest
- *
  * @package Fortuneglobe\IceHawk\Requests
  */
 final class PostRequest implements ServesPostRequestData
@@ -27,13 +24,6 @@ final class PostRequest implements ServesPostRequestData
 	/** @var array|ServesUploadedFileData[] */
 	private $uploadedFiles = [ ];
 
-	/**
-	 * PostRequest constructor.
-	 *
-	 * @param ServesRequestInfo              $requestInfo
-	 * @param array                          $postData
-	 * @param array|ServesUploadedFileData[] $uploadedFiles
-	 */
 	public function __construct( ServesRequestInfo $requestInfo, array $postData, array $uploadedFiles )
 	{
 		$this->requestInfo   = $requestInfo;
@@ -41,28 +31,19 @@ final class PostRequest implements ServesPostRequestData
 		$this->uploadedFiles = $uploadedFiles;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getData()
+	public function getData() : array
 	{
 		return $this->postData;
 	}
 
-	/**
-	 * @return null|string
-	 */
-	public function getRawData()
+	public function getRawData() : string
 	{
 		$rawData = file_get_contents( 'php://input' );
 
-		return $rawData ?: null;
+		return $rawData ? : '';
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getAllFiles()
+	public function getAllFiles() : array
 	{
 		return $this->getFilesAsInfoObjects();
 	}
@@ -70,9 +51,9 @@ final class PostRequest implements ServesPostRequestData
 	/**
 	 * @param string $fieldKey
 	 *
-	 * @return ServesUploadedFileData[]
+	 * @return array|ServesUploadedFileData[]
 	 */
-	public function getFiles( $fieldKey )
+	public function getFiles( string $fieldKey ) : array
 	{
 		$allFiles = $this->getAllFiles();
 
@@ -92,7 +73,7 @@ final class PostRequest implements ServesPostRequestData
 	 *
 	 * @return ServesUploadedFileData|null
 	 */
-	public function getOneFile( $fieldKey, $fileIndex = 0 )
+	public function getOneFile( string $fieldKey, int $fileIndex = 0 )
 	{
 		$files = $this->getFiles( $fieldKey );
 
@@ -158,7 +139,7 @@ final class PostRequest implements ServesPostRequestData
 	 *
 	 * @return null|string|array
 	 */
-	public function get( $key )
+	public function get( string $key )
 	{
 		if ( isset($this->postData[ $key ]) )
 		{
@@ -173,7 +154,7 @@ final class PostRequest implements ServesPostRequestData
 	/**
 	 * @return ServesRequestInfo
 	 */
-	public function getRequestInfo()
+	public function getRequestInfo() : ServesRequestInfo
 	{
 		return $this->requestInfo;
 	}

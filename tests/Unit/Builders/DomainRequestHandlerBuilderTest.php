@@ -6,7 +6,7 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Builders;
 
 use Fortuneglobe\IceHawk\Builders\DomainRequestHandlerBuilder;
-use Fortuneglobe\IceHawk\Constants\Http;
+use Fortuneglobe\IceHawk\Constants\HttpMethod;
 use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
 use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
@@ -24,7 +24,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 		$uriComponents               = $this->getUriComponentsMock( 'not', 'existing', [ ] );
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
 			'Fortuneglobe\\IceHawk\\Tests\\Unit\\Fixtures',
-			Http::METHOD_GET,
+			HttpMethod::GET,
 			$uriComponents
 		);
 
@@ -61,7 +61,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'invalid-test', [ ] );
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
 			'Fortuneglobe\\IceHawk\\Tests\\Unit\\Fixtures',
-			Http::METHOD_GET,
+			HttpMethod::GET,
 			$uriComponents
 		);
 
@@ -75,7 +75,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'valid-read-test', [ ] );
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
 			'Fortuneglobe\\IceHawk\\Tests\\Unit\\Fixtures',
-			Http::METHOD_GET,
+			HttpMethod::GET,
 			$uriComponents
 		);
 
@@ -91,7 +91,7 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'valid-write-test', [ ] );
 		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
 			'Fortuneglobe\\IceHawk\\Tests\\Unit\\Fixtures',
-			Http::METHOD_POST,
+			HttpMethod::POST,
 			$uriComponents
 		);
 

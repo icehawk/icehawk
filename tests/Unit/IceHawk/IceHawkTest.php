@@ -5,22 +5,22 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\IceHawk;
 
-use Fortuneglobe\IceHawk\Constants\Http;
+use Fortuneglobe\IceHawk\Constants\HttpCode;
+use Fortuneglobe\IceHawk\Defaults\IceHawkConfig;
+use Fortuneglobe\IceHawk\Defaults\IceHawkDelegate;
+use Fortuneglobe\IceHawk\Defaults\RequestInfo;
+use Fortuneglobe\IceHawk\Defaults\UriResolver;
+use Fortuneglobe\IceHawk\Defaults\UriRewriter;
 use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
 use Fortuneglobe\IceHawk\Events\RequestWasHandledEvent;
 use Fortuneglobe\IceHawk\IceHawk;
-use Fortuneglobe\IceHawk\IceHawkConfig;
-use Fortuneglobe\IceHawk\IceHawkDelegate;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
-use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Requests\GetRequest;
 use Fortuneglobe\IceHawk\Responses\Redirect;
-use Fortuneglobe\IceHawk\UriResolver;
-use Fortuneglobe\IceHawk\UriRewriter;
 
 class IceHawkTest extends \PHPUnit_Framework_TestCase
 {
@@ -152,7 +152,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 		$uriRewriter = $this->getMockBuilder( RewritesUri::class )->setMethods( [ 'rewrite' ] )->getMock();
 		$uriRewriter->expects( $this->once() )->method( 'rewrite' )->with( $requestInfo )->willReturn(
-			new Redirect( '/domain/rewritten', Http::MOVED_PERMANENTLY )
+			new Redirect( '/domain/rewritten', HttpCode::MOVED_PERMANENTLY )
 		);
 
 		$config->expects( $this->once() )->method( 'getDomainNamespace' )->willReturn( __NAMESPACE__ );
@@ -168,7 +168,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$iceHawk->handleRequest();
 
 		$this->assertContains( 'Location: /domain/rewritten', xdebug_get_headers() );
-		$this->assertEquals( Http::MOVED_PERMANENTLY, http_response_code() );
+		$this->assertEquals( HttpCode::MOVED_PERMANENTLY, http_response_code() );
 	}
 
 	public function testPublishesEventsWhenHandlingRequest()

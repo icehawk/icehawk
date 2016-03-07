@@ -24,12 +24,17 @@
 * Moved default IceHawkConfig to Defaults/IceHawkConfig
 * Moved default IceHawkDelegate to Defaults/IceHawkDelegate
 * Added Defaults/IceHawkEventSubscriber
+* Split abstract class Http into HttpMethod and HttpCode
+* Completed constants in HttpMethod and HttpCode with all available values
+* Added Responses/AbstractHttpResponse with optional additional headers and an abstract get Body
+* Added HTML body to Redirect response
 
 ### Removed
 
 * Removed Interfaces/RendersTemplate
 * Removed Responses/TemplatePage
 * Removed handleUncaughtExcpetion from delegate interface
+* Removed all predefined responses but Responses/Redirect
 
 ## Changes in Version 1.4.1
 

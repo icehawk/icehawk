@@ -5,13 +5,13 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Uri;
 
-use Fortuneglobe\IceHawk\Constants\Http;
+use Fortuneglobe\IceHawk\Constants\HttpCode;
+use Fortuneglobe\IceHawk\Defaults\RequestInfo;
+use Fortuneglobe\IceHawk\Defaults\UriRewriter;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
-use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestUriRewriterWithInvalidMap;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestUriRewriterWithValidMap;
-use Fortuneglobe\IceHawk\UriRewriter;
 
 class UriRewriterTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +29,7 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf( Redirect::class, $redirect );
 
 		$this->assertTrue( $redirect->urlEquals( $uri ) );
-		$this->assertTrue( $redirect->codeEquals( Http::MOVED_PERMANENTLY ) );
+		$this->assertTrue( $redirect->codeEquals( HttpCode::MOVED_PERMANENTLY ) );
 	}
 
 	public function uriProvider()
@@ -61,13 +61,13 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 	public function validMapUriProvider()
 	{
 		return [
-			[ '/non/regex/rewrite', '/non_regex_rewrite', Http::MOVED_PERMANENTLY ],
-			[ '/non/regex/no/code', '/non_regex_no_code', Http::MOVED_PERMANENTLY ],
-			[ '/regex/rewrite', '/regex_rewrite', Http::MOVED_TEMPORARILY ],
-			[ '/regex/rewrite/', '/regex_rewrite', Http::MOVED_TEMPORARILY ],
-			[ '/regex/param/test', '/regex_param_test', Http::MOVED_TEMPORARILY ],
-			[ '/regex/param/test/', '/regex_param_test', Http::MOVED_TEMPORARILY ],
-			[ '/not/existing/in/map', '/not/existing/in/map', Http::MOVED_PERMANENTLY ],
+			[ '/non/regex/rewrite', '/non_regex_rewrite', HttpCode::MOVED_PERMANENTLY ],
+			[ '/non/regex/no/code', '/non_regex_no_code', HttpCode::MOVED_PERMANENTLY ],
+			[ '/regex/rewrite', '/regex_rewrite', HttpCode::FOUND ],
+			[ '/regex/rewrite/', '/regex_rewrite', HttpCode::FOUND ],
+			[ '/regex/param/test', '/regex_param_test', HttpCode::FOUND ],
+			[ '/regex/param/test/', '/regex_param_test', HttpCode::FOUND ],
+			[ '/not/existing/in/map', '/not/existing/in/map', HttpCode::FOUND ],
 		];
 	}
 

@@ -1,11 +1,11 @@
 <?php
 /**
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk\Builders;
 
-use Fortuneglobe\IceHawk\Constants\Http;
+use Fortuneglobe\IceHawk\Constants\HttpMethod;
 use Fortuneglobe\IceHawk\Exceptions\InvalidRequestMethod;
 use Fortuneglobe\IceHawk\Interfaces\BuildsRequests;
 use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
@@ -49,14 +49,14 @@ final class RequestBuilder implements BuildsRequests
 	 */
 	public function buildRequest( array $getData, array $postData, array $uploadedFiles )
 	{
-		if ( $this->requestInfo->getMethod() == Http::METHOD_POST )
+		if ( $this->requestInfo->getMethod() == HttpMethod::POST )
 		{
 			$mergedPostData = $this->getMergedData( $postData );
 			$postRequest    = new PostRequest( $this->requestInfo, $mergedPostData, $uploadedFiles );
 
 			return $postRequest;
 		}
-		elseif ( in_array( $this->requestInfo->getMethod(), [ Http::METHOD_GET, Http::METHOD_HEAD ] ) )
+		elseif ( in_array( $this->requestInfo->getMethod(), [ HttpMethod::GET, HttpMethod::HEAD ] ) )
 		{
 			$mergedGetData = $this->getMergedData( $getData );
 

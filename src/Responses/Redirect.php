@@ -1,61 +1,66 @@
 <?php
 /**
- *
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk\Responses;
 
-use Fortuneglobe\IceHawk\Constants\Http;
+use Fortuneglobe\IceHawk\Constants\HttpCode;
 
 /**
  * Class Redirect
- *
  * @package Fortuneglobe\IceHawk\Responses
  */
-class Redirect extends BaseResponse
+class Redirect extends AbstractHttpResponse
 {
 
 	/** @var string */
 	private $redirectUrl;
 
-	/** @var int */
-	private $redirectCode;
-
-	/**
-	 * @param string $redirectUrl
-	 * @param int    $redirectCode
-	 */
-	public function __construct( $redirectUrl, $redirectCode = Http::MOVED_PERMANENTLY )
+	public function __construct( string $redirectUrl, int $httpCode = HttpCode::MOVED_PERMANENTLY )
 	{
-		$this->redirectUrl  = $redirectUrl;
-		$this->redirectCode = $redirectCode;
+		parent::__construct( 'text/html', $httpCode );
+
+		$this->redirectUrl = $redirectUrl;
 	}
 
 	public function respond()
 	{
 		session_write_close();
 
-		header( 'Location: ' . $this->redirectUrl, true, $this->redirectCode ?: Http::MOVED_PERMANENTLY );
+		parent::respond();
 	}
 
-	/**
-	 * @param string $string
-	 *
-	 * @return bool
-	 */
-	public function urlEquals( $string )
+	protected function getAdditionalHeaders() : array
 	{
-		return ($string == $this->redirectUrl);
+		return [
+			'Location: ' . $this->redirectUrl,
+		];
 	}
 
-	/**
-	 * @param $string
-	 *
-	 * @return bool
-	 */
-	public function codeEquals( $string )
+	protected function getBody() : string
 	{
-		return ($string == $this->redirectCode);
+		return sprintf(
+			'<!DOCTYPE html>
+			 <html lang="en"<head><meta charset="%s"><title>Redirect</title>
+             <meta http-equiv="refresh" content="0;URL=\'%s\'">
+             </head><body>
+             <p>This page has moved to a <a href="%s">%s</a>.</p>
+             </body></html>',
+			strtoupper( $this->getCharset() ),
+			$this->redirectUrl,
+			$this->redirectUrl,
+			$this->redirectUrl
+		);
+	}
+
+	public function urlEquals( string $url ) : bool
+	{
+		return ($url == $this->redirectUrl);
+	}
+
+	public function codeEquals( int $httpCode ) : bool
+	{
+		return ($httpCode == $this->getHttpCode());
 	}
 }

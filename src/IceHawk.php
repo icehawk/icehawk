@@ -5,8 +5,9 @@
 
 namespace Fortuneglobe\IceHawk;
 
-use Fortuneglobe\IceHawk\Builders\DomainRequestHandlerBuilder;
-use Fortuneglobe\IceHawk\Builders\RequestBuilder;
+use Fortuneglobe\IceHawk\Config\ConfigGuard;
+use Fortuneglobe\IceHawk\Config\ConfigWrapper;
+use Fortuneglobe\IceHawk\Constants\HttpMethod;
 use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
 use Fortuneglobe\IceHawk\Events\RedirectingEvent;
@@ -20,15 +21,20 @@ use Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation;
 use Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation;
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
 use Fortuneglobe\IceHawk\Exceptions\MissingInterfaceImplementationForHandlingDomainRequests;
+use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\Interfaces\HandlesDomainRequests;
-use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesHandlerDemand;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
 use Fortuneglobe\IceHawk\PubSub\EventPublisher;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
+use Fortuneglobe\IceHawk\RequestHandlers\Interfaces\HandlesRequest;
+use Fortuneglobe\IceHawk\RequestHandlers\RequestHandlerBuilder;
+use Fortuneglobe\IceHawk\Requests\RequestBuilder;
+use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
+use Fortuneglobe\IceHawk\Responses\Options;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 
 /**
@@ -41,16 +47,16 @@ final class IceHawk
 	private $config;
 
 	/** @var SetsUpEnvironment */
-	private $delegate;
+	private $setUpDelegate;
 
 	/**
 	 * @param ConfiguresIceHawk $config
-	 * @param SetsUpEnvironment $delegate
+	 * @param SetsUpEnvironment $setUpDelegate
 	 */
-	public function __construct( ConfiguresIceHawk $config, SetsUpEnvironment $delegate )
+	public function __construct( ConfiguresIceHawk $config, SetsUpEnvironment $setUpDelegate )
 	{
-		$this->config   = $config;
-		$this->delegate = $delegate;
+		$this->config        = $config;
+		$this->setUpDelegate = $setUpDelegate;
 	}
 
 	/**
@@ -62,11 +68,11 @@ final class IceHawk
 	 */
 	public function init()
 	{
-		$this->delegate->setUpErrorHandling();
-		$this->delegate->setUpSessionHandling();
-		$this->delegate->setUpGlobalVars();
+		$this->setUpDelegate->setUpErrorHandling();
+		$this->setUpDelegate->setUpSessionHandling();
+		$this->setUpDelegate->setUpGlobalVars();
 
-		$this->config = new IceHawkConfigWrapper( $this->config );
+		$this->config = new ConfigWrapper( $this->config );
 
 		$this->guardConfigIsValid();
 
@@ -74,6 +80,7 @@ final class IceHawk
 
 		$requestInfo      = $this->config->getRequestInfo();
 		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo );
+
 		$this->publishEvent( $initializedEvent );
 	}
 
@@ -86,7 +93,7 @@ final class IceHawk
 	 */
 	private function guardConfigIsValid()
 	{
-		$configGuard = new IceHawkConfigGuard( $this->config );
+		$configGuard = new ConfigGuard( $this->config );
 		$configGuard->guardConfigIsValid();
 	}
 
@@ -105,11 +112,29 @@ final class IceHawk
 		return EventPublisher::singleton()->publish( $event );
 	}
 
+	/**
+	 * @throws \Throwable
+	 */
 	public function handleRequest()
 	{
+		$requestInfo = $this->config->getRequestInfo();
+
 		try
 		{
-			$this->redirectOrHandleRequest();
+			$this->guardRequestMethodIsAllowed();
+
+			if ( $requestInfo->getMethod() == HttpMethod::OPTIONS )
+			{
+				( new Options( $this->config->getAllowedRequestMethods() ) )->respond();
+			}
+			else
+			{
+				$this->redirectOrHandleRequest();
+			}
+		}
+		catch ( RequestMethodNotAllowed $e )
+		{
+			( new MethodNotAllowed() )->respond();
 		}
 		catch ( \Throwable $throwable )
 		{
@@ -124,6 +149,24 @@ final class IceHawk
 	}
 
 	/**
+	 * @throws RequestMethodNotAllowed
+	 */
+	private function guardRequestMethodIsAllowed()
+	{
+		$requestMethod         = $this->config->getRequestInfo()->getMethod();
+		$allowedRequestMethods = $this->config->getAllowedRequestMethods();
+
+		if ( !in_array( $requestMethod, $allowedRequestMethods ) )
+		{
+			throw ( new RequestMethodNotAllowed() )->withRequestMethod( $requestMethod );
+		}
+	}
+
+	private function handleByMethod()
+	{
+	}
+
+	/**
 	 * @throws MissingInterfaceImplementationForHandlingDomainRequests
 	 * @throws BuildingDomainRequestHandlerFailed
 	 * @throws MalformedRequestUri
@@ -135,13 +178,13 @@ final class IceHawk
 
 		if ( $redirect->urlEquals( $requestInfo->getUri() ) )
 		{
-			$uriComponents = $this->getUriComponents();
-			$request       = $this->getRequest( $uriComponents );
+			$handlerDemand  = $this->getHandlerDemand();
+			$request        = $this->getRequest( $handlerDemand );
+			$requestHandler = $this->getRequestHandler( $handlerDemand, $request );
 
 			$handlingEvent = new HandlingRequestEvent( $request );
 			$this->publishEvent( $handlingEvent );
 
-			$requestHandler = $this->getDomainRequestHandler( $uriComponents, $request );
 			$requestHandler->handleRequest();
 
 			$handledEvent = new RequestWasHandledEvent( $request );
@@ -171,57 +214,59 @@ final class IceHawk
 
 	/**
 	 * @throws MalformedRequestUri
-	 * @return ServesUriComponents
+	 * @return ProvidesHandlerDemand
 	 */
-	private function getUriComponents() : ServesUriComponents
+	private function getHandlerDemand() : ProvidesHandlerDemand
 	{
 		$uriResolver = $this->config->getUriResolver();
 		$requestInfo = $this->config->getRequestInfo();
 
-		$uriComponents = $uriResolver->resolveUri( $requestInfo );
+		$handlerDemand = $uriResolver->resolveUri( $requestInfo );
 
-		return $uriComponents;
+		return $handlerDemand;
 	}
 
 	/**
-	 * @param ServesUriComponents $uriComponents
-
+	 * @param ProvidesHandlerDemand $handlerDemand
 	 *
-*@throws Exceptions\InvalidRequestMethod
-	 * @return ServesGetRequestData|ServesPostRequestData|ServesRequestData
+	 * @throws Exceptions\InvalidRequestMethod
+	 * @return ProvidesReadRequestData|ProvidesWriteRequestData|ProvidesRequestData
 	 */
-	private function getRequest( ServesUriComponents $uriComponents ) : ServesRequestData
+	private function getRequest( ProvidesHandlerDemand $handlerDemand ) : ProvidesRequestData
 	{
 		$requestInfo = $this->config->getRequestInfo();
-		$builder     = new RequestBuilder( $requestInfo, $uriComponents );
+		$builder     = new RequestBuilder( $requestInfo, $handlerDemand );
 
-		$request = $builder->buildRequest( $_GET, $_POST, $_FILES );
+		$request = $builder->build( $_GET, $_POST, $_FILES );
 
 		return $request;
 	}
 
 	/**
-	 * @param ServesUriComponents $uriComponents
-	 * @param ServesRequestData   $request
-	 *
-	 * @throws MissingInterfaceImplementationForHandlingDomainRequests
+	 * @param ProvidesHandlerDemand $handlerDemand
+	 * @param ProvidesRequestData   $request
+
+
+*
+*@throws MissingInterfaceImplementationForHandlingDomainRequests
 	 * @throws BuildingDomainRequestHandlerFailed
-	 * @return HandlesDomainRequests
+	 * @return HandlesRequest
 	 */
-	private function getDomainRequestHandler(
-		ServesUriComponents $uriComponents, ServesRequestData $request
-	) : HandlesDomainRequests
+	private function getRequestHandler(
+		ProvidesHandlerDemand $handlerDemand,
+		ProvidesRequestData $request
+	) : HandlesRequest
 	{
-		$domainNamespace = $this->config->getDomainNamespace();
+		$domainNamespace = $this->config->getHandlerRootNamespace();
 		$requestInfo     = $this->config->getRequestInfo();
 
-		$builder = new DomainRequestHandlerBuilder(
+		$builder = new RequestHandlerBuilder(
 			$domainNamespace,
 			$requestInfo->getMethod(),
-			$uriComponents
+			$handlerDemand
 		);
 
-		$domainRequestHandler = $builder->buildDomainRequestHandler( $request );
+		$domainRequestHandler = $builder->build( $request );
 
 		return $domainRequestHandler;
 	}

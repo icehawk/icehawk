@@ -13,7 +13,9 @@ use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
  */
 interface ConfiguresIceHawk
 {
-	public function getDomainNamespace() : string;
+	public function getHandlerRootNamespace() : string;
+
+	public function getHandlerPrefixNamespace() : string;
 
 	public function getUriRewriter() : RewritesUri;
 
@@ -24,5 +26,9 @@ interface ConfiguresIceHawk
 	 */
 	public function getEventSubscribers() : array;
 
-	public function getRequestInfo() : ServesRequestInfo;
+	public function getRequestInfo() : ProvidesRequestInfo;
+
+	public function getAllowedRequestMethods() : array;
+
+	public function getFinalResponder() : RespondsFinally;
 }

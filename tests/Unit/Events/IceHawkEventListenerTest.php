@@ -9,7 +9,7 @@ use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
 use Fortuneglobe\IceHawk\PubSub\AbstractEventSubscriber;
 use Fortuneglobe\IceHawk\RequestInfo;
-use Fortuneglobe\IceHawk\Requests\GetRequest;
+use Fortuneglobe\IceHawk\Requests\ReadRequest;
 
 class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,7 +17,7 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 	{
 		$requestInfo   = RequestInfo::fromEnv();
 		$initEvent     = new IceHawkWasInitializedEvent( $requestInfo );
-		$getRequest    = new GetRequest( $requestInfo, [ ] );
+		$getRequest    = new ReadRequest( $requestInfo, [ ] );
 		$handlingEvent = new HandlingRequestEvent( $getRequest );
 
 		$mock = $this->getMockBuilder( AbstractEventSubscriber::class )

@@ -5,14 +5,14 @@
 
 namespace Fortuneglobe\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFileData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesUploadedFileData;
 
 /**
  * Class UploadedFile
  *
  * @package Fortuneglobe\IceHawk\Requests
  */
-final class UploadedFile implements ServesUploadedFileData
+final class UploadedFile implements ProvidesUploadedFileData
 {
 
 	/** @var string */

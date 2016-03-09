@@ -6,7 +6,7 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Requests;
 
 use Fortuneglobe\IceHawk\RequestInfo;
-use Fortuneglobe\IceHawk\Requests\GetRequest;
+use Fortuneglobe\IceHawk\Requests\ReadRequest;
 
 class GetRequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +19,7 @@ class GetRequestTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCanGetRequestValueByKey( array $getData, $key, $expectedValue )
 	{
-		$getRequest = new GetRequest( RequestInfo::fromEnv(), $getData );
+		$getRequest = new ReadRequest( RequestInfo::fromEnv(), $getData );
 
 		$this->assertEquals( $expectedValue, $getRequest->get( $key ) );
 	}
@@ -53,7 +53,7 @@ class GetRequestTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetterReturnsNullIfKeyIsNotSet( array $getData, $key )
 	{
-		$getRequest = new GetRequest( RequestInfo::fromEnv(), $getData );
+		$getRequest = new ReadRequest( RequestInfo::fromEnv(), $getData );
 
 		$this->assertNull( $getRequest->get( $key ) );
 	}

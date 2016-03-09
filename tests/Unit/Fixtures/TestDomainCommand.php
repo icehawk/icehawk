@@ -5,14 +5,14 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 
-use Fortuneglobe\IceHawk\DomainCommand;
+use Fortuneglobe\IceHawk\Command;
 
 /**
  * Class TestDomainCommand
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class TestDomainCommand extends DomainCommand
+class TestCommand extends Command
 {
 	public function getTestValue()
 	{

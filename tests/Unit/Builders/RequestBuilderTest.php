@@ -6,13 +6,13 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Builders;
 
 use Fortuneglobe\IceHawk\Builders\RequestBuilder;
-use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFiles;
+use Fortuneglobe\IceHawk\HandlerDemand;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesUploadedFiles;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\RequestInfo;
-use Fortuneglobe\IceHawk\Requests\GetRequest;
-use Fortuneglobe\IceHawk\Requests\PostRequest;
-use Fortuneglobe\IceHawk\UriComponents;
+use Fortuneglobe\IceHawk\Requests\ReadRequest;
+use Fortuneglobe\IceHawk\Requests\WriteRequest;
 
 class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,10 +25,10 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildingRequestWithInvalidRequestMethodThrowsException( $requestMethod )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents  = new UriComponents( 'Unit', 'Test', [ ] );
+		$uriComponents  = new HandlerDemand( 'Unit', 'Test', [ ] );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
-		$requestBuilder->buildRequest( [ ], [ ], [ ] );
+		$requestBuilder->build( [ ], [ ], [ ] );
 	}
 
 	public function invalidRequestMethodProvider()
@@ -53,10 +53,10 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildsRequestInstanceWithValidRequestMethod( $requestMethod, $excpectedClassName )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents  = new UriComponents( 'Unit', 'Test', [ ] );
+		$uriComponents  = new HandlerDemand( 'Unit', 'Test', [ ] );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
-		$request = $requestBuilder->buildRequest( [ ], [ ], [ ] );
+		$request = $requestBuilder->build( [ ], [ ], [ ] );
 
 		$this->assertInstanceOf( $excpectedClassName, $request );
 	}
@@ -64,13 +64,13 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function validRequestMethodsProvider()
 	{
 		return [
-			[ 'GET', GetRequest::class ],
-			[ 'GET', ServesGetRequestData::class ],
-			[ 'HEAD', GetRequest::class ],
-			[ 'HEAD', ServesGetRequestData::class ],
-			[ 'POST', PostRequest::class ],
-			[ 'POST', ServesPostRequestData::class ],
-			[ 'POST', ServesUploadedFiles::class ],
+			[ 'GET', ReadRequest::class ],
+			[ 'GET', ProvidesReadRequestData::class ],
+			[ 'HEAD', ReadRequest::class ],
+			[ 'HEAD', ProvidesReadRequestData::class ],
+			[ 'POST', WriteRequest::class ],
+			[ 'POST', ProvidesWriteRequestData::class ],
+			[ 'POST', ProvidesUploadedFiles::class ],
 		];
 	}
 
@@ -80,10 +80,10 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testRequestHasParamsFromUriComponents( $requestMethod, array $params )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents  = new UriComponents( 'Unit', 'Test', $params );
+		$uriComponents  = new HandlerDemand( 'Unit', 'Test', $params );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
-		$request = $requestBuilder->buildRequest( [ ], [ ], [ ] );
+		$request = $requestBuilder->build( [ ], [ ], [ ] );
 
 		$this->assertSame( $params, $request->getData() );
 	}
@@ -113,10 +113,10 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	)
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents  = new UriComponents( 'Unit', 'Test', $params );
+		$uriComponents  = new HandlerDemand( 'Unit', 'Test', $params );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
-		$request = $requestBuilder->buildRequest( $getData, $postData, [ ] );
+		$request = $requestBuilder->build( $getData, $postData, [ ] );
 
 		$this->assertSame( $expectedData, $request->getData() );
 	}

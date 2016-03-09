@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\UriRewriter;
 
 /**
@@ -21,7 +21,7 @@ class TestUriRewriterWithInvalidMap extends UriRewriter
 		"/non/array/redirect/data" => 'not-an-array',
 	];
 
-	public function rewrite( ServesRequestInfo $requestInfo )
+	public function rewrite( ProvidesRequestInfo $requestInfo )
 	{
 		return $this->rewriteUriBySimpleMap( $requestInfo->getUri(), self::$simpleMap );
 	}

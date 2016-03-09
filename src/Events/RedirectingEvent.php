@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Events;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 
@@ -18,10 +18,10 @@ final class RedirectingEvent implements CarriesEventData
 	/** @var Redirect */
 	private $redirect;
 
-	/** @var ServesRequestInfo */
+	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
-	public function __construct( Redirect $redirect, ServesRequestInfo $requestInfo )
+	public function __construct( Redirect $redirect, ProvidesRequestInfo $requestInfo )
 	{
 		$this->redirect    = $redirect;
 		$this->requestInfo = $requestInfo;
@@ -36,7 +36,7 @@ final class RedirectingEvent implements CarriesEventData
 	}
 
 	/**
-	 * @return ServesRequestInfo
+	 * @return ProvidesRequestInfo
 	 */
 	public function getRequestInfo()
 	{

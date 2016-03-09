@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Events;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
@@ -17,10 +17,10 @@ final class UncaughtExceptionWasThrownEvent implements CarriesEventData
 	/** @var \Throwable */
 	private $throwable;
 
-	/** @var ServesRequestInfo */
+	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
-	public function __construct( \Throwable $throwable, ServesRequestInfo $requestInfo )
+	public function __construct( \Throwable $throwable, ProvidesRequestInfo $requestInfo )
 	{
 		$this->throwable   = $throwable;
 		$this->requestInfo = $requestInfo;
@@ -31,7 +31,7 @@ final class UncaughtExceptionWasThrownEvent implements CarriesEventData
 		return $this->throwable;
 	}
 
-	public function getRequestInfo() : ServesRequestInfo
+	public function getRequestInfo() : ProvidesRequestInfo
 	{
 		return $this->requestInfo;
 	}

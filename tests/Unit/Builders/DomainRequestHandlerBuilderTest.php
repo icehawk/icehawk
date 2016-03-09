@@ -5,12 +5,12 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Builders;
 
-use Fortuneglobe\IceHawk\Builders\DomainRequestHandlerBuilder;
+use Fortuneglobe\IceHawk\Builders\RequestHandlerBuilder;
 use Fortuneglobe\IceHawk\Constants\HttpMethod;
-use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesHandlerDemand;
 use Fortuneglobe\IceHawk\RequestInfo;
-use Fortuneglobe\IceHawk\Requests\GetRequest;
-use Fortuneglobe\IceHawk\Requests\PostRequest;
+use Fortuneglobe\IceHawk\Requests\ReadRequest;
+use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidReadTestRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidWriteTestRequestHandler;
 
@@ -22,15 +22,15 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildingThrowsExceptionIfHandlerDoesNotExist()
 	{
 		$uriComponents               = $this->getUriComponentsMock( 'not', 'existing', [ ] );
-		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
+		$domainRequestHandlerBuilder = new RequestHandlerBuilder(
 			'Fortuneglobe\\IceHawk\\Tests\\Unit\\Fixtures',
 			HttpMethod::GET,
 			$uriComponents
 		);
 
-		$request = new GetRequest( RequestInfo::fromEnv(), [ ] );
+		$request = new ReadRequest( RequestInfo::fromEnv(), [ ] );
 
-		$domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
+		$domainRequestHandlerBuilder->build( $request );
 	}
 
 	/**
@@ -38,11 +38,11 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @param string $demand
 	 * @param array  $params
 	 *
-	 * @return \PHPUnit_Framework_MockObject_MockObject|ServesUriComponents
+	 * @return \PHPUnit_Framework_MockObject_MockObject|ProvidesHandlerDemand
 	 */
 	private function getUriComponentsMock( $domain, $demand, array $params )
 	{
-		$mock = $this->getMockBuilder( ServesUriComponents::class )->setMethods(
+		$mock = $this->getMockBuilder( ProvidesHandlerDemand::class )->setMethods(
 			[ 'getDomain', 'getDemand', 'getParams' ]
 		)->getMock();
 
@@ -59,29 +59,29 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildingThrowsExceptionIfHandlerExistsButInterfaceImplementationIsMissing()
 	{
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'invalid-test', [ ] );
-		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
+		$domainRequestHandlerBuilder = new RequestHandlerBuilder(
 			'Fortuneglobe\\IceHawk\\Tests\\Unit\\Fixtures',
 			HttpMethod::GET,
 			$uriComponents
 		);
 
-		$request = new GetRequest( RequestInfo::fromEnv(), [ ] );
+		$request = new ReadRequest( RequestInfo::fromEnv(), [ ] );
 
-		$domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
+		$domainRequestHandlerBuilder->build( $request );
 	}
 
 	public function testBuildingSucceedsIfReadSideHandlerExistsAndImplementsInterface()
 	{
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'valid-read-test', [ ] );
-		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
+		$domainRequestHandlerBuilder = new RequestHandlerBuilder(
 			'Fortuneglobe\\IceHawk\\Tests\\Unit\\Fixtures',
 			HttpMethod::GET,
 			$uriComponents
 		);
 
-		$request = new GetRequest( RequestInfo::fromEnv(), [ ] );
+		$request = new ReadRequest( RequestInfo::fromEnv(), [ ] );
 
-		$handler = $domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
+		$handler = $domainRequestHandlerBuilder->build( $request );
 
 		$this->assertInstanceOf( ValidReadTestRequestHandler::class, $handler );
 	}
@@ -89,15 +89,15 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildingSucceedsIfWriteSideHandlerExistsAndImplementsInterface()
 	{
 		$uriComponents               = $this->getUriComponentsMock( 'domain', 'valid-write-test', [ ] );
-		$domainRequestHandlerBuilder = new DomainRequestHandlerBuilder(
+		$domainRequestHandlerBuilder = new RequestHandlerBuilder(
 			'Fortuneglobe\\IceHawk\\Tests\\Unit\\Fixtures',
 			HttpMethod::POST,
 			$uriComponents
 		);
 
-		$request = new PostRequest( RequestInfo::fromEnv(), [ ], [ ] );
+		$request = new WriteRequest( RequestInfo::fromEnv(), [ ], [ ] );
 
-		$handler = $domainRequestHandlerBuilder->buildDomainRequestHandler( $request );
+		$handler = $domainRequestHandlerBuilder->build( $request );
 
 		$this->assertInstanceOf( ValidWriteTestRequestHandler::class, $handler );
 	}

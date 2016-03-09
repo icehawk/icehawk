@@ -7,14 +7,14 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
 
 use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
 use Fortuneglobe\IceHawk\RequestInfo;
-use Fortuneglobe\IceHawk\Requests\GetRequest;
+use Fortuneglobe\IceHawk\Requests\ReadRequest;
 
 class HandlingRequestEventTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{
 		$requestInfo = RequestInfo::fromEnv();
-		$getRequest  = new GetRequest( $requestInfo, [ ] );
+		$getRequest  = new ReadRequest( $requestInfo, [ ] );
 
 		$event = new HandlingRequestEvent( $getRequest );
 

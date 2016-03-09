@@ -6,8 +6,8 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Requests;
 
 use Fortuneglobe\IceHawk\RequestInfo;
-use Fortuneglobe\IceHawk\Requests\PostRequest;
 use Fortuneglobe\IceHawk\Requests\UploadedFile;
+use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
 class PostRequestTest extends \PHPUnit_Framework_TestCase
@@ -17,7 +17,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCanGetRequestValueByKey( array $postData, $key, $expectedValue )
 	{
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), $postData, [ ] );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), $postData, [ ] );
 
 		$this->assertEquals( $expectedValue, $postRequest->get( $key ) );
 	}
@@ -48,7 +48,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetterReturnsNullIfKeyIsNotSet( array $postData, $key )
 	{
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), $postData, [ ] );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), $postData, [ ] );
 
 		$this->assertNull( $postRequest->get( $key ) );
 	}
@@ -80,7 +80,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 		$expectedError, $expectedErrorMessage, $expectedSuccess
 	)
 	{
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], $uploadedFiles );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], $uploadedFiles );
 		$oneFile     = $postRequest->getOneFile( $fieldKey, $fileIndex );
 
 		$this->assertInstanceOf( UploadedFile::class, $oneFile );
@@ -164,7 +164,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetOneFileReturnNullIfKeyIsNotSet()
 	{
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], [ ] );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], [ ] );
 		$oneFile     = $postRequest->getOneFile( 'test' );
 
 		$this->assertNull( $oneFile );
@@ -182,7 +182,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 			]
 		];
 
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], $uploadedFiles );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], $uploadedFiles );
 		$oneFile     = $postRequest->getOneFile( 'test_file', 1 );
 
 		$this->assertNull( $oneFile );
@@ -190,7 +190,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetFilesReturnsEmptyArrayIfFieldKeyIsNotSet()
 	{
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], [ ] );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], [ ] );
 		$files       = $postRequest->getFiles( 'test' );
 
 		$this->assertInternalType( 'array', $files );
@@ -203,7 +203,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 		stream_wrapper_register( "php", PhpStreamMock::class );
 		file_put_contents( 'php://input', 'Unit-Test' );
 
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], [ ] );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], [ ] );
 
 		$this->assertEquals( 'Unit-Test', $postRequest->getRawData() );
 
@@ -212,7 +212,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetRawDataReturnNullIfEmpty()
 	{
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], [ ] );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], [ ] );
 
 		$this->assertNull( $postRequest->getRawData() );
 	}

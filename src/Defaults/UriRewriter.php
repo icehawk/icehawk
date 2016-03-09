@@ -6,7 +6,7 @@
 namespace Fortuneglobe\IceHawk\Defaults;
 
 use Fortuneglobe\IceHawk\AbstractUriRewriter;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 
 /**
@@ -15,7 +15,7 @@ use Fortuneglobe\IceHawk\Responses\Redirect;
  */
 class UriRewriter extends AbstractUriRewriter
 {
-	public function rewrite( ServesRequestInfo $requestInfo ) : Redirect
+	public function rewrite( ProvidesRequestInfo $requestInfo ) : Redirect
 	{
 		return $this->rewriteUriBySimpleMap( $requestInfo->getUri(), [ ] );
 	}

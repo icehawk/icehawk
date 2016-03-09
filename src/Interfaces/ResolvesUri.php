@@ -11,5 +11,5 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface ResolvesUri
 {
-	public function resolveUri( ServesRequestInfo $requestInfo ) : ServesUriComponents;
+	public function resolveUri( ProvidesRequestInfo $requestInfo ) : ProvidesHandlerDemand;
 }

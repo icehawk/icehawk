@@ -7,10 +7,25 @@ namespace Fortuneglobe\IceHawk\Exceptions;
 
 /**
  * Class InvalidRequestMethod
- *
  * @package Fortuneglobe\IceHawk\Exceptions
  */
 final class InvalidRequestMethod extends IceHawkException
 {
+	/** @var string */
+	private $requestMethod = '';
 
+	public function withRequestMethod( string $requestMethod ) : self
+	{
+		$this->requestMethod = $requestMethod;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRequestMethod()
+	{
+		return $this->requestMethod;
+	}
 }

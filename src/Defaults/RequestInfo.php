@@ -5,13 +5,13 @@
 
 namespace Fortuneglobe\IceHawk\Defaults;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Class RequestInfo
  * @package Fortuneglobe\IceHawk
  */
-final class RequestInfo implements ServesRequestInfo
+final class RequestInfo implements ProvidesRequestInfo
 {
 
 	/** @var array */

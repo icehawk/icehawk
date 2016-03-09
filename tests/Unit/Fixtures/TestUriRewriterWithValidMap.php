@@ -7,7 +7,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 
 use Fortuneglobe\IceHawk\Constants\HttpCode;
 use Fortuneglobe\IceHawk\Defaults\UriRewriter;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Class TestUriRewriterWithValidMap
@@ -23,7 +23,7 @@ class TestUriRewriterWithValidMap extends UriRewriter
 		"#^/regex/param/([^/]+)/?#" => [ '/regex_param_$1', HttpCode::FOUND ],
 	];
 
-	public function rewrite( ServesRequestInfo $requestInfo )
+	public function rewrite( ProvidesRequestInfo $requestInfo )
 	{
 		return $this->rewriteUriBySimpleMap( $requestInfo->getUri(), self::$simpleMap );
 	}

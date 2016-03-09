@@ -6,9 +6,9 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Commands;
 
 use Fortuneglobe\IceHawk\RequestInfo;
-use Fortuneglobe\IceHawk\Requests\PostRequest;
 use Fortuneglobe\IceHawk\Requests\UploadedFile;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestDomainCommand;
+use Fortuneglobe\IceHawk\Requests\WriteRequest;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestCommand;
 use Fortuneglobe\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
 class DomainCommandTest extends \PHPUnit_Framework_TestCase
@@ -16,9 +16,9 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 	public function testCanAccessValuesFromRequest()
 	{
 		$postData    = [ 'testValue' => 'Unit-Test' ];
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), $postData, [ ] );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), $postData, [ ] );
 
-		$command = new TestDomainCommand( $postRequest );
+		$command = new TestCommand( $postRequest );
 
 		$this->assertEquals( 'Unit-Test', $command->getTestValue() );
 		$this->assertEquals( $postData, $command->getTestData() );
@@ -54,9 +54,9 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], $uploadedFilesArray );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], $uploadedFilesArray );
 
-		$command = new TestDomainCommand( $postRequest );
+		$command = new TestCommand( $postRequest );
 
 		$this->assertEquals( $expectedUploadedFiles, $command->getAllTestFiles() );
 		$this->assertEquals( $expectedUploadedFiles['testFiles'], $command->getTestFiles() );
@@ -69,8 +69,8 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 		stream_wrapper_register( "php", PhpStreamMock::class );
 		file_put_contents( 'php://input', 'Unit-Test' );
 
-		$postRequest = new PostRequest( RequestInfo::fromEnv(), [ ], [ ] );
-		$command     = new TestDomainCommand( $postRequest );
+		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], [ ] );
+		$command     = new TestCommand( $postRequest );
 
 		$this->assertEquals( 'Unit-Test', $command->getBody() );
 
@@ -80,8 +80,8 @@ class DomainCommandTest extends \PHPUnit_Framework_TestCase
 	public function testCanAccessRequestInfoFromRequest()
 	{
 		$requestInfo = RequestInfo::fromEnv();
-		$postRequest = new PostRequest( $requestInfo, [ ], [ ] );
-		$command     = new TestDomainCommand( $postRequest );
+		$postRequest = new WriteRequest( $requestInfo, [ ], [ ] );
+		$command     = new TestCommand( $postRequest );
 
 		$this->assertSame( $requestInfo, $command->getRequestInfo() );
 	}

@@ -5,10 +5,10 @@
 
 namespace Fortuneglobe\IceHawk\Events;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
@@ -18,29 +18,29 @@ use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
 final class HandlingRequestEvent implements CarriesEventData
 {
 
-	/** @var ServesPostRequestData|ServesGetRequestData|ServesRequestData */
+	/** @var ProvidesWriteRequestData|ProvidesReadRequestData|ProvidesRequestData */
 	private $request;
 
 	/**
-	 * @param ServesPostRequestData|ServesGetRequestData|ServesRequestData $request
+	 * @param ProvidesWriteRequestData|ProvidesReadRequestData|ProvidesRequestData $request
 	 */
-	public function __construct( ServesRequestData $request )
+	public function __construct( ProvidesRequestData $request )
 	{
 		$this->request = $request;
 	}
 
 	/**
-	 * @return ServesRequestInfo
+	 * @return ProvidesRequestInfo
 	 */
-	public function getRequestInfo() : ServesRequestInfo
+	public function getRequestInfo() : ProvidesRequestInfo
 	{
 		return $this->request->getRequestInfo();
 	}
 
 	/**
-	 * @return ServesGetRequestData|ServesPostRequestData|ServesRequestData
+	 * @return ProvidesReadRequestData|ProvidesWriteRequestData|ProvidesRequestData
 	 */
-	public function getRequest() : ServesRequestData
+	public function getRequest() : ProvidesRequestData
 	{
 		return $this->request;
 	}

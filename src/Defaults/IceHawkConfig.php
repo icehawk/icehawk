@@ -5,10 +5,12 @@
 
 namespace Fortuneglobe\IceHawk\Defaults;
 
+use Fortuneglobe\IceHawk\Constants\HttpMethod;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
+use Fortuneglobe\IceHawk\Interfaces\RespondsFinally;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
 /**
@@ -17,45 +19,46 @@ use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
  */
 class IceHawkConfig implements ConfiguresIceHawk
 {
-	/**
-	 * @return RewritesUri
-	 */
-	public function getUriRewriter()
+	public function getUriRewriter() : RewritesUri
 	{
 		return new UriRewriter();
 	}
 
-	/**
-	 * @return ResolvesUri
-	 */
-	public function getUriResolver()
+	public function getUriResolver() : ResolvesUri
 	{
 		return new UriResolver();
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getDomainNamespace()
+	public function getHandlerRootNamespace() : string
 	{
 		return __NAMESPACE__;
+	}
+
+	public function getHandlerPrefixNamespace() : string
+	{
+		return '';
 	}
 
 	/**
 	 * @return array|SubscribesToEvents[]
 	 */
-	public function getEventSubscribers()
+	public function getEventSubscribers() : array
 	{
-		return [
-			new EventSubscriber(),
-		];
+		return [ ];
 	}
 
-	/**
-	 * @return ServesRequestInfo
-	 */
-	public function getRequestInfo()
+	public function getRequestInfo() : ProvidesRequestInfo
 	{
 		return RequestInfo::fromEnv();
+	}
+
+	public function getAllowedRequestMethods() : array
+	{
+		return HttpMethod::ALL_METHODS;
+	}
+
+	public function getFinalResponder() : RespondsFinally
+	{
+		return new FinalResponder();
 	}
 }

@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\PubSub\Interfaces;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Interface CarriesEventData
@@ -13,5 +13,5 @@ use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
  */
 interface CarriesEventData
 {
-	public function getRequestInfo() : ServesRequestInfo;
+	public function getRequestInfo() : ProvidesRequestInfo;
 }

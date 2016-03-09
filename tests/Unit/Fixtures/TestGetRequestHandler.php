@@ -7,7 +7,7 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 
 use Fortuneglobe\IceHawk\DomainRequestHandlers\GetRequestHandler as BaseGetRequestHandler;
-use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
 
 /**
  * Class TestGetRequestHandler
@@ -16,7 +16,7 @@ use Fortuneglobe\IceHawk\Interfaces\ServesGetRequestData;
  */
 class TestGetRequestHandler extends BaseGetRequestHandler
 {
-	public function handle( ServesGetRequestData $request )
+	public function handle( ProvidesReadRequestData $request )
 	{
 		echo "Request handled.";
 	}

@@ -44,9 +44,7 @@ class Redirect extends AbstractHttpResponse
 			'<!DOCTYPE html>
 			 <html lang="en"<head><meta charset="%s"><title>Redirect</title>
              <meta http-equiv="refresh" content="0;URL=\'%s\'">
-             </head><body>
-             <p>This page has moved to a <a href="%s">%s</a>.</p>
-             </body></html>',
+             </head><body><p>This page has moved to a <a href="%s">%s</a>.</p></body></html>',
 			strtoupper( $this->getCharset() ),
 			$this->redirectUrl,
 			$this->redirectUrl,

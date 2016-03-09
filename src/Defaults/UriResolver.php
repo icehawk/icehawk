@@ -6,10 +6,10 @@
 namespace Fortuneglobe\IceHawk\Defaults;
 
 use Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri;
+use Fortuneglobe\IceHawk\HandlerDemand;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesHandlerDemand;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ServesUriComponents;
-use Fortuneglobe\IceHawk\UriComponents;
 
 /**
  * Class UriResolver
@@ -18,12 +18,12 @@ use Fortuneglobe\IceHawk\UriComponents;
 class UriResolver implements ResolvesUri
 {
 	/**
-	 * @param ServesRequestInfo $requestInfo
+	 * @param ProvidesRequestInfo $requestInfo
 	 *
 	 * @throws MalformedRequestUri
-	 * @return ServesUriComponents
+	 * @return ProvidesHandlerDemand
 	 */
-	public function resolveUri( ServesRequestInfo $requestInfo ) : ServesUriComponents
+	public function resolveUri( ProvidesRequestInfo $requestInfo ) : ProvidesHandlerDemand
 	{
 		$uri     = $requestInfo->getUri();
 		$pattern = "#^\/([^\/\?\#]+)\/([^\/\?\#]+)\/?#";
@@ -34,7 +34,7 @@ class UriResolver implements ResolvesUri
 			$domain = strtolower( $matches[1] );
 			$demand = strtolower( $matches[2] );
 
-			return new UriComponents( $domain, $demand, [ ] );
+			return new HandlerDemand( $domain, $demand, [ ] );
 		}
 		else
 		{

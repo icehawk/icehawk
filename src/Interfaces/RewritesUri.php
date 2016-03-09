@@ -13,5 +13,5 @@ use Fortuneglobe\IceHawk\Responses\Redirect;
  */
 interface RewritesUri
 {
-	public function rewrite( ServesRequestInfo $requestInfo ) : Redirect;
+	public function rewrite( ProvidesRequestInfo $requestInfo ) : Redirect;
 }

@@ -6,7 +6,7 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Builders;
 
 use Fortuneglobe\IceHawk\Builders\RequestBuilder;
-use Fortuneglobe\IceHawk\HandlerDemand;
+use Fortuneglobe\IceHawk\HandlerRoute;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesUploadedFiles;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
@@ -25,7 +25,7 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildingRequestWithInvalidRequestMethodThrowsException( $requestMethod )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents  = new HandlerDemand( 'Unit', 'Test', [ ] );
+		$uriComponents  = new HandlerRoute( 'Unit', 'Test', [ ] );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
 		$requestBuilder->build( [ ], [ ], [ ] );
@@ -53,7 +53,7 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testBuildsRequestInstanceWithValidRequestMethod( $requestMethod, $excpectedClassName )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents  = new HandlerDemand( 'Unit', 'Test', [ ] );
+		$uriComponents  = new HandlerRoute( 'Unit', 'Test', [ ] );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
 		$request = $requestBuilder->build( [ ], [ ], [ ] );
@@ -80,7 +80,7 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testRequestHasParamsFromUriComponents( $requestMethod, array $params )
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents  = new HandlerDemand( 'Unit', 'Test', $params );
+		$uriComponents  = new HandlerRoute( 'Unit', 'Test', $params );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
 		$request = $requestBuilder->build( [ ], [ ], [ ] );
@@ -113,7 +113,7 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 	)
 	{
 		$requestInfo    = new RequestInfo( [ 'REQUEST_METHOD' => $requestMethod ] );
-		$uriComponents  = new HandlerDemand( 'Unit', 'Test', $params );
+		$uriComponents  = new HandlerRoute( 'Unit', 'Test', $params );
 		$requestBuilder = new RequestBuilder( $requestInfo, $uriComponents );
 
 		$request = $requestBuilder->build( $getData, $postData, [ ] );

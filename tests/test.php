@@ -5,37 +5,16 @@
 
 namespace Fortuneglobe\IceHawk\Tests;
 
+require(__DIR__ . '/../vendor/autoload.php');
+
 error_reporting( E_ALL );
 ini_set( 'display_errors', '1' );
 
-class Request
+class Test
 {
 
 }
 
-class ReadRequest extends Request
-{
+$className = Test::class;
 
-}
-
-abstract class Test
-{
-	public function __construct( Request $request )
-	{
-		$contract = $this->getContract();
-
-		echo ($request instanceof $contract) ? 'Yes' : 'No';
-	}
-
-	abstract protected function getContract() : string;
-}
-
-class ReadTest extends Test
-{
-	protected function getContract() : string
-	{
-		return ReadRequest::class;
-	}
-}
-
-new ReadTest( new ReadRequest() );
+echo (Test::class instanceof Test) ? 'Yes' : 'No';

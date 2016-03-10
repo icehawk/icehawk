@@ -13,13 +13,11 @@ use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
  */
 interface ConfiguresIceHawk
 {
-	public function getHandlerRootNamespace() : string;
-
-	public function getHandlerPrefixNamespace() : string;
-
 	public function getUriRewriter() : RewritesUri;
 
-	public function getUriResolver() : ResolvesUri;
+	public function getReadRequestResolver() : ResolvesReadRequest;
+
+	public function getWriteRequestResolver() : ResolvesWriteRequest;
 
 	/**
 	 * @return array|SubscribesToEvents[]
@@ -28,7 +26,7 @@ interface ConfiguresIceHawk
 
 	public function getRequestInfo() : ProvidesRequestInfo;
 
-	public function getAllowedRequestMethods() : array;
+	public function getFinalReadRequestResponder() : RespondsFinallyToReadRequest;
 
-	public function getFinalResponder() : RespondsFinally;
+	public function getFinalWriteRequestResponder() : RespondsFinallyToWriteRequest;
 }

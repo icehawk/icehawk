@@ -1,51 +1,40 @@
 <?php
 /**
- * @author hollodotme
+ * @author h.woltersdorf
  */
 
 namespace Fortuneglobe\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Exceptions\InvalidRequestType;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestData;
-use Fortuneglobe\IceHawk\RequestHandlers\Interfaces\HandlesRequest;
+use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
+use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
+use Fortuneglobe\IceHawk\PubSub\Interfaces\PublishesEvents;
 
 /**
- * Class DomainRequestHandler
+ * Class AbstractRequestHandler
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
-abstract class AbstractRequestHandler implements HandlesRequest
+abstract class AbstractRequestHandler
 {
+	/** @var ConfiguresIceHawk */
+	protected $config;
 
-	/** @var ProvidesRequestData */
-	protected $request;
-
-	/**
-	 * @param ProvidesRequestData $request
-	 *
-	 * @throws InvalidRequestType
-	 */
-	final public function __construct( ProvidesRequestData $request )
-	{
-		$this->guardValidRequestContract( $request );
-
-		$this->request = $request;
-	}
+	/** @var PublishesEvents */
+	private $eventPublisher;
 
 	/**
-	 * @param ProvidesRequestData $request
-
-	 *
-*@throws InvalidRequestType
+	 * @param ConfiguresIceHawk $config
+	 * @param PublishesEvents   $eventPublisher
 	 */
-	private function guardValidRequestContract( ProvidesRequestData $request )
+	final public function __construct( ConfiguresIceHawk $config, PublishesEvents $eventPublisher )
 	{
-		$contract = $this->getRequestContract();
-
-		if ( !($request instanceof $contract) )
-		{
-			throw ( new InvalidRequestType )->withRequestType( get_class( $request ) );
-		}
+		$this->config         = $config;
+		$this->eventPublisher = $eventPublisher;
 	}
 
-	abstract protected function getRequestContract() : string;
+	final protected function publishEvent( CarriesEventData $event )
+	{
+		$this->eventPublisher->publish( $event );
+	}
+
+	abstract public function handleRequest();
 }

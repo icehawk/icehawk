@@ -12,7 +12,7 @@ use Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation;
 use Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ResolvesUri;
+use Fortuneglobe\IceHawk\Interfaces\ResolvesReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
@@ -67,9 +67,9 @@ final class ConfigGuard
 	 */
 	private function guardUriResolverIsValid()
 	{
-		$uriResolver = $this->config->getUriResolver();
+		$uriResolver = $this->config->getReadUriResolver();
 
-		if ( !($uriResolver instanceof ResolvesUri) )
+		if ( !($uriResolver instanceof ResolvesReadRequest) )
 		{
 			throw new InvalidUriResolverImplementation();
 		}

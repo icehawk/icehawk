@@ -13,7 +13,7 @@ class UriResolverTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @dataProvider malformedUriProvider
-	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri
+	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest
 	 */
 	public function testMalformedUriThrowsException( $uri )
 	{

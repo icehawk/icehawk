@@ -9,7 +9,7 @@ use Fortuneglobe\IceHawk\Constants\HttpCode;
 use Fortuneglobe\IceHawk\Defaults\IceHawkConfig;
 use Fortuneglobe\IceHawk\Defaults\IceHawkDelegate;
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Defaults\UriResolver;
+use Fortuneglobe\IceHawk\Defaults\ReadRequestResolver;
 use Fortuneglobe\IceHawk\Defaults\UriRewriter;
 use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
@@ -57,7 +57,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getDomainNamespace' )->willReturn( __NAMESPACE__ );
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( RequestInfo::fromEnv() );
 		$config->expects( $this->once() )
@@ -69,7 +69,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\MalformedRequestUri
+	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest
 	 */
 	public function testHandlingMalformedRequestThrowsException()
 	{
@@ -97,7 +97,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( [ ] );
 
 		$delegate = new IceHawkDelegate();
@@ -124,7 +124,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( [ ] );
 
 		$delegate = new IceHawkDelegate();
@@ -158,7 +158,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$config->expects( $this->once() )->method( 'getDomainNamespace' )->willReturn( __NAMESPACE__ );
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( $uriRewriter );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( [ ] );
 
 		$delegate = new IceHawkDelegate();
@@ -212,7 +212,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( [ $eventListener ] );
 
 		$delegate = new IceHawkDelegate();
@@ -241,7 +241,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	{
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new \stdClass() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new \stdClass() );
 
 		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
 		$iceHawk->init();
@@ -254,7 +254,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	{
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( new \stdClass() );
 
 		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
@@ -271,7 +271,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	{
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( RequestInfo::fromEnv() );
 		$config->expects( $this->once() )->method( 'getDomainNamespace' )->willReturn( $domainNamespace );
 
@@ -303,7 +303,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	{
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getUriResolver' )->willReturn( new UriResolver() );
+		$config->expects( $this->once() )->method( 'getReadUriResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( RequestInfo::fromEnv() );
 		$config->expects( $this->once() )->method( 'getDomainNamespace' )->willReturn( __NAMESPACE__ );
 		$config->expects( $this->once() )->method( 'getEventListeners' )->willReturn( $eventListeners );

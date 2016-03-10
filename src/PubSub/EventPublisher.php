@@ -19,25 +19,9 @@ final class EventPublisher implements RegistersEventSubscribers, PublishesEvents
 	/** @var array|SubscribesToEvents[] */
 	private $subscribers;
 
-	private function __construct()
+	public function __construct()
 	{
 		$this->subscribers = [ ];
-	}
-
-	private function __clone()
-	{
-	}
-
-	public static function singleton() : self
-	{
-		static $instance = null;
-
-		if ( is_null( $instance ) )
-		{
-			$instance = new self();
-		}
-
-		return $instance;
 	}
 
 	public function register( SubscribesToEvents $subscriber )
@@ -48,24 +32,14 @@ final class EventPublisher implements RegistersEventSubscribers, PublishesEvents
 		}
 	}
 
-	/**
-	 * @param CarriesEventData $event
-	 *
-	 * @return bool
-	 */
 	public function publish( CarriesEventData $event )
 	{
-		$eventPublished = false;
-
 		foreach ( $this->subscribers as $subscriber )
 		{
 			if ( $subscriber->acceptsEvent( $event ) )
 			{
 				$subscriber->notify( $event );
-				$eventPublished = true;
 			}
 		}
-
-		return $eventPublished;
 	}
 }

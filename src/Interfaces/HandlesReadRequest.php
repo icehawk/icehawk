@@ -3,15 +3,13 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\RequestHandlers\Interfaces;
-
-use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
  * Interface HandlesReadRequest
  * @package Fortuneglobe\IceHawk\RequestHandlers\Interfaces
  */
-interface HandlesReadRequest
+interface HandlesReadRequest extends HandlesRequest
 {
 	public function handle( ProvidesReadRequestData $request );
 }

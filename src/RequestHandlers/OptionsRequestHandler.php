@@ -6,10 +6,10 @@
 namespace Fortuneglobe\IceHawk\RequestHandlers;
 
 /**
- * Class ReadRequestHandler
+ * Class OptionsRequestHandler
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
-final class ReadRequestHandler extends AbstractRequestHandler
+final class OptionsRequestHandler extends AbstractRequestHandler
 {
 	public function handleRequest()
 	{

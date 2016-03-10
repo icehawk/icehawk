@@ -1,29 +1,19 @@
 <?php
 /**
- * @author hollodotme
+ * @author h.woltersdorf
  */
 
 namespace Fortuneglobe\IceHawk\RequestHandlers;
-
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
-use Fortuneglobe\IceHawk\RequestHandlers\Interfaces\HandlesWriteRequest;
 
 /**
  * Class WriteRequestHandler
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
-abstract class WriteRequestHandler extends AbstractRequestHandler implements HandlesWriteRequest
+final class WriteRequestHandler extends AbstractRequestHandler
 {
-	protected function getRequestContract() : string
+	public function handleRequest()
 	{
-		return ProvidesWriteRequestData::class;
+		// TODO: Implement handleRequest() method.
 	}
 
-	final public function handleRequest()
-	{
-		/** @var ProvidesWriteRequestData $request */
-		$request = $this->request;
-
-		$this->handle( $request );
-	}
 }

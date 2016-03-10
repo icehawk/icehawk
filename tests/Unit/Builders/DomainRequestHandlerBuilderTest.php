@@ -7,7 +7,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Builders;
 
 use Fortuneglobe\IceHawk\Builders\RequestHandlerBuilder;
 use Fortuneglobe\IceHawk\Constants\HttpMethod;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesHandlerDemand;
+use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\RequestInfo;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
@@ -37,18 +37,20 @@ class DomainRequestHandlerBuilderTest extends \PHPUnit_Framework_TestCase
 	 * @param string $domain
 	 * @param string $demand
 	 * @param array  $params
-	 *
-	 * @return \PHPUnit_Framework_MockObject_MockObject|ProvidesHandlerDemand
+
+
+*
+*@return \PHPUnit_Framework_MockObject_MockObject|RoutesToReadHandler
 	 */
 	private function getUriComponentsMock( $domain, $demand, array $params )
 	{
-		$mock = $this->getMockBuilder( ProvidesHandlerDemand::class )->setMethods(
-			[ 'getDomain', 'getDemand', 'getParams' ]
+		$mock = $this->getMockBuilder( RoutesToReadHandler::class )->setMethods(
+			[ 'getDomain', 'getDemand', 'getUriParams' ]
 		)->getMock();
 
 		$mock->expects( $this->once() )->method( 'getDomain' )->willReturn( $domain );
 		$mock->expects( $this->once() )->method( 'getDemand' )->willReturn( $demand );
-		$mock->expects( $this->never() )->method( 'getParams' )->willReturn( $params );
+		$mock->expects( $this->never() )->method( 'getUriParams' )->willReturn( $params );
 
 		return $mock;
 	}

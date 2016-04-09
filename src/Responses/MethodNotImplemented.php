@@ -25,6 +25,6 @@ final class MethodNotImplemented extends AbstractHttpResponse
 
 	protected function getBody() : string
 	{
-		return sprintf( '501 - Method Not Implemented (%s)', $this->requestMethod );
+		return sprintf( '%d - Method Not Implemented (%s)', $this->getHttpCode(), $this->requestMethod );
 	}
 }

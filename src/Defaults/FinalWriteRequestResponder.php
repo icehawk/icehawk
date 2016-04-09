@@ -16,7 +16,13 @@ class FinalWriteRequestResponder implements RespondsFinallyToWriteRequest
 {
 	public function handleNoResponse( ProvidesWriteRequestData $request )
 	{
-		echo "Application did not respond to the read request";
+		$requestInfo = $request->getRequestInfo();
+
+		printf(
+			"Application did not respond to the %s request: %s",
+			$requestInfo->getMethod(),
+			$requestInfo->getUri()
+		);
 	}
 
 	public function handleUncaughtException( \Throwable $throwable, ProvidesWriteRequestData $request )

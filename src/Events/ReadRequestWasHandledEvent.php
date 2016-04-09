@@ -6,24 +6,22 @@
 namespace Fortuneglobe\IceHawk\Events;
 
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
  * Class RequestWasHandledEvent
  * @package Fortuneglobe\IceHawk\Events
  */
-final class RequestWasHandledEvent implements CarriesEventData
+final class ReadRequestWasHandledEvent implements CarriesEventData
 {
-	/** @var ProvidesWriteRequestData|ProvidesReadRequestData|ProvidesRequestData */
+	/** @var ProvidesReadRequestData */
 	private $request;
 
 	/**
-	 * @param ProvidesWriteRequestData|ProvidesReadRequestData|ProvidesRequestData $request
+	 * @param ProvidesReadRequestData $request
 	 */
-	public function __construct( ProvidesRequestData $request )
+	public function __construct( ProvidesReadRequestData $request )
 	{
 		$this->request = $request;
 	}
@@ -34,9 +32,9 @@ final class RequestWasHandledEvent implements CarriesEventData
 	}
 
 	/**
-	 * @return ProvidesReadRequestData|ProvidesWriteRequestData|ProvidesRequestData
+	 * @return ProvidesReadRequestData
 	 */
-	public function getRequest() : ProvidesRequestData
+	public function getRequest() : ProvidesReadRequestData
 	{
 		return $this->request;
 	}

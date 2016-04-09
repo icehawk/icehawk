@@ -73,7 +73,7 @@ abstract class AbstractUriRewriter implements RewritesUri
 		}
 		elseif ( @preg_match( $pattern, '' ) !== false )
 		{
-			return boolval( preg_match( $pattern, $requestUrl ) );
+			return (bool)preg_match( $pattern, $requestUrl );
 		}
 		else
 		{

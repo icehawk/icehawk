@@ -13,14 +13,19 @@ use Fortuneglobe\IceHawk\Constants\HttpCode;
  */
 class MethodNotAllowed extends AbstractHttpResponse
 {
-	public function __construct()
+	/** @var string */
+	private $requestMethod;
+
+	public function __construct( string $requestMethod )
 	{
 		parent::__construct( 'text/plain', HttpCode::METHOD_NOT_ALLOWED );
+
+		$this->requestMethod = $requestMethod;
 	}
 
 	protected function getBody() : string
 	{
-		return '405 - Method Not Allowed.';
+		return sprintf( '%d - Method Not Allowed (%s).', $this->getHttpCode(), $this->requestMethod );
 	}
 
 }

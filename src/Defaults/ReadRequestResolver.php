@@ -16,12 +16,6 @@ use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
  */
 class ReadRequestResolver implements ResolvesReadRequest
 {
-	/**
-	 * @param ProvidesRequestInfo $requestInfo
-	 *
-	 * @throws UnresolvedRequest
-	 * @return RoutesToReadHandler
-	 */
 	public function resolve( ProvidesRequestInfo $requestInfo ) : RoutesToReadHandler
 	{
 		throw ( new UnresolvedRequest() )->withRequestInfo( $requestInfo );

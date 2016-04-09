@@ -6,7 +6,6 @@
 namespace Fortuneglobe\IceHawk\Defaults;
 
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 
 /**
@@ -17,7 +16,13 @@ class FinalReadRequestResponder implements RespondsFinallyToReadRequest
 {
 	public function handleNoResponse( ProvidesReadRequestData $request )
 	{
-		echo "Application did not respond to the read request";
+		$requestInfo = $request->getRequestInfo();
+
+		printf(
+			"Application did not respond to the %s request: %s",
+			$requestInfo->getMethod(),
+			$requestInfo->getUri()
+		);
 	}
 
 	public function handleUncaughtException( \Throwable $throwable, ProvidesReadRequestData $request )

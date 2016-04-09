@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
 
-use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
+use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
 use Fortuneglobe\IceHawk\PubSub\AbstractEventSubscriber;
 use Fortuneglobe\IceHawk\RequestInfo;
@@ -18,7 +18,7 @@ class IceHawkEventListenerTest extends \PHPUnit_Framework_TestCase
 		$requestInfo   = RequestInfo::fromEnv();
 		$initEvent     = new IceHawkWasInitializedEvent( $requestInfo );
 		$getRequest    = new ReadRequest( $requestInfo, [ ] );
-		$handlingEvent = new HandlingRequestEvent( $getRequest );
+		$handlingEvent = new HandlingReadRequestEvent( $getRequest );
 
 		$mock = $this->getMockBuilder( AbstractEventSubscriber::class )
 		             ->setMethods( [ 'getAcceptedEvents' ] )

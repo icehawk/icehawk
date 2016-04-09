@@ -8,12 +8,12 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\IceHawk;
 use Fortuneglobe\IceHawk\Constants\HttpCode;
 use Fortuneglobe\IceHawk\Defaults\IceHawkConfig;
 use Fortuneglobe\IceHawk\Defaults\IceHawkDelegate;
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Defaults\ReadRequestResolver;
+use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Defaults\UriRewriter;
-use Fortuneglobe\IceHawk\Events\HandlingRequestEvent;
+use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
-use Fortuneglobe\IceHawk\Events\RequestWasHandledEvent;
+use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\IceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
@@ -183,8 +183,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 		$initEvent     = new IceHawkWasInitializedEvent( $requestInfo );
 		$getRequest    = new ReadRequest( $requestInfo, [ ] );
-		$handlingEvent = new HandlingRequestEvent( $getRequest );
-		$handledEvent  = new RequestWasHandledEvent( $getRequest );
+		$handlingEvent = new HandlingReadRequestEvent( $getRequest );
+		$handledEvent  = new ReadRequestWasHandledEvent( $getRequest );
 
 		$eventListener = $this->getMockBuilder( SubscribesToEvents::class )
 		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )

@@ -5,13 +5,14 @@
 
 namespace Fortuneglobe\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Constants\HandlerInterfaceMap;
+use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Events\HandlingWriteRequestEvent;
 use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
+use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
 
@@ -77,7 +78,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function guardHandlerAcceptsRequestMethod( HandlesWriteRequest $handler, string $requestMethod )
 	{
-		$requiredInterface = HandlerInterfaceMap::HTTP_METHODS[ $requestMethod ];
+		$requiredInterface = HandlerMethodInterfaceMap::HTTP_METHODS[ $requestMethod ];
 
 		if ( !($handler instanceof $requiredInterface) )
 		{
@@ -87,9 +88,15 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getRequest( array $uriParams ) : ProvidesWriteRequestData
 	{
-		$requestInfo = $this->config->getRequestInfo();
-		$postData    = array_merge( $_POST, $uriParams );
+		$requestInfo   = $this->config->getRequestInfo();
+		$postData      = array_merge( $_POST, $uriParams );
+		$uploadedFiles = $this->getUploadedFiles();
 
-		return new WriteRequest( $requestInfo, $postData, $_FILES );
+		return new WriteRequest( $requestInfo, $postData, $uploadedFiles );
+	}
+
+	private function getUploadedFiles() : array
+	{
+		return ( new UploadedFilesMapper( $_FILES ) )->mapToInfoObjects();
 	}
 }

@@ -13,10 +13,10 @@ use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
 use Fortuneglobe\IceHawk\Interfaces\HandlesPutRequest;
 
 /**
- * Class HandlerInterfaceMap
+ * Class HandlerMethodInterfaceMap
  * @package Fortuneglobe\IceHawk\Constants
  */
-abstract class HandlerInterfaceMap
+abstract class HandlerMethodInterfaceMap
 {
 	const HTTP_METHODS = [
 		HttpMethod::HEAD   => HandlesHeadRequest::class,

@@ -205,7 +205,7 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 
 		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], [ ] );
 
-		$this->assertEquals( 'Unit-Test', $postRequest->getRawData() );
+		$this->assertEquals( 'Unit-Test', $postRequest->getBody() );
 
 		stream_wrapper_restore( "php" );
 	}
@@ -214,6 +214,6 @@ class PostRequestTest extends \PHPUnit_Framework_TestCase
 	{
 		$postRequest = new WriteRequest( RequestInfo::fromEnv(), [ ], [ ] );
 
-		$this->assertNull( $postRequest->getRawData() );
+		$this->assertNull( $postRequest->getBody() );
 	}
 }

@@ -29,7 +29,7 @@ final class ConfigGuard
 	/**
 	 * @throws InvalidEventListenerCollection
 	 */
-	public function guardConfigIsValid()
+	public function validate()
 	{
 		$this->guardEventSubscribersAreValid();
 	}

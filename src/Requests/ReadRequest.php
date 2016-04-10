@@ -19,7 +19,7 @@ final class ReadRequest implements ProvidesReadRequestData
 	private $requestInfo;
 
 	/** @var array */
-	private $getData = [ ];
+	private $getData;
 
 	/**
 	 * @param ProvidesRequestInfo $requestInfo
@@ -34,7 +34,7 @@ final class ReadRequest implements ProvidesReadRequestData
 	/**
 	 * @return array
 	 */
-	public function getData()
+	public function getData() : array
 	{
 		return $this->getData;
 	}
@@ -56,10 +56,7 @@ final class ReadRequest implements ProvidesReadRequestData
 		}
 	}
 
-	/**
-	 * @return ProvidesRequestInfo
-	 */
-	public function getRequestInfo()
+	public function getRequestInfo() : ProvidesRequestInfo
 	{
 		return $this->requestInfo;
 	}

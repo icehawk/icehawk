@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Constants\HandlerInterfaceMap;
+use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
 use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Events\RedirectingEvent;
@@ -117,7 +117,7 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	 */
 	private function guardHandlerAcceptsRequestMethod( HandlesReadRequest $handler, string $requestMethod )
 	{
-		$requiredInterface = HandlerInterfaceMap::HTTP_METHODS[ $requestMethod ];
+		$requiredInterface = HandlerMethodInterfaceMap::HTTP_METHODS[ $requestMethod ];
 
 		if ( !($handler instanceof $requiredInterface) )
 		{

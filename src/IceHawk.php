@@ -76,15 +76,10 @@ final class IceHawk
 
 	/**
 	 * @throws InvalidEventListenerCollection
-	 * @throws InvalidDomainNamespace
-	 * @throws InvalidRequestInfoImplementation
-	 * @throws InvalidUriResolverImplementation
-	 * @throws InvalidUriRewriterImplementation
 	 */
 	private function guardConfigIsValid()
 	{
-		$configGuard = new ConfigGuard( $this->config );
-		$configGuard->guardConfigIsValid();
+		( new ConfigGuard( $this->config ) )->validate();
 	}
 
 	private function registerEventSubscribers()
@@ -95,9 +90,6 @@ final class IceHawk
 		}
 	}
 
-	/**
-	 * @throws \Throwable
-	 */
 	public function handleRequest()
 	{
 		$requestInfo = $this->config->getRequestInfo();

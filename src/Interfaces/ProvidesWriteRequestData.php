@@ -11,5 +11,5 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface ProvidesWriteRequestData extends ProvidesRequestData, ProvidesUploadedFiles
 {
-	public function getRawData() : string;
+	public function getBody() : string;
 }

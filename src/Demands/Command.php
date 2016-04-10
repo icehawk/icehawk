@@ -50,7 +50,7 @@ abstract class Command
 	 */
 	protected function getRequestRawData() : string
 	{
-		return $this->request->getRawData();
+		return $this->request->getBody();
 	}
 
 	/**

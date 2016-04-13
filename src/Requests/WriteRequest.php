@@ -78,14 +78,7 @@ final class WriteRequest implements ProvidesWriteRequestData
 	 */
 	public function get( string $key )
 	{
-		if ( isset($this->postData[ $key ]) )
-		{
-			return $this->postData[ $key ];
-		}
-		else
-		{
-			return null;
-		}
+		return $this->postData[ $key ] ?? null;
 	}
 
 	public function getRequestInfo() : ProvidesRequestInfo

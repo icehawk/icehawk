@@ -46,14 +46,7 @@ final class ReadRequest implements ProvidesReadRequestData
 	 */
 	public function get( string $key )
 	{
-		if ( isset($this->getData[ $key ]) )
-		{
-			return $this->getData[ $key ];
-		}
-		else
-		{
-			return null;
-		}
+		return $this->getData[ $key ] ?? null;
 	}
 
 	public function getRequestInfo() : ProvidesRequestInfo

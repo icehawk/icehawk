@@ -68,7 +68,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getHandlerRoute() : RoutesToWriteHandler
 	{
-		$uriResolver = $this->config->getReadRequestResolver();
+		$uriResolver = $this->config->getWriteRequestResolver();
 		$requestInfo = $this->config->getRequestInfo();
 
 		$handlerRoute = $uriResolver->resolve( $requestInfo );

@@ -112,7 +112,9 @@ final class IceHawk
 
 			$requestHandler->handleRequest();
 		}
-
-		( new MethodNotImplemented( $requestInfo->getMethod() ) )->respond();
+		else
+		{
+			( new MethodNotImplemented( $requestInfo->getMethod() ) )->respond();
+		}		
 	}
 }

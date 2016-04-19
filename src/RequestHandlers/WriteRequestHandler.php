@@ -37,14 +37,6 @@ final class WriteRequestHandler extends AbstractRequestHandler
 			$finalResponder = $this->config->getFinalWriteRequestResponder();
 			$finalResponder->handleUncaughtException( $throwable, $this->getRequest( [ ] ) );
 		}
-		finally
-		{
-			if ( !headers_sent() )
-			{
-				$finalResponder = $this->config->getFinalWriteRequestResponder();
-				$finalResponder->handleNoResponse( $this->getRequest( [ ] ) );
-			}
-		}
 	}
 
 	private function resolveAndHandleRequest()
@@ -60,7 +52,8 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		$handlingEvent = new HandlingWriteRequestEvent( $request );
 		$this->publishEvent( $handlingEvent );
 
-		$requestHandler->handle( $request );
+		$response = $requestHandler->handle( $request );
+		$response->respond();
 
 		$handledEvent = new WriteRequestWasHandledEvent( $request );
 		$this->publishEvent( $handledEvent );

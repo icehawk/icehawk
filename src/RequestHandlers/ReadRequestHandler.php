@@ -38,14 +38,6 @@ final class ReadRequestHandler extends AbstractRequestHandler
 			$finalResponder = $this->config->getFinalReadRequestResponder();
 			$finalResponder->handleUncaughtException( $throwable, $this->getRequest( [ ] ) );
 		}
-		finally
-		{
-			if ( !headers_sent() )
-			{
-				$finalResponder = $this->config->getFinalReadRequestResponder();
-				$finalResponder->handleNoResponse( $this->getRequest( [ ] ) );
-			}
-		}
 	}
 
 	private function redirectOrHandleRequest()
@@ -93,7 +85,8 @@ final class ReadRequestHandler extends AbstractRequestHandler
 		$handlingEvent = new HandlingReadRequestEvent( $request );
 		$this->publishEvent( $handlingEvent );
 
-		$requestHandler->handle( $request );
+		$response = $requestHandler->handle( $request );
+		$response->respond();
 
 		$handledEvent = new ReadRequestWasHandledEvent( $request );
 		$this->publishEvent( $handledEvent );

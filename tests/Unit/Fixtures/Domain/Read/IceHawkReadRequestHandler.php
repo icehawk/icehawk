@@ -5,18 +5,20 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read;
 
-use Fortuneglobe\IceHawk\DomainRequestHandlers\GetRequestHandler;
+use Fortuneglobe\IceHawk\Interfaces\HandlesGetRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\SimpleResponse;
 
 /**
  * Class IceHawkReadRequestHandler
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read
  */
-class IceHawkReadRequestHandler extends GetRequestHandler
-{
-	public function handle( ProvidesReadRequestData $request )
+class IceHawkReadRequestHandler implements HandlesGetRequest
+{	
+	public function handle( ProvidesReadRequestData $request ) : ServesResponse
 	{
-		echo "Handler method for get request called.";
+		return new SimpleResponse( 'Handler method for get request called.' );
 	}
 }

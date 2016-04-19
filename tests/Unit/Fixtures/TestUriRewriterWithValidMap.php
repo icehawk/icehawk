@@ -8,6 +8,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 use Fortuneglobe\IceHawk\Constants\HttpCode;
 use Fortuneglobe\IceHawk\Defaults\UriRewriter;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
+use Fortuneglobe\IceHawk\Responses\Redirect;
 
 /**
  * Class TestUriRewriterWithValidMap
@@ -15,15 +16,14 @@ use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
  */
 class TestUriRewriterWithValidMap extends UriRewriter
 {
-
 	private static $simpleMap = [
-		"#/non/regex/rewrite#"      => [ '/non_regex_rewrite', HttpCode::MOVED_PERMANENTLY ],
-		"#/non/regex/no/code#"      => [ '/non_regex_no_code' ],
-		"#^/regex/rewrite/?#"       => [ '/regex_rewrite', HttpCode::FOUND ],
-		"#^/regex/param/([^/]+)/?#" => [ '/regex_param_$1', HttpCode::FOUND ],
+		"#/non/regex/rewrite#"          => [ '/non_regex_rewrite', HttpCode::MOVED_PERMANENTLY ],
+		"#/non/regex/no/code#"          => [ '/non_regex_no_code' ],
+		"#^/regex/rewrite/?#"           => [ '/regex_rewrite', HttpCode::FOUND ],
+		"#^/regex/param/([^/]+)/?#"     => [ '/regex_param_$1', HttpCode::FOUND ],
 	];
 
-	public function rewrite( ProvidesRequestInfo $requestInfo )
+	public function rewrite( ProvidesRequestInfo $requestInfo ) : Redirect
 	{
 		return $this->rewriteUriBySimpleMap( $requestInfo->getUri(), self::$simpleMap );
 	}

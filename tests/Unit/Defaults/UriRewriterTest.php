@@ -1,9 +1,5 @@
 <?php
-/**
- * @author h.woltersdorf
- */
-
-namespace Fortuneglobe\IceHawk\Tests\Unit\Uri;
+namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
 
 use Fortuneglobe\IceHawk\Constants\HttpCode;
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
@@ -15,23 +11,6 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestUriRewriterWithValidMap;
 
 class UriRewriterTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @dataProvider uriProvider
-	 */
-	public function testDefaultsToPermanentRedirectOfUri( $uri )
-	{
-		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => $uri ] );
-
-		$rewriter = new UriRewriter();
-		$redirect = $rewriter->rewrite( $requestInfo );
-
-		$this->assertInstanceOf( ServesResponse::class, $redirect );
-		$this->assertInstanceOf( Redirect::class, $redirect );
-
-		$this->assertTrue( $redirect->urlEquals( $uri ) );
-		$this->assertTrue( $redirect->codeEquals( HttpCode::MOVED_PERMANENTLY ) );
-	}
-
 	public function uriProvider()
 	{
 		return [
@@ -41,6 +20,34 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 		];
 	}
 
+	/**
+	 * @dataProvider uriProvider
+	 */
+    public function testDefaultsToPermanentRedirectOfUri( $uri )
+    {
+	    $uriRewriter = new UriRewriter();
+	    $redirect = $uriRewriter->rewrite( new RequestInfo( [ 'REQUEST_URI' => $uri ] ) );
+
+	    $this->assertInstanceOf( ServesResponse::class, $redirect );
+	    $this->assertInstanceOf( Redirect::class, $redirect );
+	    
+	    $this->assertTrue( $redirect->urlEquals( $uri ) );
+	    $this->assertTrue( $redirect->codeEquals( HttpCode::MOVED_PERMANENTLY ) );
+    }
+
+	public function validMapUriProvider()
+	{
+		return [
+			[ '/non/regex/rewrite', '/non_regex_rewrite', HttpCode::MOVED_PERMANENTLY ],
+			[ '/non/regex/no/code', '/non_regex_no_code', HttpCode::MOVED_PERMANENTLY ],
+			[ '/regex/rewrite', '/regex_rewrite', HttpCode::FOUND ],
+			[ '/regex/rewrite/', '/regex_rewrite', HttpCode::FOUND ],
+			[ '/regex/param/test', '/regex_param_test', HttpCode::FOUND ],
+			[ '/regex/param/test/', '/regex_param_test', HttpCode::FOUND ],
+			[ '/not/existing/in/map', '/not/existing/in/map', HttpCode::MOVED_PERMANENTLY ],
+		];
+	}
+	
 	/**
 	 * @dataProvider validMapUriProvider
 	 */
@@ -58,16 +65,11 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue( $redirect->codeEquals( $expectedRedirectCode ) );
 	}
 
-	public function validMapUriProvider()
+	public function invalidMapUriProvider()
 	{
 		return [
-			[ '/non/regex/rewrite', '/non_regex_rewrite', HttpCode::MOVED_PERMANENTLY ],
-			[ '/non/regex/no/code', '/non_regex_no_code', HttpCode::MOVED_PERMANENTLY ],
-			[ '/regex/rewrite', '/regex_rewrite', HttpCode::FOUND ],
-			[ '/regex/rewrite/', '/regex_rewrite', HttpCode::FOUND ],
-			[ '/regex/param/test', '/regex_param_test', HttpCode::FOUND ],
-			[ '/regex/param/test/', '/regex_param_test', HttpCode::FOUND ],
-			[ '/not/existing/in/map', '/not/existing/in/map', HttpCode::FOUND ],
+			[ '/empty/redirect/data' ],
+			[ '/non/array/redirect/data' ],
 		];
 	}
 
@@ -81,13 +83,5 @@ class UriRewriterTest extends \PHPUnit_Framework_TestCase
 
 		$rewriter = new TestUriRewriterWithInvalidMap();
 		$rewriter->rewrite( $requestInfo );
-	}
-
-	public function invalidMapUriProvider()
-	{
-		return [
-			[ '/empty/redirect/data' ],
-			[ '/non/array/redirect/data' ],
-		];
 	}
 }

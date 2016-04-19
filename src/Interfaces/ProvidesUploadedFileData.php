@@ -21,9 +21,9 @@ interface ProvidesUploadedFileData
 	public function getName() : string;
 
 	/**
-	 * @return float
+	 * @return int
 	 */
-	public function getSize() : float;
+	public function getSize() : int;
 
 	/**
 	 * @return string

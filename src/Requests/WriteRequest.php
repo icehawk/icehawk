@@ -64,7 +64,7 @@ final class WriteRequest implements ProvidesWriteRequestData
 	 *
 	 * @return ProvidesUploadedFileData|null
 	 */
-	public function getOneFile( string $fieldKey, int $fileIndex = 0 )
+	public function getOneFile( string $fieldKey, int $fileIndex = 0 ) : ProvidesUploadedFileData
 	{
 		$files = $this->getFiles( $fieldKey );
 

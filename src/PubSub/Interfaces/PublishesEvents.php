@@ -11,5 +11,5 @@ namespace Fortuneglobe\IceHawk\PubSub\Interfaces;
  */
 interface PublishesEvents
 {
-	public function publish( CarriesEventData $event ) : bool;
+	public function publish( CarriesEventData $event );
 }

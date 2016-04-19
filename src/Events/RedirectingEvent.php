@@ -30,7 +30,7 @@ final class RedirectingEvent implements CarriesEventData
 	/**
 	 * @return Redirect
 	 */
-	public function getRedirect()
+	public function getRedirect() : Redirect
 	{
 		return $this->redirect;
 	}
@@ -38,7 +38,7 @@ final class RedirectingEvent implements CarriesEventData
 	/**
 	 * @return ProvidesRequestInfo
 	 */
-	public function getRequestInfo()
+	public function getRequestInfo() : ProvidesRequestInfo
 	{
 		return $this->requestInfo;
 	}

@@ -23,5 +23,11 @@ interface ProvidesUploadedFiles
 	 */
 	public function getFiles( string $fieldKey ) : array;
 
-	public function getOneFile( string $fieldKey, int $fileIndex ) : ProvidesUploadedFileData;
+	/**
+	 * @param string $fieldKey
+	 * @param int    $fileIndex
+	 *
+	 * @return ProvidesUploadedFileData|null
+	 */
+	public function getOneFile( string $fieldKey, int $fileIndex );
 }

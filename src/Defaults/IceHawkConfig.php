@@ -5,6 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Defaults;
 
+use Fortuneglobe\IceHawk\Defaults\Traits\DefaultBodyParserCreating;
 use Fortuneglobe\IceHawk\Defaults\Traits\DefaultEventSubscribing;
 use Fortuneglobe\IceHawk\Defaults\Traits\DefaultFinalReadRequestResponding;
 use Fortuneglobe\IceHawk\Defaults\Traits\DefaultFinalWriteRequestResponding;
@@ -27,4 +28,5 @@ class IceHawkConfig implements ConfiguresIceHawk
 	use DefaultRequestInfoProviding;
 	use DefaultFinalReadRequestResponding;
 	use DefaultFinalWriteRequestResponding;
+	use DefaultBodyParserCreating;
 }

@@ -6,6 +6,7 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use Fortuneglobe\IceHawk\RequestParsers\AbstractBodyParserFactory;
 
 /**
  * Interface ConfiguresIceHawk
@@ -29,4 +30,6 @@ interface ConfiguresIceHawk
 	public function getFinalReadRequestResponder() : RespondsFinallyToReadRequest;
 
 	public function getFinalWriteRequestResponder() : RespondsFinallyToWriteRequest;
+	
+	public function getBodyParserFactory() : AbstractBodyParserFactory;
 }

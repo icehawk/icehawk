@@ -12,12 +12,13 @@ use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
-use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
+use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
 
 /**
  * Class WriteRequestHandler
+ *
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
 final class WriteRequestHandler extends AbstractRequestHandler
@@ -82,14 +83,12 @@ final class WriteRequestHandler extends AbstractRequestHandler
 	private function getRequest( array $uriParams ) : ProvidesWriteRequestData
 	{
 		$requestInfo   = $this->config->getRequestInfo();
-		$postData      = array_merge( $_POST, $uriParams );
-		$uploadedFiles = $this->getUploadedFiles();
+		$parserFactory = $this->config->getBodyParserFactory();
 
-		return new WriteRequest( $requestInfo, $postData, $uploadedFiles );
-	}
+		$requestBodyParser = $parserFactory->selectParserByContentType( $requestInfo->getContentType() );
 
-	private function getUploadedFiles() : array
-	{
-		return ( new UploadedFilesMapper( $_FILES ) )->mapToInfoObjects();
+		$requestInput = new WriteRequestInput( $uriParams, $requestBodyParser );
+
+		return new WriteRequest( $requestInfo, $requestInput );
 	}
 }

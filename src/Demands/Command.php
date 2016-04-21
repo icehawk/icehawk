@@ -8,23 +8,31 @@ namespace Fortuneglobe\IceHawk\Demands;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesUploadedFileData;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestInputData;
 
 /**
  * Class Command
+ *
  * @package Fortuneglobe\IceHawk\Demands
  */
 abstract class Command
 {
 
-	/** @var ProvidesWriteRequestData */
-	protected $request;
+	/** @var ProvidesRequestInfo */
+	protected $requestInfo;
+
+	/**
+	 * @var ProvidesWriteRequestInputData
+	 */
+	protected $requestInput;
 
 	/**
 	 * @param ProvidesWriteRequestData $request
 	 */
 	public function __construct( ProvidesWriteRequestData $request )
 	{
-		$this->request = $request;
+		$this->requestInfo  = $request->getRequestInfo();
+		$this->requestInput = $request->getInputData();
 	}
 
 	/**
@@ -34,7 +42,7 @@ abstract class Command
 	 */
 	protected function getRequestValue( string $key )
 	{
-		return $this->request->get( $key );
+		return $this->requestInput->get( $key );
 	}
 
 	/**
@@ -42,7 +50,7 @@ abstract class Command
 	 */
 	protected function getRequestData() : array
 	{
-		return $this->request->getData();
+		return $this->requestInput->getData();
 	}
 
 	/**
@@ -50,7 +58,7 @@ abstract class Command
 	 */
 	protected function getRequestRawData() : string
 	{
-		return $this->request->getBody();
+		return $this->requestInput->getBody();
 	}
 
 	/**
@@ -58,7 +66,7 @@ abstract class Command
 	 */
 	protected function getAllUploadedFiles() : array
 	{
-		return $this->request->getAllFiles();
+		return $this->requestInput->getAllFiles();
 	}
 
 	/**
@@ -68,7 +76,7 @@ abstract class Command
 	 */
 	protected function getUploadedFiles( string $key ) : array
 	{
-		return $this->request->getFiles( $key );
+		return $this->requestInput->getFiles( $key );
 	}
 
 	/**
@@ -79,7 +87,7 @@ abstract class Command
 	 */
 	protected function getOneUploadedFile( string $key, int $fileIndex = 0 )
 	{
-		return $this->request->getOneFile( $key, $fileIndex );
+		return $this->requestInput->getOneFile( $key, $fileIndex );
 	}
 
 	/**
@@ -87,6 +95,6 @@ abstract class Command
 	 */
 	final public function getRequestInfo() : ProvidesRequestInfo
 	{
-		return $this->request->getRequestInfo();
+		return $this->requestInfo;
 	}
 }

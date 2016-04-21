@@ -14,6 +14,7 @@ use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
+use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 
@@ -126,8 +127,9 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	private function getRequest( array $uriParams ) : ProvidesReadRequestData
 	{
 		$requestInfo = $this->config->getRequestInfo();
-		$getData     = array_merge( $_GET, $uriParams );
 
-		return new ReadRequest( $requestInfo, $getData );
+		$requestInput = new ReadRequestInput( $uriParams );
+
+		return new ReadRequest( $requestInfo, $requestInput );
 	}
 }

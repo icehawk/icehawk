@@ -7,6 +7,7 @@
 namespace Fortuneglobe\IceHawk\Requests;
 
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestInputData;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
@@ -18,39 +19,22 @@ final class ReadRequest implements ProvidesReadRequestData
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
-	/** @var array */
-	private $getData;
-
-	/**
-	 * @param ProvidesRequestInfo $requestInfo
-	 * @param array               $getData
-	 */
-	public function __construct( ProvidesRequestInfo $requestInfo, array $getData )
+	/** @var ProvidesReadRequestInputData */
+	private $inputData;
+	
+	public function __construct( ProvidesRequestInfo $requestInfo, ProvidesReadRequestInputData $inputData )
 	{
 		$this->requestInfo = $requestInfo;
-		$this->getData     = $getData;
+		$this->inputData   = $inputData;
 	}
-
-	/**
-	 * @return array
-	 */
-	public function getData() : array
-	{
-		return $this->getData;
-	}
-
-	/**
-	 * @param string $key
-	 *
-	 * @return null|string|array
-	 */
-	public function get( string $key )
-	{
-		return $this->getData[ $key ] ?? null;
-	}
-
+	
 	public function getRequestInfo() : ProvidesRequestInfo
 	{
 		return $this->requestInfo;
+	}
+	
+	public function getInputData() : ProvidesReadRequestInputData
+	{
+		return $this->inputData;
 	}
 }

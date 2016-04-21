@@ -6,24 +6,29 @@
 namespace Fortuneglobe\IceHawk\Demands;
 
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestInputData;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Class Query
+ *
  * @package Fortuneglobe\IceHawk\Demands
  */
 abstract class Query
 {
+	/** @var ProvidesRequestInfo */
+	protected $requestInfo;
 
-	/** @var ProvidesReadRequestData */
-	protected $request;
+	/** @var ProvidesReadRequestInputData */
+	protected $requestInput;
 
 	/**
 	 * @param ProvidesReadRequestData $request
 	 */
 	public function __construct( ProvidesReadRequestData $request )
 	{
-		$this->request = $request;
+		$this->requestInfo  = $request->getRequestInfo();
+		$this->requestInput = $request->getInputData();
 	}
 
 	/**
@@ -33,7 +38,7 @@ abstract class Query
 	 */
 	protected function getRequestValue( string $key )
 	{
-		return $this->request->get( $key );
+		return $this->requestInput->get( $key );
 	}
 
 	/**
@@ -41,7 +46,7 @@ abstract class Query
 	 */
 	protected function getRequestData() : array
 	{
-		return $this->request->getData();
+		return $this->requestInput->getData();
 	}
 
 	/**
@@ -49,6 +54,6 @@ abstract class Query
 	 */
 	final public function getRequestInfo() : ProvidesRequestInfo
 	{
-		return $this->request->getRequestInfo();
+		return $this->requestInfo;
 	}
 }

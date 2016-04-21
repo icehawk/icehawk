@@ -19,6 +19,7 @@ use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
+use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestReadRequestResolver;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestWriteRequestResolver;
@@ -261,7 +262,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$initEvent     = new IceHawkWasInitializedEvent( $requestInfo );
-		$getRequest    = new ReadRequest( $requestInfo, [ ] );
+		$getRequest    = new ReadRequest( $requestInfo, new ReadRequestInput( [] ) );
 		$handlingEvent = new HandlingReadRequestEvent( $getRequest );
 		$handledEvent  = new ReadRequestWasHandledEvent( $getRequest );
 

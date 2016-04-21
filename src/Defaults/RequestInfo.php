@@ -13,7 +13,6 @@ use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
  */
 final class RequestInfo implements ProvidesRequestInfo
 {
-
 	/** @var array */
 	private $serverData = [ ];
 
@@ -128,5 +127,15 @@ final class RequestInfo implements ProvidesRequestInfo
 	public function getAuthPassword() : string
 	{
 		return $this->get( 'PHP_AUTH_PW' ) ?: '';
+	}
+
+	public function getContentType() : string
+	{
+		return $this->get( 'CONTENT_TYPE' ) ?: '';
+	}
+
+	public function getContentLength() : string
+	{
+		return $this->get( 'CONTENT_LENGTH' ) ?: '';
 	}
 }

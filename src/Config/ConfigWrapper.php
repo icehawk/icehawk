@@ -13,6 +13,7 @@ use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use Fortuneglobe\IceHawk\RequestParsers\AbstractBodyParserFactory;
 
 /**
  * Class IceHawkConfigWrapper
@@ -41,6 +42,9 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	/** @var RespondsFinallyToWriteRequest */
 	private $finalWriteRequestResponder;
 
+	/** @var AbstractBodyParserFactory */
+	private $bodyParserFactory;
+
 	public function __construct( ConfiguresIceHawk $config )
 	{
 		$this->uriRewriter                = $config->getUriRewriter();
@@ -50,6 +54,7 @@ final class ConfigWrapper implements ConfiguresIceHawk
 		$this->requestInfo                = $config->getRequestInfo();
 		$this->finalReadRequestResponder  = $config->getFinalReadRequestResponder();
 		$this->finalWriteRequestResponder = $config->getFinalWriteRequestResponder();
+		$this->bodyParserFactory          = $config->getBodyParserFactory();
 	}
 
 	public function getRequestInfo() : ProvidesRequestInfo
@@ -88,5 +93,10 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	public function getFinalWriteRequestResponder() : RespondsFinallyToWriteRequest
 	{
 		return $this->finalWriteRequestResponder;
+	}
+	
+	public function getBodyParserFactory() : AbstractBodyParserFactory
+	{
+		return $this->bodyParserFactory;
 	}
 }

@@ -36,4 +36,8 @@ interface ProvidesRequestInfo
 	public function getAuthUser() : string;
 
 	public function getAuthPassword() : string;
+
+	public function getContentType() : string;
+
+	public function getContentLength() : string;
 }

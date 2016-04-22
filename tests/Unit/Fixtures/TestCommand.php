@@ -5,10 +5,10 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 
-use Fortuneglobe\IceHawk\Command;
+use Fortuneglobe\IceHawk\Demands\Command;
 
 /**
- * Class TestDomainCommand
+ * Class TestCommand
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */

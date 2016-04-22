@@ -8,10 +8,30 @@ use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestInputData;
  *
  * @package Fortuneglobe\IceHawk\Requests
  */
-class ReadRequestInput extends AbstractRequestInput implements ProvidesReadRequestInputData
+final class ReadRequestInput implements ProvidesReadRequestInputData
 {
-	protected function getMergedRequestData() : array
+	/**
+	 * @var array
+	 */
+	private $data;
+
+	public function __construct( array $data )
 	{
-		return array_merge( $_GET, $this->uriParams );
+		$this->data = $data;
+	}
+
+	public function getData() : array
+	{
+		return $this->data;
+	}
+
+	/**
+	 * @param string $key
+	 *
+	 * @return null|string|array
+	 */
+	public function get( string $key )
+	{
+		return $this->data[ $key ] ?? null;
 	}
 }

@@ -5,11 +5,9 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Requests;
 
-use Fortuneglobe\IceHawk\RequestParsers\FormBodyParser;
-use Fortuneglobe\IceHawk\RequestParsers\NullParser;
+use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
 use Fortuneglobe\IceHawk\Requests\UploadedFile;
 use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
-use Fortuneglobe\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
 class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +37,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCanGetRequestValueByKey( array $writeData, $key, $expectedValue )
 	{
-		$writeRequestInput = new WriteRequestInput( $writeData, new NullParser() );
+		$writeRequestInput = new WriteRequestInput( '', $writeData );
 
 		$this->assertEquals( $expectedValue, $writeRequestInput->get( $key ) );
 	}
@@ -67,7 +65,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetterReturnsNullIfKeyIsNotSet( array $writeData, $key )
 	{
-		$writeRequestInput = new WriteRequestInput( $writeData, new NullParser() );
+		$writeRequestInput = new WriteRequestInput( '', $writeData );
 
 		$this->assertNull( $writeRequestInput->get( $key ) );
 	}
@@ -79,7 +77,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			[
 				[
 					'test_file' => [
-						'name'     => 'TestFile.dat',
+						 'name'     => 'TestFile.dat',
 						'tmp_name' => '/tmp/TestFile.dat',
 						'type'     => 'text/plain',
 						'size'     => 1024,
@@ -150,9 +148,9 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 		$expectedError, $expectedErrorMessage, $expectedSuccess
 	)
 	{
-		$_FILES = $uploadedFiles;
-
-		$writeRequestInput = new WriteRequestInput( [ ], new NullParser() );
+		$uploadedFiles = ( new UploadedFilesMapper( $uploadedFiles ) )->mapToInfoObjects(); 
+		
+		$writeRequestInput = new WriteRequestInput( '', [ ], $uploadedFiles );
 
 		$oneFile = $writeRequestInput->getOneFile( $fieldKey, $fileIndex );
 
@@ -168,7 +166,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetOneFileReturnNullIfKeyIsNotSet()
 	{
-		$writeRequestInput = new WriteRequestInput( [ ], new NullParser() );
+		$writeRequestInput = new WriteRequestInput( '', [ ], [ ] );
 		$oneFile           = $writeRequestInput->getOneFile( 'test' );
 
 		$this->assertNull( $oneFile );
@@ -176,7 +174,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetOneFileReturnNullIfFileIndexIsNotSet()
 	{
-		$_FILES = [
+		$uploadedFiles = [
 			'test_file' => [
 				'name'     => 'TestFile.dat',
 				'tmp_name' => '/tmp/TestFile.dat',
@@ -186,7 +184,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 
-		$writeRequestInput = new WriteRequestInput( [ ], new NullParser() );
+		$writeRequestInput = new WriteRequestInput( '', [ ], $uploadedFiles );
 		$oneFile           = $writeRequestInput->getOneFile( 'test_file', 1 );
 
 		$this->assertNull( $oneFile );
@@ -194,111 +192,10 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetFilesReturnsEmptyArrayIfFieldKeyIsNotSet()
 	{
-		$writeRequestInput = new WriteRequestInput( [ ], new NullParser() );
+		$writeRequestInput = new WriteRequestInput( '', [ ], [] );
 		$files             = $writeRequestInput->getFiles( 'test' );
 
 		$this->assertInternalType( 'array', $files );
 		$this->assertEmpty( $files );
-	}
-
-	public function testCanGetBodyDataFromInputStream()
-	{
-		stream_wrapper_unregister( "php" );
-		stream_wrapper_register( "php", PhpStreamMock::class );
-		file_put_contents( 'php://input', 'Unit-Test' );
-
-		$writeRequestInput = new WriteRequestInput( [ ], new NullParser() );
-
-		$this->assertEquals( 'Unit-Test', $writeRequestInput->getBody() );
-
-		stream_wrapper_restore( "php" );
-	}
-
-	public function testGetBodyReturnsEmptyStringIfIsEmpty()
-	{
-		$writeRequestInput = new WriteRequestInput( [ ], new NullParser() );
-
-		$this->assertSame( '', $writeRequestInput->getBody() );
-	}
-
-	public function postAndBodyDataProvider()
-	{
-		return [
-			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
-				'unit=tested',
-				'unit',
-			    'tested'
-			],
-			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
-				'test=units',
-				'test',
-			    'units'
-			],
-			[
-				[ 'unit' => [ 'test' => 'unit' ] ],
-				'unit[test]=units',
-				'unit',
-				[ 'test' => 'units' ]
-			],
-		];
-	}
-
-	/**
-	 * @dataProvider postAndBodyDataProvider
-	 */
-	public function testBodyParamsOverwritesPostParams( array $postData, string $body, string $key, $expectedValue )
-	{
-		stream_wrapper_unregister( "php" );
-		stream_wrapper_register( "php", PhpStreamMock::class );
-		file_put_contents( 'php://input', $body );
-		
-		$_POST = $postData;
-		$writeRequestInput = new WriteRequestInput( [], new FormBodyParser() );
-
-		$this->assertEquals( $expectedValue, $writeRequestInput->get( $key ) );
-		
-		stream_wrapper_restore( "php" );
-	}
-
-	public function uriAndBodyDataProvider()
-	{
-		return [
-			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
-				'unit=tested',
-				'unit',
-				'test'
-			],
-			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
-				'test=units',
-				'test',
-				'unit'
-			],
-			[
-				[ 'unit' => [ 'test' => 'unit' ] ],
-				'unit[test]=units',
-				'unit',
-				[ 'test' => 'unit' ]
-			],
-		];
-	}
-
-	/**
-	 * @dataProvider uriAndBodyDataProvider
-	 */
-	public function testUriParamsOverwritesBodyParams( array $uriData, string $body, string $key, $expectedValue )
-	{
-		stream_wrapper_unregister( "php" );
-		stream_wrapper_register( "php", PhpStreamMock::class );
-		file_put_contents( 'php://input', $body );
-
-		$writeRequestInput = new WriteRequestInput( $uriData, new FormBodyParser() );
-
-		$this->assertEquals( $expectedValue, $writeRequestInput->get( $key ) );
-
-		stream_wrapper_restore( "php" );
 	}
 }

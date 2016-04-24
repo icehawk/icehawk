@@ -7,7 +7,7 @@ use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\SimpleResponse;
 
 /**
- * Class MethodNotAllowedRequestHandler
+ * Class PostRequestHandler
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write
  */

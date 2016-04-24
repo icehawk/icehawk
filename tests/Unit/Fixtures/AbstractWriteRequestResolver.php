@@ -13,7 +13,7 @@ use Fortuneglobe\IceHawk\WriteHandlerRouter;
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-abstract class AbstractWriteResolver implements ResolvesWriteRequest
+abstract class AbstractWriteRequestResolver implements ResolvesWriteRequest
 {
 	/**
 	 * @var string

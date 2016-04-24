@@ -9,7 +9,7 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PatchRequestHandler;
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class TestPatchRequestResolver extends AbstractWriteResolver
+class TestPatchRequestRequestResolver extends AbstractWriteRequestResolver
 {
 	protected function createDefaultRequestHandler() : HandlesWriteRequest
 	{

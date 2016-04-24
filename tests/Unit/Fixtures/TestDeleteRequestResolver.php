@@ -9,7 +9,7 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class TestDeleteRequestResolver extends AbstractWriteResolver
+class TestDeleteRequestRequestResolver extends AbstractWriteRequestResolver
 {
 	protected function createDefaultRequestHandler() : HandlesWriteRequest
 	{

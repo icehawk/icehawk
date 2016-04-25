@@ -7,6 +7,7 @@ use Fortuneglobe\IceHawk\Interfaces\ResolvesReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\ReadHandlerRouter;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\IceHawkReadRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidReadTestRequestHandler;
 
@@ -15,7 +16,7 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidReadTestRequestHan
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class TestGetRequestResolver implements ResolvesReadRequest
+class TestReadRequestResolver implements ResolvesReadRequest
 {
 	public function resolve( ProvidesRequestInfo $requestInfo ) : RoutesToReadHandler
 	{
@@ -30,6 +31,10 @@ class TestGetRequestResolver implements ResolvesReadRequest
 		elseif( $requestInfo->getUri() ==  '/domain/get' )
 		{
 			return new ReadHandlerRouter( new GetRequestHandler() );
+		}
+		elseif( $requestInfo->getUri() ==  '/domain/head' )
+		{
+			return new ReadHandlerRouter( new HeadRequestHandler() );
 		}
 
 		throw ( new UnresolvedRequest() )->withRequestInfo( $requestInfo );

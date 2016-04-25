@@ -266,12 +266,16 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$reflection = new \ReflectionClass( '\\Fortuneglobe\\IceHawk\\Responses\\Redirect' );
 		$getBody    = $reflection->getMethod( 'getBody' );
 		$getBody->setAccessible( true );
+		$getContentType = $reflection->getMethod( 'getContentType' );
+		$getContentType->setAccessible( true );
 
 		$expectedBody = $getBody->invoke( $redirect );
-		$this->expectOutputString( $expectedBody );
+		$contentType  = $getContentType->invoke( $redirect );
 
+		$this->expectOutputString( $expectedBody );
 		$this->assertContains( 'Location: /domain/rewritten', xdebug_get_headers() );
 		$this->assertEquals( HttpCode::MOVED_PERMANENTLY, http_response_code() );
+		$this->assertEquals( 'text/html', $contentType );
 	}
 
 	/**

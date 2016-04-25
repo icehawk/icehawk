@@ -10,30 +10,35 @@ use Fortuneglobe\IceHawk\Responses\Redirect;
 
 class RedirectTest extends \PHPUnit_Framework_TestCase
 {
+	public function locationCodeProvider()
+	{
+		return [
+			[ '/unit/test', HttpCode::MOVED_PERMANENTLY, 'Location: /unit/test', HttpCode::MOVED_PERMANENTLY ],
+			[ '/unit/test', HttpCode::TEMPORARY_REDIRECT, 'Location: /unit/test', HttpCode::TEMPORARY_REDIRECT ],
+		];
+	}
+	
 	/**
 	 * @runInSeparateProcess
 	 * @dataProvider locationCodeProvider
 	 */
 	public function testSendsLocationAndHttpCodeHeaderWhenResponding(
-		$location, $httpCode,
-		$expectedHeader, $expectedCode
+		$location, $httpCode, $expectedHeader, $expectedCode
 	)
 	{
 		$redirect = new Redirect( $location, $httpCode );
 
 		$redirect->respond();
 
+		$reflection = new \ReflectionClass( '\\Fortuneglobe\\IceHawk\\Responses\\Redirect' );
+		$getBody    = $reflection->getMethod( 'getBody' );
+		$getBody->setAccessible( true );
+
+		$expectedBody = $getBody->invoke( $redirect );
+
+		$this->expectOutputString( $expectedBody );
 		$this->assertContains( $expectedHeader, xdebug_get_headers() );
 		$this->assertEquals( $expectedCode, http_response_code() );
-	}
-
-	public function locationCodeProvider()
-	{
-		return [
-			[ '/unit/test', null, 'Location: /unit/test', HttpCode::MOVED_PERMANENTLY ],
-			[ '/unit/test', HttpCode::MOVED_PERMANENTLY, 'Location: /unit/test', HttpCode::MOVED_PERMANENTLY ],
-			[ '/unit/test', HttpCode::FOUND, 'Location: /unit/test', HttpCode::FOUND ],
-		];
 	}
 
 	/**
@@ -50,5 +55,13 @@ class RedirectTest extends \PHPUnit_Framework_TestCase
 		$redirect->respond();
 
 		$this->assertEquals( PHP_SESSION_NONE, session_status() );
+
+		$reflection = new \ReflectionClass( '\\Fortuneglobe\\IceHawk\\Responses\\Redirect' );
+		$getBody    = $reflection->getMethod( 'getBody' );
+		$getBody->setAccessible( true );
+
+		$expectedBody = $getBody->invoke( $redirect );
+
+		$this->expectOutputString( $expectedBody );
 	}
 }

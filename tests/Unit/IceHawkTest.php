@@ -13,6 +13,7 @@ use Fortuneglobe\IceHawk\Defaults\WriteRequestResolver;
 use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
 use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
+use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\IceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\HandlesDeleteRequest;
@@ -31,6 +32,8 @@ use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
 use Fortuneglobe\IceHawk\Responses\Redirect;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestDeleteRequestResolver;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestFinalReadRequestResponder;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestFinalWriteRequestResponder;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestGetRequestResolver;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestHeadRequestResolver;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestPatchRequestResolver;
@@ -472,5 +475,54 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 		$this->expectOutputString( $expectedBody );
 		$this->assertEquals( HttpCode::METHOD_NOT_ALLOWED, http_response_code() );
+	}
+
+	public function requestHandlerProvider()
+	{
+		return [
+			[ '/domain/unresolvable_write_uri', 'POST' ],
+			[ '/domain/unresolvable_write_uri', 'PUT' ],
+			[ '/domain/unresolvable_write_uri', 'PATCH' ],
+			[ '/domain/unresolvable_write_uri', 'DELETE' ],
+			[ '/domain/unresolvable_read_uri', 'GET' ],
+			[ '/domain/unresolvable_read_uri', 'HEAD' ],
+		];
+	}
+
+	/**
+	 * @dataProvider requestHandlerProvider
+	 * @runInSeparateProcess
+	 */
+	public function testFinalResponseRespondsIfUriCouldNotBeResolved( string $uri, string $requestMethod )
+	{
+		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
+		$requestInfo = new RequestInfo(
+			[
+				'REQUEST_METHOD' => $requestMethod,
+				'REQUEST_URI'    => $uri,
+			]
+		);
+		
+		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
+		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn( new ReadRequestResolver() );
+		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
+			new WriteRequestResolver()
+		);
+		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
+			new TestFinalReadRequestResponder()
+		);
+		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
+			new TestFinalWriteRequestResponder()
+		);
+		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
+
+		$delegate = new IceHawkDelegate();
+
+		$iceHawk = new IceHawk( $config, $delegate );
+		$iceHawk->init();
+		$iceHawk->handleRequest();
+		
+		$this->expectOutputString( UnresolvedRequest::class	);
 	}
 }

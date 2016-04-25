@@ -23,6 +23,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTPS']              = 'on';
         $_SERVER['PHP_AUTH_USER']      = 'Unit';
         $_SERVER['PHP_AUTH_PW']        = 'Test';
+        $_SERVER['CONTENT_LENGTH']     = '512';
 
         $requestInfo = RequestInfo::fromEnv();
 
@@ -42,6 +43,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'Unit', $requestInfo->getAuthUser() );
         $this->assertEquals( 'Test', $requestInfo->getAuthPassword() );
         $this->assertEquals( $requestTimeFloat, $requestInfo->getRequestTimeFloat() );
+        $this->assertEquals( '512', $requestInfo->getContentLength() );
         $this->assertTrue( $requestInfo->isSecure() );
     }
 

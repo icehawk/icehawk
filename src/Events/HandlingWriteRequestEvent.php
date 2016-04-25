@@ -7,6 +7,7 @@ namespace Fortuneglobe\IceHawk\Events;
 
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestInputData;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
@@ -29,8 +30,8 @@ final class HandlingWriteRequestEvent implements CarriesEventData
 		return $this->request->getRequestInfo();
 	}
 
-	public function getRequest() : ProvidesWriteRequestData
+	public function getInputData() : ProvidesWriteRequestInputData
 	{
-		return $this->request;
+		return $this->request->getInputData();
 	}
 }

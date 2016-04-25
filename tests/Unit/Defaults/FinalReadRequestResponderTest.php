@@ -38,9 +38,6 @@ class FinalReadRequestResponderTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 	
-	/**
-	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest
-	 */
 	public function testHandleUncaughtException()
 	{
 		$requestInfo = new RequestInfo(
@@ -52,8 +49,22 @@ class FinalReadRequestResponderTest extends \PHPUnit_Framework_TestCase
 		
 		$requestData = new ReadRequest( $requestInfo, new ReadRequestInput( [] ) );
 
-		$responder = new FinalReadRequestResponder();
-		$responder->handleUncaughtException( new UnresolvedRequest(), $requestData );
-
+		try
+		{
+			$unresolvedRequest = ( new UnresolvedRequest() )->withRequestInfo( $requestInfo );
+		
+			$responder = new FinalReadRequestResponder();
+			$responder->handleUncaughtException( $unresolvedRequest, $requestData );
+			
+			$this->fail('No Exception thrown');
+		}
+		catch ( UnresolvedRequest $ex )
+		{
+			$this->assertSame( $requestInfo, $ex->getRequestInfo() );
+		}
+		catch ( \Throwable $throwable )
+		{
+			$this->fail( 'Wrong exception thrown');	
+		}
 	}
 }

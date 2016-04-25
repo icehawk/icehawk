@@ -26,7 +26,7 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$requestData = new WriteRequest( $requestInfo, new WriteRequestInput( '', [] ) );
+		$requestData = new WriteRequest( $requestInfo, new WriteRequestInput( '', [ ] ) );
 
 		$responder = new FinalWriteRequestResponder();
 		$responder->handleNoResponse( $requestData );
@@ -38,9 +38,6 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
-	/**
-	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest
-	 */
 	public function testHandleUncaughtException()
 	{
 		$requestInfo = new RequestInfo(
@@ -50,9 +47,24 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$requestData = new WriteRequest( $requestInfo, new WriteRequestInput( '', [] ) );
+		$requestData = new WriteRequest( $requestInfo, new WriteRequestInput( '', [ ] ) );
 
-		$responder = new FinalWriteRequestResponder();
-		$responder->handleUncaughtException( new UnresolvedRequest(), $requestData );
+		try
+		{
+			$unresolvedRequest = ( new UnresolvedRequest() )->withRequestInfo( $requestInfo );
+			
+			$responder = new FinalWriteRequestResponder();
+			$responder->handleUncaughtException( $unresolvedRequest, $requestData );
+
+			$this->fail( 'No Exception thrown' );
+		}
+		catch ( UnresolvedRequest $ex )
+		{
+			$this->assertSame( $requestInfo, $ex->getRequestInfo() );
+		}
+		catch ( \Throwable $throwable )
+		{
+			$this->fail( 'Wrong exception thrown' );
+		}
 	}
 }

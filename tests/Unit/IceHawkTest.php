@@ -30,12 +30,12 @@ use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
 use Fortuneglobe\IceHawk\Responses\Redirect;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestDeleteRequestRequestResolver;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestDeleteRequestResolver;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestGetRequestResolver;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestHeadRequestResolver;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestPatchRequestRequestResolver;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestPatchRequestResolver;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestPostRequestResolver;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestPutRequestRequestResolver;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestPutRequestResolver;
 
 class IceHawkTest extends \PHPUnit_Framework_TestCase
 {
@@ -332,31 +332,31 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			[ HandlesPostRequest::class, new TestPostRequestResolver(), '/domain/post', 'PUT' ],
 			[ HandlesPostRequest::class, new TestPostRequestResolver(), '/domain/post', 'DELETE' ],
 			[ HandlesPostRequest::class, new TestPostRequestResolver(), '/domain/post', 'PATCH' ],
-			[ HandlesPutRequest::class, new TestPutRequestRequestResolver( '/domain/put' ), '/domain/put', 'POST' ],
-			[ HandlesPutRequest::class, new TestPutRequestRequestResolver( '/domain/put' ), '/domain/put', 'DELETE' ],
-			[ HandlesPutRequest::class, new TestPutRequestRequestResolver( '/domain/put' ), '/domain/put', 'POST' ],
+			[ HandlesPutRequest::class, new TestPutRequestResolver( '/domain/put' ), '/domain/put', 'POST' ],
+			[ HandlesPutRequest::class, new TestPutRequestResolver( '/domain/put' ), '/domain/put', 'DELETE' ],
+			[ HandlesPutRequest::class, new TestPutRequestResolver( '/domain/put' ), '/domain/put', 'POST' ],
 			[
-				HandlesDeleteRequest::class, new TestDeleteRequestRequestResolver( '/domain/delete' ), '/domain/delete',
+				HandlesDeleteRequest::class, new TestDeleteRequestResolver( '/domain/delete' ), '/domain/delete',
 				'POST',
 			],
 			[
-				HandlesDeleteRequest::class, new TestDeleteRequestRequestResolver( '/domain/delete' ), '/domain/delete',
+				HandlesDeleteRequest::class, new TestDeleteRequestResolver( '/domain/delete' ), '/domain/delete',
 				'PUT',
 			],
 			[
-				HandlesDeleteRequest::class, new TestDeleteRequestRequestResolver( '/domain/delete' ), '/domain/delete',
+				HandlesDeleteRequest::class, new TestDeleteRequestResolver( '/domain/delete' ), '/domain/delete',
 				'PATCH',
 			],
 			[
-				HandlesPatchRequest::class, new TestPatchRequestRequestResolver( '/domain/patch' ), '/domain/patch',
+				HandlesPatchRequest::class, new TestPatchRequestResolver( '/domain/patch' ), '/domain/patch',
 				'POST',
 			],
 			[
-				HandlesPatchRequest::class, new TestPatchRequestRequestResolver( '/domain/patch' ), '/domain/patch',
+				HandlesPatchRequest::class, new TestPatchRequestResolver( '/domain/patch' ), '/domain/patch',
 				'PUT',
 			],
 			[
-				HandlesPatchRequest::class, new TestPatchRequestRequestResolver( '/domain/patch' ), '/domain/patch',
+				HandlesPatchRequest::class, new TestPatchRequestResolver( '/domain/patch' ), '/domain/patch',
 				'DELETE',
 			],
 		];

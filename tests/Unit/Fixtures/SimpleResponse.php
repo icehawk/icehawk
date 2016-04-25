@@ -4,7 +4,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
 use Fortuneglobe\IceHawk\Responses\AbstractHttpResponse;
 
 /**
- * Class SimpleRespond
+ * Class SimpleResponse
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */

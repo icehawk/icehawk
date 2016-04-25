@@ -11,7 +11,7 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\IceHawkReadRequestHandl
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidReadTestRequestHandler;
 
 /**
- * Class TestReadRequestResolver
+ * Class TestGetRequestResolver
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */

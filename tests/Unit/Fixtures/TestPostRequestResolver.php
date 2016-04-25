@@ -10,7 +10,7 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use Fortuneglobe\IceHawk\WriteHandlerRouter;
 
 /**
- * Class TestWriteRequestHandler
+ * Class TestPostRequestResolver
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */

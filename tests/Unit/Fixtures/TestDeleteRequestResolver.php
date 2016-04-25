@@ -5,11 +5,11 @@ use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
 
 /**
- * Class TestPostRequestResolver
+ * Class TestDeleteRequestResolver
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
  */
-class TestDeleteRequestRequestResolver extends AbstractWriteRequestResolver
+class TestDeleteRequestResolver extends AbstractWriteRequestResolver
 {
 	protected function createDefaultRequestHandler() : HandlesWriteRequest
 	{

@@ -10,14 +10,14 @@ use Fortuneglobe\IceHawk\Interfaces\ParsesRequestBody;
  * @package Fortuneglobe\IceHawk\RequestParsers
  */
 class SimpleBodyParserFactory extends AbstractBodyParserFactory
-{	
+{
 	protected function createParserByContentType( string $contentType ) : ParsesRequestBody
 	{
-		if( empty( $contentType ) || $contentType == 'application/x-www-form-urlencoded')
+		if ( empty($contentType) || $contentType == 'application/x-www-form-urlencoded' )
 		{
 			return new FormBodyParser();
 		}
-		
+
 		throw ( new MissingBodyContentParser() )->withContentType( $contentType );
 	}
 }

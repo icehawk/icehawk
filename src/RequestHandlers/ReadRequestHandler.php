@@ -13,6 +13,7 @@ use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
+use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
@@ -28,7 +29,8 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	{
 		try
 		{
-			$this->redirectOrHandleRequest();
+			$response = $this->redirectOrHandleRequest();
+			$response->respond();
 		}
 		catch ( RequestMethodNotAllowed $e )
 		{
@@ -41,21 +43,21 @@ final class ReadRequestHandler extends AbstractRequestHandler
 		}
 	}
 
-	private function redirectOrHandleRequest()
+	private function redirectOrHandleRequest() : ServesResponse
 	{
 		$redirect    = $this->getRedirect();
 		$requestInfo = $this->config->getRequestInfo();
 
 		if ( $redirect->urlEquals( $requestInfo->getUri() ) )
 		{
-			$this->resolveAndHandleRequest();
+			return $this->resolveAndHandleRequest();
 		}
 		else
 		{
 			$redirectingEvent = new RedirectingEvent( $redirect, $requestInfo );
 			$this->publishEvent( $redirectingEvent );
 
-			$redirect->respond();
+			return $redirect;
 		}
 	}
 
@@ -73,7 +75,7 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	/**
 	 * @throws RequestMethodNotAllowed
 	 */
-	private function resolveAndHandleRequest()
+	private function resolveAndHandleRequest() : ServesResponse
 	{
 		$requestInfo  = $this->config->getRequestInfo();
 		$handlerRoute = $this->getHandlerRoute();
@@ -87,10 +89,11 @@ final class ReadRequestHandler extends AbstractRequestHandler
 		$this->publishEvent( $handlingEvent );
 
 		$response = $requestHandler->handle( $request );
-		$response->respond();
 
 		$handledEvent = new ReadRequestWasHandledEvent( $request );
 		$this->publishEvent( $handledEvent );
+		
+		return $response;
 	}
 
 	private function getHandlerRoute() : RoutesToReadHandler

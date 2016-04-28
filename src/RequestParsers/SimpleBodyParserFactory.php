@@ -20,4 +20,10 @@ class SimpleBodyParserFactory extends AbstractBodyParserFactory
 
 		throw ( new MissingBodyContentParser() )->withContentType( $contentType );
 	}
+
+	protected function canCreateParserForContentType( string $contentType ) : bool
+	{
+		return ( empty($contentType) || $contentType == 'application/x-www-form-urlencoded' );
+	}
+
 }

@@ -12,15 +12,15 @@ abstract class AbstractBodyParserFactory
 {
 	public function selectParserByContentType( string $contentType ) : ParsesRequestBody
 	{
-		try 
+		if( $this->canCreateParserForContentType( $contentType ) )
 		{
 			return $this->createParserByContentType( $contentType );
 		}
-		catch ( \Throwable $throwable )
-		{
-			return new NullParser();
-		}
+		
+		return new NullParser();
 	}
 	
 	abstract protected function createParserByContentType( string $contentType ) : ParsesRequestBody;
+	
+	abstract protected function canCreateParserForContentType( string $contentType ) : bool;
 }

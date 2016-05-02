@@ -7,6 +7,8 @@
 
 # ![Ice Hawk](icehawk-logo.png)
 
+[![Join the chat at https://gitter.im/fortuneglobe/icehawk](https://badges.gitter.im/fortuneglobe/icehawk.svg)](https://gitter.im/fortuneglobe/icehawk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Fast and reliable PHP frontend framework respecting CQRS.
 
 ## Requirements

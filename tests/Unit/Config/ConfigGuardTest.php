@@ -2,7 +2,7 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Config;
 
 use Fortuneglobe\IceHawk\Config\ConfigGuard;
-use Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection;
+use Fortuneglobe\IceHawk\Exceptions\InvalidEventSubscriberCollection;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestEventSubscriber;
 
@@ -37,7 +37,7 @@ class ConfigGuardTest extends \PHPUnit_Framework_TestCase
 
 			$this->fail( 'No Exception thrown' );
 		}
-		catch ( InvalidEventListenerCollection $ex )
+		catch ( InvalidEventSubscriberCollection $ex )
 		{
 			$this->assertEquals( $invalidKeys, $ex->getInvalidKeys() );
 		}

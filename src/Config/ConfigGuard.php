@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Config;
 
-use Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection;
+use Fortuneglobe\IceHawk\Exceptions\InvalidEventSubscriberCollection;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
@@ -27,7 +27,7 @@ final class ConfigGuard
 	}
 
 	/**
-	 * @throws InvalidEventListenerCollection
+	 * @throws InvalidEventSubscriberCollection
 	 */
 	public function validate()
 	{
@@ -35,14 +35,14 @@ final class ConfigGuard
 	}
 
 	/**
-	 * @throws InvalidEventListenerCollection
+	 * @throws InvalidEventSubscriberCollection
 	 */
 	private function guardEventSubscribersAreValid()
 	{
-		$eventListeners = $this->config->getEventSubscribers();
+		$eventSubscribers = $this->config->getEventSubscribers();
 
 		$invalidSubscribers = array_filter(
-			$eventListeners,
+			$eventSubscribers,
 			function ( $subscriber )
 			{
 				return (!is_object( $subscriber ) || !($subscriber instanceof SubscribesToEvents));
@@ -51,7 +51,7 @@ final class ConfigGuard
 
 		if ( !empty($invalidSubscribers) )
 		{
-			throw ( new InvalidEventListenerCollection() )->withInvalidKeys( array_keys( $invalidSubscribers ) );
+			throw ( new InvalidEventSubscriberCollection() )->withInvalidKeys( array_keys( $invalidSubscribers ) );
 		}
 	}
 }

@@ -9,11 +9,7 @@ use Fortuneglobe\IceHawk\Config\ConfigGuard;
 use Fortuneglobe\IceHawk\Config\ConfigWrapper;
 use Fortuneglobe\IceHawk\Constants\HttpMethod;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
-use Fortuneglobe\IceHawk\Exceptions\InvalidDomainNamespace;
-use Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection;
-use Fortuneglobe\IceHawk\Exceptions\InvalidRequestInfoImplementation;
-use Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation;
-use Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation;
+use Fortuneglobe\IceHawk\Exceptions\InvalidEventSubscriberCollection;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
 use Fortuneglobe\IceHawk\PubSub\EventPublisher;
@@ -50,11 +46,7 @@ final class IceHawk
 	}
 
 	/**
-	 * @throws InvalidEventListenerCollection
-	 * @throws InvalidDomainNamespace
-	 * @throws InvalidRequestInfoImplementation
-	 * @throws InvalidUriResolverImplementation
-	 * @throws InvalidUriRewriterImplementation
+	 * @throws InvalidEventSubscriberCollection
 	 */
 	public function init()
 	{
@@ -75,7 +67,7 @@ final class IceHawk
 	}
 
 	/**
-	 * @throws InvalidEventListenerCollection
+	 * @throws InvalidEventSubscriberCollection
 	 */
 	private function guardConfigIsValid()
 	{

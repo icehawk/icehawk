@@ -6,10 +6,10 @@
 namespace Fortuneglobe\IceHawk\Exceptions;
 
 /**
- * Class InvalidEventListenerCollection
+ * Class InvalidEventSubscriberCollection
  * @package Fortuneglobe\IceHawk\Exceptions
  */
-final class InvalidEventListenerCollection extends IceHawkException
+final class InvalidEventSubscriberCollection extends IceHawkException
 {
 	/** @var array */
 	private $invalidKeys = [ ];
@@ -25,7 +25,7 @@ final class InvalidEventListenerCollection extends IceHawkException
 	/**
 	 * @param array $invalidKeys
 	 *
-	 * @return InvalidEventListenerCollection
+	 * @return InvalidEventSubscriberCollection
 	 */
 	public function withInvalidKeys( array $invalidKeys ) : self
 	{

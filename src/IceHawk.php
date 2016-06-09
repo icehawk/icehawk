@@ -107,6 +107,6 @@ final class IceHawk
 		else
 		{
 			( new MethodNotImplemented( $requestInfo->getMethod() ) )->respond();
-		}		
+		}
 	}
 }

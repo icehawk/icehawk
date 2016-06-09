@@ -6,7 +6,6 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
-use Fortuneglobe\IceHawk\RequestParsers\AbstractBodyParserFactory;
 
 /**
  * Interface ConfiguresIceHawk
@@ -14,11 +13,15 @@ use Fortuneglobe\IceHawk\RequestParsers\AbstractBodyParserFactory;
  */
 interface ConfiguresIceHawk
 {
-	public function getUriRewriter() : RewritesUri;
+	/**
+	 * @return array|\Traversable|RoutesToReadHandler[]
+	 */
+	public function getReadRoutes();
 
-	public function getReadRequestResolver() : ResolvesReadRequest;
-
-	public function getWriteRequestResolver() : ResolvesWriteRequest;
+	/**
+	 * @return array|\Traversable|RoutesToWriteHandler[]
+	 */
+	public function getWriteRoutes();
 
 	/**
 	 * @return array|SubscribesToEvents[]
@@ -27,9 +30,7 @@ interface ConfiguresIceHawk
 
 	public function getRequestInfo() : ProvidesRequestInfo;
 
-	public function getFinalReadRequestResponder() : RespondsFinallyToReadRequest;
+	public function getFinalReadResponder() : RespondsFinallyToReadRequest;
 
-	public function getFinalWriteRequestResponder() : RespondsFinallyToWriteRequest;
-	
-	public function getBodyParserFactory() : AbstractBodyParserFactory;
+	public function getFinalWriteResponder() : RespondsFinallyToWriteRequest;
 }

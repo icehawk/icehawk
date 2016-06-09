@@ -11,7 +11,5 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface RespondsFinallyToWriteRequest
 {
-	public function handleNoResponse( ProvidesWriteRequestData $request );
-
 	public function handleUncaughtException( \Throwable $throwable, ProvidesWriteRequestData $request );
 }

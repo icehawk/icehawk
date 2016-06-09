@@ -5,14 +5,12 @@
 
 namespace Fortuneglobe\IceHawk\Defaults;
 
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultBodyParserCreating;
 use Fortuneglobe\IceHawk\Defaults\Traits\DefaultEventSubscribing;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultFinalReadRequestResponding;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultFinalWriteRequestResponding;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultReadRequestResolving;
+use Fortuneglobe\IceHawk\Defaults\Traits\DefaultFinalReadResponding;
+use Fortuneglobe\IceHawk\Defaults\Traits\DefaultFinalWriteResponding;
+use Fortuneglobe\IceHawk\Defaults\Traits\DefaultReadRouting;
 use Fortuneglobe\IceHawk\Defaults\Traits\DefaultRequestInfoProviding;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultUriRewriting;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultWriteRequestResolving;
+use Fortuneglobe\IceHawk\Defaults\Traits\DefaultWriteRouting;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 
 /**
@@ -21,12 +19,10 @@ use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
  */
 class IceHawkConfig implements ConfiguresIceHawk
 {
-	use DefaultUriRewriting;
-	use DefaultReadRequestResolving;
-	use DefaultWriteRequestResolving;
+	use DefaultReadRouting;
+	use DefaultWriteRouting;
 	use DefaultEventSubscribing;
 	use DefaultRequestInfoProviding;
-	use DefaultFinalReadRequestResponding;
-	use DefaultFinalWriteRequestResponding;
-	use DefaultBodyParserCreating;
+	use DefaultFinalReadResponding;
+	use DefaultFinalWriteResponding;
 }

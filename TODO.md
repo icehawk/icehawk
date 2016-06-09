@@ -16,6 +16,13 @@
  `- Feedback
 ```
 
+## Removed
+
+* Everything related to rewriting (not necessary, because there is no default routing anymore)
+* BodyParserFactory requirements
+* UriResolvers
+* SessionRegistry => Should go into own package
+
 ## Request validation / Responding
 
 * Request should be validated before building Command/Query
@@ -24,27 +31,23 @@
 * Command-/QueryHandler should return a result object
 * RequestHandler produces a HTTP response out of the result object
 
-## Give opportunity to inject route configurations
+## Body parsing
 
-### Route
+Having only one possible body parser for all requests with the same content-type is too restrictive.
 
-```php
-<?php
+ * Add an `applyBodyParser(ParsesRequestBody)` to the request interface
+ * Call that in the concrete request handler before request validation
+ * No need for a factory, less magic, more intentional
+ * Move body parsers to an own package?
+ * Parser can be used stand-alone or can be applied to the request (and change its data)
 
-abstract class Route implements RoutesToHandler
-{
-    private $requestMethod;
-    
-    private $uriPattern;
-    
-    private $requestHandler;
-    
-    public function __construct(string $requestMethod, string $uriPattern, HandlesRequest $requestHandler)
-    {
-        $this->requestMethod = $requestMethod;
-        $
-    }
-    
-    public
-}
-```
+## Responding
+
+* Response-Object / -Interface should be injected to the request handler->handle()
+* Response-Object should be implemented as a stream for continuous output flushing (see symfony's OutputInterface)
+* Create then respose objects that get output object injected (new TwigPage($output)->respond('/path/to/template.twig'))
+
+
+## Bugs
+
+ * ReadRequestHandler creates a request object only from uri params of the route. Merge with $_GET is missing?

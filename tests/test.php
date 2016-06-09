@@ -1,20 +1,11 @@
-<?php declare(strict_types = 1);
+<?php
 /**
  * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk\Tests;
 
-require(__DIR__ . '/../vendor/autoload.php');
-
-error_reporting( E_ALL );
+error_reporting( -1 );
 ini_set( 'display_errors', '1' );
 
-class Test
-{
-
-}
-
-$className = Test::class;
-
-echo (Test::class instanceof Test) ? 'Yes' : 'No';
+require(__DIR__ . '/../vendor/autoload.php');

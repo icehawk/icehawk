@@ -11,6 +11,8 @@ use Fortuneglobe\IceHawk\Interfaces\HandlesRequest;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
 use Fortuneglobe\IceHawk\Responses\Options;
+use Fortuneglobe\IceHawk\Routing\ReadRouter;
+use Fortuneglobe\IceHawk\Routing\WriteRouter;
 
 /**
  * Class OptionsRequestHandler
@@ -40,12 +42,16 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 		}
 	}
 
+	/**
+	 * @throws UnresolvedRequest
+	 */
 	private function getReadHandlerRoute() : RoutesToReadHandler
 	{
-		$uriResolver = $this->config->getReadRequestResolver();
+		$readRoutes  = $this->config->getReadRoutes();
 		$requestInfo = $this->config->getRequestInfo();
+		$readRouter  = new ReadRouter( $readRoutes );
 
-		$handlerRoute = $uriResolver->resolve( $requestInfo );
+		$handlerRoute = $readRouter->findMatchingRoute( $requestInfo );
 
 		return $handlerRoute;
 	}
@@ -80,12 +86,16 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 		}
 	}
 
+	/**
+	 * @throws UnresolvedRequest
+	 */
 	private function getWriteHandlerRoute() : RoutesToWriteHandler
 	{
-		$uriResolver = $this->config->getWriteRequestResolver();
+		$writeRoutes = $this->config->getWriteRoutes();
 		$requestInfo = $this->config->getRequestInfo();
+		$writeRouter = new WriteRouter( $writeRoutes );
 
-		$handlerRoute = $uriResolver->resolve( $requestInfo );
+		$handlerRoute = $writeRouter->findMatchingRoute( $requestInfo );
 
 		return $handlerRoute;
 	}

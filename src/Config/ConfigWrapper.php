@@ -7,13 +7,11 @@ namespace Fortuneglobe\IceHawk\Config;
 
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ResolvesReadRequest;
-use Fortuneglobe\IceHawk\Interfaces\ResolvesWriteRequest;
 use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
-use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
+use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
+use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
-use Fortuneglobe\IceHawk\RequestParsers\AbstractBodyParserFactory;
 
 /**
  * Class IceHawkConfigWrapper
@@ -21,14 +19,14 @@ use Fortuneglobe\IceHawk\RequestParsers\AbstractBodyParserFactory;
  */
 final class ConfigWrapper implements ConfiguresIceHawk
 {
-	/** @var RewritesUri */
-	private $uriRewriter;
+	/** @var ConfiguresIceHawk */
+	private $config;
 
-	/** @var ResolvesReadRequest */
-	private $readRequestResolver;
+	/** @var array|\Traversable|RoutesToReadHandler[] */
+	private $readRoutes;
 
-	/** @var ResolvesWriteRequest */
-	private $writeRequestResolver;
+	/** @var array|\Traversable|RoutesToWriteHandler[] */
+	private $writeRoutes;
 
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
@@ -37,44 +35,50 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	private $eventSubscribers;
 
 	/** @var RespondsFinallyToReadRequest */
-	private $finalReadRequestResponder;
+	private $finalReadResponder;
 
 	/** @var RespondsFinallyToWriteRequest */
-	private $finalWriteRequestResponder;
-
-	/** @var AbstractBodyParserFactory */
-	private $bodyParserFactory;
+	private $finalWriteResponder;
 
 	public function __construct( ConfiguresIceHawk $config )
 	{
-		$this->uriRewriter                = $config->getUriRewriter();
-		$this->readRequestResolver        = $config->getReadRequestResolver();
-		$this->writeRequestResolver       = $config->getWriteRequestResolver();
-		$this->eventSubscribers           = $config->getEventSubscribers();
-		$this->requestInfo                = $config->getRequestInfo();
-		$this->finalReadRequestResponder  = $config->getFinalReadRequestResponder();
-		$this->finalWriteRequestResponder = $config->getFinalWriteRequestResponder();
-		$this->bodyParserFactory          = $config->getBodyParserFactory();
+		$this->config = $config;
 	}
 
 	public function getRequestInfo() : ProvidesRequestInfo
 	{
+		if ( $this->requestInfo === null )
+		{
+			$this->requestInfo = $this->config->getRequestInfo();
+		}
+
 		return $this->requestInfo;
 	}
 
-	public function getReadRequestResolver() : ResolvesReadRequest
+	/**
+	 * @return array|RoutesToReadHandler[]|\Traversable
+	 */
+	public function getReadRoutes()
 	{
-		return $this->readRequestResolver;
+		if ( $this->readRoutes === null )
+		{
+			$this->readRoutes = $this->config->getReadRoutes();
+		}
+
+		return $this->readRoutes;
 	}
 
-	public function getWriteRequestResolver() : ResolvesWriteRequest
+	/**
+	 * @return array|RoutesToWriteHandler[]|\Traversable
+	 */
+	public function getWriteRoutes()
 	{
-		return $this->writeRequestResolver;
-	}
+		if ( $this->writeRoutes === null )
+		{
+			$this->writeRoutes = $this->config->getWriteRoutes();
+		}
 
-	public function getUriRewriter() : RewritesUri
-	{
-		return $this->uriRewriter;
+		return $this->writeRoutes;
 	}
 
 	/**
@@ -82,21 +86,31 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	 */
 	public function getEventSubscribers() : array
 	{
+		if ( $this->eventSubscribers === null )
+		{
+			$this->eventSubscribers = $this->config->getEventSubscribers();
+		}
+
 		return $this->eventSubscribers;
 	}
 
-	public function getFinalReadRequestResponder() : RespondsFinallyToReadRequest
+	public function getFinalReadResponder() : RespondsFinallyToReadRequest
 	{
-		return $this->finalReadRequestResponder;
+		if ( $this->finalReadResponder === null )
+		{
+			$this->finalReadResponder = $this->config->getFinalReadResponder();
+		}
+
+		return $this->finalReadResponder;
 	}
 
-	public function getFinalWriteRequestResponder() : RespondsFinallyToWriteRequest
+	public function getFinalWriteResponder() : RespondsFinallyToWriteRequest
 	{
-		return $this->finalWriteRequestResponder;
-	}
-	
-	public function getBodyParserFactory() : AbstractBodyParserFactory
-	{
-		return $this->bodyParserFactory;
+		if ( $this->finalWriteResponder === null )
+		{
+			$this->finalWriteResponder = $this->config->getFinalWriteResponder();
+		}
+
+		return $this->finalWriteResponder;
 	}
 }

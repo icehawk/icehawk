@@ -1,7 +1,7 @@
 <?php
 namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
 
-use Fortuneglobe\IceHawk\Defaults\FinalReadRequestResponder;
+use Fortuneglobe\IceHawk\Defaults\FinalReadResponder;
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
@@ -27,8 +27,8 @@ class FinalReadRequestResponderTest extends \PHPUnit_Framework_TestCase
 		);
 		
 		$requestData = new ReadRequest( $requestInfo, new ReadRequestInput( [] ) );
-		
-		$responder = new FinalReadRequestResponder();		
+
+		$responder = new FinalReadResponder();		
 		$responder->handleNoResponse( $requestData );	
 		
 		$this->expectOutputString( 
@@ -52,8 +52,8 @@ class FinalReadRequestResponderTest extends \PHPUnit_Framework_TestCase
 		try
 		{
 			$unresolvedRequest = ( new UnresolvedRequest() )->withRequestInfo( $requestInfo );
-		
-			$responder = new FinalReadRequestResponder();
+
+			$responder = new FinalReadResponder();
 			$responder->handleUncaughtException( $unresolvedRequest, $requestData );
 			
 			$this->fail('No Exception thrown');

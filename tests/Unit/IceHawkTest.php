@@ -2,8 +2,8 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
 
 use Fortuneglobe\IceHawk\Constants\HttpCode;
-use Fortuneglobe\IceHawk\Defaults\FinalReadRequestResponder;
-use Fortuneglobe\IceHawk\Defaults\FinalWriteRequestResponder;
+use Fortuneglobe\IceHawk\Defaults\FinalReadResponder;
+use Fortuneglobe\IceHawk\Defaults\FinalWriteResponder;
 use Fortuneglobe\IceHawk\Defaults\IceHawkConfig;
 use Fortuneglobe\IceHawk\Defaults\IceHawkDelegate;
 use Fortuneglobe\IceHawk\Defaults\ReadRequestResolver;
@@ -121,10 +121,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			new WriteRequestResolver()
 		);
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadRequestResponder()
+			new FinalReadResponder()
 		);
 		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteRequestResponder()
+			new FinalWriteResponder()
 		);
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
 
@@ -157,10 +157,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			new TestWriteRequestResolver()
 		);
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadRequestResponder()
+			new FinalReadResponder()
 		);
 		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteRequestResponder()
+			new FinalWriteResponder()
 		);
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
 
@@ -208,10 +208,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			new TestWriteRequestResolver()
 		);
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadRequestResponder()
+			new FinalReadResponder()
 		);
 		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteRequestResponder()
+			new FinalWriteResponder()
 		);
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
 
@@ -250,10 +250,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			new WriteRequestResolver()
 		);
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadRequestResponder()
+			new FinalReadResponder()
 		);
 		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteRequestResponder()
+			new FinalWriteResponder()
 		);
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
 
@@ -326,10 +326,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			new WriteRequestResolver()
 		);
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadRequestResponder()
+			new FinalReadResponder()
 		);
 		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteRequestResponder()
+			new FinalWriteResponder()
 		);
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ $eventListener ] );
 
@@ -385,10 +385,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn( new ReadRequestResolver() );
 		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn( $resolver );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadRequestResponder()
+			new FinalReadResponder()
 		);
 		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteRequestResponder()
+			new FinalWriteResponder()
 		);
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
 
@@ -447,10 +447,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			new WriteRequestResolver()
 		);
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadRequestResponder()
+			new FinalReadResponder()
 		);
 		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteRequestResponder()
+			new FinalWriteResponder()
 		);
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
 

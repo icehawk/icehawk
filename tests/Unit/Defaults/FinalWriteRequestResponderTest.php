@@ -1,7 +1,7 @@
 <?php
 namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
 
-use Fortuneglobe\IceHawk\Defaults\FinalWriteRequestResponder;
+use Fortuneglobe\IceHawk\Defaults\FinalWriteResponder;
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
@@ -28,7 +28,7 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 
 		$requestData = new WriteRequest( $requestInfo, new WriteRequestInput( '', [ ] ) );
 
-		$responder = new FinalWriteRequestResponder();
+		$responder = new FinalWriteResponder();
 		$responder->handleNoResponse( $requestData );
 
 		$this->expectOutputString(
@@ -52,8 +52,8 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 		try
 		{
 			$unresolvedRequest = ( new UnresolvedRequest() )->withRequestInfo( $requestInfo );
-			
-			$responder = new FinalWriteRequestResponder();
+
+			$responder = new FinalWriteResponder();
 			$responder->handleUncaughtException( $unresolvedRequest, $requestData );
 
 			$this->fail( 'No Exception thrown' );

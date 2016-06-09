@@ -9,6 +9,7 @@ use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Events\HandlingWriteRequestEvent;
 use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
+use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
@@ -17,10 +18,10 @@ use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
+use Fortuneglobe\IceHawk\Routing\WriteRouter;
 
 /**
  * Class WriteRequestHandler
- *
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
 final class WriteRequestHandler extends AbstractRequestHandler
@@ -38,7 +39,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		}
 		catch ( \Throwable $throwable )
 		{
-			$finalResponder = $this->config->getFinalWriteRequestResponder();
+			$finalResponder = $this->config->getFinalWriteResponder();
 			$finalResponder->handleUncaughtException( $throwable, $this->getRequest( [ ] ) );
 		}
 	}
@@ -60,16 +61,20 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 		$handledEvent = new WriteRequestWasHandledEvent( $request );
 		$this->publishEvent( $handledEvent );
-		
+
 		return $response;
 	}
 
+	/**
+	 * @throws UnresolvedRequest
+	 */
 	private function getHandlerRoute() : RoutesToWriteHandler
 	{
-		$uriResolver = $this->config->getWriteRequestResolver();
+		$routes      = $this->config->getWriteRoutes();
 		$requestInfo = $this->config->getRequestInfo();
+		$router      = new WriteRouter( $routes );
 
-		$handlerRoute = $uriResolver->resolve( $requestInfo );
+		$handlerRoute = $router->findMatchingRoute( $requestInfo );
 
 		return $handlerRoute;
 	}
@@ -86,15 +91,10 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getRequest( array $uriParams ) : ProvidesWriteRequestData
 	{
-		$requestInfo   = $this->config->getRequestInfo();
-		$parserFactory = $this->config->getBodyParserFactory();
+		$requestInfo = $this->config->getRequestInfo();
 
-		$body = $this->getRequestBody();
-
-		$bodyParser = $parserFactory->selectParserByContentType( $requestInfo->getContentType() );
-		$bodyParams = $bodyParser->parse( $body );
-
-		$requestData   = array_merge( $_POST, $bodyParams, $uriParams );
+		$body          = $this->getRequestBody();
+		$requestData   = array_merge( $_POST, $uriParams );
 		$uploadedFiles = $this->getUploadedFiles();
 
 		$requestInput = new WriteRequestInput( $body, $requestData, $uploadedFiles );
@@ -104,7 +104,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getRequestBody() : string
 	{
-		$body = file_get_contents( 'php://input' );
+		$body = stream_get_contents( STDIN );
 
 		return $body ? : '';
 	}

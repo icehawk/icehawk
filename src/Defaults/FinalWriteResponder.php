@@ -9,22 +9,11 @@ use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 
 /**
- * Class FinalWriteRequestResponder
+ * Class FinalWriteResponder
  * @package Fortuneglobe\IceHawk\Defaults
  */
-class FinalWriteRequestResponder implements RespondsFinallyToWriteRequest
+class FinalWriteResponder implements RespondsFinallyToWriteRequest
 {
-	public function handleNoResponse( ProvidesWriteRequestData $request )
-	{
-		$requestInfo = $request->getRequestInfo();
-
-		printf(
-			"Application did not respond to the %s request: %s",
-			$requestInfo->getMethod(),
-			$requestInfo->getUri()
-		);
-	}
-
 	public function handleUncaughtException( \Throwable $throwable, ProvidesWriteRequestData $request )
 	{
 		throw $throwable;

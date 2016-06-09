@@ -8,8 +8,8 @@ namespace Fortuneglobe\IceHawk\RequestHandlers;
 use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
 use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\Events\RedirectingEvent;
 use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
+use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
@@ -17,7 +17,7 @@ use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
-use Fortuneglobe\IceHawk\Responses\Redirect;
+use Fortuneglobe\IceHawk\Routing\ReadRouter;
 
 /**
  * Class ReadRequestHandler
@@ -29,7 +29,7 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	{
 		try
 		{
-			$response = $this->redirectOrHandleRequest();
+			$response = $this->resolveAndHandleRequest();
 			$response->respond();
 		}
 		catch ( RequestMethodNotAllowed $e )
@@ -38,38 +38,9 @@ final class ReadRequestHandler extends AbstractRequestHandler
 		}
 		catch ( \Throwable $throwable )
 		{
-			$finalResponder = $this->config->getFinalReadRequestResponder();
+			$finalResponder = $this->config->getFinalReadResponder();
 			$finalResponder->handleUncaughtException( $throwable, $this->getRequest( [ ] ) );
 		}
-	}
-
-	private function redirectOrHandleRequest() : ServesResponse
-	{
-		$redirect    = $this->getRedirect();
-		$requestInfo = $this->config->getRequestInfo();
-
-		if ( $redirect->urlEquals( $requestInfo->getUri() ) )
-		{
-			return $this->resolveAndHandleRequest();
-		}
-		else
-		{
-			$redirectingEvent = new RedirectingEvent( $redirect, $requestInfo );
-			$this->publishEvent( $redirectingEvent );
-
-			return $redirect;
-		}
-	}
-
-	/**
-	 * @return Redirect
-	 */
-	private function getRedirect() : Redirect
-	{
-		$uriRewriter = $this->config->getUriRewriter();
-		$requestInfo = $this->config->getRequestInfo();
-
-		return $uriRewriter->rewrite( $requestInfo );
 	}
 
 	/**
@@ -92,16 +63,20 @@ final class ReadRequestHandler extends AbstractRequestHandler
 
 		$handledEvent = new ReadRequestWasHandledEvent( $request );
 		$this->publishEvent( $handledEvent );
-		
+
 		return $response;
 	}
 
+	/**
+	 * @throws UnresolvedRequest
+	 */
 	private function getHandlerRoute() : RoutesToReadHandler
 	{
-		$uriResolver = $this->config->getReadRequestResolver();
+		$readRoutes  = $this->config->getReadRoutes();
 		$requestInfo = $this->config->getRequestInfo();
+		$readRouter  = new ReadRouter( $readRoutes );
 
-		$handlerRoute = $uriResolver->resolve( $requestInfo );
+		$handlerRoute = $readRouter->findMatchingRoute( $requestInfo );
 
 		return $handlerRoute;
 	}

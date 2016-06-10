@@ -21,6 +21,7 @@ use Fortuneglobe\IceHawk\Routing\ReadRouter;
 
 /**
  * Class ReadRequestHandler
+ *
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
 final class ReadRequestHandler extends AbstractRequestHandler
@@ -106,7 +107,8 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	{
 		$requestInfo = $this->config->getRequestInfo();
 
-		$requestInput = new ReadRequestInput( $uriParams );
+		$requestData  = array_merge( $_GET, $uriParams );
+		$requestInput = new ReadRequestInput( $requestData );
 
 		return new ReadRequest( $requestInfo, $requestInput );
 	}

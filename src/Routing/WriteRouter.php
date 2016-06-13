@@ -5,6 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Routing;
 
+use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
@@ -23,6 +24,8 @@ final class WriteRouter extends AbstractRouter
 	 */
 	public function findMatchingRoute( ProvidesRequestInfo $requestInfo ) : RoutesToWriteHandler
 	{
+		$requiredHandlerType = HandlerMethodInterfaceMap::HTTP_METHODS[ $requestInfo->getMethod() ];
+
 		foreach ( $this->getRoutes() as $route )
 		{
 			if ( !($route instanceof RoutesToWriteHandler) )
@@ -30,7 +33,7 @@ final class WriteRouter extends AbstractRouter
 				continue;
 			}
 
-			if ( $route->matches( $requestInfo ) )
+			if ( $route->matches( $requestInfo ) && $route->getRequestHandler() instanceof $requiredHandlerType )
 			{
 				return $route;
 			}

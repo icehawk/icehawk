@@ -104,7 +104,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getRequestBody() : string
 	{
-		$body = stream_get_contents( STDIN );
+		$body = stream_get_contents( fopen('php://stdin', 'r') );
 
 		return $body ? : '';
 	}

@@ -68,11 +68,6 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn( new ReadRequestResolver() );
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
-			new WriteRequestResolver()
-		);
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( RequestInfo::fromEnv() );
 		$config->expects( $this->once() )
 		       ->method( 'getEventSubscribers' )
@@ -113,13 +108,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn(
-			new TestReadRequestResolver()
-		);
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
-			new WriteRequestResolver()
-		);
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new FinalReadResponder()
 		);
@@ -151,11 +141,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn( new ReadRequestResolver() );
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
-			new TestWriteRequestResolver()
-		);
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new FinalReadResponder()
 		);
@@ -200,13 +187,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn(
-			new TestReadRequestResolver()
-		);
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
-			new TestWriteRequestResolver()
-		);
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new FinalReadResponder()
 		);
@@ -222,60 +204,6 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$iceHawk->handleRequest();
 
 		$this->assertContains( sprintf( 'Allow: %s', $requestMethod ), xdebug_get_headers() );
-	}
-
-	/**
-	 * @runInSeparateProcess
-	 */
-	public function testCanRewriteUrl()
-	{
-		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
-
-		$requestInfo = new RequestInfo(
-			[
-				'REQUEST_METHOD' => 'GET',
-				'REQUEST_URI'    => '/domain/ice_hawk_rewrite',
-			]
-		);
-
-		$redirect = new Redirect( '/domain/rewritten', HttpCode::MOVED_PERMANENTLY );
-
-		$uriRewriter = $this->getMockBuilder( RewritesUri::class )->setMethods( [ 'rewrite' ] )->getMock();
-		$uriRewriter->expects( $this->once() )->method( 'rewrite' )->with( $requestInfo )->willReturn( $redirect );
-
-		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( $uriRewriter );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn( new ReadRequestResolver() );
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
-			new WriteRequestResolver()
-		);
-		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadResponder()
-		);
-		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteResponder()
-		);
-		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
-
-		$delegate = new IceHawkDelegate();
-
-		$iceHawk = new IceHawk( $config, $delegate );
-		$iceHawk->init();
-		$iceHawk->handleRequest();
-
-		$reflection = new \ReflectionClass( '\\Fortuneglobe\\IceHawk\\Responses\\Redirect' );
-		$getBody    = $reflection->getMethod( 'getBody' );
-		$getBody->setAccessible( true );
-		$getContentType = $reflection->getMethod( 'getContentType' );
-		$getContentType->setAccessible( true );
-
-		$expectedBody = $getBody->invoke( $redirect );
-		$contentType  = $getContentType->invoke( $redirect );
-
-		$this->expectOutputString( $expectedBody );
-		$this->assertContains( 'Location: /domain/rewritten', xdebug_get_headers() );
-		$this->assertEquals( HttpCode::MOVED_PERMANENTLY, http_response_code() );
-		$this->assertEquals( 'text/html', $contentType );
 	}
 
 	/**
@@ -318,13 +246,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		              );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn(
-			new TestReadRequestResolver()
-		);
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
-			new WriteRequestResolver()
-		);
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new FinalReadResponder()
 		);
@@ -338,138 +261,6 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$iceHawk = new IceHawk( $config, $delegate );
 		$iceHawk->init();
 		$iceHawk->handleRequest();
-	}
-
-	public function writeRequestHandlerProvider()
-	{
-		return [
-			[ HandlesPostRequest::class, '/domain/post', 'PUT' ],
-			[ HandlesPostRequest::class, '/domain/post', 'DELETE' ],
-			[ HandlesPostRequest::class, '/domain/post', 'PATCH' ],
-			[ HandlesPutRequest::class, '/domain/put', 'POST' ],
-			[ HandlesPutRequest::class, '/domain/put', 'DELETE' ],
-			[ HandlesPutRequest::class, '/domain/put', 'POST' ],
-			[ HandlesDeleteRequest::class, '/domain/delete', 'POST' ],
-			[ HandlesDeleteRequest::class, '/domain/delete', 'PUT' ],
-			[ HandlesDeleteRequest::class, '/domain/delete', 'PATCH' ],
-			[ HandlesPatchRequest::class, '/domain/patch', 'POST' ],
-			[ HandlesPatchRequest::class, '/domain/patch', 'PUT' ],
-			[ HandlesPatchRequest::class, '/domain/patch', 'DELETE' ],
-		];
-	}
-
-	/**
-	 * @dataProvider writeRequestHandlerProvider
-	 * @runInSeparateProcess
-	 */
-	public function testInvalidWriteMethodRespondsWithMethodIsNotAllowed(
-		string $expectedInterface, string $uri, string $wrongWriteRequestMethod
-	)
-	{
-		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
-		$requestInfo = new RequestInfo(
-			[
-				'REQUEST_METHOD' => $wrongWriteRequestMethod,
-				'REQUEST_URI'    => $uri,
-			]
-		);
-
-		$resolver           = new TestWriteRequestResolver();
-		$writeHandlerRouter = $resolver->resolve( $requestInfo );
-		$writeHandler       = $writeHandlerRouter->getRequestHandler();
-
-		$this->assertInstanceOf( $expectedInterface, $writeHandler );
-
-		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn( new ReadRequestResolver() );
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn( $resolver );
-		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadResponder()
-		);
-		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteResponder()
-		);
-		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
-
-		$delegate = new IceHawkDelegate();
-
-		$iceHawk = new IceHawk( $config, $delegate );
-		$iceHawk->init();
-		$iceHawk->handleRequest();
-
-		$methodNotAllowedResponse = new MethodNotAllowed( $wrongWriteRequestMethod );
-
-		$reflection = new \ReflectionClass( '\\Fortuneglobe\\IceHawk\\Responses\\MethodNotAllowed' );
-		$getBody    = $reflection->getMethod( 'getBody' );
-		$getBody->setAccessible( true );
-
-		$expectedBody = $getBody->invoke( $methodNotAllowedResponse );
-
-		$this->expectOutputString( $expectedBody );
-		$this->assertEquals( HttpCode::METHOD_NOT_ALLOWED, http_response_code() );
-	}
-
-	public function readRequestHandlerProvider()
-	{
-		return [
-			[ HandlesGetRequest::class, '/domain/get', 'HEAD' ],
-			[ HandlesHeadRequest::class, '/domain/head', 'GET' ],
-		];
-	}
-
-	/**
-	 * @dataProvider readRequestHandlerProvider
-	 * @runInSeparateProcess
-	 */
-	public function testInvalidReadMethodRespondsWithMethodIsNotAllowed(
-		string $expectedInterface, string $uri, string $wrongReadRequestMethod
-	)
-	{
-		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
-		$requestInfo = new RequestInfo(
-			[
-				'REQUEST_METHOD' => $wrongReadRequestMethod,
-				'REQUEST_URI'    => $uri,
-			]
-		);
-
-		$resolver          = new TestReadRequestResolver();
-		$readHandlerRouter = $resolver->resolve( $requestInfo );
-		$readHandler       = $readHandlerRouter->getRequestHandler();
-
-		$this->assertInstanceOf( $expectedInterface, $readHandler );
-
-		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn( $resolver );
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
-			new WriteRequestResolver()
-		);
-		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadResponder()
-		);
-		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteResponder()
-		);
-		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
-
-		$delegate = new IceHawkDelegate();
-
-		$iceHawk = new IceHawk( $config, $delegate );
-		$iceHawk->init();
-		$iceHawk->handleRequest();
-
-		$methodNotAllowedResponse = new MethodNotAllowed( $wrongReadRequestMethod );
-
-		$reflection = new \ReflectionClass( '\\Fortuneglobe\\IceHawk\\Responses\\MethodNotAllowed' );
-		$getBody    = $reflection->getMethod( 'getBody' );
-		$getBody->setAccessible( true );
-
-		$expectedBody = $getBody->invoke( $methodNotAllowedResponse );
-
-		$this->expectOutputString( $expectedBody );
-		$this->assertEquals( HttpCode::METHOD_NOT_ALLOWED, http_response_code() );
 	}
 
 	public function requestHandlerProvider()
@@ -499,11 +290,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getUriRewriter' )->willReturn( new UriRewriter() );
-		$config->expects( $this->once() )->method( 'getReadRequestResolver' )->willReturn( new ReadRequestResolver() );
-		$config->expects( $this->once() )->method( 'getWriteRequestResolver' )->willReturn(
-			new WriteRequestResolver()
-		);
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new TestFinalReadRequestResponder()
 		);

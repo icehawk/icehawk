@@ -1,22 +1,22 @@
 <?php
 namespace Fortuneglobe\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
+use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
+use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Routing\Patterns\ExactRegExp;
 
 /**
- * Class WriteRouteGroup
+ * Class ReadRouteGroup
  *
  * @package Fortuneglobe\IceHawk\Routing
  */
-final class WriteRouteGroup implements RoutesToWriteHandler
+final class ReadRouteGroup implements RoutesToReadHandler
 {
 	/** @var ExactRegExp */
 	private $pattern;
 
-	/** @var HandlesWriteRequest */
+	/** @var HandlesReadRequest */
 	private $requestHandler;
 
 	/**
@@ -29,14 +29,14 @@ final class WriteRouteGroup implements RoutesToWriteHandler
 	 */
 	private $uriParams = [ ];
 
-	public function __construct( ExactRegExp $pattern, HandlesWriteRequest $requestHandler, array $routes = [ ] )
+	public function __construct( ExactRegExp $pattern, HandlesReadRequest $requestHandler, array $routes = [ ] )
 	{
 		$this->pattern        = $pattern;
 		$this->requestHandler = $requestHandler;
 		$this->routes         = $routes;
 	}
 
-	public function addRoute( RoutesToWriteHandler $route ) : self
+	public function addRoute( RoutesToReadHandler $route ) : self
 	{
 		$this->routes[] = $route;
 
@@ -72,7 +72,7 @@ final class WriteRouteGroup implements RoutesToWriteHandler
 		return $this->uriParams;
 	}
 
-	public function getRequestHandler() : HandlesWriteRequest
+	public function getRequestHandler() : HandlesReadRequest
 	{
 		return $this->requestHandler;
 	}

@@ -8,7 +8,7 @@ use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
  *
  * @package Fortuneglobe\IceHawk\Routing\Patterns
  */
-class NamedRegExp implements ProvidesMatchResult
+class ExactRegExp implements ProvidesMatchResult
 {
 	/** @var string */
 	private $regExp;
@@ -16,14 +16,32 @@ class NamedRegExp implements ProvidesMatchResult
 	/** @var array */
 	private $matchValues;
 
-	public function __construct( string $regExp )
+	/**
+	 * @var bool
+	 */
+	private $matchedExact = false;
+
+	/**
+	 * @var string
+	 */
+	private $flags;
+
+	public function __construct( string $regExp, string $flags = '' )
 	{
 		$this->regExp = $regExp;
+		$this->flags  = $flags;
 	}
 
 	public function matches( string $other ) : bool
 	{
-		return (bool)preg_match( $this->regExp, $other, $this->matchValues );
+		$result = (bool)preg_match( '!(' . $this->regExp . ')!' . $this->flags, $other, $this->matchValues );
+		
+		if( $result )
+		{
+			$this->matchedExact = $this->matchValues[0] == $other;
+		}
+		
+		return $result;
 	}
 
 	public function getMatches() : array
@@ -42,5 +60,13 @@ class NamedRegExp implements ProvidesMatchResult
 		}
 
 		return $matches;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function matchedExact() : bool
+	{
+		return $this->matchedExact;
 	}
 }

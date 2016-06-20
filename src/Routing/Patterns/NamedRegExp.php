@@ -8,7 +8,7 @@ use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
  *
  * @package Fortuneglobe\IceHawk\Routing\Patterns
  */
-class ExactRegExp implements ProvidesMatchResult
+class NamedRegExp implements ProvidesMatchResult
 {
 	/** @var string */
 	private $regExp;
@@ -60,13 +60,5 @@ class ExactRegExp implements ProvidesMatchResult
 		}
 
 		return $matches;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function matchedExact() : bool
-	{
-		return $this->matchedExact;
 	}
 }

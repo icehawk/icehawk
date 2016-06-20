@@ -1,9 +1,9 @@
 <?php
 namespace Fortuneglobe\IceHawk\Tests\Unit\Routing\Patterns;
 
-use Fortuneglobe\IceHawk\Routing\Patterns\ExactRegExp;
+use Fortuneglobe\IceHawk\Routing\Patterns\NamedRegExp;
 
-class ExactRegExpTest extends \PHPUnit_Framework_TestCase
+class NamedRegExpTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @param string $pattern
@@ -12,26 +12,25 @@ class ExactRegExpTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider regExpMatchProvider
 	 */
-	public function testCanMatch( string $pattern, string $other, bool $expectedResult, bool $expectedMatchedExact )
+	public function testCanMatch( string $pattern, string $other, bool $expectedResult )
 	{
-		$regExp = new ExactRegExp( $pattern );
+		$regExp = new NamedRegExp( $pattern );
 
 		$result = $regExp->matches( $other );
 
 		$this->assertSame( $expectedResult, $result );
-		$this->assertSame( $expectedMatchedExact, $regExp->matchedExact() );
 	}
 
 	public function regExpMatchProvider()
 	{
 		return [
-			[ '', '', true, true ],
-			[ '/', '/', true, true ],
-			[ '/path', '/path', true, true ],
-			[ '/(unit|test)', '/unit', true, true ],
-			[ '/(unit|test)', '/test', true, true ],
-			[ '^/(unit|test)$', '/unit/test', false, false ],
-			[ '/unit', '/unit/test', true, false ],
+			[ '', '', true ],
+			[ '/', '/', true ],
+			[ '/path', '/path', true ],
+			[ '/(unit|test)', '/unit', true ],
+			[ '/(unit|test)', '/test', true ],
+			[ '^/(unit|test)$', '/unit/test', false ],
+			[ '/unit', '/unit/test', true ],
 		];
 	}
 
@@ -44,7 +43,7 @@ class ExactRegExpTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCanGetMatches( string $pattern, string $other, array $expectedMatches )
 	{
-		$regExp = new ExactRegExp( $pattern );
+		$regExp = new NamedRegExp( $pattern );
 
 		$regExp->matches( $other );
 

@@ -11,5 +11,8 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface RoutesToReadHandler extends RoutesToHandler
 {
-	public function getRequestHandler() : HandlesReadRequest;
+	/**
+	 * @return HandlesReadRequest
+	 */
+	public function getRequestHandler();
 }

@@ -2,8 +2,6 @@
 namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
 
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
-use Fortuneglobe\IceHawk\Routing\Patterns\ExactRegExp;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
 use Fortuneglobe\IceHawk\Routing\ReadRoute;
 use Fortuneglobe\IceHawk\Routing\ReadRouteGroup;
@@ -18,15 +16,13 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider routeProvider
 	 */
-	public function testFindRouteForRequest(
-		ReadRouteGroup $groupedRoute, string $uri, bool $expectedMatched, HandlesReadRequest $expectedRequestHandler
-	)
+	public function testFindRouteForRequest( ReadRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{
 		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => $uri ] );
-		$matched     = $groupedRoute->matches( $requestInfo );
+
+		$groupedRoute->matches( $requestInfo );
 
 		$this->assertEquals( $expectedRequestHandler, $groupedRoute->getRequestHandler() );
-		$this->assertSame( $expectedMatched, $matched );
 	}
 
 	public function routeProvider()
@@ -35,19 +31,17 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 			[
 				#Route through part-matching routes to finally find the exactly matching route (first of last route-list)
 				new ReadRouteGroup(
-					new ExactRegExp( '/companies' ),
-					new GetRequestHandler(),
+					new RegExp( '#^/companies#' ),
 					[
 						new ReadRouteGroup(
-							new ExactRegExp( '/companies/stores' ),
-							new HeadRequestHandler(),
+							new RegExp( '#^/companies/stores#' ),
 							[
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/(?<storeId>\d*)' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stores/(?<storeId>\d*)#' ),
 									new IceHawkReadRequestHandler()
 								),
 								new ReadRoute(
-									new ExactRegExp( '/companies/stores/stocks' ),
+									new RegExp( '#^/companies/stores/stocks#' ),
 									new ValidReadTestRequestHandler()
 								),
 							]
@@ -55,25 +49,22 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 					]
 				),
 				'/companies/stores/123',
-				true,
 				new IceHawkReadRequestHandler(),
 			],
 			#Route through part-matching routes to finally find the exactly matching route (last of last route-list)
 			[
 				new ReadRouteGroup(
-					new ExactRegExp( '/companies' ),
-					new GetRequestHandler(),
+					new RegExp( '#^/companies#' ),
 					[
 						new ReadRouteGroup(
-							new ExactRegExp( '/companies/stores' ),
-							new IceHawkReadRequestHandler(),
+							new RegExp( '#^/companies/stores#' ),
 							[
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/(?<storeId>\d*)' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stores/(?<storeId>\d*)$#' ),
 									new ValidReadTestRequestHandler()
 								),
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/stocks' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stores/stocks$#' ),
 									new RequestParamsRequestHandler()
 								),
 							]
@@ -81,50 +72,48 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 					]
 				),
 				'/companies/stores/stocks',
-				true,
 				new RequestParamsRequestHandler(),
 			],
 			[
 				new ReadRouteGroup(
-					new ExactRegExp( '/companies' ),
-					new GetRequestHandler(),
+					new RegExp( '#^/companies#' ),
 					[
 						new ReadRouteGroup(
-							new ExactRegExp( '/companies/stores' ),
-							new IceHawkReadRequestHandler(),
+							new RegExp( '#^/companies/stores#' ),
 							[
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/(?<storeId>\d*)' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stores/(?<storeId>\d*)#' ),
 									new ValidReadTestRequestHandler()
 								),
 								new ReadRoute(
-									new ExactRegExp( '/companies/stores/stock$' ),
+									new RegExp( '#^/companies/stores/stock$#' ),
 									new RequestParamsRequestHandler()
 								),
 							]
 						),
+						new ReadRoute(
+							new RegExp( '#^/companies$#' ),
+							new GetRequestHandler()
+						),
 					]
 				),
 				'/companies',
-				true,
 				new GetRequestHandler(),
 			],
 			#Use only ReadRouteGroups to route through part-matching routes to a non existing route
 			[
 				new ReadRouteGroup(
-					new ExactRegExp( '/companies' ),
-					new GetRequestHandler(),
+					new RegExp( '#^/companies#' ),
 					[
 						new ReadRouteGroup(
-							new ExactRegExp( '/companies/stores' ),
-							new IceHawkReadRequestHandler(),
+							new RegExp( '#^/companies/stores#' ),
 							[
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/stocks/(?<stockId>\d*)' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stores/stocks/(?<stockId>\d*)$#' ),
 									new ValidReadTestRequestHandler()
 								),
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/stocks' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stores/stocks$#' ),
 									new RequestParamsRequestHandler()
 								),
 							]
@@ -132,25 +121,22 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 					]
 				),
 				'/companies/stores/stocks/doesnotexist',
-				false,
-				new GetRequestHandler(),
+				null,
 			],
 			#Use Regex to finish on first route with negative match result
 			[
 				new ReadRouteGroup(
-					new ExactRegExp( '/companies$' ),
-					new GetRequestHandler(),
+					new RegExp( '#^/companies#' ),
 					[
 						new ReadRouteGroup(
-							new ExactRegExp( '/companies/stores' ),
-							new IceHawkReadRequestHandler(),
+							new RegExp( '#^/companies/stores#' ),
 							[
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/(?<storeId>\d*)' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stores/(?<storeId>\d*)#' ),
 									new ValidReadTestRequestHandler()
 								),
 								new ReadRoute(
-									new ExactRegExp( '/companies/stores/stocks' ),
+									new RegExp( '#^/companies/stores/stocks#' ),
 									new RequestParamsRequestHandler()
 								),
 							]
@@ -158,52 +144,22 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 					]
 				),
 				'/companies/stores',
-				false,
-				new GetRequestHandler(),
-			],
-			#use RegExp within a route
-			[
-				new ReadRouteGroup(
-					new ExactRegExp( '/companies' ),
-					new GetRequestHandler(),
-					[
-						new ReadRoute( new RegExp( '!^/companies/stores!' ), new IceHawkReadRequestHandler() ),
-						new ReadRouteGroup(
-							new ExactRegExp( '/companies/stores' ),
-							new ValidReadTestRequestHandler(),
-							[
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/(?<storeId>\d*)' ),
-									new HeadRequestHandler()
-								),
-								new ReadRoute(
-									new ExactRegExp( '/companies/stores/stocks' ),
-									new RequestParamsRequestHandler()
-								),
-							]
-						),
-					]
-				),
-				'/companies/stores/abc',
-				true,
-				new IceHawkReadRequestHandler(),
+				null,
 			],
 			#add matching Route after a non matching Route doesn't match
 			[
 				new ReadRouteGroup(
-					new ExactRegExp( '/companies' ),
-					new GetRequestHandler(),
+					new RegExp( '#^/companies#' ),
 					[
 						new ReadRouteGroup(
-							new ExactRegExp( '/companies/stores' ),
-							new IceHawkReadRequestHandler(),
+							new RegExp( '#^/companies/stores#' ),
 							[
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stores/(?<storeId>\d*)' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stores/(?<storeId>\d*)#' ),
 									new ValidReadTestRequestHandler()
 								),
-								new ReadRouteGroup(
-									new ExactRegExp( '/companies/stocks' ),
+								new ReadRoute(
+									new RegExp( '#^/companies/stocks#' ),
 									new RequestParamsRequestHandler()
 								),
 							]
@@ -211,8 +167,7 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 					]
 				),
 				'/companies/stocks',
-				false,
-				new GetRequestHandler(),
+				null,
 			],
 		];
 	}
@@ -221,22 +176,32 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 	{
 		$expectedRequestHandler = new RequestParamsRequestHandler();
 
-		$companyRoute = new ReadRouteGroup( new ExactRegExp( '/companies' ), new GetRequestHandler() );
-		$membersRoute = new ReadRouteGroup( new ExactRegExp( '/companies/members' ), new IceHawkReadRequestHandler() );
-		$storesRoute  = new ReadRouteGroup( new ExactRegExp( '/companies/stores' ), new ValidReadTestRequestHandler() );
-		$storeRoute   = new ReadRouteGroup( new ExactRegExp( '/companies/stores/store' ), new HeadRequestHandler() );
-		$stocksRoute  = new ReadRouteGroup(
-			new ExactRegExp( '/companies/stores/stocks' ), new RequestParamsRequestHandler()
+		$companyGroup = new ReadRouteGroup( new RegExp( '#^/companies#' ) );
+		$storeGroup   = new ReadRouteGroup( new RegExp( '#^/companies/stores#' ) );
+
+		$storeGroup->addRoute(
+			new ReadRoute( new RegExp( '#^/companies/stores$#' ), new ValidReadTestRequestHandler() )
 		);
 
-		$storesRoute->addRoute( $storeRoute )->addRoute( $stocksRoute );
-		$companyRoute->addRoute( $membersRoute )->addRoute( $storesRoute );
+		$storeGroup->addRoute(
+			new ReadRoute( new RegExp( '#^/companies/stores/store#' ), new HeadRequestHandler() )
+		);
+
+		$storeGroup->addRoute(
+			new ReadRoute( new RegExp( '#^/companies/stores/stocks#' ), new RequestParamsRequestHandler() )
+		);
+
+		$companyGroup->addRoute( $storeGroup );
+
+		$companyGroup->addRoute(
+			new ReadRoute( new RegExp( '#^/companies/members#' ), new IceHawkReadRequestHandler() )
+		);
 
 		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => '/companies/stores/stocks' ] );
 
-		$result = $companyRoute->matches( $requestInfo );
+		$result = $companyGroup->matches( $requestInfo );
 
 		$this->assertTrue( $result );
-		$this->assertEquals( $expectedRequestHandler, $companyRoute->getRequestHandler() );
+		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );
 	}
 }

@@ -4,7 +4,8 @@ namespace Fortuneglobe\IceHawk\Routing;
 use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
-use Fortuneglobe\IceHawk\Routing\Patterns\ExactRegExp;
+use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
+use Fortuneglobe\IceHawk\Routing\Patterns\NamedRegExp;
 
 /**
  * Class WriteRouteGroup
@@ -13,7 +14,7 @@ use Fortuneglobe\IceHawk\Routing\Patterns\ExactRegExp;
  */
 final class WriteRouteGroup implements RoutesToWriteHandler
 {
-	/** @var ExactRegExp */
+	/** @var NamedRegExp */
 	private $pattern;
 
 	/** @var HandlesWriteRequest */
@@ -29,10 +30,9 @@ final class WriteRouteGroup implements RoutesToWriteHandler
 	 */
 	private $uriParams = [ ];
 
-	public function __construct( ExactRegExp $pattern, HandlesWriteRequest $requestHandler, array $routes = [ ] )
+	public function __construct( ProvidesMatchResult $pattern, array $routes = [ ] )
 	{
 		$this->pattern        = $pattern;
-		$this->requestHandler = $requestHandler;
 		$this->routes         = $routes;
 	}
 
@@ -47,11 +47,6 @@ final class WriteRouteGroup implements RoutesToWriteHandler
 	{
 		if ( $this->pattern->matches( $requestInfo->getUri() ) )
 		{
-			if ( $this->pattern->matchedExact() )
-			{
-				return true;
-			}
-
 			foreach ( $this->routes as $route )
 			{
 				if ( $route->matches( $requestInfo ) )
@@ -72,7 +67,7 @@ final class WriteRouteGroup implements RoutesToWriteHandler
 		return $this->uriParams;
 	}
 
-	public function getRequestHandler() : HandlesWriteRequest
+	public function getRequestHandler()
 	{
 		return $this->requestHandler;
 	}

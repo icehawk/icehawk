@@ -38,7 +38,7 @@ final class ReadRoute implements RoutesToReadHandler
 		return $this->pattern->getMatches();
 	}
 
-	public function getRequestHandler() : HandlesReadRequest
+	public function getRequestHandler() : RoutesToReadHandler
 	{
 		return $this->requestHandler;
 	}

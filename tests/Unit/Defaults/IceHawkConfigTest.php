@@ -21,13 +21,8 @@ class IceHawkConfigTest extends \PHPUnit_Framework_TestCase
 		$config = new IceHawkConfig();
 
 		$this->assertEquals( [ ], $config->getEventSubscribers() );
-		$this->assertEquals( new UriRewriter(), $config->getUriRewriter() );
-		$this->assertEquals( new UriRewriter(), $config->getUriRewriter() );
 		$this->assertEquals( RequestInfo::fromEnv(), $config->getRequestInfo() );
-		$this->assertEquals( new SimpleBodyParserFactory(), $config->getBodyParserFactory() );
-		$this->assertEquals( new FinalReadResponder(), $config->getFinalReadRequestResponder() );
-		$this->assertEquals( new FinalWriteResponder(), $config->getFinalWriteRequestResponder() );
-		$this->assertEquals( new ReadRequestResolver(), $config->getReadRequestResolver() );
-		$this->assertEquals( new WriteRequestResolver(), $config->getWriteRequestResolver() );
+		$this->assertEquals( new FinalReadResponder(), $config->getFinalReadResponder() );
+		$this->assertEquals( new FinalWriteResponder(), $config->getFinalWriteResponder() );
 	}
 }

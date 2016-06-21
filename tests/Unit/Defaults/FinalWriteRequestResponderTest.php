@@ -14,30 +14,6 @@ use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
  */
 class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @runInSeparateProcess
-	 */
-	public function testHandleNoResponse()
-	{
-		$requestInfo = new RequestInfo(
-			[
-				'REQUEST_METHOD' => 'POST',
-				'REQUEST_URI'    => '/domain/ice_hawk_write',
-			]
-		);
-
-		$requestData = new WriteRequest( $requestInfo, new WriteRequestInput( '', [ ] ) );
-
-		$responder = new FinalWriteResponder();
-		$responder->handleNoResponse( $requestData );
-
-		$this->expectOutputString(
-			sprintf(
-				"Application did not respond to the %s request: %s", $requestInfo->getMethod(), $requestInfo->getUri()
-			)
-		);
-	}
-
 	public function testHandleUncaughtException()
 	{
 		$requestInfo = new RequestInfo(

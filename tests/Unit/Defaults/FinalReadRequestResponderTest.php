@@ -13,31 +13,7 @@ use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
  * @package Fortuneglobe\IceHawk\Tests\Unit\Defaults
  */
 class FinalReadRequestResponderTest extends \PHPUnit_Framework_TestCase
-{
-	/**
-	 * @runInSeparateProcess
-	 */
-	public function testHandleNoResponse()
-	{
-		$requestInfo = new RequestInfo(
-			[
-				'REQUEST_METHOD' => 'GET',
-				'REQUEST_URI'    => '/domain/ice_hawk_read',
-			]
-		);
-		
-		$requestData = new ReadRequest( $requestInfo, new ReadRequestInput( [] ) );
-
-		$responder = new FinalReadResponder();		
-		$responder->handleNoResponse( $requestData );	
-		
-		$this->expectOutputString( 
-			sprintf( 
-				"Application did not respond to the %s request: %s", $requestInfo->getMethod(), $requestInfo->getUri()
-			)
-		);
-	}
-	
+{	
 	public function testHandleUncaughtException()
 	{
 		$requestInfo = new RequestInfo(

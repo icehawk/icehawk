@@ -17,11 +17,6 @@ class NamedRegExp implements ProvidesMatchResult
 	private $matchValues;
 
 	/**
-	 * @var bool
-	 */
-	private $matchedExact = false;
-
-	/**
 	 * @var string
 	 */
 	private $flags;
@@ -34,14 +29,7 @@ class NamedRegExp implements ProvidesMatchResult
 
 	public function matches( string $other ) : bool
 	{
-		$result = (bool)preg_match( '!(' . $this->regExp . ')!' . $this->flags, $other, $this->matchValues );
-		
-		if( $result )
-		{
-			$this->matchedExact = $this->matchValues[0] == $other;
-		}
-		
-		return $result;
+		return (bool)preg_match( '!' . $this->regExp . '!' . $this->flags, $other, $this->matchValues );
 	}
 
 	public function getMatches() : array

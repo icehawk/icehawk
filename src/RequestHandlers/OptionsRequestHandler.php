@@ -30,23 +30,16 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 
 	private function getReadOptions() : array
 	{
-		try
-		{
-			$handlerRoutes = $this->getReadHandlerRoutes();
+		$handlerRoutes = $this->getReadHandlerRoutes();
 
-			$requestMethods = [ ];
-			foreach ( $handlerRoutes as $handlerRoute )
-			{
-				$handler          = $handlerRoute->getRequestHandler();
-				$requestMethods[] = $this->getImplementedRequestMethods( $handler );
-			}
-
-			return $requestMethods;
-		}
-		catch ( UnresolvedRequest $e )
+		$requestMethods = [ ];
+		foreach ( $handlerRoutes as $handlerRoute )
 		{
-			return [ ];
+			$handler        = $handlerRoute->getRequestHandler();
+			$requestMethods = array_merge( $requestMethods, $this->getImplementedRequestMethods( $handler ) );
 		}
+
+		return $requestMethods;
 	}
 
 	/**
@@ -61,8 +54,16 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 		$handlerRoutes = [ ];
 		foreach ( HttpMethod::READ_METHODS as $readMethod )
 		{
-			$routeRequest    = new RouteRequest( $requestInfo->getUri(), $readMethod );
-			$handlerRoutes[] = $readRouter->findMatchingRoute( $routeRequest );
+			$routeRequest = new RouteRequest( $requestInfo->getUri(), $readMethod );
+
+			try
+			{
+				$handlerRoutes[] = $readRouter->findMatchingRoute( $routeRequest );
+			}
+			catch ( UnresolvedRequest $ex )
+			{
+				continue;
+			}
 		}
 
 		return $handlerRoutes;
@@ -85,23 +86,16 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 
 	private function getWriteOptions() : array
 	{
-		try
-		{
-			$handlerRoutes = $this->getWriteHandlerRoutes();
+		$handlerRoutes = $this->getWriteHandlerRoutes();
 
-			$requestMethods = [ ];
-			foreach ( $handlerRoutes as $handlerRoute )
-			{
-				$handler          = $handlerRoute->getRequestHandler();
-				$requestMethods[] = $this->getImplementedRequestMethods( $handler );
-			}
-
-			return $requestMethods;
-		}
-		catch ( UnresolvedRequest $e )
+		$requestMethods = [ ];
+		foreach ( $handlerRoutes as $handlerRoute )
 		{
-			return [ ];
+			$handler        = $handlerRoute->getRequestHandler();
+			$requestMethods = array_merge( $requestMethods, $this->getImplementedRequestMethods( $handler ) );
 		}
+
+		return $requestMethods;
 	}
 
 	/**
@@ -114,10 +108,18 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 		$writeRouter = new WriteRouter( $writeRoutes );
 
 		$handlerRoutes = [ ];
-		foreach ( HttpMethod::READ_METHODS as $readMethod )
+		foreach ( HttpMethod::WRITE_METHODS as $writeMethod )
 		{
-			$routeRequest    = new RouteRequest( $requestInfo->getUri(), $readMethod );
-			$handlerRoutes[] = $writeRouter->findMatchingRoute( $routeRequest );
+			$routeRequest = new RouteRequest( $requestInfo->getUri(), $writeMethod );
+
+			try
+			{
+				$handlerRoutes[] = $writeRouter->findMatchingRoute( $routeRequest );
+			}
+			catch ( UnresolvedRequest $ex )
+			{
+				continue;
+			}
 		}
 
 		return $handlerRoutes;

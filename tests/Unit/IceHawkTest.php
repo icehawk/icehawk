@@ -29,6 +29,14 @@ use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
 use Fortuneglobe\IceHawk\Responses\Redirect;
+use Fortuneglobe\IceHawk\Routing\Patterns\Literal;
+use Fortuneglobe\IceHawk\Routing\ReadRoute;
+use Fortuneglobe\IceHawk\Routing\WriteRoute;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestFinalReadRequestResponder;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestFinalWriteRequestResponder;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestReadRequestResolver;
@@ -160,23 +168,32 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$this->expectOutputString( 'Handler method for post request called.' );
 	}
 
-	public function optionRequestUriAndMethodProvider()
+	public function RouteProvider()
 	{
 		return [
-			[ '/domain/post', 'POST' ],
-			[ '/domain/get', 'GET' ],
-			[ '/domain/put', 'PUT' ],
-			[ '/domain/head', 'HEAD' ],
-			[ '/domain/delete', 'DELETE' ],
-			[ '/domain/patch', 'PATCH' ],
+			[
+				[
+					new ReadRoute( new Literal( '/get/this' ), new GetRequestHandler() ),
+					new ReadRoute( new Literal( '/get/that' ), new HeadRequestHandler() ),
+					new ReadRoute( new Literal( '/get/this/again' ), new GetRequestHandler() ),
+				],
+				[
+					new WriteRoute( new Literal( '/do/this' ), new PostRequestHandler() ),
+					new WriteRoute( new Literal( '/do/this/again' ), new PostRequestHandler() ),
+					new WriteRoute( new Literal( '/do/that' ), new PutRequestHandler() ),
+					new WriteRoute( new Literal( '/do/whatever/you/want' ), new DeleteRequestHandler() ),
+				],
+				'/do/this',
+				[ 'POST' ],
+			],
 		];
 	}
 
 	/**
-	 * @dataProvider optionRequestUriAndMethodProvider
+	 * @dataProvider RouteProvider
 	 * @runInSeparateProcess
 	 */
-	public function testCanCallHandlerForOptionRequest( string $uri, string $requestMethod )
+	public function testCanCallHandlerForOptionRequest( array $readRoutes, array $writeRoutes, string $uri, array $expectedMethods )
 	{
 		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
@@ -186,16 +203,9 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
-		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
-			new FinalReadResponder()
-		);
-		$config->expects( $this->once() )->method( 'getFinalWriteRequestResponder' )->willReturn(
-			new FinalWriteResponder()
-		);
-		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ ] );
+		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->method( 'getReadRoutes' )->willReturn( $readRoutes );
+		$config->method( 'getWriteRoutes' )->willReturn( $writeRoutes );
 
 		$delegate = new IceHawkDelegate();
 
@@ -203,7 +213,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$iceHawk->init();
 		$iceHawk->handleRequest();
 
-		$this->assertContains( sprintf( 'Allow: %s', $requestMethod ), xdebug_get_headers() );
+		$this->assertContains( sprintf( 'Allow: %s', implode(',', $expectedMethods) ), xdebug_get_headers() );
 	}
 
 	/**

@@ -7,8 +7,8 @@ namespace Fortuneglobe\IceHawk\Routing;
 
 use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
+use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
 
 /**
  * Class ReadRouter
@@ -17,14 +17,14 @@ use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
 final class ReadRouter extends AbstractRouter
 {
 	/**
-	 * @param ProvidesRequestInfo $requestInfo
+	 * @param ProvidesDestinationInfo $destinationInfo
 	 *
 	 * @throws UnresolvedRequest
 	 * @return RoutesToReadHandler
 	 */
-	public function findMatchingRoute( ProvidesRequestInfo $requestInfo ) : RoutesToReadHandler
+	public function findMatchingRoute( ProvidesDestinationInfo $destinationInfo ) : RoutesToReadHandler
 	{
-		$requiredHandlerType = HandlerMethodInterfaceMap::HTTP_METHODS[ $requestInfo->getMethod() ];
+		$requiredHandlerType = HandlerMethodInterfaceMap::HTTP_METHODS[ $destinationInfo->getRequestMethod() ];
 
 		foreach ( $this->getRoutes() as $route )
 		{
@@ -33,12 +33,12 @@ final class ReadRouter extends AbstractRouter
 				continue;
 			}
 
-			if ( $route->matches( $requestInfo ) && $route->getRequestHandler() instanceof $requiredHandlerType  )
+			if ( $route->matches( $destinationInfo ) && $route->getRequestHandler() instanceof $requiredHandlerType  )
 			{
 				return $route;
 			}
 		}
 
-		throw ( new UnresolvedRequest() )->withRequestInfo( $requestInfo );
+		throw ( new UnresolvedRequest() )->withDestinationInfo( $destinationInfo );
 	}
 }

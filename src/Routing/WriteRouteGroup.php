@@ -2,8 +2,8 @@
 namespace Fortuneglobe\IceHawk\Routing;
 
 use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
+use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
 use Fortuneglobe\IceHawk\Routing\Patterns\NamedRegExp;
 
@@ -43,13 +43,13 @@ final class WriteRouteGroup implements RoutesToWriteHandler
 		return $this;
 	}
 
-	public function matches( ProvidesRequestInfo $requestInfo ) : bool
+	public function matches( ProvidesDestinationInfo $destinationInfo ) : bool
 	{
-		if ( $this->pattern->matches( $requestInfo->getUri() ) )
+		if ( $this->pattern->matches( $destinationInfo->getUri() ) )
 		{
 			foreach ( $this->routes as $route )
 			{
-				if ( $route->matches( $requestInfo ) )
+				if ( $route->matches( $destinationInfo ) )
 				{
 					$this->requestHandler = $route->getRequestHandler();
 					$this->uriParams      = $route->getUriParams();

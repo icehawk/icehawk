@@ -3,6 +3,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
 
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
+use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Routing\WriteRoute;
 use Fortuneglobe\IceHawk\Routing\WriteRouteGroup;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\BodyDataRequestHandler;
@@ -21,9 +22,9 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFindRouteForRequest( WriteRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{
-		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => $uri ] );
+		$routeRequest = new RouteRequest( $uri, 'POST' );
 
-		$groupedRoute->matches( $requestInfo );
+		$groupedRoute->matches( $routeRequest );
 
 		$this->assertEquals( $expectedRequestHandler, $groupedRoute->getRequestHandler() );
 	}
@@ -226,9 +227,9 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 
 		$companyGroup->addRoute( $membersRoute )->addRoute( $companyRoute )->addRoute( $storesGroup );
 
-		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => '!/companies/stores/store/test' ] );
+		$routeRequest = new RouteRequest( '!/companies/stores/store/test', 'POST' );
 
-		$result = $companyGroup->matches( $requestInfo );
+		$result = $companyGroup->matches( $routeRequest );
 
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );
 		$this->assertTrue( $result );

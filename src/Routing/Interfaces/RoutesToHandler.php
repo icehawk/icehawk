@@ -3,7 +3,7 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace Fortuneglobe\IceHawk\Routing\Interfaces;
 
 /**
  * Interface RoutesToHandler
@@ -11,7 +11,7 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface RoutesToHandler
 {
-	public function matches( ProvidesRequestInfo $requestInfo );
+	public function matches( ProvidesDestinationInfo $destinationInfo ) : bool;
 
 	public function getUriParams() : array;
 }

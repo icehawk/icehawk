@@ -3,7 +3,9 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace Fortuneglobe\IceHawk\Routing\Interfaces;
+
+use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
 
 /**
  * Interface RoutesToReadHandler

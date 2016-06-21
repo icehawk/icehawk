@@ -5,6 +5,7 @@ use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
 use Fortuneglobe\IceHawk\Routing\ReadRoute;
 use Fortuneglobe\IceHawk\Routing\ReadRouteGroup;
+use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\IceHawkReadRequestHandler;
@@ -18,9 +19,9 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFindRouteForRequest( ReadRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{
-		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => $uri ] );
+		$routeRequest = new RouteRequest( $uri, 'GET' );
 
-		$groupedRoute->matches( $requestInfo );
+		$groupedRoute->matches( $routeRequest );
 
 		$this->assertEquals( $expectedRequestHandler, $groupedRoute->getRequestHandler() );
 	}
@@ -197,9 +198,9 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 			new ReadRoute( new RegExp( '#^/companies/members#' ), new IceHawkReadRequestHandler() )
 		);
 
-		$requestInfo = new RequestInfo( [ 'REQUEST_URI' => '/companies/stores/stocks' ] );
+		$routeRequest = new RouteRequest( '/companies/stores/stocks', 'GET' );
 
-		$result = $companyGroup->matches( $requestInfo );
+		$result = $companyGroup->matches( $routeRequest );
 
 		$this->assertTrue( $result );
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );

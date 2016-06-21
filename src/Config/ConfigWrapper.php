@@ -9,9 +9,9 @@ use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
-use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
-use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
 /**
  * Class IceHawkConfigWrapper

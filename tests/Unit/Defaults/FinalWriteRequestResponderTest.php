@@ -6,6 +6,7 @@ use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
+use Fortuneglobe\IceHawk\Routing\RouteRequest;
 
 /**
  * Class FinalWriteRequestResponderTest
@@ -23,11 +24,12 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$requestData = new WriteRequest( $requestInfo, new WriteRequestInput( '', [ ] ) );
+		$requestData  = new WriteRequest( $requestInfo, new WriteRequestInput( '', [ ] ) );
+		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
 
 		try
 		{
-			$unresolvedRequest = ( new UnresolvedRequest() )->withRequestInfo( $requestInfo );
+			$unresolvedRequest = ( new UnresolvedRequest() )->withDestinationInfo( $routeRequest );
 
 			$responder = new FinalWriteResponder();
 			$responder->handleUncaughtException( $unresolvedRequest, $requestData );
@@ -36,7 +38,7 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 		}
 		catch ( UnresolvedRequest $ex )
 		{
-			$this->assertSame( $requestInfo, $ex->getRequestInfo() );
+			$this->assertSame( $routeRequest, $ex->getDestinationInfo() );
 		}
 		catch ( \Throwable $throwable )
 		{

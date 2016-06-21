@@ -12,12 +12,13 @@ use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
-use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Routing\ReadRouter;
+use Fortuneglobe\IceHawk\Routing\RouteRequest;
 
 /**
  * Class ReadRequestHandler
@@ -75,9 +76,11 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	{
 		$readRoutes  = $this->config->getReadRoutes();
 		$requestInfo = $this->config->getRequestInfo();
-		$readRouter  = new ReadRouter( $readRoutes );
 
-		$handlerRoute = $readRouter->findMatchingRoute( $requestInfo );
+		$readRouter   = new ReadRouter( $readRoutes );
+		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
+
+		$handlerRoute = $readRouter->findMatchingRoute( $routeRequest );
 
 		return $handlerRoute;
 	}

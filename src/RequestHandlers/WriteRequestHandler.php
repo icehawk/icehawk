@@ -12,16 +12,18 @@ use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
-use Fortuneglobe\IceHawk\Interfaces\RoutesToWriteHandler;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
 use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
+use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Routing\WriteRouter;
 
 /**
  * Class WriteRequestHandler
+ *
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
 final class WriteRequestHandler extends AbstractRequestHandler
@@ -72,9 +74,11 @@ final class WriteRequestHandler extends AbstractRequestHandler
 	{
 		$routes      = $this->config->getWriteRoutes();
 		$requestInfo = $this->config->getRequestInfo();
-		$router      = new WriteRouter( $routes );
 
-		$handlerRoute = $router->findMatchingRoute( $requestInfo );
+		$router       = new WriteRouter( $routes );
+		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
+
+		$handlerRoute = $router->findMatchingRoute( $routeRequest );
 
 		return $handlerRoute;
 	}
@@ -104,7 +108,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getRequestBody() : string
 	{
-		$body = stream_get_contents( fopen('php://stdin', 'r') );
+		$body = stream_get_contents( fopen( 'php://stdin', 'r' ) );
 
 		return $body ? : '';
 	}

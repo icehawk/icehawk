@@ -1,10 +1,10 @@
 <?php
 namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
+use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
+use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Routing\WriteRoute;
 use Fortuneglobe\IceHawk\Routing\WriteRouter;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\IceHawkWriteRequestHandler;
@@ -18,11 +18,11 @@ class WriteRouterTest extends \PHPUnit_Framework_TestCase
 	 * @dataProvider routeProvider
 	 */
 	public function testFindRouteForRequest(
-		ProvidesRequestInfo $requestInfo, array $routes, HandlesWriteRequest $expectedRequestHandler
+		ProvidesDestinationInfo $destinationInfo, array $routes, HandlesWriteRequest $expectedRequestHandler
 	)
 	{
 		$router = new WriteRouter( $routes );
-		$route  = $router->findMatchingRoute( $requestInfo );
+		$route  = $router->findMatchingRoute( $destinationInfo );
 
 		$this->assertEquals( $expectedRequestHandler, $route->getRequestHandler() );
 	}
@@ -31,7 +31,7 @@ class WriteRouterTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test' ] ),
+				new RouteRequest( '/test', 'POST' ),
 				[
 					new WriteRoute( new RegExp( '#^/(unit|test)$#' ), new PutRequestHandler() ),
 					new WriteRoute( new RegExp( '#^/(unit|test)$#' ), new PostRequestHandler() ),
@@ -47,7 +47,7 @@ class WriteRouterTest extends \PHPUnit_Framework_TestCase
 	 * @dataProvider invalidRouteProvider
 	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest
 	 */
-	public function testMissingRouteForRequestThrowsException( ProvidesRequestInfo $requestInfo, array $routes )
+	public function testMissingRouteForRequestThrowsException( ProvidesDestinationInfo $requestInfo, array $routes )
 	{
 		$router = new WriteRouter( $routes );
 		$router->findMatchingRoute( $requestInfo );
@@ -57,7 +57,7 @@ class WriteRouterTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test' ] ),
+				new RouteRequest( '/test', 'POST' ),
 				[
 					new WriteRoute( new RegExp( '#^/(unit|test)$#' ), new PutRequestHandler() ),
 					new WriteRoute( new RegExp( '#^/notvalid$#' ), new ValidWriteTestRequestHandler() ),

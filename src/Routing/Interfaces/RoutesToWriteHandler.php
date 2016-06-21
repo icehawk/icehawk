@@ -3,7 +3,9 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace Fortuneglobe\IceHawk\Routing\Interfaces;
+
+use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
 
 /**
  * Interface RoutesToWriteHandler
@@ -11,5 +13,8 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface RoutesToWriteHandler extends RoutesToHandler
 {
+	/**
+	 * @return HandlesWriteRequest
+	 */
 	public function getRequestHandler();
 }

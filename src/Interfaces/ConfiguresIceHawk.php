@@ -6,6 +6,8 @@
 namespace Fortuneglobe\IceHawk\Interfaces;
 
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
 /**
  * Interface ConfiguresIceHawk

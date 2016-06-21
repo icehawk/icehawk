@@ -6,6 +6,8 @@
 namespace Fortuneglobe\IceHawk\RequestHandlers;
 
 use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
+use Fortuneglobe\IceHawk\Constants\HttpMethod;
+use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\HandlesRequest;
 use Fortuneglobe\IceHawk\Interfaces\RoutesToReadHandler;
@@ -50,6 +52,15 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 		$readRoutes  = $this->config->getReadRoutes();
 		$requestInfo = $this->config->getRequestInfo();
 		$readRouter  = new ReadRouter( $readRoutes );
+
+		$handlerRoutes = [];
+		foreach( HttpMethod::READ_METHODS as $readMethod )
+		{
+			$requestInfo = new RequestInfo(
+				['REQUEST_URI' => $requestInfo->getUri(), 'REQUEST_METHOD' => $requestInfo->getMethod() ]
+			);
+			$handlerRoutes[] = $readRouter->findMatchingRoute( $requestInfo );
+		}
 
 		$handlerRoute = $readRouter->findMatchingRoute( $requestInfo );
 

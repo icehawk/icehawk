@@ -6,29 +6,18 @@ use Fortuneglobe\IceHawk\Defaults\FinalReadResponder;
 use Fortuneglobe\IceHawk\Defaults\FinalWriteResponder;
 use Fortuneglobe\IceHawk\Defaults\IceHawkConfig;
 use Fortuneglobe\IceHawk\Defaults\IceHawkDelegate;
-use Fortuneglobe\IceHawk\Defaults\ReadRequestResolver;
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Defaults\UriRewriter;
-use Fortuneglobe\IceHawk\Defaults\WriteRequestResolver;
 use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
+use Fortuneglobe\IceHawk\Events\InitializingIceHawkEvent;
 use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\IceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\Interfaces\HandlesDeleteRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesGetRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesHeadRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesPatchRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesPutRequest;
-use Fortuneglobe\IceHawk\Interfaces\RewritesUri;
 use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
-use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
-use Fortuneglobe\IceHawk\Responses\Redirect;
 use Fortuneglobe\IceHawk\Routing\Patterns\Literal;
 use Fortuneglobe\IceHawk\Routing\ReadRoute;
 use Fortuneglobe\IceHawk\Routing\WriteRoute;
@@ -39,8 +28,6 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestFinalReadRequestResponder;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestFinalWriteRequestResponder;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestReadRequestResolver;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestWriteRequestResolver;
 
 class IceHawkTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,9 +36,11 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$config   = new IceHawkConfig();
 		$delegate = $this->prophesize( SetsUpEnvironment::class );
 
-		$delegate->setUpErrorHandling()->shouldBeCalled();
-		$delegate->setUpSessionHandling()->shouldBeCalled();
+		$requestInfo       = RequestInfo::fromEnv();
+
 		$delegate->setUpGlobalVars()->shouldBeCalled();
+		$delegate->setUpErrorHandling( $requestInfo )->shouldBeCalled();
+		$delegate->setUpSessionHandling( $requestInfo )->shouldBeCalled();
 
 		$iceHawk = new IceHawk( $config, $delegate->reveal() );
 		$iceHawk->init();
@@ -59,24 +48,35 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 	public function testPublishesEventWhenInitializationIsDone()
 	{
-		$requestInfo   = RequestInfo::fromEnv();
-		$initEvent     = new IceHawkWasInitializedEvent( $requestInfo );
-		$eventListener = $this->getMockBuilder( SubscribesToEvents::class )
-		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )
-		                      ->getMockForAbstractClass();
+		$requestInfo       = RequestInfo::fromEnv();
+		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
+		$initializedEvent  = new IceHawkWasInitializedEvent( $requestInfo );
 
-		$eventListener->expects( $this->once() )
+		$eventListener     = $this->getMockBuilder( SubscribesToEvents::class )
+		                          ->setMethods( [ 'acceptsEvent', 'notify' ] )
+		                          ->getMockForAbstractClass();
+		
+		$eventListener->expects( $this->at(0) )
 		              ->method( 'acceptsEvent' )
-		              ->with( $this->equalTo( $initEvent ) )
+		              ->with( $this->equalTo( $initializingEvent ) )
 		              ->willReturn( true );
 
-		$eventListener->expects( $this->once() )
+		$eventListener->expects( $this->at(1) )
 		              ->method( 'notify' )
-		              ->with( $this->equalTo( $initEvent ) );
+		              ->with( $this->equalTo( $initializingEvent ) );
 
+		$eventListener->expects( $this->at(2) )
+		              ->method( 'acceptsEvent' )
+		              ->with( $this->equalTo( $initializedEvent ) )
+		              ->willReturn( true );
+
+		$eventListener->expects( $this->at(3) )
+		              ->method( 'notify' )
+		              ->with( $this->equalTo( $initializedEvent ) );
+		
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
-		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( RequestInfo::fromEnv() );
+		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )
 		       ->method( 'getEventSubscribers' )
 		       ->willReturn( [ $eventListener ] );
@@ -116,8 +116,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ ] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ ] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new FinalReadResponder()
 		);
@@ -149,8 +149,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ ] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ ] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new FinalReadResponder()
 		);
@@ -193,7 +193,9 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	 * @dataProvider RouteProvider
 	 * @runInSeparateProcess
 	 */
-	public function testCanCallHandlerForOptionRequest( array $readRoutes, array $writeRoutes, string $uri, array $expectedMethods )
+	public function testCanCallHandlerForOptionRequest(
+		array $readRoutes, array $writeRoutes, string $uri, array $expectedMethods
+	)
 	{
 		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
@@ -213,7 +215,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$iceHawk->init();
 		$iceHawk->handleRequest();
 
-		$this->assertContains( sprintf( 'Allow: %s', implode(',', $expectedMethods) ), xdebug_get_headers() );
+		$this->assertContains( sprintf( 'Allow: %s', implode( ',', $expectedMethods ) ), xdebug_get_headers() );
 	}
 
 	/**
@@ -256,8 +258,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		              );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ ] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ ] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new FinalReadResponder()
 		);
@@ -300,8 +302,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ ] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ ] );
 		$config->expects( $this->once() )->method( 'getFinalReadRequestResponder' )->willReturn(
 			new TestFinalReadRequestResponder()
 		);

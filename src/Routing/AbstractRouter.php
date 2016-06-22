@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Interfaces\RoutesToHandler;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToHandler;
 use Fortuneglobe\IceHawk\Routing\Exceptions\RoutesAreNotTraversable;
 
 /**

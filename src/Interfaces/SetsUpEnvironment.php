@@ -11,9 +11,9 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface SetsUpEnvironment
 {
-	public function setUpErrorHandling();
+	public function setUpErrorHandling( ProvidesRequestInfo $requestInfo );
 
-	public function setUpSessionHandling();
+	public function setUpSessionHandling( ProvidesRequestInfo $requestInfo );
 
 	public function setUpGlobalVars();
 }

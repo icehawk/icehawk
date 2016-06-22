@@ -9,6 +9,7 @@ use Fortuneglobe\IceHawk\Config\ConfigGuard;
 use Fortuneglobe\IceHawk\Config\ConfigWrapper;
 use Fortuneglobe\IceHawk\Constants\HttpMethod;
 use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
+use Fortuneglobe\IceHawk\Events\InitializingIceHawkEvent;
 use Fortuneglobe\IceHawk\Exceptions\InvalidEventSubscriberCollection;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
@@ -21,6 +22,7 @@ use Fortuneglobe\IceHawk\Responses\MethodNotImplemented;
 
 /**
  * Class IceHawk
+ *
  * @package Fortuneglobe\IceHawk
  */
 final class IceHawk
@@ -50,19 +52,22 @@ final class IceHawk
 	 */
 	public function init()
 	{
-		$this->setUpDelegate->setUpErrorHandling();
-		$this->setUpDelegate->setUpSessionHandling();
 		$this->setUpDelegate->setUpGlobalVars();
 
 		$this->config = new ConfigWrapper( $this->config );
 
 		$this->guardConfigIsValid();
-
 		$this->registerEventSubscribers();
 
-		$requestInfo      = $this->config->getRequestInfo();
-		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo );
+		$requestInfo = $this->config->getRequestInfo();
 
+		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
+		$this->eventPublisher->publish( $initializingEvent );
+
+		$this->setUpDelegate->setUpSessionHandling( $requestInfo );
+		$this->setUpDelegate->setUpErrorHandling( $requestInfo );
+
+		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo );
 		$this->eventPublisher->publish( $initializedEvent );
 	}
 

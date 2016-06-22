@@ -5,6 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Defaults;
 
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
 
 /**
@@ -13,11 +14,11 @@ use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
  */
 class IceHawkDelegate implements SetsUpEnvironment
 {
-	public function setUpErrorHandling()
+	public function setUpErrorHandling( ProvidesRequestInfo $requestInfo )
 	{
 	}
 
-	public function setUpSessionHandling()
+	public function setUpSessionHandling( ProvidesRequestInfo $requestInfo )
 	{
 	}
 

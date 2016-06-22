@@ -7,11 +7,12 @@ namespace Fortuneglobe\IceHawk\Routing;
 
 use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
+use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 
 /**
  * Class ReadRouter
+ *
  * @package Fortuneglobe\IceHawk\Routing
  */
 final class ReadRouter extends AbstractRouter
@@ -33,7 +34,7 @@ final class ReadRouter extends AbstractRouter
 				continue;
 			}
 
-			if ( $route->matches( $destinationInfo ) && $route->getRequestHandler() instanceof $requiredHandlerType  )
+			if ( $route->matches( $destinationInfo ) && $route->getRequestHandler() instanceof $requiredHandlerType )
 			{
 				return $route;
 			}

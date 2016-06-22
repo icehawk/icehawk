@@ -5,12 +5,10 @@
 
 namespace Fortuneglobe\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Events\HandlingWriteRequestEvent;
 use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
@@ -48,10 +46,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function resolveAndHandleRequest() : ServesResponse
 	{
-		$requestInfo  = $this->config->getRequestInfo();
 		$handlerRoute = $this->getHandlerRoute();
-
-		$this->guardHandlerAcceptsRequestMethod( $handlerRoute->getRequestHandler(), $requestInfo->getMethod() );
 
 		$request        = $this->getRequest( $handlerRoute->getUriParams() );
 		$requestHandler = $handlerRoute->getRequestHandler();
@@ -81,16 +76,6 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		$handlerRoute = $router->findMatchingRoute( $routeRequest );
 
 		return $handlerRoute;
-	}
-
-	private function guardHandlerAcceptsRequestMethod( HandlesWriteRequest $handler, string $requestMethod )
-	{
-		$requiredInterface = HandlerMethodInterfaceMap::HTTP_METHODS[ $requestMethod ];
-
-		if ( !($handler instanceof $requiredInterface) )
-		{
-			throw ( new RequestMethodNotAllowed() )->withRequestMethod( $requestMethod );
-		}
 	}
 
 	private function getRequest( array $uriParams ) : ProvidesWriteRequestData

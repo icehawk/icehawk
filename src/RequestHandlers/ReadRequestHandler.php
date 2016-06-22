@@ -13,7 +13,6 @@ use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
-use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
 use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Routing\ReadRouter;
 use Fortuneglobe\IceHawk\Routing\RouteRequest;

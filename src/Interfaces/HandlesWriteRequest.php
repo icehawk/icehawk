@@ -11,5 +11,5 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  */
 interface HandlesWriteRequest extends HandlesRequest
 {
-	public function handle( ProvidesWriteRequestData $request ) : ServesResponse;
+	public function handle( ProvidesWriteRequestData $request );
 }

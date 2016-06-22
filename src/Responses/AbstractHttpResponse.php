@@ -6,13 +6,12 @@
 namespace Fortuneglobe\IceHawk\Responses;
 
 use Fortuneglobe\IceHawk\Constants\HttpCode;
-use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 
 /**
  * Class AbstractHttpResponse
  * @package Fortuneglobe\IceHawk\Responses
  */
-abstract class AbstractHttpResponse implements ServesResponse
+abstract class AbstractHttpResponse
 {
 	/** @var string */
 	private $contentType;

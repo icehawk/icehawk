@@ -9,7 +9,6 @@ use Fortuneglobe\IceHawk\Events\HandlingWriteRequestEvent;
 use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
@@ -19,7 +18,6 @@ use Fortuneglobe\IceHawk\Routing\WriteRouter;
 
 /**
  * Class WriteRequestHandler
- *
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
 final class WriteRequestHandler extends AbstractRequestHandler
@@ -28,8 +26,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 	{
 		try
 		{
-			$response = $this->resolveAndHandleRequest();
-			$response->respond();
+			$this->resolveAndHandleRequest();
 		}
 		catch ( \Throwable $throwable )
 		{
@@ -38,7 +35,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		}
 	}
 
-	private function resolveAndHandleRequest() : ServesResponse
+	private function resolveAndHandleRequest()
 	{
 		$handlerRoute = $this->getHandlerRoute();
 
@@ -48,12 +45,10 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		$handlingEvent = new HandlingWriteRequestEvent( $request );
 		$this->publishEvent( $handlingEvent );
 
-		$response = $requestHandler->handle( $request );
+		$requestHandler->handle( $request );
 
 		$handledEvent = new WriteRequestWasHandledEvent( $request );
 		$this->publishEvent( $handledEvent );
-
-		return $response;
 	}
 
 	/**

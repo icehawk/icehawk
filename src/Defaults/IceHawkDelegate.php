@@ -14,6 +14,10 @@ use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
  */
 class IceHawkDelegate implements SetsUpEnvironment
 {
+	public function setUpGlobalVars()
+	{
+	}
+	
 	public function setUpErrorHandling( ProvidesRequestInfo $requestInfo )
 	{
 	}
@@ -22,7 +26,4 @@ class IceHawkDelegate implements SetsUpEnvironment
 	{
 	}
 
-	public function setUpGlobalVars()
-	{
-	}
 }

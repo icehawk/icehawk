@@ -5,12 +5,10 @@
 
 namespace Fortuneglobe\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
 use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
 use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
@@ -34,10 +32,6 @@ final class ReadRequestHandler extends AbstractRequestHandler
 			$response = $this->resolveAndHandleRequest();
 			$response->respond();
 		}
-		catch ( RequestMethodNotAllowed $e )
-		{
-			( new MethodNotAllowed( $e->getRequestMethod() ) )->respond();
-		}
 		catch ( \Throwable $throwable )
 		{
 			$finalResponder = $this->config->getFinalReadResponder();
@@ -50,10 +44,7 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	 */
 	private function resolveAndHandleRequest() : ServesResponse
 	{
-		$requestInfo  = $this->config->getRequestInfo();
 		$handlerRoute = $this->getHandlerRoute();
-
-		$this->guardHandlerAcceptsRequestMethod( $handlerRoute->getRequestHandler(), $requestInfo->getMethod() );
 
 		$request        = $this->getRequest( $handlerRoute->getUriParams() );
 		$requestHandler = $handlerRoute->getRequestHandler();
@@ -83,22 +74,6 @@ final class ReadRequestHandler extends AbstractRequestHandler
 		$handlerRoute = $readRouter->findMatchingRoute( $routeRequest );
 
 		return $handlerRoute;
-	}
-
-	/**
-	 * @param HandlesReadRequest $handler
-	 * @param string             $requestMethod
-	 *
-	 * @throws RequestMethodNotAllowed
-	 */
-	private function guardHandlerAcceptsRequestMethod( HandlesReadRequest $handler, string $requestMethod )
-	{
-		$requiredInterface = HandlerMethodInterfaceMap::HTTP_METHODS[ $requestMethod ];
-
-		if ( !($handler instanceof $requiredInterface) )
-		{
-			throw ( new RequestMethodNotAllowed() )->withRequestMethod( $requestMethod );
-		}
 	}
 
 	/**

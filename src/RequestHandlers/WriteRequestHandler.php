@@ -7,14 +7,12 @@ namespace Fortuneglobe\IceHawk\RequestHandlers;
 
 use Fortuneglobe\IceHawk\Events\HandlingWriteRequestEvent;
 use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 use Fortuneglobe\IceHawk\Interfaces\ServesResponse;
 use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
-use Fortuneglobe\IceHawk\Responses\MethodNotAllowed;
 use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Routing\WriteRouter;
@@ -32,10 +30,6 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		{
 			$response = $this->resolveAndHandleRequest();
 			$response->respond();
-		}
-		catch ( RequestMethodNotAllowed $e )
-		{
-			( new MethodNotAllowed( $e->getRequestMethod() ) )->respond();
 		}
 		catch ( \Throwable $throwable )
 		{

@@ -8,11 +8,7 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
 use Fortuneglobe\IceHawk\Defaults\FinalReadResponder;
 use Fortuneglobe\IceHawk\Defaults\FinalWriteResponder;
 use Fortuneglobe\IceHawk\Defaults\IceHawkConfig;
-use Fortuneglobe\IceHawk\Defaults\ReadRequestResolver;
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Defaults\UriRewriter;
-use Fortuneglobe\IceHawk\Defaults\WriteRequestResolver;
-use Fortuneglobe\IceHawk\RequestParsers\SimpleBodyParserFactory;
 
 class IceHawkConfigTest extends \PHPUnit_Framework_TestCase
 {

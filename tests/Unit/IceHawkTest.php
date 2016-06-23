@@ -11,7 +11,6 @@ use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
 use Fortuneglobe\IceHawk\Events\InitializingIceHawkEvent;
 use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\IceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
 use Fortuneglobe\IceHawk\Interfaces\HandlesGetRequest;
@@ -32,7 +31,6 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestFinalReadRequestResponder;
 
 class IceHawkTest extends \PHPUnit_Framework_TestCase
 {

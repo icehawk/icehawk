@@ -1,17 +1,16 @@
 <?php
 namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
 use Fortuneglobe\IceHawk\Routing\WriteRoute;
 use Fortuneglobe\IceHawk\Routing\WriteRouteGroup;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\AnotherPostRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\BodyDataRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\IceHawkWriteRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PatchRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\AnotherPostRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidPostRequestHandler;
 
 class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
@@ -224,7 +223,6 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 
 		$companyGroup->addRoute( $membersRoute )->addRoute( $companyRoute )->addRoute( $storesGroup );
 
-		
 		$result = $companyGroup->matches( '/companies/stores/store/test' );
 
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );

@@ -1,7 +1,6 @@
 <?php
 namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
 use Fortuneglobe\IceHawk\Routing\ReadRoute;
 use Fortuneglobe\IceHawk\Routing\ReadRouteGroup;

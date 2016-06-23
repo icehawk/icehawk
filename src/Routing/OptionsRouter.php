@@ -16,13 +16,13 @@ final class OptionsRouter extends AbstractRouter
 	 *
 	 * @return RoutesToHandler[]
 	 */
-	public function findMatchingRoutes( ProvidesRequestInfo $requestInfo ) : array
+	public function findMatchingRoutes( string $uri ) : array
 	{
 		$matchedRoutes = [ ];
 
 		foreach ( $this->getRoutes() as $route )
 		{
-			if ( $route->matches( $requestInfo ) )
+			if ( $route->matches( $uri ) )
 			{
 				$matchedRoutes[] = $route;
 			}

@@ -47,7 +47,7 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 		$requestInfo = $this->config->getRequestInfo();
 		$router      = new OptionsRouter( $routes );
 
-		return $router->findMatchingRoutes( $requestInfo );
+		return $router->findMatchingRoutes( $requestInfo->getUri() );
 	}
 
 	private function getImplementedRequestMethods( HandlesRequest $handler ) : array

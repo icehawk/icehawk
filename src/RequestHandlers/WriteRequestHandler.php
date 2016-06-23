@@ -13,10 +13,12 @@ use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
 use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
+use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Routing\WriteRouter;
 
 /**
  * Class WriteRequestHandler
+ *
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
 final class WriteRequestHandler extends AbstractRequestHandler
@@ -55,11 +57,12 @@ final class WriteRequestHandler extends AbstractRequestHandler
 	 */
 	private function getHandlerRoute() : RoutesToWriteHandler
 	{
-		$routes      = $this->config->getWriteRoutes();
-		$requestInfo = $this->config->getRequestInfo();
+		$routes       = $this->config->getWriteRoutes();
+		$requestInfo  = $this->config->getRequestInfo();
+		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
 
 		$router       = new WriteRouter( $routes );
-		$handlerRoute = $router->findMatchingRoute( $requestInfo );
+		$handlerRoute = $router->findMatchingRoute( $routeRequest );
 
 		return $handlerRoute;
 	}

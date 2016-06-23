@@ -6,7 +6,6 @@
 namespace Fortuneglobe\IceHawk\Routing;
 
 use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
 
@@ -28,9 +27,9 @@ final class ReadRoute implements RoutesToReadHandler
 		$this->requestHandler = $requestHandler;
 	}
 
-	public function matches( ProvidesRequestInfo $requestInfo ) : bool
+	public function matches( string $uri ) : bool
 	{
-		return $this->pattern->matches( $requestInfo->getUri() );
+		return $this->pattern->matches( $uri );
 	}
 
 	public function getUriParams() : array

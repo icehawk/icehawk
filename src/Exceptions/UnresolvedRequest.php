@@ -23,7 +23,7 @@ final class UnresolvedRequest extends IceHawkException
 		return $this;
 	}
 
-	public function getRequestInfo() : ProvidesDestinationInfo
+	public function getDestinationInfo() : ProvidesDestinationInfo
 	{
 		return $this->destinationInfo;
 	}

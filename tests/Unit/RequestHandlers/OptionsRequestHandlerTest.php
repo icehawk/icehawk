@@ -73,7 +73,7 @@ class OptionsRequestHandlerTest extends \PHPUnit_Framework_TestCase
 					new WriteRoute( new Literal( '/this' ), new DeleteRequestHandler() ),
 				],
 				'/this',
-				[ 'GET', 'HEAD', 'POST', 'PUT', 'DELETE' ],
+				[ 'HEAD', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE' ],
 			],
 		];
 	}

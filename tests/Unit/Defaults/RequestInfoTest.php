@@ -24,6 +24,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
         $_SERVER['PHP_AUTH_USER']      = 'Unit';
         $_SERVER['PHP_AUTH_PW']        = 'Test';
         $_SERVER['CONTENT_LENGTH']     = '512';
+        $_SERVER['CONTENT_TYPE']       = 'application/json';
 
         $requestInfo = RequestInfo::fromEnv();
 
@@ -44,6 +45,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'Test', $requestInfo->getAuthPassword() );
         $this->assertEquals( $requestTimeFloat, $requestInfo->getRequestTimeFloat() );
         $this->assertEquals( '512', $requestInfo->getContentLength() );
+        $this->assertEquals( 'application/json', $requestInfo->getContentType() );
         $this->assertTrue( $requestInfo->isSecure() );
     }
 

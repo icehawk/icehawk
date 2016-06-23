@@ -18,14 +18,7 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFindRouteForRequest( ReadRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{
-		$requestInfo = new RequestInfo(
-			[
-				'REQUEST_METHOD' => 'GET',
-				'REQUEST_URI'    => $uri,
-			]
-		);
-
-		$groupedRoute->matches( $requestInfo );
+		$groupedRoute->matches( $uri );
 
 		$this->assertEquals( $expectedRequestHandler, $groupedRoute->getRequestHandler() );
 	}
@@ -202,9 +195,7 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 			new ReadRoute( new RegExp( '#^/companies/members#' ), new IceHawkReadRequestHandler() )
 		);
 
-		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/companies/stores/stocks' ] );
-
-		$result = $companyGroup->matches( $requestInfo );
+		$result = $companyGroup->matches( '/companies/stores/stocks' );
 
 		$this->assertTrue( $result );
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );

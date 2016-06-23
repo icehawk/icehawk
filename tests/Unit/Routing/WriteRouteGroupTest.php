@@ -21,12 +21,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFindRouteForRequest( WriteRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{
-		$requestInfo = new RequestInfo( [
-			'REQUEST_METHOD' => 'POST',
-			'REQUEST_URI'    => $uri,
-		]);
-
-		$groupedRoute->matches( $requestInfo );
+		$groupedRoute->matches( $uri );
 
 		$this->assertEquals( $expectedRequestHandler, $groupedRoute->getRequestHandler() );
 	}
@@ -229,10 +224,8 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 
 		$companyGroup->addRoute( $membersRoute )->addRoute( $companyRoute )->addRoute( $storesGroup );
 
-		$requestInfo = new RequestInfo( 
-			[ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/companies/stores/store/test' ] 
-		);
-		$result = $companyGroup->matches( $requestInfo );
+		
+		$result = $companyGroup->matches( '/companies/stores/store/test' );
 
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );
 		$this->assertTrue( $result );

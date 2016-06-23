@@ -11,6 +11,17 @@ use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
 
 class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 {
+	public function testCanGetBodyAndData()
+	{
+		$body = 'test';
+		$data = [ 'key' => 'value' ];
+
+		$writeRequestInput = new WriteRequestInput( 'test', $data );
+
+		$this->assertEquals( $body, $writeRequestInput->getBody() );
+		$this->assertEquals( $data, $writeRequestInput->getData() );
+	}
+
 	public function requestDataProvider()
 	{
 		return [
@@ -77,7 +88,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			[
 				[
 					'test_file' => [
-						 'name'     => 'TestFile.dat',
+						'name'     => 'TestFile.dat',
 						'tmp_name' => '/tmp/TestFile.dat',
 						'type'     => 'text/plain',
 						'size'     => 1024,
@@ -148,8 +159,8 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 		$expectedError, $expectedErrorMessage, $expectedSuccess
 	)
 	{
-		$uploadedFiles = ( new UploadedFilesMapper( $uploadedFiles ) )->mapToInfoObjects(); 
-		
+		$uploadedFiles = ( new UploadedFilesMapper( $uploadedFiles ) )->mapToInfoObjects();
+
 		$writeRequestInput = new WriteRequestInput( '', [ ], $uploadedFiles );
 
 		$oneFile = $writeRequestInput->getOneFile( $fieldKey, $fileIndex );
@@ -192,10 +203,35 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetFilesReturnsEmptyArrayIfFieldKeyIsNotSet()
 	{
-		$writeRequestInput = new WriteRequestInput( '', [ ], [] );
+		$writeRequestInput = new WriteRequestInput( '', [ ], [ ] );
 		$files             = $writeRequestInput->getFiles( 'test' );
 
 		$this->assertInternalType( 'array', $files );
 		$this->assertEmpty( $files );
+	}
+
+	public function testGetAllUploadFiles()
+	{
+		$uploadedFiles = [
+			'test_file'         => [
+				'name'     => [ 'TestFile.dat', 'FileTest.html' ],
+				'tmp_name' => [ '/tmp/TestFile.dat', '/tmp/FileTest.html' ],
+				'type'     => [ 'text/plain', 'text/html' ],
+				'size'     => [ 1024, 2048 ],
+				'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
+			],
+			'another_test_file' => [
+				'name'     => [ 'AnotherTestFile.dat', 'AnotherFileTest.html' ],
+				'tmp_name' => [ '/tmp/AnotherTestFile.dat', '/tmp/AnotherFileTest.html' ],
+				'type'     => [ 'text/plain', 'text/html' ],
+				'size'     => [ 20, 40 ],
+				'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
+			],
+		];
+
+		$uploadedFiles     = ( new UploadedFilesMapper( $uploadedFiles ) )->mapToInfoObjects();
+		$writeRequestInput = new WriteRequestInput( '', [ ], $uploadedFiles );
+
+		$this->assertEquals( $uploadedFiles, $writeRequestInput->getAllFiles() );
 	}
 }

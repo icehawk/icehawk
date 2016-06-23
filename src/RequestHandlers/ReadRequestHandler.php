@@ -7,7 +7,6 @@ namespace Fortuneglobe\IceHawk\RequestHandlers;
 
 use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
 use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\Exceptions\RequestMethodNotAllowed;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
@@ -18,7 +17,6 @@ use Fortuneglobe\IceHawk\Routing\RouteRequest;
 
 /**
  * Class ReadRequestHandler
- *
  * @package Fortuneglobe\IceHawk\RequestHandlers
  */
 final class ReadRequestHandler extends AbstractRequestHandler
@@ -36,9 +34,6 @@ final class ReadRequestHandler extends AbstractRequestHandler
 		}
 	}
 
-	/**
-	 * @throws RequestMethodNotAllowed
-	 */
 	private function resolveAndHandleRequest()
 	{
 		$handlerRoute = $this->getHandlerRoute();

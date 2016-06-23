@@ -9,7 +9,7 @@ namespace Fortuneglobe\IceHawk\Interfaces;
  * Interface HandlesGetRequest
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface HandlesGetRequest extends HandlesReadRequest
+interface HandlesGetRequest extends HandlesReadRequest, HandlesHeadRequest
 {
 
 }

@@ -14,6 +14,7 @@ use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
 use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
 use Fortuneglobe\IceHawk\IceHawk;
 use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
+use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
 use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
 use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 use Fortuneglobe\IceHawk\Requests\ReadRequest;
@@ -148,6 +149,13 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
+
+
+		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
+		$requestHandler->expects( $this->once() )->method( 'handle' );
+
+		$route = new WriteRoute( new Literal( '/test' ), $requestHandler );
+
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ ] );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ ] );
@@ -165,7 +173,6 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$iceHawk->init();
 		$iceHawk->handleRequest();
 
-		$this->expectOutputString( 'Handler method for post request called.' );
 	}
 
 	public function RouteProvider()

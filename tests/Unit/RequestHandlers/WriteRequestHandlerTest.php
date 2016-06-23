@@ -11,11 +11,11 @@ use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
 use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use Fortuneglobe\IceHawk\PubSub\EventPublisher;
 use Fortuneglobe\IceHawk\RequestHandlers\WriteRequestHandler;
+use Fortuneglobe\IceHawk\Requests\WriteRequest;
+use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
 use Fortuneglobe\IceHawk\Routing\Patterns\Literal;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
 use Fortuneglobe\IceHawk\Routing\WriteRoute;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\BodyDataRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\RequestParamsRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
 class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
@@ -26,17 +26,17 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 			[
 				[ 'unit' => 'test', 'test' => 'unit' ],
 				'unit', 'tested',
-				json_encode( [ 'unit' => 'tested', 'test' => 'unit' ] ),
+				[ 'unit' => 'tested', 'test' => 'unit' ],
 			],
 			[
 				[ 'unit' => 'test', 'test' => 'unit' ],
 				'test', 'units',
-				json_encode( [ 'unit' => 'test', 'test' => 'units' ] ),
+				[ 'unit' => 'test', 'test' => 'units' ],
 			],
 			[
 				[ 'unit' => [ 'test' => 'unit' ] ],
 				'unit', 'units',
-				json_encode( [ 'unit' => 'units' ] ),
+				[ 'unit' => 'units' ],
 			],
 		];
 	}
@@ -45,12 +45,12 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 * @dataProvider parameterProvider
 	 * @runInSeparateProcess
 	 */
-	public function testUriParamsOverwritesPostParams( array $postData, string $uriKey, string $uriValue, $expectedJson
+	public function testUriParamsOverwritesPostParams(
+		array $postData, string $uriKey, string $uriValue, array $expectedInputParams
 	)
 	{
 		$_POST = $postData;
 
-		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(
 			[
 				'REQUEST_METHOD' => 'POST',
@@ -58,18 +58,25 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
+		$expectedWriteRequest = new WriteRequest(
+			$requestInfo, new WriteRequestInput( '', $expectedInputParams )
+		);
+
+		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
+		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedWriteRequest ) );
+
 		$regExp     = new RegExp(
 			sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [ $uriKey ]
 		);
-		$writeRoute = new WriteRoute( $regExp, new RequestParamsRequestHandler() );
+		$writeRoute = new WriteRoute( $regExp, $requestHandler );
+
+		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
 
 		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
-
-		$this->expectOutputString( $expectedJson );
 	}
 
 	/**
@@ -81,18 +88,24 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		stream_wrapper_register( "php", PhpStreamMock::class );
 		file_put_contents( 'php://input', 'body data' );
 
-		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/domain/test_body_data' ] );
 
-		$writeRoute = new WriteRoute( new Literal( '/domain/test_body_data' ), new BodyDataRequestHandler() );
+		$expectedWriteRequest = new WriteRequest(
+			$requestInfo, new WriteRequestInput( 'body data', [ ] )
+		);
+
+		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
+		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedWriteRequest ) );
+
+		$writeRoute = new WriteRoute( new Literal( '/domain/test_body_data' ), $requestHandler );
+
+		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
 
 		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
-
-		$this->expectOutputString( 'body data' );
 
 		stream_wrapper_restore( "php" );
 	}
@@ -147,7 +160,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		                    );
 
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
-		
+
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->method( 'getFinalWriteResponder' )->willReturn( $finalWriteResponder );
 

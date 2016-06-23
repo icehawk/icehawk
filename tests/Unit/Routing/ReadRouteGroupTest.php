@@ -5,12 +5,11 @@ use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
 use Fortuneglobe\IceHawk\Routing\ReadRoute;
 use Fortuneglobe\IceHawk\Routing\ReadRouteGroup;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\AnotherGetRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\IceHawkReadRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\RequestParamsRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidReadTestRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidGetRequestHandler;
 
 class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,9 +18,14 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFindRouteForRequest( ReadRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{
-		$routeRequest = new RouteRequest( $uri, 'GET' );
+		$requestInfo = new RequestInfo(
+			[
+				'REQUEST_METHOD' => 'GET',
+				'REQUEST_URI'    => $uri,
+			]
+		);
 
-		$groupedRoute->matches( $routeRequest );
+		$groupedRoute->matches( $requestInfo );
 
 		$this->assertEquals( $expectedRequestHandler, $groupedRoute->getRequestHandler() );
 	}
@@ -43,7 +47,7 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 								),
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/stocks#' ),
-									new ValidReadTestRequestHandler()
+									new ValidGetRequestHandler()
 								),
 							]
 						),
@@ -62,18 +66,18 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/(?<storeId>\d*)$#' ),
-									new ValidReadTestRequestHandler()
+									new ValidGetRequestHandler()
 								),
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/stocks$#' ),
-									new RequestParamsRequestHandler()
+									new AnotherGetRequestHandler()
 								),
 							]
 						),
 					]
 				),
 				'/companies/stores/stocks',
-				new RequestParamsRequestHandler(),
+				new AnotherGetRequestHandler(),
 			],
 			[
 				new ReadRouteGroup(
@@ -84,11 +88,11 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/(?<storeId>\d*)#' ),
-									new ValidReadTestRequestHandler()
+									new ValidGetRequestHandler()
 								),
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/stock$#' ),
-									new RequestParamsRequestHandler()
+									new AnotherGetRequestHandler()
 								),
 							]
 						),
@@ -111,11 +115,11 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/stocks/(?<stockId>\d*)$#' ),
-									new ValidReadTestRequestHandler()
+									new ValidGetRequestHandler()
 								),
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/stocks$#' ),
-									new RequestParamsRequestHandler()
+									new AnotherGetRequestHandler()
 								),
 							]
 						),
@@ -134,11 +138,11 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/(?<storeId>\d*)#' ),
-									new ValidReadTestRequestHandler()
+									new ValidGetRequestHandler()
 								),
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/stocks#' ),
-									new RequestParamsRequestHandler()
+									new AnotherGetRequestHandler()
 								),
 							]
 						),
@@ -157,11 +161,11 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new ReadRoute(
 									new RegExp( '#^/companies/stores/(?<storeId>\d*)#' ),
-									new ValidReadTestRequestHandler()
+									new ValidGetRequestHandler()
 								),
 								new ReadRoute(
 									new RegExp( '#^/companies/stocks#' ),
-									new RequestParamsRequestHandler()
+									new AnotherGetRequestHandler()
 								),
 							]
 						),
@@ -175,13 +179,13 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 
 	public function testAddingRoutes()
 	{
-		$expectedRequestHandler = new RequestParamsRequestHandler();
+		$expectedRequestHandler = new AnotherGetRequestHandler();
 
 		$companyGroup = new ReadRouteGroup( new RegExp( '#^/companies#' ) );
 		$storeGroup   = new ReadRouteGroup( new RegExp( '#^/companies/stores#' ) );
 
 		$storeGroup->addRoute(
-			new ReadRoute( new RegExp( '#^/companies/stores$#' ), new ValidReadTestRequestHandler() )
+			new ReadRoute( new RegExp( '#^/companies/stores$#' ), new ValidGetRequestHandler() )
 		);
 
 		$storeGroup->addRoute(
@@ -189,7 +193,7 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$storeGroup->addRoute(
-			new ReadRoute( new RegExp( '#^/companies/stores/stocks#' ), new RequestParamsRequestHandler() )
+			new ReadRoute( new RegExp( '#^/companies/stores/stocks#' ), new AnotherGetRequestHandler() )
 		);
 
 		$companyGroup->addRoute( $storeGroup );
@@ -198,9 +202,9 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 			new ReadRoute( new RegExp( '#^/companies/members#' ), new IceHawkReadRequestHandler() )
 		);
 
-		$routeRequest = new RouteRequest( '/companies/stores/stocks', 'GET' );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/companies/stores/stocks' ] );
 
-		$result = $companyGroup->matches( $routeRequest );
+		$result = $companyGroup->matches( $requestInfo );
 
 		$this->assertTrue( $result );
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );

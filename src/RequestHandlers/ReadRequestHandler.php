@@ -14,7 +14,6 @@ use Fortuneglobe\IceHawk\Requests\ReadRequest;
 use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
 use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use Fortuneglobe\IceHawk\Routing\ReadRouter;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
 
 /**
  * Class ReadRequestHandler
@@ -63,9 +62,7 @@ final class ReadRequestHandler extends AbstractRequestHandler
 		$requestInfo = $this->config->getRequestInfo();
 
 		$readRouter   = new ReadRouter( $readRoutes );
-		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
-
-		$handlerRoute = $readRouter->findMatchingRoute( $routeRequest );
+		$handlerRoute = $readRouter->findMatchingRoute( $requestInfo );
 
 		return $handlerRoute;
 	}

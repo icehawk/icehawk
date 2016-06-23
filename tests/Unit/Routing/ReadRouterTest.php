@@ -3,11 +3,10 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
 
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
 use Fortuneglobe\IceHawk\Routing\ReadRoute;
 use Fortuneglobe\IceHawk\Routing\ReadRouter;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 
@@ -17,11 +16,11 @@ class ReadRouterTest extends \PHPUnit_Framework_TestCase
 	 * @dataProvider routeProvider
 	 */
 	public function testFindRouteForRequest(
-		ProvidesDestinationInfo $destinationInfo, array $routes, HandlesReadRequest $expectedRequestHandler
+		ProvidesRequestInfo $requestInfo, array $routes, HandlesReadRequest $expectedRequestHandler
 	)
 	{
 		$router = new ReadRouter( $routes );
-		$route  = $router->findMatchingRoute( $destinationInfo );
+		$route  = $router->findMatchingRoute( $requestInfo );
 
 		$this->assertEquals( $expectedRequestHandler, $route->getRequestHandler() );
 	}
@@ -30,7 +29,7 @@ class ReadRouterTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				new RouteRequest( '/test', 'GET' ),
+				new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] ),
 				[
 					new ReadRoute( new RegExp( '#^/(unit|test)$#' ), new HeadRequestHandler() ),
 					new ReadRoute( new RegExp( '#^/(unit|test)$#' ), new GetRequestHandler() ),
@@ -46,7 +45,7 @@ class ReadRouterTest extends \PHPUnit_Framework_TestCase
 	 * @dataProvider invalidRouteProvider
 	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest
 	 */
-	public function testMissingRouteForRequestThrowsException( ProvidesDestinationInfo $requestInfo, array $routes )
+	public function testMissingRouteForRequestThrowsException( ProvidesRequestInfo $requestInfo, array $routes )
 	{
 		$router = new ReadRouter( $routes );
 		$router->findMatchingRoute( $requestInfo );
@@ -56,7 +55,7 @@ class ReadRouterTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				new RouteRequest( '/test', 'GET' ),
+				new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] ),
 				[
 					new ReadRoute( new RegExp( '#^/(unit|test)$#' ), new HeadRequestHandler() ),
 					new ReadRoute( new RegExp( '#^/notvalid$#' ), new GetRequestHandler() ),

@@ -13,7 +13,6 @@ use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
 use Fortuneglobe\IceHawk\Requests\WriteRequest;
 use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
 use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Routing\WriteRouter;
 
 /**
@@ -60,9 +59,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		$requestInfo = $this->config->getRequestInfo();
 
 		$router       = new WriteRouter( $routes );
-		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
-
-		$handlerRoute = $router->findMatchingRoute( $routeRequest );
+		$handlerRoute = $router->findMatchingRoute( $requestInfo );
 
 		return $handlerRoute;
 	}
@@ -82,7 +79,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getRequestBody() : string
 	{
-		$body = stream_get_contents( fopen( 'php://stdin', 'r' ) );
+		$body = @stream_get_contents( fopen( 'php://stdin', 'r' ) );
 
 		return $body ? : '';
 	}

@@ -5,7 +5,7 @@
 
 namespace Fortuneglobe\IceHawk\Exceptions;
 
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Class UnresolvedRequest
@@ -13,18 +13,18 @@ use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
  */
 final class UnresolvedRequest extends IceHawkException
 {
-	/** @var ProvidesDestinationInfo */
-	private $destinationInfo = '';
+	/** @var ProvidesRequestInfo */
+	private $requestInfo = '';
 
-	public function withDestinationInfo( ProvidesDestinationInfo $destinationInfo ) : self
+	public function withRequestInfo( ProvidesRequestInfo $requestInfo ) : self
 	{
-		$this->destinationInfo = $destinationInfo;
+		$this->requestInfo = $requestInfo;
 
 		return $this;
 	}
 
-	public function getDestinationInfo() : ProvidesDestinationInfo
+	public function getRequestInfo() : ProvidesRequestInfo
 	{
-		return $this->destinationInfo;
+		return $this->requestInfo;
 	}
 }

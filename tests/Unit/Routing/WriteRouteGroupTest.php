@@ -3,7 +3,6 @@ namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
 
 use Fortuneglobe\IceHawk\Defaults\RequestInfo;
 use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
 use Fortuneglobe\IceHawk\Routing\WriteRoute;
 use Fortuneglobe\IceHawk\Routing\WriteRouteGroup;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\BodyDataRequestHandler;
@@ -12,8 +11,8 @@ use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\IceHawkWriteRequestHan
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PatchRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\RequestParamsRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidWriteTestRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\AnotherPostRequestHandler;
+use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidPostRequestHandler;
 
 class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,9 +21,12 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testFindRouteForRequest( WriteRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{
-		$routeRequest = new RouteRequest( $uri, 'POST' );
+		$requestInfo = new RequestInfo( [
+			'REQUEST_METHOD' => 'POST',
+			'REQUEST_URI'    => $uri,
+		]);
 
-		$groupedRoute->matches( $routeRequest );
+		$groupedRoute->matches( $requestInfo );
 
 		$this->assertEquals( $expectedRequestHandler, $groupedRoute->getRequestHandler() );
 	}
@@ -42,7 +44,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new WriteRoute(
 									new RegExp( '!/companies/stores/(?<storeId>\d*)$!' ),
-									new ValidWriteTestRequestHandler()
+									new ValidPostRequestHandler()
 								),
 								new WriteRoute(
 									new RegExp( '!/companies/stores/stocks$!' ),
@@ -53,7 +55,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 					]
 				),
 				'/companies/stores/123',
-				new ValidWriteTestRequestHandler(),
+				new ValidPostRequestHandler(),
 			],
 			#Route through part-matching routes to finally find the exactly matching route (last of last route-list)
 			[
@@ -65,7 +67,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new WriteRoute(
 									new RegExp( '!/companies/stores/(?<storeId>\d*)$!' ),
-									new ValidWriteTestRequestHandler()
+									new ValidPostRequestHandler()
 								),
 								new WriteRoute(
 									new RegExp( '!/companies/stores/stocks$!' ),
@@ -88,7 +90,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new WriteRoute(
 									new RegExp( '!/companies/stores/(?<storeId>\d*)$!' ),
-									new ValidWriteTestRequestHandler()
+									new ValidPostRequestHandler()
 								),
 								new WriteRoute(
 									new RegExp( '!/companies/stores/stock$!' ),
@@ -111,7 +113,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new WriteRoute(
 									new RegExp( '!/companies/stores/stocks/(?<stockId>\d*)$!' ),
-									new ValidWriteTestRequestHandler()
+									new ValidPostRequestHandler()
 								),
 								new WriteRoute(
 									new RegExp( '!/companies/stores/stocks$!' ),
@@ -134,7 +136,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new WriteRoute(
 									new RegExp( '!/companies/stores/(?<storeId>\d*)$!' ),
-									new ValidWriteTestRequestHandler()
+									new ValidPostRequestHandler()
 								),
 								new WriteRoute(
 									new RegExp( '!/companies/stores/stocks!' ),
@@ -157,7 +159,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new WriteRoute(
 									new RegExp( '!/companies/stores/(?<storeId>\d*$)!' ),
-									new ValidWriteTestRequestHandler()
+									new ValidPostRequestHandler()
 								),
 								new WriteRoute(
 									new RegExp( '!/companies/stores/stocks!' ),
@@ -180,7 +182,7 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 							[
 								new WriteRoute(
 									new RegExp( '!/companies/stores/(?<storeId>\d*)$!' ),
-									new ValidWriteTestRequestHandler()
+									new ValidPostRequestHandler()
 								),
 								new WriteRoute(
 									new RegExp( '!/companies/stocks$!' ),
@@ -210,13 +212,13 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 		$storesRoute   = new WriteRoute( new RegExp( '!/companies/stores$!' ), new PutRequestHandler() );
 		$storeRoute    = new WriteRoute( new RegExp( '!/companies/stores/store$!' ), new DeleteRequestHandler() );
 		$stocksRoute   =
-			new WriteRoute( new RegExp( '!/companies/stores/store/stocks$!' ), new ValidWriteTestRequestHandler() );
+			new WriteRoute( new RegExp( '!/companies/stores/store/stocks$!' ), new ValidPostRequestHandler() );
 		$testRoute     = new WriteRoute( new RegExp( '!/companies/stores/store/test$!' ), $expectedRequestHandler );
 		$productsRoute = new WriteRoute(
 			new RegExp( '!/companies/stores/store/products$!' ), new BodyDataRequestHandler()
 		);
 		$stockRoute    = new WriteRoute(
-			new RegExp( '!/companies/stores/store/stocks/stock$!' ), new RequestParamsRequestHandler()
+			new RegExp( '!/companies/stores/store/stocks/stock$!' ), new AnotherPostRequestHandler()
 		);
 
 		$stocksGroup->addRoute( $stocksRoute )->addRoute( $stockRoute );
@@ -227,9 +229,10 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 
 		$companyGroup->addRoute( $membersRoute )->addRoute( $companyRoute )->addRoute( $storesGroup );
 
-		$routeRequest = new RouteRequest( '!/companies/stores/store/test', 'POST' );
-
-		$result = $companyGroup->matches( $routeRequest );
+		$requestInfo = new RequestInfo( 
+			[ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/companies/stores/store/test' ] 
+		);
+		$result = $companyGroup->matches( $requestInfo );
 
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );
 		$this->assertTrue( $result );

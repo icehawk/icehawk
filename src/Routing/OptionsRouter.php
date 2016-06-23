@@ -1,20 +1,18 @@
 <?php
 namespace Fortuneglobe\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
 use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToHandler;
 
 /**
  * Class OptionsRouter
- *
  * @package Fortuneglobe\IceHawk\Routing
  */
 final class OptionsRouter extends AbstractRouter
 {
 	/**
-	 * @param ProvidesRequestInfo $requestInfo
-	 *
-	 * @return RoutesToHandler[]
+	 * @param string $uri
+	 * 
+*@return RoutesToHandler[]
 	 */
 	public function findMatchingRoutes( string $uri ) : array
 	{

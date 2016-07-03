@@ -7,13 +7,9 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
  * Interface HandlesGetRequest
- *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface HandlesGetRequest
+interface HandlesGetRequest extends HandlesReadRequest, HandlesHeadRequest
 {
-	/**
-	 * @param ServesGetRequestData $request
-	 */
-	public function handle( ServesGetRequestData $request );
+
 }

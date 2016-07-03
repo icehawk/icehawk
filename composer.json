@@ -2,7 +2,6 @@
 	"name": "fortuneglobe/icehawk",
 	"description": "Fast and reliable PHP frontend framework respecting CQRS",
 	"minimum-stability": "dev",
-	"abandoned": true,
 	"prefer-stable": true,
 	"license": "MIT",
 	"authors": [
@@ -20,12 +19,11 @@
 		"source": "http://gitlab.fortuneglobe.com/fortunesolutions/icehawk"
 	},
 	"require": {
-		"php": ">=5.5"
+		"php": ">=7.0",
+		"ext-fileinfo": "*"
 	},
 	"require-dev": {
-		"ext-fileinfo": "*",
-		"ext-xdebug": "*",
-		"satooshi/php-coveralls": "dev-master"
+		"ext-xdebug": "*"
 	},
 	"autoload": {
 		"psr-4": {

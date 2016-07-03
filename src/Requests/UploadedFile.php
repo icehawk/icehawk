@@ -1,19 +1,17 @@
 <?php
 /**
- *
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
 namespace Fortuneglobe\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesUploadedFileData;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesUploadedFileData;
 
 /**
  * Class UploadedFile
- *
  * @package Fortuneglobe\IceHawk\Requests
  */
-final class UploadedFile implements ServesUploadedFileData
+final class UploadedFile implements ProvidesUploadedFileData
 {
 
 	/** @var string */
@@ -31,28 +29,16 @@ final class UploadedFile implements ServesUploadedFileData
 	/** @var string */
 	private $type;
 
-	/**
-	 * @param string $name
-	 * @param string $tmpName
-	 * @param string $type
-	 * @param int    $size
-	 * @param int    $error
-	 */
-	public function __construct( $name, $tmpName, $type, $size, $error )
+	public function __construct( string $name, string $tmpName, string $type, int $size, int $error )
 	{
 		$this->name    = $name;
 		$this->tmpName = $tmpName;
 		$this->type    = $type;
 		$this->size    = $size;
-		$this->error   = intval( $error );
+		$this->error   = $error;
 	}
 
-	/**
-	 * @param array $fileArray
-	 *
-	 * @return UploadedFile
-	 */
-	public static function fromFileArray( array $fileArray )
+	public static function fromFileArray( array $fileArray ) : self
 	{
 		return new self(
 			$fileArray['name'],
@@ -63,74 +49,47 @@ final class UploadedFile implements ServesUploadedFileData
 		);
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getError()
+	public function getError() : int
 	{
 		return $this->error;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName()
+	public function getName() : string
 	{
 		return $this->name;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getSize()
+	public function getSize() : int
 	{
 		return $this->size;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getTmpName()
+	public function getTmpName() : string
 	{
 		return $this->tmpName;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getType()
+	public function getType() : string
 	{
 		return $this->type;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getRealType()
+	public function getRealType() : string
 	{
 		return ( new \finfo( FILEINFO_MIME_TYPE ) )->file( $this->tmpName );
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getEncoding()
+	public function getEncoding() : string
 	{
 		return ( new \finfo( FILEINFO_MIME_ENCODING ) )->file( $this->tmpName );
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function didUploadSucceed()
+	public function didUploadSucceed() : bool
 	{
 		return ($this->error === UPLOAD_ERR_OK);
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getErrorMessage()
+	public function getErrorMessage() : string
 	{
 		switch ( $this->error )
 		{

@@ -5,18 +5,18 @@
 
 namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write;
 
-use Fortuneglobe\IceHawk\DomainRequestHandlers\PostRequestHandler;
-use Fortuneglobe\IceHawk\Interfaces\ServesPostRequestData;
+use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
+use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
 
 /**
  * Class IceHawkWriteRequestHandler
  *
  * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write
  */
-class IceHawkWriteRequestHandler extends PostRequestHandler
+class IceHawkWriteRequestHandler implements HandlesPostRequest
 {
-	public function handle( ServesPostRequestData $request )
+	public function handle( ProvidesWriteRequestData $request )
 	{
-		echo "Handler method for post request called.";
+		echo 'Handler method for post request called.';
 	}
 }

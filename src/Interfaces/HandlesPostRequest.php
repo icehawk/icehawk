@@ -7,13 +7,9 @@ namespace Fortuneglobe\IceHawk\Interfaces;
 
 /**
  * Interface HandlesPostRequest
- *
  * @package Fortuneglobe\IceHawk\Interfaces
  */
-interface HandlesPostRequest
+interface HandlesPostRequest extends HandlesWriteRequest
 {
-	/**
-	 * @param ServesPostRequestData $request
-	 */
-	public function handle( ServesPostRequestData $request );
+
 }

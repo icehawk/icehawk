@@ -1,39 +1,40 @@
 {
-  "name": "fortuneglobe/icehawk",
-  "description": "Fast and reliable PHP frontend framework respecting CQRS",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Holger Woltersdorf",
-      "email": "h.woltersdorf@fortuneglobe.com"
-    },
-    {
-      "name": "Tobias Mißner",
-      "email": "t.missner@fortuneglobe.com"
-    }
-  ],
-  "support": {
-    "email": "holger.woltersdorf@fortuneglobe.com",
-    "source": "http://gitlab.fortuneglobe.com/fortunesolutions/icehawk"
-  },
-  "require": {
-    "php": ">=5.5"
-  },
-  "require-dev": {
-    "ext-fileinfo": "*",
-    "ext-xdebug": "*",
-    "satooshi/php-coveralls": "dev-master"
-  },
-  "autoload": {
-    "psr-4": {
-      "Fortuneglobe\\IceHawk\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Fortuneglobe\\IceHawk\\Tests\\Unit\\": "tests/Unit/"
-    }
-  }
+	"name": "fortuneglobe/icehawk",
+	"description": "Fast and reliable PHP frontend framework respecting CQRS",
+	"minimum-stability": "dev",
+	"abandoned": true,
+	"prefer-stable": true,
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Holger Woltersdorf",
+			"email": "h.woltersdorf@fortuneglobe.com"
+		},
+		{
+			"name": "Tobias Mißner",
+			"email": "t.missner@fortuneglobe.com"
+		}
+	],
+	"support": {
+		"email": "holger.woltersdorf@fortuneglobe.com",
+		"source": "http://gitlab.fortuneglobe.com/fortunesolutions/icehawk"
+	},
+	"require": {
+		"php": ">=5.5"
+	},
+	"require-dev": {
+		"ext-fileinfo": "*",
+		"ext-xdebug": "*",
+		"satooshi/php-coveralls": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+			"Fortuneglobe\\IceHawk\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Fortuneglobe\\IceHawk\\Tests\\Unit\\": "tests/Unit/"
+		}
+	}
 }

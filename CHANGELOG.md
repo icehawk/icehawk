@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Changes in Version 1.4.2
+
+ * Final 1.* release before moving to https://github.com/icehawk/icehawk.git and version 2.0
+
 ## Changes in Version 1.4.1
 
  * Fixed regex pattern replacement in UriRewriter class

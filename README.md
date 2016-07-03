@@ -11,6 +11,8 @@
 
 Fast and reliable PHP frontend framework respecting CQRS.
 
+**Please note:** This project has moved to https://github.com/icehawk/icehawk. Version `1.4.2` is the last release under this namespace. 
+
 ## Requirements
 
  * PHP >= 5.5

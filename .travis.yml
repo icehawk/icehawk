@@ -1,8 +1,7 @@
 language: php
 
 php:
-  - 5.5
-  - 5.6
+  - 7.0
 
 branches:
   only:
@@ -12,12 +11,13 @@ branches:
 
 before_script:
  - git checkout $TRAVIS_BRANCH
- - sh build/tools/update_tools.sh
- - php build/tools/composer.phar install --prefer-dist -o --no-interaction
+ - curl -sS 'https://getcomposer.org/installer' | php -- --install-dir=/usr/local/bin --filename=composer
+ - chmod +x /usr/local/bin/composer
+ - /usr/local/bin/composer install -o --prefer-dist --no-interaction
  - mkdir build/logs
 
 script:
  - php build/tools/phpunit.phar -c build/
 
 after_script:
- - php vendor/bin/coveralls -c ./.coveralls.yml -v --exclude-no-stmt
+ - php build/tools/coveralls.phar -c ./.coveralls.yml -v --exclude-no-stmt

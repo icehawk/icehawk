@@ -1,36 +1,34 @@
 <?php
 /**
- *
- * @author h.woltersdorf
+ * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Events;
+namespace IceHawk\IceHawk\Events;
 
-use Fortuneglobe\IceHawk\Interfaces\ServesEventData;
-use Fortuneglobe\IceHawk\Interfaces\ServesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
  * Class IceHawkWasInitializedEvent
- *
- * @package Fortuneglobe\IceHawk\Events
+ * @package IceHawk\IceHawk\Events
  */
-final class IceHawkWasInitializedEvent implements ServesEventData
+final class IceHawkWasInitializedEvent implements CarriesEventData
 {
-	/** @var ServesRequestInfo */
+	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
 	/**
-	 * @param ServesRequestInfo $requestInfo
+	 * @param ProvidesRequestInfo $requestInfo
 	 */
-	public function __construct( ServesRequestInfo $requestInfo )
+	public function __construct( ProvidesRequestInfo $requestInfo )
 	{
 		$this->requestInfo = $requestInfo;
 	}
 
 	/**
-	 * @return ServesRequestInfo
+	 * @return ProvidesRequestInfo
 	 */
-	public function getRequestInfo()
+	public function getRequestInfo() : ProvidesRequestInfo
 	{
 		return $this->requestInfo;
 	}

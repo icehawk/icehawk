@@ -1,8 +1,45 @@
 # CHANGELOG
 
+## Changes in Version 2.0.0
+
+**CAUTION** This release has major interface changes and is not backward compatible with prior versions.
+
+### Added / Moved / Renamed
+
+* Requires php >= 7.0.0
+* Changed vendor namespace to IceHawk
+* Added scalar type hints and return types to all interfaces where possible
+* Renamed/moved pub/sub related classes and interfaces
+  * EventListener => PubSub\AbstractEventSubscriber
+  * Interfaces\ListensToEvents => PubSub\Interfaces\SubscribesToEvents
+  * Interfaces\ServesEventData => PubSub\Interfaces\CarriesEventData
+* Added exceptions in pub/sub context:
+  * PubSubException
+  * EventSubscriberMethodNotCallable
+* Added interfaces for event publisher
+* Added EventPublisher as a singleton class
+* Added UncaughtExceptionWasThrownEvent that is emitted instead of calling handleUncaughtException on the delegate
+* Added RedirectingEvent that is emitted before a redirecting to another URI
+* Renamed ServceIceHawkContig interface to ConfiguresIceHawk
+* Renamed ControlsHandlingBehaviour interface to SetsUpEnvironment
+* Moved default IceHawkConfig to Defaults/IceHawkConfig
+* Moved default IceHawkDelegate to Defaults/IceHawkDelegate
+* Added Defaults/IceHawkEventSubscriber
+* Split abstract class Http into HttpMethod and HttpCode
+* Completed constants in HttpMethod and HttpCode with all available values
+* Added Responses/AbstractHttpResponse with optional additional headers and an abstract get Body
+* Added HTML body to Redirect response
+
+### Removed
+
+* Removed Interfaces/RendersTemplate
+* Removed Responses/TemplatePage
+* Removed handleUncaughtExcpetion from delegate interface
+* Removed all predefined responses but Responses/Redirect
+
 ## Changes in Version 1.4.2
 
- * Final 1.* release before moving to https://github.com/icehawk/icehawk.git and version 2.0
+Final 1.* release before moving to https://github.com/icehawk/icehawk.git and version 2.0
 
 ## Changes in Version 1.4.1
 
@@ -10,8 +47,8 @@
 
 ## Changes in Version 1.4.0
 
- * Fixed issue #1, added "ext-fileinfo": "*" to composer's require block and a hint to the README.  
- * Closed issue #2, added `setUpEnvironment()` to interface `ControlsHandlingBehaviour` and default class `IceHawkDelegate`.  
+ * Fixed issue #1, added "ext-fileinfo": "*" to composer's require block and a hint to the README.
+ * Closed issue #2, added `setUpEnvironment()` to interface `ControlsHandlingBehaviour` and default class `IceHawkDelegate`.
  Order of IceHawk initialization is now:
     1. setUpErrorHandling()
     2. setUpSessionHandling()

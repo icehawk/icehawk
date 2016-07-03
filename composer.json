@@ -1,40 +1,84 @@
 {
-	"name": "fortuneglobe/icehawk",
-	"description": "Fast and reliable PHP frontend framework respecting CQRS",
+	"name": "icehawk/icehawk",
+	"description": "Lightweight PHP routing framework, respecting CQRS",
 	"minimum-stability": "dev",
-	"abandoned": true,
 	"prefer-stable": true,
 	"license": "MIT",
 	"authors": [
 		{
 			"name": "Holger Woltersdorf",
-			"email": "h.woltersdorf@fortuneglobe.com"
+			"email": "hw@hollo.me"
 		},
 		{
 			"name": "Tobias Mißner",
-			"email": "t.missner@fortuneglobe.com"
+			"email": "tobias.missner@fortuneglobe.com"
+		},
+		{
+			"name": "Benjamin Bruska",
+			"email": "benjamin.bruska@fortuneglobe.com"
 		}
 	],
 	"support": {
-		"email": "holger.woltersdorf@fortuneglobe.com",
-		"source": "http://gitlab.fortuneglobe.com/fortunesolutions/icehawk"
+		"email": "hw@hollo.me",
+		"source": "https://github.com/icehawk/icehawk",
+		"issues": "https://github.com/icehawk/icehawk/issues"
 	},
 	"require": {
-		"php": ">=5.5"
+		"php": ">=7.0",
+		"ext-fileinfo": "*"
 	},
 	"require-dev": {
-		"ext-fileinfo": "*",
 		"ext-xdebug": "*",
-		"satooshi/php-coveralls": "dev-master"
+		"tm/tooly-composer-script": "^0.1.0"
 	},
 	"autoload": {
 		"psr-4": {
-			"Fortuneglobe\\IceHawk\\": "src/"
+			"IceHawk\\IceHawk\\": "src/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Fortuneglobe\\IceHawk\\Tests\\Unit\\": "tests/Unit/"
+			"IceHawk\\IceHawk\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
+		"post-update-cmd": "Tooly\\ScriptHandler::installPharTools"
+	},
+	"extra": {
+		"tools": {
+			"phpunit": {
+				"url": "https://phar.phpunit.de/phpunit.phar",
+				"only-dev": true
+			},
+			"phploc": {
+				"url": "https://phar.phpunit.de/phploc.phar",
+				"only-dev": true
+			},
+			"pdepend": {
+				"url": "https://static.pdepend.org/php/latest/pdepend.phar",
+				"only-dev": true
+			},
+			"phpmd": {
+				"url": "https://static.phpmd.org/php/latest/phpmd.phar",
+				"only-dev": true
+			},
+			"phpcs": {
+				"url": "https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar",
+				"only-dev": true
+			},
+			"phpcpd": {
+				"url": "https://phar.phpunit.de/phpcpd.phar",
+				"only-dev": true
+			},
+			"phpdox": {
+				"url": "https://github.com/theseer/phpdox/releases/download/0.8.1.1/phpdox-0.8.1.1.phar",
+				"only-dev": true
+			},
+			"coveralls": {
+				"url": "https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar",
+				"only-dev": true
+			}
 		}
 	}
 }

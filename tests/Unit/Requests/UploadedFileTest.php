@@ -4,9 +4,9 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Requests;
+namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
-use Fortuneglobe\IceHawk\Requests\UploadedFile;
+use IceHawk\IceHawk\Requests\UploadedFile;
 
 class UploadedFileTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,18 +27,6 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 		$uploadedFileInfoFromFileArray = UploadedFile::fromFileArray( $fileArray );
 
 		$this->assertEquals( $uploadedFileInfoFromConstruct, $uploadedFileInfoFromFileArray );
-	}
-
-	/**
-	 * @param UploadedFile $uploadedFileInfo
-	 * @param boolean          $expectedBool
-	 *
-	 * @dataProvider uploadSucceededProvider
-	 */
-	public function testDidUploadSucceed( UploadedFile $uploadedFileInfo, $expectedBool )
-	{
-		$this->assertInternalType( 'boolean', $uploadedFileInfo->didUploadSucceed() );
-		$this->assertSame( $expectedBool, $uploadedFileInfo->didUploadSucceed() );
 	}
 
 	public function uploadSucceededProvider()
@@ -62,15 +50,14 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @param UploadedFile $uploadedFileInfo
-	 * @param int              $expectedErrorCode
-	 * @param string           $expectedErrorMessage
+	 * @param boolean          $expectedBool
 	 *
-	 * @dataProvider uploadErrorMessageProvider
+	 * @dataProvider uploadSucceededProvider
 	 */
-	public function testGetErrorMessage( UploadedFile $uploadedFileInfo, $expectedErrorCode, $expectedErrorMessage )
+	public function testDidUploadSucceed( UploadedFile $uploadedFileInfo, $expectedBool )
 	{
-		$this->assertSame( $expectedErrorCode, $uploadedFileInfo->getError() );
-		$this->assertEquals( $expectedErrorMessage, $uploadedFileInfo->getErrorMessage() );
+		$this->assertInternalType( 'boolean', $uploadedFileInfo->didUploadSucceed() );
+		$this->assertSame( $expectedBool, $uploadedFileInfo->didUploadSucceed() );
 	}
 
 	public function uploadErrorMessageProvider()
@@ -117,6 +104,27 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @param UploadedFile $uploadedFileInfo
+	 * @param int              $expectedErrorCode
+	 * @param string           $expectedErrorMessage
+	 *
+	 * @dataProvider uploadErrorMessageProvider
+	 */
+	public function testGetErrorMessage( UploadedFile $uploadedFileInfo, $expectedErrorCode, $expectedErrorMessage )
+	{
+		$this->assertSame( $expectedErrorCode, $uploadedFileInfo->getError() );
+		$this->assertEquals( $expectedErrorMessage, $uploadedFileInfo->getErrorMessage() );
+	}
+
+	public function filePathRealTypeProvider()
+	{
+		return [
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'image/png' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'text/plain' ],
+		];
+	}
+
+	/**
 	 * @param string $filePath
 	 * @param string $expectedRealType
 	 *
@@ -131,11 +139,11 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals( $expectedRealType, $uploadedFileInfo->getRealType() );
 	}
 
-	public function filePathRealTypeProvider()
+	public function filePathEncodingProvider()
 	{
 		return [
-			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'image/png' ],
-			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'text/plain' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'binary' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'utf-8' ],
 		];
 	}
 
@@ -152,13 +160,5 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertEquals( $expectedEncoding, $uploadedFileInfo->getEncoding() );
-	}
-
-	public function filePathEncodingProvider()
-	{
-		return [
-			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'binary' ],
-			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'utf-8' ],
-		];
 	}
 }

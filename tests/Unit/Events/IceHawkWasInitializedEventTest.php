@@ -1,24 +1,18 @@
 <?php
-/**
- *
- * @author hollodotme
- */
+namespace IceHawk\IceHawk\Tests\Unit\Events;
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
-
-use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
-use Fortuneglobe\IceHawk\RequestInfo;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
 
 /**
  * Class IceHawkWasInitializedEventTest
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Events
+ * @package IceHawk\IceHawk\Tests\Unit\Events
  */
 class IceHawkWasInitializedEventTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{
-		$requestInfo = RequestInfo::fromEnv();
+		$requestInfo  = RequestInfo::fromEnv();
 
 		$event = new IceHawkWasInitializedEvent( $requestInfo );
 

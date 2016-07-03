@@ -4,12 +4,11 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Mocks;
+namespace IceHawk\IceHawk\Tests\Unit\Mocks;
 
 /**
  * Class PhpStreamMock
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Mocks
+ * @package IceHawk\IceHawk\Tests\Unit\Mocks
  */
 class PhpStreamMock
 {

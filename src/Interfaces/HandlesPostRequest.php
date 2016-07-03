@@ -3,17 +3,13 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Interfaces;
 
 /**
  * Interface HandlesPostRequest
- *
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
-interface HandlesPostRequest
+interface HandlesPostRequest extends HandlesWriteRequest
 {
-	/**
-	 * @param ServesPostRequestData $request
-	 */
-	public function handle( ServesPostRequestData $request );
+
 }

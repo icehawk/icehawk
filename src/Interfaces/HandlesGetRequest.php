@@ -3,17 +3,13 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Interfaces;
 
 /**
  * Interface HandlesGetRequest
- *
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
-interface HandlesGetRequest
+interface HandlesGetRequest extends HandlesReadRequest, HandlesHeadRequest
 {
-	/**
-	 * @param ServesGetRequestData $request
-	 */
-	public function handle( ServesGetRequestData $request );
+
 }

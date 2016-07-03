@@ -9,9 +9,9 @@ build/tools/*.phar
 
 # composer
 vendor/
-composer.lock
 
 # locally generated docs
 build/api/
 build/phpdox/
 build/logs/
+build/coverage/

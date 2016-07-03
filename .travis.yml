@@ -17,7 +17,7 @@ before_script:
  - mkdir build/logs
 
 script:
- - php build/tools/phpunit.phar -c build/
+ - php vendor/bin/phpunit -c build/
 
 after_script:
- - php build/tools/coveralls.phar -c ./.coveralls.yml -v --exclude-no-stmt
+ - php vendor/bin/coveralls -c ./.coveralls.yml -v --exclude-no-stmt

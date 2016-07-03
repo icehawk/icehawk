@@ -11,13 +11,13 @@ branches:
 
 before_script:
  - git checkout $TRAVIS_BRANCH
- - curl -sS 'https://getcomposer.org/installer' | php -- --install-dir=/usr/local/bin --filename=composer
- - chmod +x /usr/local/bin/composer
- - /usr/local/bin/composer install -o --prefer-dist --no-interaction
+ - composer self-update
+ - mkdir -p vendor/bin
+ - composer install -o --prefer-dist --no-interaction
  - mkdir build/logs
 
 script:
- - php build/tools/phpunit.phar -c build/
+ - php vendor/bin/phpunit -c build/
 
 after_script:
- - php build/tools/coveralls.phar -c ./.coveralls.yml -v --exclude-no-stmt
+ - php vendor/bin/coveralls -c ./.coveralls.yml -v --exclude-no-stmt

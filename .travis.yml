@@ -11,9 +11,8 @@ branches:
 
 before_script:
  - git checkout $TRAVIS_BRANCH
- - curl -sS 'https://getcomposer.org/installer' | php -- --install-dir=/usr/local/bin --filename=composer
- - chmod +x /usr/local/bin/composer
- - /usr/local/bin/composer install -o --prefer-dist --no-interaction
+ - composer self-update
+ - composer install -o --prefer-dist --no-interaction
  - mkdir build/logs
 
 script:

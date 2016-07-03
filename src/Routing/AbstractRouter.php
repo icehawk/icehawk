@@ -3,14 +3,14 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Routing;
+namespace IceHawk\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToHandler;
-use Fortuneglobe\IceHawk\Routing\Exceptions\RoutesAreNotTraversable;
+use IceHawk\IceHawk\Routing\Exceptions\RoutesAreNotTraversable;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToHandler;
 
 /**
  * Class AbstractRouter
- * @package Fortuneglobe\IceHawk\Routing
+ * @package IceHawk\IceHawk\Routing
  */
 abstract class AbstractRouter
 {

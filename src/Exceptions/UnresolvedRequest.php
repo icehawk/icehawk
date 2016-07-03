@@ -3,13 +3,13 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Exceptions;
+namespace IceHawk\IceHawk\Exceptions;
 
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
+use IceHawk\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
 
 /**
  * Class UnresolvedRequest
- * @package Fortuneglobe\IceHawk\Exceptions
+ * @package IceHawk\IceHawk\Exceptions
  */
 final class UnresolvedRequest extends IceHawkException
 {

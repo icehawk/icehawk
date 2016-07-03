@@ -3,10 +3,10 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
+namespace IceHawk\IceHawk\Tests\Unit\Events;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Events\InitializingIceHawkEvent;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Events\InitializingIceHawkEvent;
 
 class InitializingIceHawkEventTest extends \PHPUnit_Framework_TestCase
 {

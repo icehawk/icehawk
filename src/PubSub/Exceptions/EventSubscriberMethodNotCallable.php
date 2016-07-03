@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\PubSub\Exceptions;
+namespace IceHawk\IceHawk\PubSub\Exceptions;
 
 /**
  * Class EventSubscriberMethodNotCallable
- * @package Fortuneglobe\IceHawk\PubSub\Exceptions
+ * @package IceHawk\IceHawk\PubSub\Exceptions
  */
 final class EventSubscriberMethodNotCallable extends PubSubException
 {

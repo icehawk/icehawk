@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Interfaces;
 
 /**
  * Interface HandlesWriteRequest
- * @package Fortuneglobe\IceHawk\RequestHandlers\Interfaces
+ * @package IceHawk\IceHawk\RequestHandlers\Interfaces
  */
 interface HandlesWriteRequest extends HandlesRequest
 {

@@ -1,36 +1,36 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
+namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
-use Fortuneglobe\IceHawk\Constants\HttpCode;
-use Fortuneglobe\IceHawk\Defaults\IceHawkConfig;
-use Fortuneglobe\IceHawk\Defaults\IceHawkDelegate;
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
-use Fortuneglobe\IceHawk\Events\HandlingWriteRequestEvent;
-use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
-use Fortuneglobe\IceHawk\Events\InitializingIceHawkEvent;
-use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\IceHawk;
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\Interfaces\HandlesGetRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
-use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
-use Fortuneglobe\IceHawk\Requests\ReadRequest;
-use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
-use Fortuneglobe\IceHawk\Requests\WriteRequest;
-use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
-use Fortuneglobe\IceHawk\Routing\Patterns\Literal;
-use Fortuneglobe\IceHawk\Routing\ReadRoute;
-use Fortuneglobe\IceHawk\Routing\WriteRoute;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
+use IceHawk\IceHawk\Constants\HttpCode;
+use IceHawk\IceHawk\Defaults\IceHawkConfig;
+use IceHawk\IceHawk\Defaults\IceHawkDelegate;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Events\HandlingReadRequestEvent;
+use IceHawk\IceHawk\Events\HandlingWriteRequestEvent;
+use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
+use IceHawk\IceHawk\Events\InitializingIceHawkEvent;
+use IceHawk\IceHawk\Events\ReadRequestWasHandledEvent;
+use IceHawk\IceHawk\Events\WriteRequestWasHandledEvent;
+use IceHawk\IceHawk\IceHawk;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\HandlesGetRequest;
+use IceHawk\IceHawk\Interfaces\HandlesPostRequest;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
+use IceHawk\IceHawk\Interfaces\SetsUpEnvironment;
+use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
+use IceHawk\IceHawk\Requests\WriteRequest;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
+use IceHawk\IceHawk\Routing\Patterns\Literal;
+use IceHawk\IceHawk\Routing\ReadRoute;
+use IceHawk\IceHawk\Routing\WriteRoute;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 
 class IceHawkTest extends \PHPUnit_Framework_TestCase
 {

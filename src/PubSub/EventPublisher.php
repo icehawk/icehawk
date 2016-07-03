@@ -3,16 +3,16 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\PubSub;
+namespace IceHawk\IceHawk\PubSub;
 
-use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\PublishesEvents;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\RegistersEventSubscribers;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
+use IceHawk\IceHawk\PubSub\Interfaces\PublishesEvents;
+use IceHawk\IceHawk\PubSub\Interfaces\RegistersEventSubscribers;
+use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
 /**
  * Class EventPublisher
- * @package Fortuneglobe\IceHawk\PubSub
+ * @package IceHawk\IceHawk\PubSub
  */
 final class EventPublisher implements RegistersEventSubscribers, PublishesEvents
 {

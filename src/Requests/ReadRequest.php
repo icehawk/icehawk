@@ -4,15 +4,15 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Requests;
+namespace IceHawk\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestInputData;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestInputData;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Class GetRequest
- * @package Fortuneglobe\IceHawk\Requests
+ * @package IceHawk\IceHawk\Requests
  */
 final class ReadRequest implements ProvidesReadRequestData
 {

@@ -3,13 +3,13 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Defaults\Traits;
+namespace IceHawk\IceHawk\Defaults\Traits;
 
-use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
 /**
  * Trait DefaultEventSubscribing
- * @package Fortuneglobe\IceHawk\Defaults\Traits
+ * @package IceHawk\IceHawk\Defaults\Traits
  */
 trait DefaultEventSubscribing
 {

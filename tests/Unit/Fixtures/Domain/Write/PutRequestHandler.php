@@ -1,13 +1,12 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesPutRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Interfaces\HandlesPutRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
 
 /**
  * Class PutRequestHandler
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write
+ * @package IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write
  */
 class PutRequestHandler implements HandlesPutRequest
 {

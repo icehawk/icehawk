@@ -3,12 +3,12 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
+namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
-use Fortuneglobe\IceHawk\Defaults\FinalReadResponder;
-use Fortuneglobe\IceHawk\Defaults\FinalWriteResponder;
-use Fortuneglobe\IceHawk\Defaults\IceHawkConfig;
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Defaults\FinalReadResponder;
+use IceHawk\IceHawk\Defaults\FinalWriteResponder;
+use IceHawk\IceHawk\Defaults\IceHawkConfig;
+use IceHawk\IceHawk\Defaults\RequestInfo;
 
 class IceHawkConfigTest extends \PHPUnit_Framework_TestCase
 {

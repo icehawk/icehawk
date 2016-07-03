@@ -3,13 +3,13 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Routing\Interfaces;
+namespace IceHawk\IceHawk\Routing\Interfaces;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
+use IceHawk\IceHawk\Interfaces\HandlesReadRequest;
 
 /**
  * Interface RoutesToReadHandler
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
 interface RoutesToReadHandler extends RoutesToHandler
 {

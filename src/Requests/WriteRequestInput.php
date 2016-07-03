@@ -1,13 +1,12 @@
 <?php
-namespace Fortuneglobe\IceHawk\Requests;
+namespace IceHawk\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesUploadedFileData;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestInputData;
+use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestInputData;
 
 /**
  * Class RequestInput
- *
- * @package Fortuneglobe\IceHawk\Requests
+ * @package IceHawk\IceHawk\Requests
  */
 final class WriteRequestInput implements ProvidesWriteRequestInputData
 {

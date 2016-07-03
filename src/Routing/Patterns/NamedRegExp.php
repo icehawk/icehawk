@@ -1,12 +1,11 @@
 <?php
-namespace Fortuneglobe\IceHawk\Routing\Patterns;
+namespace IceHawk\IceHawk\Routing\Patterns;
 
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
+use IceHawk\IceHawk\Routing\Interfaces\ProvidesMatchResult;
 
 /**
  * Class ExactRegExp
- *
- * @package Fortuneglobe\IceHawk\Routing\Patterns
+ * @package IceHawk\IceHawk\Routing\Patterns
  */
 class NamedRegExp implements ProvidesMatchResult
 {

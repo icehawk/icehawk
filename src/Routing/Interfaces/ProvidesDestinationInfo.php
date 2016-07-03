@@ -1,10 +1,9 @@
 <?php
-namespace Fortuneglobe\IceHawk\Routing\Interfaces;
+namespace IceHawk\IceHawk\Routing\Interfaces;
 
 /**
  * Interface ProvidesDestinationInfo
- *
- * @package Fortuneglobe\IceHawk\Routing\Interfaces
+ * @package IceHawk\IceHawk\Routing\Interfaces
  */
 interface ProvidesDestinationInfo
 {

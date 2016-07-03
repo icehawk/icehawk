@@ -3,23 +3,22 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\RequestHandlers;
+namespace IceHawk\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Events\HandlingWriteRequestEvent;
-use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
-use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
-use Fortuneglobe\IceHawk\Requests\WriteRequest;
-use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
-use Fortuneglobe\IceHawk\Routing\WriteRouter;
+use IceHawk\IceHawk\Events\HandlingWriteRequestEvent;
+use IceHawk\IceHawk\Events\WriteRequestWasHandledEvent;
+use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Mappers\UploadedFilesMapper;
+use IceHawk\IceHawk\Requests\WriteRequest;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
+use IceHawk\IceHawk\Routing\RouteRequest;
+use IceHawk\IceHawk\Routing\WriteRouter;
 
 /**
  * Class WriteRequestHandler
- *
- * @package Fortuneglobe\IceHawk\RequestHandlers
+ * @package IceHawk\IceHawk\RequestHandlers
  */
 final class WriteRequestHandler extends AbstractRequestHandler
 {

@@ -3,14 +3,14 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Defaults;
+namespace IceHawk\IceHawk\Defaults;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\SetsUpEnvironment;
 
 /**
  * Class IceHawkDelegate
- * @package Fortuneglobe\IceHawk\Defaults
+ * @package IceHawk\IceHawk\Defaults
  */
 class IceHawkDelegate implements SetsUpEnvironment
 {

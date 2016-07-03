@@ -1,13 +1,12 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesPatchRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Interfaces\HandlesPatchRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
 
 /**
  * Class PatchRequestHandler
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write
+ * @package IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write
  */
 class PatchRequestHandler implements HandlesPatchRequest
 {

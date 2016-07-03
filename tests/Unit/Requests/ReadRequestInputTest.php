@@ -3,9 +3,9 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Requests;
+namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
-use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
 
 class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 {

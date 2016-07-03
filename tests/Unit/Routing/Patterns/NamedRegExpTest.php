@@ -1,7 +1,7 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Routing\Patterns;
+namespace IceHawk\IceHawk\Tests\Unit\Routing\Patterns;
 
-use Fortuneglobe\IceHawk\Routing\Patterns\NamedRegExp;
+use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
 
 class NamedRegExpTest extends \PHPUnit_Framework_TestCase
 {

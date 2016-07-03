@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Constants;
+namespace IceHawk\IceHawk\Constants;
 
 /**
  * Class HttpCode
- * @package Fortuneglobe\IceHawk\Constants
+ * @package IceHawk\IceHawk\Constants
  */
 abstract class HttpCode
 {

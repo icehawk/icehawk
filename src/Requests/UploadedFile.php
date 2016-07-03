@@ -3,13 +3,13 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Requests;
+namespace IceHawk\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesUploadedFileData;
+use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
 
 /**
  * Class UploadedFile
- * @package Fortuneglobe\IceHawk\Requests
+ * @package IceHawk\IceHawk\Requests
  */
 final class UploadedFile implements ProvidesUploadedFileData
 {

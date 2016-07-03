@@ -3,13 +3,13 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Defaults;
+namespace IceHawk\IceHawk\Defaults;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Class RequestInfo
- * @package Fortuneglobe\IceHawk
+ * @package IceHawk\IceHawk
  */
 final class RequestInfo implements ProvidesRequestInfo
 {

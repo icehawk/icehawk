@@ -1,13 +1,12 @@
 <?php
-namespace Fortuneglobe\IceHawk\Events;
+namespace IceHawk\IceHawk\Events;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
  * Class InitializingIceHawkEvent
- *
- * @package Fortuneglobe\IceHawk\Events
+ * @package IceHawk\IceHawk\Events
  */
 final class InitializingIceHawkEvent implements CarriesEventData
 {

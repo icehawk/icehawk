@@ -1,13 +1,12 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
+namespace IceHawk\IceHawk\Tests\Unit\Events;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
 
 /**
  * Class IceHawkWasInitializedEventTest
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Events
+ * @package IceHawk\IceHawk\Tests\Unit\Events
  */
 class IceHawkWasInitializedEventTest extends \PHPUnit_Framework_TestCase
 {

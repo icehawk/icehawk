@@ -1,17 +1,17 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
+namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
-use Fortuneglobe\IceHawk\Routing\Patterns\Literal;
-use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
-use Fortuneglobe\IceHawk\Routing\ReadRoute;
-use Fortuneglobe\IceHawk\Routing\ReadRouter;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
-use Fortuneglobe\IceHawk\Routing\WriteRoute;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
+use IceHawk\IceHawk\Interfaces\HandlesReadRequest;
+use IceHawk\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
+use IceHawk\IceHawk\Routing\Patterns\Literal;
+use IceHawk\IceHawk\Routing\Patterns\RegExp;
+use IceHawk\IceHawk\Routing\ReadRoute;
+use IceHawk\IceHawk\Routing\ReadRouter;
+use IceHawk\IceHawk\Routing\RouteRequest;
+use IceHawk\IceHawk\Routing\WriteRoute;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 
 class ReadRouterTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,7 +46,7 @@ class ReadRouterTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @dataProvider invalidRouteProvider
-	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest
+	 * @expectedException \IceHawk\IceHawk\Exceptions\UnresolvedRequest
 	 */
 	public function testMissingRouteForRequestThrowsException( ProvidesDestinationInfo $routeRequest, array $routes )
 	{
@@ -69,7 +69,7 @@ class ReadRouterTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException \Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest
+	 * @expectedException \IceHawk\IceHawk\Exceptions\UnresolvedRequest
 	 */
 	public function testReadRouterSkipsRoutesWithWriteRequestHandler()
 	{

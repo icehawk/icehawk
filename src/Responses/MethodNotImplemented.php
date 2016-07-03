@@ -3,13 +3,13 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Responses;
+namespace IceHawk\IceHawk\Responses;
 
-use Fortuneglobe\IceHawk\Constants\HttpCode;
+use IceHawk\IceHawk\Constants\HttpCode;
 
 /**
  * Class MethodNotImplemented
- * @package Fortuneglobe\IceHawk\Responses
+ * @package IceHawk\IceHawk\Responses
  */
 final class MethodNotImplemented extends AbstractHttpResponse
 {

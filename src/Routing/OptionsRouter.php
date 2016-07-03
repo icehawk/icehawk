@@ -1,11 +1,11 @@
 <?php
-namespace Fortuneglobe\IceHawk\Routing;
+namespace IceHawk\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToHandler;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToHandler;
 
 /**
  * Class OptionsRouter
- * @package Fortuneglobe\IceHawk\Routing
+ * @package IceHawk\IceHawk\Routing
  */
 final class OptionsRouter extends AbstractRouter
 {

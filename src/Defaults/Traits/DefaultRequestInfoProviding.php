@@ -3,14 +3,14 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Defaults\Traits;
+namespace IceHawk\IceHawk\Defaults\Traits;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Trait DefaultRequestInfoProviding
- * @package Fortuneglobe\IceHawk\Defaults\Traits
+ * @package IceHawk\IceHawk\Defaults\Traits
  */
 trait DefaultRequestInfoProviding
 {

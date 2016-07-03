@@ -3,13 +3,13 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Routing\Exceptions;
+namespace IceHawk\IceHawk\Routing\Exceptions;
 
-use Fortuneglobe\IceHawk\Exceptions\IceHawkException;
+use IceHawk\IceHawk\Exceptions\IceHawkException;
 
 /**
  * Class RoutesAreNotTraversable
- * @package Fortuneglobe\IceHawk\Routing\Exceptions
+ * @package IceHawk\IceHawk\Routing\Exceptions
  */
 final class RoutesAreNotTraversable extends IceHawkException
 {

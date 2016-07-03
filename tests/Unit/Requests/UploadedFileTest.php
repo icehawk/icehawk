@@ -4,9 +4,9 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Requests;
+namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
-use Fortuneglobe\IceHawk\Requests\UploadedFile;
+use IceHawk\IceHawk\Requests\UploadedFile;
 
 class UploadedFileTest extends \PHPUnit_Framework_TestCase
 {

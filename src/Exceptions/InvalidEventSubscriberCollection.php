@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Exceptions;
+namespace IceHawk\IceHawk\Exceptions;
 
 /**
  * Class InvalidEventSubscriberCollection
- * @package Fortuneglobe\IceHawk\Exceptions
+ * @package IceHawk\IceHawk\Exceptions
  */
 final class InvalidEventSubscriberCollection extends IceHawkException
 {

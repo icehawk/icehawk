@@ -3,20 +3,20 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\RequestHandlers;
+namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
-use Fortuneglobe\IceHawk\PubSub\EventPublisher;
-use Fortuneglobe\IceHawk\RequestHandlers\WriteRequestHandler;
-use Fortuneglobe\IceHawk\Requests\WriteRequest;
-use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
-use Fortuneglobe\IceHawk\Routing\Patterns\Literal;
-use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
-use Fortuneglobe\IceHawk\Routing\WriteRoute;
-use Fortuneglobe\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\HandlesPostRequest;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
+use IceHawk\IceHawk\PubSub\EventPublisher;
+use IceHawk\IceHawk\RequestHandlers\WriteRequestHandler;
+use IceHawk\IceHawk\Requests\WriteRequest;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
+use IceHawk\IceHawk\Routing\Patterns\Literal;
+use IceHawk\IceHawk\Routing\Patterns\RegExp;
+use IceHawk\IceHawk\Routing\WriteRoute;
+use IceHawk\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
 class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 {

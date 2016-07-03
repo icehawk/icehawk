@@ -1,13 +1,13 @@
 <?php
-namespace Fortuneglobe\IceHawk\Routing;
+namespace IceHawk\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
+use IceHawk\IceHawk\Interfaces\HandlesReadRequest;
+use IceHawk\IceHawk\Routing\Interfaces\ProvidesMatchResult;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 
 /**
  * Class ReadRouteGroup
- * @package Fortuneglobe\IceHawk\Routing
+ * @package IceHawk\IceHawk\Routing
  */
 final class ReadRouteGroup implements RoutesToReadHandler
 {

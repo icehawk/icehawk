@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Responses;
+namespace IceHawk\IceHawk\Responses;
 
 /**
  * Class Options
- * @package Fortuneglobe\IceHawk\Responses
+ * @package IceHawk\IceHawk\Responses
  */
 class Options extends AbstractHttpResponse
 {

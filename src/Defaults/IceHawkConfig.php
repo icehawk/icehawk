@@ -3,19 +3,19 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Defaults;
+namespace IceHawk\IceHawk\Defaults;
 
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultEventSubscribing;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultFinalReadResponding;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultFinalWriteResponding;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultReadRouting;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultRequestInfoProviding;
-use Fortuneglobe\IceHawk\Defaults\Traits\DefaultWriteRouting;
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Defaults\Traits\DefaultEventSubscribing;
+use IceHawk\IceHawk\Defaults\Traits\DefaultFinalReadResponding;
+use IceHawk\IceHawk\Defaults\Traits\DefaultFinalWriteResponding;
+use IceHawk\IceHawk\Defaults\Traits\DefaultReadRouting;
+use IceHawk\IceHawk\Defaults\Traits\DefaultRequestInfoProviding;
+use IceHawk\IceHawk\Defaults\Traits\DefaultWriteRouting;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 
 /**
  * Class IceHawkConfig
- * @package Fortuneglobe\IceHawk
+ * @package IceHawk\IceHawk
  */
 class IceHawkConfig implements ConfiguresIceHawk
 {

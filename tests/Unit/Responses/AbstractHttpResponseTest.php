@@ -3,10 +3,10 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Responses;
+namespace IceHawk\IceHawk\Tests\Unit\Responses;
 
-use Fortuneglobe\IceHawk\Constants\HttpCode;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\SimpleResponse;
+use IceHawk\IceHawk\Constants\HttpCode;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\SimpleResponse;
 
 class AbstractHttpResponseTest extends \PHPUnit_Framework_TestCase
 {

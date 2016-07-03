@@ -3,15 +3,14 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesGetRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+use IceHawk\IceHawk\Interfaces\HandlesGetRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
 
 /**
  * Class ValidReadTestRequestHandler
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain
+ * @package IceHawk\IceHawk\Tests\Unit\Fixtures\Domain
  */
 class ValidGetRequestHandler implements HandlesGetRequest
 {

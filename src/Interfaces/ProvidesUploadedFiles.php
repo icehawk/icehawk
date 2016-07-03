@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Interfaces;
 
 /**
  * Interface ServesUploadedFiles
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
 interface ProvidesUploadedFiles
 {

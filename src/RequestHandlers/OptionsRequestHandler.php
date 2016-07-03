@@ -3,17 +3,16 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\RequestHandlers;
+namespace IceHawk\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
-use Fortuneglobe\IceHawk\Interfaces\HandlesRequest;
-use Fortuneglobe\IceHawk\Responses\Options;
-use Fortuneglobe\IceHawk\Routing\OptionsRouter;
+use IceHawk\IceHawk\Constants\HandlerMethodInterfaceMap;
+use IceHawk\IceHawk\Interfaces\HandlesRequest;
+use IceHawk\IceHawk\Responses\Options;
+use IceHawk\IceHawk\Routing\OptionsRouter;
 
 /**
  * Class OptionsRequestHandler
- *
- * @package Fortuneglobe\IceHawk\RequestHandlers
+ * @package IceHawk\IceHawk\RequestHandlers
  */
 final class OptionsRequestHandler extends AbstractRequestHandler
 {

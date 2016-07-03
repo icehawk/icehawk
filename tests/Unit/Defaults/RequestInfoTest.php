@@ -1,7 +1,7 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
+namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Defaults\RequestInfo;
 
 class RequestInfoTest extends \PHPUnit_Framework_TestCase
 {

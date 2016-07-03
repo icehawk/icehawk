@@ -3,13 +3,13 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Routing\Interfaces;
+namespace IceHawk\IceHawk\Routing\Interfaces;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
+use IceHawk\IceHawk\Interfaces\HandlesWriteRequest;
 
 /**
  * Interface RoutesToWriteHandler
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
 interface RoutesToWriteHandler extends RoutesToHandler
 {

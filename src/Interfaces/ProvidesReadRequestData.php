@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Interfaces;
 
 /**
  * Interface ServesGetRequestData
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
 interface ProvidesReadRequestData extends ProvidesRequestData
 {

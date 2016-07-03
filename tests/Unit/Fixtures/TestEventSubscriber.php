@@ -1,14 +1,13 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures;
 
-use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
-use Fortuneglobe\IceHawk\Events\WriteRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\PubSub\AbstractEventSubscriber;
+use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
+use IceHawk\IceHawk\Events\WriteRequestWasHandledEvent;
+use IceHawk\IceHawk\PubSub\AbstractEventSubscriber;
 
 /**
  * Class TestEventSubscriber
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
+ * @package IceHawk\IceHawk\Tests\Unit\Fixtures
  */
 class TestEventSubscriber extends AbstractEventSubscriber
 {

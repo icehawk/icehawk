@@ -3,15 +3,15 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Interfaces;
 
-use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
+use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
 /**
  * Interface ConfiguresIceHawk
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
 interface ConfiguresIceHawk
 {

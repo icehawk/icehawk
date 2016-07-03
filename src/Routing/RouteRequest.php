@@ -1,11 +1,11 @@
 <?php
-namespace Fortuneglobe\IceHawk\Routing;
+namespace IceHawk\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
+use IceHawk\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
 
 /**
  * Class RouteRequest
- * @package Fortuneglobe\IceHawk\Routing
+ * @package IceHawk\IceHawk\Routing
  */
 final class RouteRequest implements ProvidesDestinationInfo
 {

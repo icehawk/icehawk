@@ -3,9 +3,9 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Routing\Patterns;
+namespace IceHawk\IceHawk\Tests\Unit\Routing\Patterns;
 
-use Fortuneglobe\IceHawk\Routing\Patterns\Literal;
+use IceHawk\IceHawk\Routing\Patterns\Literal;
 
 class LiteralTest extends \PHPUnit_Framework_TestCase
 {

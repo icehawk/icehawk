@@ -1,14 +1,14 @@
 <?php
-namespace Fortuneglobe\IceHawk\Routing;
+namespace IceHawk\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesWriteRequest;
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
-use Fortuneglobe\IceHawk\Routing\Patterns\NamedRegExp;
+use IceHawk\IceHawk\Interfaces\HandlesWriteRequest;
+use IceHawk\IceHawk\Routing\Interfaces\ProvidesMatchResult;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
+use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
 
 /**
  * Class WriteRouteGroup
- * @package Fortuneglobe\IceHawk\Routing
+ * @package IceHawk\IceHawk\Routing
  */
 final class WriteRouteGroup implements RoutesToWriteHandler
 {

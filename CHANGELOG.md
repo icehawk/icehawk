@@ -7,7 +7,8 @@
 ### Added / Moved / Renamed
 
 * Requires php >= 7.0.0
-* Added scalar type hints and return types to all interfaces
+* Changed vendor namespace to IceHawk
+* Added scalar type hints and return types to all interfaces where possible
 * Renamed/moved pub/sub related classes and interfaces
   * EventListener => PubSub\AbstractEventSubscriber
   * Interfaces\ListensToEvents => PubSub\Interfaces\SubscribesToEvents
@@ -36,14 +37,18 @@
 * Removed handleUncaughtExcpetion from delegate interface
 * Removed all predefined responses but Responses/Redirect
 
+## Changes in Version 1.4.2
+
+Final 1.* release before moving to https://github.com/icehawk/icehawk.git and version 2.0
+
 ## Changes in Version 1.4.1
 
  * Fixed regex pattern replacement in UriRewriter class
 
 ## Changes in Version 1.4.0
 
- * Fixed issue #1, added "ext-fileinfo": "*" to composer's require block and a hint to the README.  
- * Closed issue #2, added `setUpEnvironment()` to interface `ControlsHandlingBehaviour` and default class `IceHawkDelegate`.  
+ * Fixed issue #1, added "ext-fileinfo": "*" to composer's require block and a hint to the README.
+ * Closed issue #2, added `setUpEnvironment()` to interface `ControlsHandlingBehaviour` and default class `IceHawkDelegate`.
  Order of IceHawk initialization is now:
     1. setUpErrorHandling()
     2. setUpSessionHandling()

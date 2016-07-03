@@ -3,15 +3,15 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Requests;
+namespace IceHawk\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestInputData;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestInputData;
 
 /**
  * Class PostRequest
- * @package Fortuneglobe\IceHawk\Requests
+ * @package IceHawk\IceHawk\Requests
  */
 final class WriteRequest implements ProvidesWriteRequestData
 {

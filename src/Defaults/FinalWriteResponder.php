@@ -3,14 +3,14 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Defaults;
+namespace IceHawk\IceHawk\Defaults;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 
 /**
  * Class FinalWriteResponder
- * @package Fortuneglobe\IceHawk\Defaults
+ * @package IceHawk\IceHawk\Defaults
  */
 class FinalWriteResponder implements RespondsFinallyToWriteRequest
 {

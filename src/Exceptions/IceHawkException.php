@@ -3,12 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Exceptions;
+namespace IceHawk\IceHawk\Exceptions;
 
 /**
  * Class IceHawkException
- *
- * @package Fortuneglobe\IceHawk\Exceptions
+ * @package IceHawk\IceHawk\Exceptions
  */
 class IceHawkException extends \Exception
 {

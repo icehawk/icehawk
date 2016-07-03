@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\PubSub\Interfaces;
+namespace IceHawk\IceHawk\PubSub\Interfaces;
 
 /**
  * Interface RegistersEventSubscribers
- * @package Fortuneglobe\IceHawk\PubSub\Interfaces
+ * @package IceHawk\IceHawk\PubSub\Interfaces
  */
 interface RegistersEventSubscribers
 {

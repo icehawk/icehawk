@@ -3,13 +3,13 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\PubSub\Interfaces;
+namespace IceHawk\IceHawk\PubSub\Interfaces;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Interface CarriesEventData
- * @package Fortuneglobe\IceHawk\PubSub\Interfaces
+ * @package IceHawk\IceHawk\PubSub\Interfaces
  */
 interface CarriesEventData
 {

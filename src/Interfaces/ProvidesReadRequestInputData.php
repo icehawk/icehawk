@@ -1,10 +1,9 @@
 <?php
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Interfaces;
 
 /**
  * Interface ProvidesReadRequestInputData
- *
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
 interface ProvidesReadRequestInputData extends ProvidesRequestInputData
 {

@@ -3,15 +3,15 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Config;
+namespace IceHawk\IceHawk\Config;
 
-use Fortuneglobe\IceHawk\Exceptions\InvalidEventSubscriberCollection;
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\Exceptions\InvalidEventSubscriberCollection;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 
 /**
  * Class IceHawkConfigGuard
- * @package Fortuneglobe\IceHawk\Config
+ * @package IceHawk\IceHawk\Config
  */
 final class ConfigGuard
 {

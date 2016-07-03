@@ -3,18 +3,18 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Constants;
+namespace IceHawk\IceHawk\Constants;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesDeleteRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesGetRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesHeadRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesPatchRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
-use Fortuneglobe\IceHawk\Interfaces\HandlesPutRequest;
+use IceHawk\IceHawk\Interfaces\HandlesDeleteRequest;
+use IceHawk\IceHawk\Interfaces\HandlesGetRequest;
+use IceHawk\IceHawk\Interfaces\HandlesHeadRequest;
+use IceHawk\IceHawk\Interfaces\HandlesPatchRequest;
+use IceHawk\IceHawk\Interfaces\HandlesPostRequest;
+use IceHawk\IceHawk\Interfaces\HandlesPutRequest;
 
 /**
  * Class HandlerMethodInterfaceMap
- * @package Fortuneglobe\IceHawk\Constants
+ * @package IceHawk\IceHawk\Constants
  */
 abstract class HandlerMethodInterfaceMap
 {

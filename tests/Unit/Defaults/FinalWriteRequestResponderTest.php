@@ -1,17 +1,16 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
+namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
-use Fortuneglobe\IceHawk\Defaults\FinalWriteResponder;
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Requests\WriteRequest;
-use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
+use IceHawk\IceHawk\Defaults\FinalWriteResponder;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
+use IceHawk\IceHawk\Requests\WriteRequest;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
+use IceHawk\IceHawk\Routing\RouteRequest;
 
 /**
  * Class FinalWriteRequestResponderTest
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Defaults
+ * @package IceHawk\IceHawk\Tests\Unit\Defaults
  */
 class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 {

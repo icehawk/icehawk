@@ -1,12 +1,11 @@
 <?php
-namespace Fortuneglobe\IceHawk\Requests;
+namespace IceHawk\IceHawk\Requests;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestInputData;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestInputData;
 
 /**
  * Class ReadRequestInput
- *
- * @package Fortuneglobe\IceHawk\Requests
+ * @package IceHawk\IceHawk\Requests
  */
 final class ReadRequestInput implements ProvidesReadRequestInputData
 {

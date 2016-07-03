@@ -1,17 +1,17 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
+namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
-use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
-use Fortuneglobe\IceHawk\Routing\WriteRoute;
-use Fortuneglobe\IceHawk\Routing\WriteRouteGroup;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\AnotherPostRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\BodyDataRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\IceHawkWriteRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PatchRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidPostRequestHandler;
+use IceHawk\IceHawk\Routing\Patterns\RegExp;
+use IceHawk\IceHawk\Routing\WriteRoute;
+use IceHawk\IceHawk\Routing\WriteRouteGroup;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\AnotherPostRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\BodyDataRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\IceHawkWriteRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PatchRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidPostRequestHandler;
 
 class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 {

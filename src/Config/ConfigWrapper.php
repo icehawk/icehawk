@@ -3,19 +3,19 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Config;
+namespace IceHawk\IceHawk\Config;
 
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\SubscribesToEvents;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
+use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
 /**
  * Class IceHawkConfigWrapper
- * @package Fortuneglobe\IceHawk\Config
+ * @package IceHawk\IceHawk\Config
  */
 final class ConfigWrapper implements ConfiguresIceHawk
 {

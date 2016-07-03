@@ -3,15 +3,15 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Routing;
+namespace IceHawk\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesReadRequest;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesMatchResult;
+use IceHawk\IceHawk\Interfaces\HandlesReadRequest;
+use IceHawk\IceHawk\Routing\Interfaces\ProvidesMatchResult;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 
 /**
  * Class ReadRoute
- * @package Fortuneglobe\IceHawk\Routing
+ * @package IceHawk\IceHawk\Routing
  */
 final class ReadRoute implements RoutesToReadHandler
 {

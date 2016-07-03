@@ -3,11 +3,11 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Defaults\Traits;
+namespace IceHawk\IceHawk\Defaults\Traits;
 
 /**
  * Trait DefaultWriteRouting
- * @package Fortuneglobe\IceHawk\Defaults\Traits
+ * @package IceHawk\IceHawk\Defaults\Traits
  */
 trait DefaultWriteRouting
 {

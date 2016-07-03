@@ -3,12 +3,12 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
+namespace IceHawk\IceHawk\Tests\Unit\Events;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Events\HandlingWriteRequestEvent;
-use Fortuneglobe\IceHawk\Requests\WriteRequest;
-use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Events\HandlingWriteRequestEvent;
+use IceHawk\IceHawk\Requests\WriteRequest;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
 
 class HandlingWriteRequestEventTest extends \PHPUnit_Framework_TestCase
 {

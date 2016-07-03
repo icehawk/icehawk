@@ -3,11 +3,11 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Routing\Interfaces;
+namespace IceHawk\IceHawk\Routing\Interfaces;
 
 /**
  * Interface ProvidesMatchResult
- * @package Fortuneglobe\IceHawk\Routing\Interfaces
+ * @package IceHawk\IceHawk\Routing\Interfaces
  */
 interface ProvidesMatchResult
 {

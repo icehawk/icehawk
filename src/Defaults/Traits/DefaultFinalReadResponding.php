@@ -3,14 +3,14 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Defaults\Traits;
+namespace IceHawk\IceHawk\Defaults\Traits;
 
-use Fortuneglobe\IceHawk\Defaults\FinalReadResponder;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
+use IceHawk\IceHawk\Defaults\FinalReadResponder;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 
 /**
  * Trait DefaultFinalReadResponding
- * @package Fortuneglobe\IceHawk\Defaults\Traits
+ * @package IceHawk\IceHawk\Defaults\Traits
  */
 trait DefaultFinalReadResponding
 {

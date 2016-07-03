@@ -1,15 +1,14 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
+namespace IceHawk\IceHawk\Tests\Unit\Events;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\Requests\ReadRequest;
-use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Events\ReadRequestWasHandledEvent;
+use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
 
 /**
  * Class ReadRequestWasHandledEventTest
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Events
+ * @package IceHawk\IceHawk\Tests\Unit\Events
  */
 class ReadRequestWasHandledEventTest extends \PHPUnit_Framework_TestCase
 {

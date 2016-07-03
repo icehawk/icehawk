@@ -1,13 +1,12 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Interfaces\HandlesPostRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
 
 /**
  * Class BodyParamRequestHandler
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write
+ * @package IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write
  */
 class BodyDataRequestHandler implements HandlesPostRequest
 {

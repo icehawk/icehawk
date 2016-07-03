@@ -1,13 +1,12 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesHeadRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
+use IceHawk\IceHawk\Interfaces\HandlesHeadRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
 
 /**
  * Class HeadRequestHandler
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read
+ * @package IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read
  */
 class HeadRequestHandler implements HandlesHeadRequest
 {

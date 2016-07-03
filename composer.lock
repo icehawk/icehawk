@@ -1,0 +1,84 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "619fc65f2f011f8b3385c30473e8625b",
+    "content-hash": "05f38b2e9b52c7e1a4428f31a4ed045b",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "tm/tooly-composer-script",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tommy-muehle/tooly-composer-script.git",
+                "reference": "8673ee59696ed8cd0fafce995aa33d4c4c5c3179"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tommy-muehle/tooly-composer-script/zipball/8673ee59696ed8cd0fafce995aa33d4c4c5c3179",
+                "reference": "8673ee59696ed8cd0fafce995aa33d4c4c5c3179",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "composer/composer": "1.*",
+                "mikey179/vfsstream": "1.6.*"
+            },
+            "type": "library",
+            "extra": {
+                "tools": {
+                    "phpunit": {
+                        "url": "https://phar.phpunit.de/phpunit-4.8.9.phar",
+                        "only-dev": true
+                    },
+                    "phpcpd": {
+                        "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar",
+                        "only-dev": true
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tooly\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tommy Muehle",
+                    "email": "tommy.muehle@gmail.com",
+                    "homepage": "https://tommy-muehle.de"
+                }
+            ],
+            "description": "Simple composer script to manage phar files.",
+            "homepage": "https://github.com/tommy-muehle/tooly-composer-script",
+            "keywords": [
+                "composer",
+                "composer-phar",
+                "composer-script",
+                "phar-management"
+            ],
+            "time": "2016-07-01 09:55:31"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.0",
+        "ext-fileinfo": "*"
+    },
+    "platform-dev": {
+        "ext-xdebug": "*"
+    }
+}

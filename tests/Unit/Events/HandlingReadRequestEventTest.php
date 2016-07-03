@@ -3,12 +3,12 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Events;
+namespace IceHawk\IceHawk\Tests\Unit\Events;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
-use Fortuneglobe\IceHawk\Requests\ReadRequest;
-use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Events\HandlingReadRequestEvent;
+use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
 
 class HandlingReadRequestEventTest extends \PHPUnit_Framework_TestCase
 {

@@ -2,11 +2,11 @@
 /**
  * @author hollodotme
  */
-namespace Fortuneglobe\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Interfaces;
 
 /**
  * Class UploadedFile
- * @package Fortuneglobe\IceHawk\Interfaces
+ * @package IceHawk\IceHawk\Interfaces
  */
 interface ProvidesUploadedFileData
 {

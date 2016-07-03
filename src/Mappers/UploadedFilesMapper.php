@@ -3,14 +3,14 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Mappers;
+namespace IceHawk\IceHawk\Mappers;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesUploadedFileData;
-use Fortuneglobe\IceHawk\Requests\UploadedFile;
+use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
+use IceHawk\IceHawk\Requests\UploadedFile;
 
 /**
  * Class UploadedFilesMapper
- * @package Fortuneglobe\IceHawk\Mappers
+ * @package IceHawk\IceHawk\Mappers
  */
 final class UploadedFilesMapper
 {

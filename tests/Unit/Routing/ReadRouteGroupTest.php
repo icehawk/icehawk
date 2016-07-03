@@ -1,14 +1,14 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Routing;
+namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
-use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
-use Fortuneglobe\IceHawk\Routing\ReadRoute;
-use Fortuneglobe\IceHawk\Routing\ReadRouteGroup;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\AnotherGetRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\IceHawkReadRequestHandler;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidGetRequestHandler;
+use IceHawk\IceHawk\Routing\Patterns\RegExp;
+use IceHawk\IceHawk\Routing\ReadRoute;
+use IceHawk\IceHawk\Routing\ReadRouteGroup;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\AnotherGetRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\IceHawkReadRequestHandler;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidGetRequestHandler;
 
 class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 {

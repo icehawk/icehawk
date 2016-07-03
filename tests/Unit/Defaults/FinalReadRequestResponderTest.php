@@ -1,17 +1,16 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Defaults;
+namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
-use Fortuneglobe\IceHawk\Defaults\FinalReadResponder;
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Requests\ReadRequest;
-use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
+use IceHawk\IceHawk\Defaults\FinalReadResponder;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
+use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
+use IceHawk\IceHawk\Routing\RouteRequest;
 
 /**
  * Class FinalReadRequestResponderTest
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Defaults
+ * @package IceHawk\IceHawk\Tests\Unit\Defaults
  */
 class FinalReadRequestResponderTest extends \PHPUnit_Framework_TestCase
 {

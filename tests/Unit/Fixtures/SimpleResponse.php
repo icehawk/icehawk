@@ -1,12 +1,11 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures;
 
-use Fortuneglobe\IceHawk\Responses\AbstractHttpResponse;
+use IceHawk\IceHawk\Responses\AbstractHttpResponse;
 
 /**
  * Class SimpleResponse
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures
+ * @package IceHawk\IceHawk\Tests\Unit\Fixtures
  */
 class SimpleResponse extends AbstractHttpResponse
 {

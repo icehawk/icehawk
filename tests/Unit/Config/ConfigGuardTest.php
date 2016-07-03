@@ -1,15 +1,14 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Config;
+namespace IceHawk\IceHawk\Tests\Unit\Config;
 
-use Fortuneglobe\IceHawk\Config\ConfigGuard;
-use Fortuneglobe\IceHawk\Exceptions\InvalidEventSubscriberCollection;
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\Tests\Unit\Fixtures\TestEventSubscriber;
+use IceHawk\IceHawk\Config\ConfigGuard;
+use IceHawk\IceHawk\Exceptions\InvalidEventSubscriberCollection;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Tests\Unit\Fixtures\TestEventSubscriber;
 
 /**
  * Class ConfigGuardTest
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Defaults
+ * @package IceHawk\IceHawk\Tests\Unit\Defaults
  */
 class ConfigGuardTest extends \PHPUnit_Framework_TestCase
 {

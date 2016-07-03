@@ -3,21 +3,21 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\RequestHandlers;
+namespace IceHawk\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Events\HandlingReadRequestEvent;
-use Fortuneglobe\IceHawk\Events\ReadRequestWasHandledEvent;
-use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
-use Fortuneglobe\IceHawk\Requests\ReadRequest;
-use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
-use Fortuneglobe\IceHawk\Routing\ReadRouter;
-use Fortuneglobe\IceHawk\Routing\RouteRequest;
+use IceHawk\IceHawk\Events\HandlingReadRequestEvent;
+use IceHawk\IceHawk\Events\ReadRequestWasHandledEvent;
+use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
+use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
+use IceHawk\IceHawk\Routing\ReadRouter;
+use IceHawk\IceHawk\Routing\RouteRequest;
 
 /**
  * Class ReadRequestHandler
- * @package Fortuneglobe\IceHawk\RequestHandlers
+ * @package IceHawk\IceHawk\RequestHandlers
  */
 final class ReadRequestHandler extends AbstractRequestHandler
 {

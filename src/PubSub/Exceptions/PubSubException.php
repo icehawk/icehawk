@@ -3,13 +3,13 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\PubSub\Exceptions;
+namespace IceHawk\IceHawk\PubSub\Exceptions;
 
-use Fortuneglobe\IceHawk\Exceptions\IceHawkException;
+use IceHawk\IceHawk\Exceptions\IceHawkException;
 
 /**
  * Class PubSubException
- * @package Fortuneglobe\IceHawk\PubSub\Exceptions
+ * @package IceHawk\IceHawk\PubSub\Exceptions
  */
 class PubSubException extends IceHawkException
 {

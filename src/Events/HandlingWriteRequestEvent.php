@@ -3,16 +3,16 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Events;
+namespace IceHawk\IceHawk\Events;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesRequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestInputData;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestInputData;
+use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
  * Class HandlingWriteRequestEvent
- * @package Fortuneglobe\IceHawk\Events
+ * @package IceHawk\IceHawk\Events
  */
 final class HandlingWriteRequestEvent implements CarriesEventData
 {

@@ -3,27 +3,26 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk;
+namespace IceHawk\IceHawk;
 
-use Fortuneglobe\IceHawk\Config\ConfigGuard;
-use Fortuneglobe\IceHawk\Config\ConfigWrapper;
-use Fortuneglobe\IceHawk\Constants\HttpMethod;
-use Fortuneglobe\IceHawk\Events\IceHawkWasInitializedEvent;
-use Fortuneglobe\IceHawk\Events\InitializingIceHawkEvent;
-use Fortuneglobe\IceHawk\Exceptions\InvalidEventSubscriberCollection;
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\Interfaces\SetsUpEnvironment;
-use Fortuneglobe\IceHawk\PubSub\EventPublisher;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\PublishesEvents;
-use Fortuneglobe\IceHawk\RequestHandlers\OptionsRequestHandler;
-use Fortuneglobe\IceHawk\RequestHandlers\ReadRequestHandler;
-use Fortuneglobe\IceHawk\RequestHandlers\WriteRequestHandler;
-use Fortuneglobe\IceHawk\Responses\MethodNotImplemented;
+use IceHawk\IceHawk\Config\ConfigGuard;
+use IceHawk\IceHawk\Config\ConfigWrapper;
+use IceHawk\IceHawk\Constants\HttpMethod;
+use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
+use IceHawk\IceHawk\Events\InitializingIceHawkEvent;
+use IceHawk\IceHawk\Exceptions\InvalidEventSubscriberCollection;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\SetsUpEnvironment;
+use IceHawk\IceHawk\PubSub\EventPublisher;
+use IceHawk\IceHawk\PubSub\Interfaces\PublishesEvents;
+use IceHawk\IceHawk\RequestHandlers\OptionsRequestHandler;
+use IceHawk\IceHawk\RequestHandlers\ReadRequestHandler;
+use IceHawk\IceHawk\RequestHandlers\WriteRequestHandler;
+use IceHawk\IceHawk\Responses\MethodNotImplemented;
 
 /**
  * Class IceHawk
- *
- * @package Fortuneglobe\IceHawk
+ * @package IceHawk\IceHawk
  */
 final class IceHawk
 {

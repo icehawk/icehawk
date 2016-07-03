@@ -3,15 +3,15 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\RequestHandlers;
+namespace IceHawk\IceHawk\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\CarriesEventData;
-use Fortuneglobe\IceHawk\PubSub\Interfaces\PublishesEvents;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
+use IceHawk\IceHawk\PubSub\Interfaces\PublishesEvents;
 
 /**
  * Class AbstractRequestHandler
- * @package Fortuneglobe\IceHawk\RequestHandlers
+ * @package IceHawk\IceHawk\RequestHandlers
  */
 abstract class AbstractRequestHandler
 {

@@ -1,8 +1,8 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesPostRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Interfaces\HandlesPostRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
 
 class AnotherPostRequestHandler implements HandlesPostRequest
 {

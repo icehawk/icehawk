@@ -3,17 +3,16 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Routing;
+namespace IceHawk\IceHawk\Routing;
 
-use Fortuneglobe\IceHawk\Constants\HandlerMethodInterfaceMap;
-use Fortuneglobe\IceHawk\Exceptions\UnresolvedRequest;
-use Fortuneglobe\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
-use Fortuneglobe\IceHawk\Routing\Interfaces\RoutesToReadHandler;
+use IceHawk\IceHawk\Constants\HandlerMethodInterfaceMap;
+use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
+use IceHawk\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 
 /**
  * Class ReadRouter
- *
- * @package Fortuneglobe\IceHawk\Routing
+ * @package IceHawk\IceHawk\Routing
  */
 final class ReadRouter extends AbstractRouter
 {

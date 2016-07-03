@@ -3,11 +3,11 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\Requests;
+namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
-use Fortuneglobe\IceHawk\Mappers\UploadedFilesMapper;
-use Fortuneglobe\IceHawk\Requests\UploadedFile;
-use Fortuneglobe\IceHawk\Requests\WriteRequestInput;
+use IceHawk\IceHawk\Mappers\UploadedFilesMapper;
+use IceHawk\IceHawk\Requests\UploadedFile;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
 
 class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 {

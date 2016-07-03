@@ -1,13 +1,12 @@
 <?php
-namespace Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write;
+namespace IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write;
 
-use Fortuneglobe\IceHawk\Interfaces\HandlesDeleteRequest;
-use Fortuneglobe\IceHawk\Interfaces\ProvidesWriteRequestData;
+use IceHawk\IceHawk\Interfaces\HandlesDeleteRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
 
 /**
  * Class DeleteRequestHandler
- *
- * @package Fortuneglobe\IceHawk\Tests\Unit\Fixtures\Domain\Write
+ * @package IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write
  */
 class DeleteRequestHandler implements HandlesDeleteRequest
 {

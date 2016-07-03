@@ -3,14 +3,14 @@
  * @author hollodotme
  */
 
-namespace Fortuneglobe\IceHawk\Defaults;
+namespace IceHawk\IceHawk\Defaults;
 
-use Fortuneglobe\IceHawk\Interfaces\ProvidesReadRequestData;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 
 /**
  * Class FinalReadResponder
- * @package Fortuneglobe\IceHawk\Defaults
+ * @package IceHawk\IceHawk\Defaults
  */
 class FinalReadResponder implements RespondsFinallyToReadRequest
 {

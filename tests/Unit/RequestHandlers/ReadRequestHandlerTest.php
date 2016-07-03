@@ -3,19 +3,19 @@
  * @author h.woltersdorf
  */
 
-namespace Fortuneglobe\IceHawk\Tests\Unit\RequestHandlers;
+namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
 
-use Fortuneglobe\IceHawk\Defaults\RequestInfo;
-use Fortuneglobe\IceHawk\Interfaces\ConfiguresIceHawk;
-use Fortuneglobe\IceHawk\Interfaces\HandlesGetRequest;
-use Fortuneglobe\IceHawk\Interfaces\RespondsFinallyToReadRequest;
-use Fortuneglobe\IceHawk\PubSub\EventPublisher;
-use Fortuneglobe\IceHawk\RequestHandlers\ReadRequestHandler;
-use Fortuneglobe\IceHawk\Requests\ReadRequest;
-use Fortuneglobe\IceHawk\Requests\ReadRequestInput;
-use Fortuneglobe\IceHawk\Routing\Patterns\Literal;
-use Fortuneglobe\IceHawk\Routing\Patterns\RegExp;
-use Fortuneglobe\IceHawk\Routing\ReadRoute;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\HandlesGetRequest;
+use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
+use IceHawk\IceHawk\PubSub\EventPublisher;
+use IceHawk\IceHawk\RequestHandlers\ReadRequestHandler;
+use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
+use IceHawk\IceHawk\Routing\Patterns\Literal;
+use IceHawk\IceHawk\Routing\Patterns\RegExp;
+use IceHawk\IceHawk\Routing\ReadRoute;
 
 class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 {

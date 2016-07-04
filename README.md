@@ -1,11 +1,11 @@
 [![Build Status](https://travis-ci.org/icehawk/icehawk.svg?branch=master)](https://travis-ci.org/icehawk/icehawk)
-[![Coverage Status](https://coveralls.io/repos/icehawk/icehawk/badge.svg?branch=master&service=github)](https://coveralls.io/github/icehawk/icehawk?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/icehawk/icehawk/badge.svg?branch=master)](https://coveralls.io/github/icehawk/icehawk?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/icehawk/icehawk/v/stable)](https://packagist.org/packages/icehawk/icehawk) 
 [![Total Downloads](https://poser.pugx.org/icehawk/icehawk/downloads)](https://packagist.org/packages/icehawk/icehawk) 
 [![Latest Unstable Version](https://poser.pugx.org/icehawk/icehawk/v/unstable)](https://packagist.org/packages/icehawk/icehawk) 
 [![License](https://poser.pugx.org/icehawk/icehawk/license)](https://packagist.org/packages/icehawk/icehawk)
 
-# ![Ice Hawk](icehawk-logo.png)
+# ![IceHawk](icehawk-logo.png)
 
 Lightweight PHP routing framework, respecting CQRS. 
 

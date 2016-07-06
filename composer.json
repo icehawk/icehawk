@@ -29,8 +29,7 @@
 	},
 	"require-dev": {
 		"ext-xdebug": "*",
-		"tm/tooly-composer-script": "^1.0",
-		"codeclimate/php-test-reporter": "dev-master"
+		"tm/tooly-composer-script": "^1.0"
 	},
 	"autoload": {
 		"psr-4": {

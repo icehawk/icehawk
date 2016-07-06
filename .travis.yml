@@ -21,4 +21,3 @@ script:
 
 after_script:
  - php vendor/bin/coveralls -c ./.coveralls.yml -v --exclude-no-stmt
- - vendor/bin/test-reporter

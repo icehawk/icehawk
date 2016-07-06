@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/icehawk/icehawk.svg?branch=master)](https://travis-ci.org/icehawk/icehawk)
-[![Code Climate](https://codeclimate.com/github/icehawk/icehawk/badges/gpa.svg)](https://codeclimate.com/github/icehawk/icehawk)
 [![Coverage Status](https://coveralls.io/repos/github/icehawk/icehawk/badge.svg?branch=master)](https://coveralls.io/github/icehawk/icehawk?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/icehawk/icehawk/v/stable)](https://packagist.org/packages/icehawk/icehawk) 
 [![Total Downloads](https://poser.pugx.org/icehawk/icehawk/downloads)](https://packagist.org/packages/icehawk/icehawk) 

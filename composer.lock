@@ -4,28 +4,29 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "619fc65f2f011f8b3385c30473e8625b",
-    "content-hash": "05f38b2e9b52c7e1a4428f31a4ed045b",
+    "hash": "3047c6b10ccb289ec113d04154624eb4",
+    "content-hash": "393a37ec82e743a7c8da8a83de526b07",
     "packages": [],
     "packages-dev": [
         {
             "name": "tm/tooly-composer-script",
-            "version": "0.1.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tommy-muehle/tooly-composer-script.git",
-                "reference": "8673ee59696ed8cd0fafce995aa33d4c4c5c3179"
+                "reference": "1e29176f345d09afd328bdcb56805d94c0e3abbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tommy-muehle/tooly-composer-script/zipball/8673ee59696ed8cd0fafce995aa33d4c4c5c3179",
-                "reference": "8673ee59696ed8cd0fafce995aa33d4c4c5c3179",
+                "url": "https://api.github.com/repos/tommy-muehle/tooly-composer-script/zipball/1e29176f345d09afd328bdcb56805d94c0e3abbe",
+                "reference": "1e29176f345d09afd328bdcb56805d94c0e3abbe",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0"
             },
             "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
                 "composer/composer": "1.*",
                 "mikey179/vfsstream": "1.6.*"
             },
@@ -66,7 +67,7 @@
                 "composer-script",
                 "phar-management"
             ],
-            "time": "2016-07-01 09:55:31"
+            "time": "2016-07-06 12:47:04"
         }
     ],
     "aliases": [],

@@ -29,7 +29,7 @@
 	},
 	"require-dev": {
 		"ext-xdebug": "*",
-		"tm/tooly-composer-script": "^0.1.0"
+		"tm/tooly-composer-script": "^1.0"
 	},
 	"autoload": {
 		"psr-4": {

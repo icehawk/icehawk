@@ -19,5 +19,5 @@ before_script:
 script:
  - php vendor/bin/phpunit -c build/
 
-after_script:
- - php vendor/bin/coveralls -c ./.coveralls.yml -v --exclude-no-stmt
+after_success:
+ - travis_retry php vendor/bin/coveralls -v --exclude-no-stmt

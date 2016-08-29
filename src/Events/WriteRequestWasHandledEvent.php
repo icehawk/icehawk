@@ -6,8 +6,8 @@
 namespace IceHawk\IceHawk\Events;
 
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
 use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
-use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestInputData;
 use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
 
 /**
@@ -29,8 +29,21 @@ final class WriteRequestWasHandledEvent implements CarriesEventData
 		return $this->request->getRequestInfo();
 	}
 
-	public function getInputData() : ProvidesWriteRequestInputData
+	public function getInputData() : array
 	{
 		return $this->request->getInputData();
+	}
+
+	public function getBody() : string
+	{
+		return $this->request->getBody();
+	}
+
+	/**
+	 * @return array|ProvidesUploadedFileData[][]
+	 */
+	public function getUploadedFiles() : array
+	{
+		return $this->request->getAllFiles();
 	}
 }

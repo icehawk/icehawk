@@ -6,8 +6,8 @@
 namespace IceHawk\IceHawk\Requests;
 
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
 use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
-use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestInputData;
 
 /**
  * Class PostRequest
@@ -17,14 +17,27 @@ final class WriteRequest implements ProvidesWriteRequestData
 {
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
+	/**
+	 * @var string
+	 */
+	private $body;
 
-	/** @var ProvidesWriteRequestInputData */
-	private $inputData;
+	/**
+	 * @var array
+	 */
+	private $data;
 
-	public function __construct( ProvidesRequestInfo $requestInfo, ProvidesWriteRequestInputData $inputData )
+	/**
+	 * @var array
+	 */
+	private $uploadedFiles;
+
+	public function __construct( ProvidesRequestInfo $requestInfo, array $data, string $body, array $uploadedFiles = [ ] )
 	{
 		$this->requestInfo   = $requestInfo;
-		$this->inputData     = $inputData;
+		$this->body          = $body;
+		$this->data     = $data;
+		$this->uploadedFiles = $uploadedFiles;
 	}
 
 	public function getRequestInfo() : ProvidesRequestInfo
@@ -32,8 +45,52 @@ final class WriteRequest implements ProvidesWriteRequestData
 		return $this->requestInfo;
 	}
 
-	public function getInputData() : ProvidesWriteRequestInputData
+	public function getInputData() : array
 	{
-		return $this->inputData;
+		return $this->data;
+	}
+
+	/**
+	 * @param string $key
+	 * @param null|string|array $default
+	 *
+	 * @return null|string|array
+	 */
+	public function get( string $key, $default = null )
+	{
+		return $this->data[ $key ] ?? $default;
+	}
+
+	public function getBody() : string
+	{
+		return $this->body;
+	}
+
+	public function getAllFiles() : array
+	{
+		return $this->uploadedFiles;
+	}
+
+	/**
+	 * @param string $fieldKey
+	 *
+	 * @return array|ProvidesUploadedFileData[]
+	 */
+	public function getFiles( string $fieldKey ) : array
+	{
+		return $this->uploadedFiles[ $fieldKey ] ?? [ ];
+	}
+
+	/**
+	 * @param string $fieldKey
+	 * @param int    $fileIndex
+	 *
+	 * @return ProvidesUploadedFileData|null
+	 */
+	public function getOneFile( string $fieldKey, int $fileIndex = 0 )
+	{
+		$files = $this->getFiles( $fieldKey );
+
+		return $files[ $fileIndex ] ?? null;
 	}
 }

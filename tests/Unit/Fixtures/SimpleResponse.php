@@ -11,6 +11,7 @@ class SimpleResponse extends AbstractHttpResponse
 {
 	protected function getBody() : string
 	{
+		return '';
 	}
 	
 	public function getCharsetToTest() : string

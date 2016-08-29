@@ -1,15 +1,12 @@
 <?php
-/**
- * @author hollodotme
- */
-
 namespace IceHawk\IceHawk\PubSub\Interfaces;
 
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Interface CarriesEventData
- * @package IceHawk\IceHawk\PubSub\Interfaces
+ *
+ * @package IceHawk\IceHawk\Interfaces
  */
 interface CarriesEventData
 {

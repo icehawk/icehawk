@@ -11,7 +11,6 @@ use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
 use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestData;
 use IceHawk\IceHawk\Mappers\UploadedFilesMapper;
 use IceHawk\IceHawk\Requests\WriteRequest;
-use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 use IceHawk\IceHawk\Routing\RouteRequest;
 use IceHawk\IceHawk\Routing\WriteRouter;
@@ -74,9 +73,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		$requestData   = array_merge( $_POST, $uriParams );
 		$uploadedFiles = $this->getUploadedFiles();
 
-		$requestInput = new WriteRequestInput( $body, $requestData, $uploadedFiles );
-
-		return new WriteRequest( $requestInfo, $requestInput );
+		return new WriteRequest( $requestInfo, $requestData, $body, $uploadedFiles );
 	}
 
 	private function getRequestBody() : string

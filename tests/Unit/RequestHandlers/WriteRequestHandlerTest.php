@@ -12,7 +12,6 @@ use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use IceHawk\IceHawk\PubSub\EventPublisher;
 use IceHawk\IceHawk\RequestHandlers\WriteRequestHandler;
 use IceHawk\IceHawk\Requests\WriteRequest;
-use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\WriteRoute;
@@ -58,9 +57,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
-		$expectedWriteRequest = new WriteRequest(
-			$requestInfo, new WriteRequestInput( '', $expectedInputParams )
-		);
+		$expectedWriteRequest = new WriteRequest( $requestInfo, $expectedInputParams, '' );
 
 		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedWriteRequest ) );
@@ -90,9 +87,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/domain/test_body_data' ] );
 
-		$expectedWriteRequest = new WriteRequest(
-			$requestInfo, new WriteRequestInput( 'body data', [ ] )
-		);
+		$expectedWriteRequest = new WriteRequest( $requestInfo, [ ], 'body data' );
 
 		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedWriteRequest ) );

@@ -5,21 +5,22 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
+use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Mappers\UploadedFilesMapper;
 use IceHawk\IceHawk\Requests\UploadedFile;
-use IceHawk\IceHawk\Requests\WriteRequestInput;
+use IceHawk\IceHawk\Requests\WriteRequest;
 
-class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
+class WriteRequestTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanGetBodyAndData()
 	{
 		$body = 'test';
 		$data = [ 'key' => 'value' ];
 
-		$writeRequestInput = new WriteRequestInput( 'test', $data );
+		$writeRequestInput = new WriteRequest( RequestInfo::fromEnv(), $data, 'test' );
 
 		$this->assertEquals( $body, $writeRequestInput->getBody() );
-		$this->assertEquals( $data, $writeRequestInput->getData() );
+		$this->assertEquals( $data, $writeRequestInput->getInputData() );
 	}
 
 	public function requestDataProvider()
@@ -48,7 +49,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCanGetRequestValueByKey( array $writeData, $key, $expectedValue )
 	{
-		$writeRequestInput = new WriteRequestInput( '', $writeData );
+		$writeRequestInput = new WriteRequest( RequestInfo::fromEnv(), $writeData, '' );
 
 		$this->assertEquals( $expectedValue, $writeRequestInput->get( $key ) );
 	}
@@ -76,7 +77,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetterReturnsNullIfKeyIsNotSet( array $writeData, $key )
 	{
-		$writeRequestInput = new WriteRequestInput( '', $writeData );
+		$writeRequestInput = new WriteRequest( RequestInfo::fromEnv(), $writeData, '' );
 
 		$this->assertNull( $writeRequestInput->get( $key ) );
 	}
@@ -161,7 +162,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		$uploadedFiles = ( new UploadedFilesMapper( $uploadedFiles ) )->mapToInfoObjects();
 
-		$writeRequestInput = new WriteRequestInput( '', [ ], $uploadedFiles );
+		$writeRequestInput = new WriteRequest( RequestInfo::fromEnv(), [], '', $uploadedFiles );
 
 		$oneFile = $writeRequestInput->getOneFile( $fieldKey, $fileIndex );
 
@@ -177,7 +178,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetOneFileReturnNullIfKeyIsNotSet()
 	{
-		$writeRequestInput = new WriteRequestInput( '', [ ], [ ] );
+		$writeRequestInput = new WriteRequest( RequestInfo::fromEnv(), [], '', [ ] );
 		$oneFile           = $writeRequestInput->getOneFile( 'test' );
 
 		$this->assertNull( $oneFile );
@@ -195,7 +196,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 
-		$writeRequestInput = new WriteRequestInput( '', [ ], $uploadedFiles );
+		$writeRequestInput = new WriteRequest( RequestInfo::fromEnv(), [], '', $uploadedFiles );
 		$oneFile           = $writeRequestInput->getOneFile( 'test_file', 1 );
 
 		$this->assertNull( $oneFile );
@@ -203,7 +204,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetFilesReturnsEmptyArrayIfFieldKeyIsNotSet()
 	{
-		$writeRequestInput = new WriteRequestInput( '', [ ], [ ] );
+		$writeRequestInput = new WriteRequest( RequestInfo::fromEnv(), [], '', [ ] );
 		$files             = $writeRequestInput->getFiles( 'test' );
 
 		$this->assertInternalType( 'array', $files );
@@ -230,7 +231,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 		];
 
 		$uploadedFiles     = ( new UploadedFilesMapper( $uploadedFiles ) )->mapToInfoObjects();
-		$writeRequestInput = new WriteRequestInput( '', [ ], $uploadedFiles );
+		$writeRequestInput = new WriteRequest( RequestInfo::fromEnv(), [], '', $uploadedFiles );
 
 		$this->assertEquals( $uploadedFiles, $writeRequestInput->getAllFiles() );
 	}

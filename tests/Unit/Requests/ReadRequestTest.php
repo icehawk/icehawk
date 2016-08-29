@@ -5,9 +5,10 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
-use IceHawk\IceHawk\Requests\ReadRequestInput;
+use IceHawk\IceHawk\Defaults\RequestInfo;
+use IceHawk\IceHawk\Requests\ReadRequest;
 
-class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
+class ReadRequestTest extends \PHPUnit_Framework_TestCase
 {
 	public function requestDataProvider()
 	{
@@ -35,9 +36,9 @@ class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetDataReturnsProvidedGetData( array $getData )
 	{
-		$readRequestInput = new ReadRequestInput( $getData );
+		$readRequestInput = new ReadRequest( RequestInfo::fromEnv(), $getData );
 
-		$this->assertEquals( $getData, $readRequestInput->getData() );
+		$this->assertEquals( $getData, $readRequestInput->getInputData() );
 	}
 
 	/**
@@ -45,7 +46,7 @@ class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCanGetRequestValueByKey( array $getData, $key, $expectedValue )
 	{
-		$readRequestInput = new ReadRequestInput( $getData );
+		$readRequestInput = new ReadRequest( RequestInfo::fromEnv(), $getData );
 
 		$this->assertEquals( $expectedValue, $readRequestInput->get( $key ) );
 	}
@@ -73,7 +74,7 @@ class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetterReturnsNullIfKeyIsNotSet( array $getData, $key )
 	{		
-		$readRequestInput = new ReadRequestInput( $getData );
+		$readRequestInput = new ReadRequest( RequestInfo::fromEnv(), $getData );
 
 		$this->assertNull( $readRequestInput->get( $key ) );
 	}

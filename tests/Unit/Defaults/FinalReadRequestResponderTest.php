@@ -5,7 +5,6 @@ use IceHawk\IceHawk\Defaults\FinalReadResponder;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
 use IceHawk\IceHawk\Requests\ReadRequest;
-use IceHawk\IceHawk\Requests\ReadRequestInput;
 use IceHawk\IceHawk\Routing\RouteRequest;
 
 /**
@@ -24,7 +23,7 @@ class FinalReadRequestResponderTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
-		$requestData  = new ReadRequest( $requestInfo, new ReadRequestInput( [ ] ) );
+		$requestData  = new ReadRequest( $requestInfo, [ ] );
 
 		try
 		{

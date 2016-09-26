@@ -11,5 +11,5 @@ namespace IceHawk\IceHawk\Interfaces;
  */
 interface ProvidesWriteRequestData extends ProvidesRequestData
 {
-	public function getInputData() : ProvidesWriteRequestInputData;
+	public function getInput() : ProvidesWriteRequestInputData;
 }

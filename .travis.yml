@@ -8,6 +8,7 @@ branches:
     - master
     - development
     - /^feature\/.+$/
+    - /^refactoring\/.+$/
 
 before_script:
  - git checkout $TRAVIS_BRANCH

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author hollodotme
+ */
 namespace IceHawk\IceHawk\Requests;
 
 use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
@@ -10,19 +13,13 @@ use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestInputData;
  */
 final class WriteRequestInput implements ProvidesWriteRequestInputData
 {
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $body;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $data;
 
-	/**
-	 * @var array
-	 */
+	/** @var array|ProvidesUploadedFileData[] */
 	private $uploadedFiles;
 
 	public function __construct( string $body, array $data, array $uploadedFiles = [] )

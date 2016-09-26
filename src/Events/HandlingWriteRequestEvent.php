@@ -27,11 +27,11 @@ final class HandlingWriteRequestEvent implements CarriesEventData
 
 	public function getRequestInfo() : ProvidesRequestInfo
 	{
-		return $this->request->getRequestInfo();
+		return $this->request->getInfo();
 	}
 
-	public function getInputData() : ProvidesWriteRequestInputData
+	public function getRequestInput() : ProvidesWriteRequestInputData
 	{
-		return $this->request->getInputData();
+		return $this->request->getInput();
 	}
 }

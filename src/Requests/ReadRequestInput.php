@@ -9,9 +9,7 @@ use IceHawk\IceHawk\Interfaces\ProvidesReadRequestInputData;
  */
 final class ReadRequestInput implements ProvidesReadRequestInputData
 {
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $data;
 
 	public function __construct( array $data )

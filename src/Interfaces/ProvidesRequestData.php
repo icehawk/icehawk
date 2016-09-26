@@ -11,5 +11,5 @@ namespace IceHawk\IceHawk\Interfaces;
  */
 interface ProvidesRequestData
 {
-	public function getRequestInfo() : ProvidesRequestInfo;
+	public function getInfo() : ProvidesRequestInfo;
 } 

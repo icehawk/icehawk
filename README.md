@@ -5,7 +5,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/icehawk/icehawk/v/unstable)](https://packagist.org/packages/icehawk/icehawk) 
 [![License](https://poser.pugx.org/icehawk/icehawk/license)](https://packagist.org/packages/icehawk/icehawk)
 
-# ![IceHawk](icehawk-logo.png)
+# ![IceHawk Framework](https://icehawk.github.io/images/Logo-Flying-Tail-White.png)
 
 Lightweight PHP routing framework, respecting CQRS. 
 

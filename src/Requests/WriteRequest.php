@@ -27,12 +27,12 @@ final class WriteRequest implements ProvidesWriteRequestData
 		$this->inputData   = $inputData;
 	}
 
-	public function getRequestInfo() : ProvidesRequestInfo
+	public function getInfo() : ProvidesRequestInfo
 	{
 		return $this->requestInfo;
 	}
 
-	public function getInputData() : ProvidesWriteRequestInputData
+	public function getInput() : ProvidesWriteRequestInputData
 	{
 		return $this->inputData;
 	}

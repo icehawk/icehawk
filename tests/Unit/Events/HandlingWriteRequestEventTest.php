@@ -21,6 +21,6 @@ class HandlingWriteRequestEventTest extends \PHPUnit_Framework_TestCase
 		$event = new HandlingWriteRequestEvent( $writeRequest );
 
 		$this->assertSame( $requestInfo, $event->getRequestInfo() );
-		$this->assertSame( $requestInput, $event->getInputData() );
+		$this->assertSame( $requestInput, $event->getRequestInput() );
 	}
 }

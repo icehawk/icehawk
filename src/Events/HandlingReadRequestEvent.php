@@ -26,11 +26,11 @@ final class HandlingReadRequestEvent implements CarriesEventData
 
 	public function getRequestInfo() : ProvidesRequestInfo
 	{
-		return $this->request->getRequestInfo();
+		return $this->request->getInfo();
 	}
 
-	public function getInputData() : ProvidesReadRequestInputData
+	public function getRequestInput() : ProvidesReadRequestInputData
 	{
-		return $this->request->getInputData();
+		return $this->request->getInput();
 	}
 }

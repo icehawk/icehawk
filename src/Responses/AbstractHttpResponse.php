@@ -50,31 +50,22 @@ abstract class AbstractHttpResponse
 
 	protected function getAdditionalHeaders() : array
 	{
-		return [ ];
+		return [];
 	}
 
 	abstract protected function getBody() : string;
 
-	/**
-	 * @return string
-	 */
-	protected function getContentType()
+	protected function getContentType() : string
 	{
 		return $this->contentType;
 	}
 
-	/**
-	 * @return int
-	 */
-	protected function getHttpCode()
+	protected function getHttpCode() : int
 	{
 		return $this->httpCode;
 	}
 
-	/**
-	 * @return string
-	 */
-	protected function getCharset()
+	protected function getCharset() : string
 	{
 		return $this->charset;
 	}

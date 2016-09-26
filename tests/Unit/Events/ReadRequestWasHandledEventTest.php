@@ -21,6 +21,6 @@ class ReadRequestWasHandledEventTest extends \PHPUnit_Framework_TestCase
 		$event = new ReadRequestWasHandledEvent( $readRequest );
 
 		$this->assertSame( $requestInfo, $event->getRequestInfo() );
-		$this->assertSame( $requestInput, $event->getInputData() );
+		$this->assertSame( $requestInput, $event->getRequestInput() );
 	}
 }

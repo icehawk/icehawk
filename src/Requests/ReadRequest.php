@@ -28,12 +28,12 @@ final class ReadRequest implements ProvidesReadRequestData
 		$this->inputData   = $inputData;
 	}
 
-	public function getRequestInfo() : ProvidesRequestInfo
+	public function getInfo() : ProvidesRequestInfo
 	{
 		return $this->requestInfo;
 	}
 
-	public function getInputData() : ProvidesReadRequestInputData
+	public function getInput() : ProvidesReadRequestInputData
 	{
 		return $this->inputData;
 	}

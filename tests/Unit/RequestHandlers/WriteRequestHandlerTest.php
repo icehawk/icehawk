@@ -1,6 +1,29 @@
 <?php
 /**
- * @author h.woltersdorf
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
+declare(strict_types = 1);
+/**
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  */
 
 namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
@@ -24,19 +47,19 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
+				['unit' => 'test', 'test' => 'unit'],
 				'unit', 'tested',
-				[ 'unit' => 'tested', 'test' => 'unit' ],
+				['unit' => 'tested', 'test' => 'unit'],
 			],
 			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
+				['unit' => 'test', 'test' => 'unit'],
 				'test', 'units',
-				[ 'unit' => 'test', 'test' => 'units' ],
+				['unit' => 'test', 'test' => 'units'],
 			],
 			[
-				[ 'unit' => [ 'test' => 'unit' ] ],
+				['unit' => ['test' => 'unit']],
 				'unit', 'units',
-				[ 'unit' => 'units' ],
+				['unit' => 'units'],
 			],
 		];
 	}
@@ -66,14 +89,14 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedWriteRequest ) );
 
 		$regExp     = new RegExp(
-			sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [ $uriKey ]
+			sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [$uriKey]
 		);
 		$writeRoute = new WriteRoute( $regExp, $requestHandler );
 
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$writeRoute] );
 
 		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
@@ -88,7 +111,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		stream_wrapper_register( "php", PhpStreamMock::class );
 		file_put_contents( 'php://input', 'body data' );
 
-		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/domain/test_body_data' ] );
+		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/domain/test_body_data'] );
 
 		$expectedWriteRequest = new WriteRequest(
 			$requestInfo, new WriteRequestInput( 'body data', [] )
@@ -102,7 +125,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$writeRoute] );
 
 		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
@@ -115,7 +138,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMissingWriteRoutesHandledByFinaleWriteResponder()
 	{
-		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] );
+		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test'] );
 
 		$finalWriteResponder = $this->getMockBuilder( RespondsFinallyToWriteRequest::class )->getMockForAbstractClass();
 		$finalWriteResponder->method( 'handleUncaughtException' )
@@ -131,7 +154,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ ] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->method( 'getFinalWriteResponder' )->willReturn( $finalWriteResponder );
 
 		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
@@ -145,7 +168,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExceptionHandledByFinaleWriteResponder()
 	{
-		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test' ] );
+		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test'] );
 		$exception   = new \Exception();
 
 		$finalWriteResponder = $this->getMockBuilder( RespondsFinallyToWriteRequest::class )->getMockForAbstractClass();
@@ -171,7 +194,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$writeRoute = new WriteRoute( new Literal( '/test' ), $requestHandler );
 
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$writeRoute] );
 
 		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();

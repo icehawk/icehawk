@@ -1,4 +1,31 @@
 <?php
+/**
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
+declare(strict_types = 1);
+/**
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Interfaces\HandlesWriteRequest;
@@ -73,7 +100,7 @@ class WriteRouterTest extends \PHPUnit_Framework_TestCase
 	public function invalidRoutesProvider()
 	{
 		return [
-			[ 'string' ], [ 1 ], [ 0.0 ], [ false ], [ true ], [ new \stdClass() ], [ null ],
+			['string'], [1], [0.0], [false], [true], [new \stdClass()], [null],
 		];
 	}
 
@@ -94,7 +121,7 @@ class WriteRouterTest extends \PHPUnit_Framework_TestCase
 		$matchingUri = '/test';
 
 		$routes = [
-			new ReadRoute( new Literal( $matchingUri ), new GetRequestHandler() )
+			new ReadRoute( new Literal( $matchingUri ), new GetRequestHandler() ),
 		];
 
 		$routeRequest = new RouteRequest( $matchingUri, 'POST' );

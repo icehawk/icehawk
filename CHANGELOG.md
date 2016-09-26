@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 ### Changed
 
 - Renamed accessors for RequestInfo and InputData on `$request` object to `$request->getInfo()` and `$request->getInput()` 
+- All php files are setting strict types `declare(strict_types = 1);`
 
 ## [2.0.0-rc4] - 2016-07-13
 

@@ -9,6 +9,7 @@ branches:
     - development
     - /^feature\/.+$/
     - /^refactoring\/.+$/
+    - /^issue\/.+$/
 
 before_script:
  - git checkout $TRAVIS_BRANCH

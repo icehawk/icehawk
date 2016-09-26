@@ -8,19 +8,19 @@ namespace IceHawk\IceHawk\Tests\Unit\Events;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\HandlingWriteRequestEvent;
 use IceHawk\IceHawk\Requests\WriteRequest;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
 
 class HandlingWriteRequestEventTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{
 		$requestInfo  = RequestInfo::fromEnv();
-		$writeRequest = new WriteRequest( $requestInfo, [], '' );
+		$requestInput = new WriteRequestInput( '', [] );
+		$writeRequest = new WriteRequest( $requestInfo, $requestInput );
 
 		$event = new HandlingWriteRequestEvent( $writeRequest );
 
 		$this->assertSame( $requestInfo, $event->getRequestInfo() );
-		$this->assertSame( [], $event->getInputData() );
-		$this->assertSame( '', $event->getBody() );
-		$this->assertSame( [], $event->getUploadedFiles() );
+		$this->assertSame( $requestInput, $event->getInputData() );
 	}
 }

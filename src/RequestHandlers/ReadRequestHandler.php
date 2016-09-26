@@ -10,13 +10,13 @@ use IceHawk\IceHawk\Events\ReadRequestWasHandledEvent;
 use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
 use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
 use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use IceHawk\IceHawk\Routing\ReadRouter;
 use IceHawk\IceHawk\Routing\RouteRequest;
 
 /**
  * Class ReadRequestHandler
- *
  * @package IceHawk\IceHawk\RequestHandlers
  */
 final class ReadRequestHandler extends AbstractRequestHandler
@@ -73,8 +73,10 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	private function getRequest( array $uriParams ) : ProvidesReadRequestData
 	{
 		$requestInfo = $this->config->getRequestInfo();
-		$requestData = array_merge( $_GET, $uriParams );
 
-		return new ReadRequest( $requestInfo, $requestData );
+		$requestData  = array_merge( $_GET, $uriParams );
+		$requestInput = new ReadRequestInput( $requestData );
+
+		return new ReadRequest( $requestInfo, $requestInput );
 	}
 }

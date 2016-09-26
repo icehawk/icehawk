@@ -20,7 +20,9 @@ use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use IceHawk\IceHawk\Interfaces\SetsUpEnvironment;
 use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
 use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
 use IceHawk\IceHawk\Requests\WriteRequest;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\ReadRoute;
 use IceHawk\IceHawk\Routing\WriteRoute;
@@ -244,7 +246,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
 		$initEvent         = new IceHawkWasInitializedEvent( $requestInfo );
-		$request           = new ReadRequest( $requestInfo, [ ] );
+		$request           = new ReadRequest( $requestInfo, new ReadRequestInput( [] ) );
 		$handlingEvent     = new HandlingReadRequestEvent( $request );
 		$handledEvent      = new ReadRequestWasHandledEvent( $request );
 
@@ -297,7 +299,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
 		$initEvent         = new IceHawkWasInitializedEvent( $requestInfo );
-		$request           = new WriteRequest( $requestInfo, [ ], '' );
+		$request           = new WriteRequest( $requestInfo, new WriteRequestInput( '', [] ) );
 		$handlingEvent     = new HandlingWriteRequestEvent( $request );
 		$handledEvent      = new WriteRequestWasHandledEvent( $request );
 

@@ -1,18 +1,17 @@
 <?php
 /**
  * GET request wrapper
- *
  * @author hollodotme
  */
 
 namespace IceHawk\IceHawk\Requests;
 
 use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestInputData;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
  * Class GetRequest
- *
  * @package IceHawk\IceHawk\Requests
  */
 final class ReadRequest implements ProvidesReadRequestData
@@ -20,15 +19,13 @@ final class ReadRequest implements ProvidesReadRequestData
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
-	/**
-	 * @var array
-	 */
-	private $data;
+	/** @var ProvidesReadRequestInputData */
+	private $inputData;
 
-	public function __construct( ProvidesRequestInfo $requestInfo, array $data )
+	public function __construct( ProvidesRequestInfo $requestInfo, ProvidesReadRequestInputData $inputData )
 	{
 		$this->requestInfo = $requestInfo;
-		$this->data        = $data;
+		$this->inputData   = $inputData;
 	}
 
 	public function getRequestInfo() : ProvidesRequestInfo
@@ -36,19 +33,8 @@ final class ReadRequest implements ProvidesReadRequestData
 		return $this->requestInfo;
 	}
 
-	public function getInputData() : array
+	public function getInputData() : ProvidesReadRequestInputData
 	{
-		return $this->data;
-	}
-
-	/**
-	 * @param string            $key
-	 * @param null|string|array $default
-	 *
-	 * @return null|string|array
-	 */
-	public function get( string $key, $default = null )
-	{
-		return $this->data[ $key ] ?? $default;
+		return $this->inputData;
 	}
 }

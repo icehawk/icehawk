@@ -6,6 +6,7 @@ use IceHawk\IceHawk\Events\HandlingReadRequestEvent;
 use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
 use IceHawk\IceHawk\PubSub\Exceptions\EventSubscriberMethodNotCallable;
 use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\TestEventSubscriber;
 
 /**
@@ -17,7 +18,8 @@ class EventSubscriberTest extends \PHPUnit_Framework_TestCase
 	public function testCanCheckForAcceptedEvents()
 	{
 		$initEvent     = new IceHawkWasInitializedEvent( RequestInfo::fromEnv() );
-		$handlingEvent = new HandlingReadRequestEvent( new ReadRequest( RequestInfo::fromEnv(), [ ] ) );
+		$handlingEvent =
+			new HandlingReadRequestEvent( new ReadRequest( RequestInfo::fromEnv(), new ReadRequestInput( [] ) ) );
 
 		$mock = $this->getMockBuilder( TestEventSubscriber::class )
 		             ->setMethods( [ 'getAcceptedEvents', 'whenIceHawkWasInitialized' ] )

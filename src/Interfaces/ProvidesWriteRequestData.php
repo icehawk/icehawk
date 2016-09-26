@@ -9,7 +9,7 @@ namespace IceHawk\IceHawk\Interfaces;
  * Interface ServesPostRequestData
  * @package IceHawk\IceHawk\Interfaces
  */
-interface ProvidesWriteRequestData extends ProvidesRequestData, ProvidesUploadedFiles
+interface ProvidesWriteRequestData extends ProvidesRequestData
 {
-	public function getBody() : string;
+	public function getInputData() : ProvidesWriteRequestInputData;
 }

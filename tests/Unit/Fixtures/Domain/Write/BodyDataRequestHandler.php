@@ -12,6 +12,6 @@ class BodyDataRequestHandler implements HandlesPostRequest
 {
 	public function handle( ProvidesWriteRequestData $request )
 	{
-		echo $request->getBody();
+		echo $request->getInputData()->getBody();
 	}
 }

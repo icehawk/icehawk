@@ -5,6 +5,7 @@ use IceHawk\IceHawk\Defaults\FinalWriteResponder;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
 use IceHawk\IceHawk\Requests\WriteRequest;
+use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\RouteRequest;
 
 /**
@@ -23,7 +24,7 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 		);
 		
 		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
-		$requestData  = new WriteRequest( $requestInfo, [ ], '' );
+		$requestData  = new WriteRequest( $requestInfo, new WriteRequestInput( '', [] ) );
 
 		try
 		{

@@ -12,6 +12,7 @@ use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use IceHawk\IceHawk\PubSub\EventPublisher;
 use IceHawk\IceHawk\RequestHandlers\ReadRequestHandler;
 use IceHawk\IceHawk\Requests\ReadRequest;
+use IceHawk\IceHawk\Requests\ReadRequestInput;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\ReadRoute;
@@ -52,7 +53,9 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri ] );
 
-		$expectedRequest = new ReadRequest(	$requestInfo,  $expectedParams );
+		$expectedRequest = new ReadRequest(
+			$requestInfo, new ReadRequestInput( $expectedParams )
+		);
 
 		$requestHandler = $this->getMockBuilder( HandlesGetRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedRequest ) );

@@ -6,6 +6,7 @@
 namespace IceHawk\IceHawk\Events;
 
 use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestInputData;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
 
@@ -28,7 +29,7 @@ final class HandlingReadRequestEvent implements CarriesEventData
 		return $this->request->getRequestInfo();
 	}
 
-	public function getInputData() : array
+	public function getInputData() : ProvidesReadRequestInputData
 	{
 		return $this->request->getInputData();
 	}

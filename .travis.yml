@@ -18,10 +18,10 @@ before_script:
  - mkdir build/logs
 
 script:
- - php vendor/bin/phpunit -c build/
+ - php vendor/bin/phpunit.phar -c build/
 
 after_success:
- - travis_retry php vendor/bin/coveralls -v --exclude-no-stmt
+ - travis_retry php vendor/bin/coveralls.phar -v --exclude-no-stmt
 
 notifications:
   slack: fortunesolutions:PoLjMJuARdFicBIEPzdNrZ96

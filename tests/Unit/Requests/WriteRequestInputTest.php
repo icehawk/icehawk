@@ -1,6 +1,14 @@
-<?php
+<?php declare(strict_types = 1);
 /**
- * @author h.woltersdorf
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  */
 
 namespace IceHawk\IceHawk\Tests\Unit\Requests;
@@ -14,7 +22,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	public function testCanGetBodyAndData()
 	{
 		$body = 'test';
-		$data = [ 'key' => 'value' ];
+		$data = ['key' => 'value'];
 
 		$writeRequestInput = new WriteRequestInput( 'test', $data );
 
@@ -26,19 +34,19 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
+				['unit' => 'test', 'test' => 'unit'],
 				'unit',
 				'test',
 			],
 			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
+				['unit' => 'test', 'test' => 'unit'],
 				'test',
 				'unit',
 			],
 			[
-				[ 'unit' => [ 'test' => 'unit' ] ],
+				['unit' => ['test' => 'unit']],
 				'unit',
-				[ 'test' => 'unit' ],
+				['test' => 'unit'],
 			],
 		];
 	}
@@ -57,15 +65,15 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
+				['unit' => 'test', 'test' => 'unit'],
 				'blubb',
 			],
 			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
+				['unit' => 'test', 'test' => 'unit'],
 				'blubb',
 			],
 			[
-				[ 'unit' => [ 'test' => 'unit' ] ],
+				['unit' => ['test' => 'unit']],
 				'blubb',
 			],
 		];
@@ -109,11 +117,11 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			[
 				[
 					'test_file' => [
-						'name'     => [ 'TestFile.dat', 'FileTest.html' ],
-						'tmp_name' => [ '/tmp/TestFile.dat', '/tmp/FileTest.html' ],
-						'type'     => [ 'text/plain', 'text/html' ],
-						'size'     => [ 1024, 2048 ],
-						'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
+						'name'     => ['TestFile.dat', 'FileTest.html'],
+						'tmp_name' => ['/tmp/TestFile.dat', '/tmp/FileTest.html'],
+						'type'     => ['text/plain', 'text/html'],
+						'size'     => [1024, 2048],
+						'error'    => [UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL],
 					],
 				],
 				'test_file',
@@ -130,11 +138,11 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			[
 				[
 					'test_file' => [
-						'name'     => [ 'TestFile.dat', 'FileTest.html' ],
-						'tmp_name' => [ '/tmp/TestFile.dat', '/tmp/FileTest.html' ],
-						'type'     => [ 'text/plain', 'text/html' ],
-						'size'     => [ 1024, 2048 ],
-						'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
+						'name'     => ['TestFile.dat', 'FileTest.html'],
+						'tmp_name' => ['/tmp/TestFile.dat', '/tmp/FileTest.html'],
+						'type'     => ['text/plain', 'text/html'],
+						'size'     => [1024, 2048],
+						'error'    => [UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL],
 					],
 				],
 				'test_file',
@@ -159,7 +167,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 		$expectedError, $expectedErrorMessage, $expectedSuccess
 	)
 	{
-		$uploadedFiles = ( new UploadedFilesMapper( $uploadedFiles ) )->mapToInfoObjects();
+		$uploadedFiles = (new UploadedFilesMapper( $uploadedFiles ))->mapToInfoObjects();
 
 		$writeRequestInput = new WriteRequestInput( '', [], $uploadedFiles );
 
@@ -214,22 +222,22 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		$uploadedFiles = [
 			'test_file'         => [
-				'name'     => [ 'TestFile.dat', 'FileTest.html' ],
-				'tmp_name' => [ '/tmp/TestFile.dat', '/tmp/FileTest.html' ],
-				'type'     => [ 'text/plain', 'text/html' ],
-				'size'     => [ 1024, 2048 ],
-				'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
+				'name'     => ['TestFile.dat', 'FileTest.html'],
+				'tmp_name' => ['/tmp/TestFile.dat', '/tmp/FileTest.html'],
+				'type'     => ['text/plain', 'text/html'],
+				'size'     => [1024, 2048],
+				'error'    => [UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL],
 			],
 			'another_test_file' => [
-				'name'     => [ 'AnotherTestFile.dat', 'AnotherFileTest.html' ],
-				'tmp_name' => [ '/tmp/AnotherTestFile.dat', '/tmp/AnotherFileTest.html' ],
-				'type'     => [ 'text/plain', 'text/html' ],
-				'size'     => [ 20, 40 ],
-				'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
+				'name'     => ['AnotherTestFile.dat', 'AnotherFileTest.html'],
+				'tmp_name' => ['/tmp/AnotherTestFile.dat', '/tmp/AnotherFileTest.html'],
+				'type'     => ['text/plain', 'text/html'],
+				'size'     => [20, 40],
+				'error'    => [UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL],
 			],
 		];
 
-		$uploadedFiles     = ( new UploadedFilesMapper( $uploadedFiles ) )->mapToInfoObjects();
+		$uploadedFiles     = (new UploadedFilesMapper( $uploadedFiles ))->mapToInfoObjects();
 		$writeRequestInput = new WriteRequestInput( '', [], $uploadedFiles );
 
 		$this->assertEquals( $uploadedFiles, $writeRequestInput->getAllFiles() );

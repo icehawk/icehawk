@@ -9,9 +9,9 @@ branches:
     - development
     - /^feature\/.+$/
     - /^refactoring\/.+$/
+    - /^issue\/.+$/
 
 before_script:
- - git checkout $TRAVIS_BRANCH
  - composer self-update
  - mkdir -p vendor/bin
  - composer install -o --prefer-dist --no-interaction

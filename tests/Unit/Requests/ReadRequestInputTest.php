@@ -17,7 +17,20 @@ use IceHawk\IceHawk\Requests\ReadRequestInput;
 
 class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 {
-	public function requestDataProvider()
+
+	/**
+	 * @dataProvider requestDataProvider
+	 *
+	 * @param array $getData
+	 */
+	public function testGetDataReturnsProvidedGetData( array $getData )
+	{
+		$readRequestInput = new ReadRequestInput( $getData );
+
+		$this->assertEquals( $getData, $readRequestInput->getData() );
+	}
+
+	public function requestDataProvider() : array
 	{
 		return [
 			[
@@ -35,30 +48,42 @@ class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 				'unit',
 				['test' => 'unit'],
 			],
+			[
+				['unit' => ''],
+				'unit',
+				'',
+			],
 		];
 	}
 
 	/**
 	 * @dataProvider requestDataProvider
+	 *
+	 * @param array  $getData
+	 * @param string $key
+	 * @param mixed  $expectedValue
 	 */
-	public function testGetDataReturnsProvidedGetData( array $getData )
+	public function testCanGetRequestValueByKey( array $getData, string $key, $expectedValue )
 	{
 		$readRequestInput = new ReadRequestInput( $getData );
 
-		$this->assertEquals( $getData, $readRequestInput->getData() );
+		$this->assertSame( $expectedValue, $readRequestInput->get( $key ) );
 	}
 
 	/**
-	 * @dataProvider requestDataProvider
+	 * @dataProvider nullKeyDataProvider
+	 *
+	 * @param array  $getData
+	 * @param string $key
 	 */
-	public function testCanGetRequestValueByKey( array $getData, $key, $expectedValue )
+	public function testGetterReturnsNullIfKeyIsNotSet( array $getData, string $key )
 	{
 		$readRequestInput = new ReadRequestInput( $getData );
 
-		$this->assertEquals( $expectedValue, $readRequestInput->get( $key ) );
+		$this->assertNull( $readRequestInput->get( $key ) );
 	}
 
-	public function nullKeyDataProvider()
+	public function nullKeyDataProvider() : array
 	{
 		return [
 			[
@@ -76,13 +101,19 @@ class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider nullKeyDataProvider
-	 */
-	public function testGetterReturnsNullIfKeyIsNotSet( array $getData, $key )
+	public function testGetterReturnsDefaultValueIfProvidedAndKeyIsNotFound()
 	{
-		$readRequestInput = new ReadRequestInput( $getData );
+		$readRequestInput = new ReadRequestInput( ['unit' => 'test'] );
 
-		$this->assertNull( $readRequestInput->get( $key ) );
+		$stdObj = new \stdClass();
+
+		$this->assertSame( ['123'], $readRequestInput->get( 'someKey', ['123'] ) );
+		$this->assertSame( '123', $readRequestInput->get( 'someKey', '123' ) );
+		$this->assertSame( 123, $readRequestInput->get( 'someKey', 123 ) );
+		$this->assertSame( $stdObj, $readRequestInput->get( 'someKey', $stdObj ) );
+		$this->assertSame( null, $readRequestInput->get( 'someKey', null ) );
+		$this->assertSame( null, $readRequestInput->get( 'someKey' ) );
+
+		$this->assertSame( 'test', $readRequestInput->get( 'unit', ['123'] ) );
 	}
 }

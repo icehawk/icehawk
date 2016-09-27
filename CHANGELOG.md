@@ -1,8 +1,9 @@
 # Change Log
+
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
-## [Unreleased]
+## [2.0.0-rc5] - 2016-09-27
 
 ### Added
 
@@ -153,7 +154,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - First release
 
-[Unreleased]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc4...development
+[2.0.0-rc5]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc4...v2.0.0-rc5
 [2.0.0-rc4]: https://github.com/icehawk/icehawk/compare/v1.4.2...v2.0.0-rc4
 [1.4.2]: https://github.com/icehawk/icehawk/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/icehawk/icehawk/compare/v1.4.0...v1.4.1

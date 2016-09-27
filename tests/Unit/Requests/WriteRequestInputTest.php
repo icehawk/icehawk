@@ -242,4 +242,20 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals( $uploadedFiles, $writeRequestInput->getAllFiles() );
 	}
+
+	public function testGetterReturnsDefaultValueIfProvidedAndKeyIsNotFound()
+	{
+		$writeRequestInput = new WriteRequestInput( '', ['unit' => 'test'], [] );
+
+		$stdObj = new \stdClass();
+
+		$this->assertSame( ['123'], $writeRequestInput->get( 'someKey', ['123'] ) );
+		$this->assertSame( '123', $writeRequestInput->get( 'someKey', '123' ) );
+		$this->assertSame( 123, $writeRequestInput->get( 'someKey', 123 ) );
+		$this->assertSame( $stdObj, $writeRequestInput->get( 'someKey', $stdObj ) );
+		$this->assertSame( null, $writeRequestInput->get( 'someKey', null ) );
+		$this->assertSame( null, $writeRequestInput->get( 'someKey' ) );
+
+		$this->assertSame( 'test', $writeRequestInput->get( 'unit', ['123'] ) );
+	}
 }

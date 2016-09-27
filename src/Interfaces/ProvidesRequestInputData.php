@@ -22,9 +22,10 @@ interface ProvidesRequestInputData
 	public function getData() : array;
 
 	/**
-	 * @param string $key
+	 * @param string            $key
+	 * @param string|array|null $default
 	 *
-	 * @return null|string|array
+	 * @return string|array|null
 	 */
-	public function get( string $key );
+	public function get( string $key, $default = null );
 }

@@ -1,4 +1,16 @@
-<?php
+<?php declare(strict_types = 1);
+/**
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
 namespace IceHawk\IceHawk\Tests\Unit\Config;
 
 use IceHawk\IceHawk\Config\ConfigGuard;
@@ -15,9 +27,9 @@ class ConfigGuardTest extends \PHPUnit_Framework_TestCase
 	public function invalidSubscriberProvider()
 	{
 		return [
-			[ [ 'invalidSubscriber', new TestEventSubscriber(), null ], [ 0, 2 ] ],
-			[ [ '', new \stdClass(), 1, new TestEventSubscriber() ], [ 0, 1, 2 ] ],
-			[ [ new TestEventSubscriber(), [ ], 0, true, false ], [ 1, 2, 3, 4 ] ],
+			[['invalidSubscriber', new TestEventSubscriber(), null], [0, 2]],
+			[['', new \stdClass(), 1, new TestEventSubscriber()], [0, 1, 2]],
+			[[new TestEventSubscriber(), [], 0, true, false], [1, 2, 3, 4]],
 		];
 	}
 

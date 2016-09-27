@@ -1,7 +1,14 @@
-<?php
+<?php declare(strict_types = 1);
 /**
- *
- * @author h.woltersdorf
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  */
 
 namespace IceHawk\IceHawk\Tests\Unit\Requests;
@@ -17,7 +24,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 			'tmp_name' => '/tmp/abc123',
 			'type'     => 'text/plain',
 			'size'     => 1024,
-			'error'    => UPLOAD_ERR_OK
+			'error'    => UPLOAD_ERR_OK,
 		];
 
 		$uploadedFileInfoFromConstruct = new UploadedFile(
@@ -37,20 +44,20 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 		$size    = 1024;
 
 		return [
-			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_OK ), true ],
-			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_CANT_WRITE ), false ],
-			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_EXTENSION ), false ],
-			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_FORM_SIZE ), false ],
-			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_INI_SIZE ), false ],
-			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_FILE ), false ],
-			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_TMP_DIR ), false ],
-			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_PARTIAL ), false ],
+			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_OK ), true],
+			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_CANT_WRITE ), false],
+			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_EXTENSION ), false],
+			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_FORM_SIZE ), false],
+			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_INI_SIZE ), false],
+			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_FILE ), false],
+			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_TMP_DIR ), false],
+			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_PARTIAL ), false],
 		];
 	}
 
 	/**
 	 * @param UploadedFile $uploadedFileInfo
-	 * @param boolean          $expectedBool
+	 * @param boolean      $expectedBool
 	 *
 	 * @dataProvider uploadSucceededProvider
 	 */
@@ -70,43 +77,43 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 		return [
 			[
 				new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_OK ),
-				0, ''
+				0, '',
 			],
 			[
 				new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_INI_SIZE ),
-				1, 'Filesize exceeded max size allowed by server.'
+				1, 'Filesize exceeded max size allowed by server.',
 			],
 			[
 				new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_FORM_SIZE ),
-				2, 'Filesize exceeded max size allowed by input form.'
+				2, 'Filesize exceeded max size allowed by input form.',
 			],
 			[
 				new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_PARTIAL ),
-				3, 'File was uploaded partially.'
+				3, 'File was uploaded partially.',
 			],
 			[
 				new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_FILE ),
-				4, 'No file uploaded.'
+				4, 'No file uploaded.',
 			],
 			[
 				new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_TMP_DIR ),
-				6, 'No upload temp directory available.'
+				6, 'No upload temp directory available.',
 			],
 			[
 				new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_CANT_WRITE ),
-				7, 'Cannot write file.'
+				7, 'Cannot write file.',
 			],
 			[
 				new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_EXTENSION ),
-				8, 'Upload canceled by PHP extension.'
+				8, 'Upload canceled by PHP extension.',
 			],
 		];
 	}
 
 	/**
 	 * @param UploadedFile $uploadedFileInfo
-	 * @param int              $expectedErrorCode
-	 * @param string           $expectedErrorMessage
+	 * @param int          $expectedErrorCode
+	 * @param string       $expectedErrorMessage
 	 *
 	 * @dataProvider uploadErrorMessageProvider
 	 */
@@ -119,8 +126,8 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 	public function filePathRealTypeProvider()
 	{
 		return [
-			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'image/png' ],
-			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'text/plain' ],
+			[__DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'image/png'],
+			[__DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'text/plain'],
 		];
 	}
 
@@ -142,8 +149,8 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 	public function filePathEncodingProvider()
 	{
 		return [
-			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'binary' ],
-			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'utf-8' ],
+			[__DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'binary'],
+			[__DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'utf-8'],
 		];
 	}
 

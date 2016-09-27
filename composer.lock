@@ -4,42 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3047c6b10ccb289ec113d04154624eb4",
-    "content-hash": "393a37ec82e743a7c8da8a83de526b07",
+    "hash": "beedec4b1c074f1587aa925e73679e8b",
+    "content-hash": "54c9fe8cb11563d1ad00dbda6cf1d08a",
     "packages": [],
     "packages-dev": [
         {
             "name": "tm/tooly-composer-script",
-            "version": "1.0.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tommy-muehle/tooly-composer-script.git",
-                "reference": "1e29176f345d09afd328bdcb56805d94c0e3abbe"
+                "reference": "be34f34ebd83bd25ee388240fcb1b55f109adb6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tommy-muehle/tooly-composer-script/zipball/1e29176f345d09afd328bdcb56805d94c0e3abbe",
-                "reference": "1e29176f345d09afd328bdcb56805d94c0e3abbe",
+                "url": "https://api.github.com/repos/tommy-muehle/tooly-composer-script/zipball/be34f34ebd83bd25ee388240fcb1b55f109adb6b",
+                "reference": "be34f34ebd83bd25ee388240fcb1b55f109adb6b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "php": ">=5.6.0"
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
                 "composer/composer": "1.*",
-                "mikey179/vfsstream": "1.6.*"
+                "mikey179/vfsstream": "1.6.*",
+                "php-mock/php-mock-phpunit": "1.1.*",
+                "tm/gpg-verifier": "1.*"
+            },
+            "suggest": {
+                "tm/gpg-verifier": "Allows verification over GPG for PHAR tools."
             },
             "type": "library",
             "extra": {
                 "tools": {
                     "phpunit": {
-                        "url": "https://phar.phpunit.de/phpunit-4.8.9.phar",
-                        "only-dev": true
+                        "url": "https://phar.phpunit.de/phpunit-5.5.0.phar"
                     },
                     "phpcpd": {
-                        "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar",
-                        "only-dev": true
+                        "url": "https://phar.phpunit.de/phpcpd-2.0.4.phar"
+                    },
+                    "phpcs": {
+                        "url": "https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar",
+                        "force-replace": true
+                    },
+                    "phpmd": {
+                        "url": "http://static.phpmd.org/php/latest/phpmd.phar",
+                        "force-replace": true
+                    },
+                    "security-checker": {
+                        "url": "http://get.sensiolabs.org/security-checker.phar",
+                        "force-replace": true
                     }
                 }
             },
@@ -65,9 +80,12 @@
                 "composer",
                 "composer-phar",
                 "composer-script",
+                "gpg-verification",
+                "phar",
+                "phar-handling",
                 "phar-management"
             ],
-            "time": "2016-07-06 12:47:04"
+            "time": "2016-09-13 10:42:40"
         }
     ],
     "aliases": [],

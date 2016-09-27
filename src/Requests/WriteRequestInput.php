@@ -1,4 +1,16 @@
-<?php
+<?php declare(strict_types = 1);
+/**
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
 namespace IceHawk\IceHawk\Requests;
 
 use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
@@ -10,22 +22,16 @@ use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestInputData;
  */
 final class WriteRequestInput implements ProvidesWriteRequestInputData
 {
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $body;
-	
-	/**
-	 * @var array
-	 */
+
+	/** @var array */
 	private $data;
 
-	/**
-	 * @var array
-	 */
+	/** @var array|ProvidesUploadedFileData[] */
 	private $uploadedFiles;
 
-	public function __construct( string $body, array $data, array $uploadedFiles = [ ] )
+	public function __construct( string $body, array $data, array $uploadedFiles = [] )
 	{
 		$this->body          = $body;
 		$this->data          = $data;
@@ -38,13 +44,14 @@ final class WriteRequestInput implements ProvidesWriteRequestInputData
 	}
 
 	/**
-	 * @param string $key
+	 * @param string            $key
+	 * @param string|array|null $default
 	 *
-	 * @return null|string|array
+	 * @return string|array|null
 	 */
-	public function get( string $key )
+	public function get( string $key, $default = null )
 	{
-		return $this->data[ $key ] ?? null;
+		return $this->data[ $key ] ?? $default;
 	}
 
 	public function getBody() : string
@@ -63,8 +70,8 @@ final class WriteRequestInput implements ProvidesWriteRequestInputData
 	 * @return array|ProvidesUploadedFileData[]
 	 */
 	public function getFiles( string $fieldKey ) : array
-	{		
-		return $this->uploadedFiles[ $fieldKey ] ?? [ ];
+	{
+		return $this->uploadedFiles[ $fieldKey ] ?? [];
 	}
 
 	/**

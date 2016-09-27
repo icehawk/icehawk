@@ -1,6 +1,18 @@
 # Change Log
+
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
+
+## [2.0.0-rc5] - 2016-09-27
+
+### Added
+
+- `ReadRequestInput`/`WriteRequestInput`'s get method now support an optional default value, in case it was asked for a non-existing key. - #1
+
+### Changed
+
+- Renamed accessors for RequestInfo and InputData on `$request` object to `$request->getInfo()` and `$request->getInput()`
+- All php files are setting strict types `declare(strict_types = 1);` - #2
 
 ## [2.0.0-rc4] - 2016-07-13
 
@@ -142,6 +154,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - First release
 
+[2.0.0-rc5]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc4...v2.0.0-rc5
 [2.0.0-rc4]: https://github.com/icehawk/icehawk/compare/v1.4.2...v2.0.0-rc4
 [1.4.2]: https://github.com/icehawk/icehawk/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/icehawk/icehawk/compare/v1.4.0...v1.4.1

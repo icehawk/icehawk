@@ -1,6 +1,14 @@
-<?php
+<?php declare(strict_types = 1);
 /**
- * @author h.woltersdorf
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  */
 
 namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
@@ -23,19 +31,19 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
+				['unit' => 'test', 'test' => 'unit'],
 				'unit', 'tested',
-				[ 'unit' => 'tested', 'test' => 'unit' ],
+				['unit' => 'tested', 'test' => 'unit'],
 			],
 			[
-				[ 'unit' => 'test', 'test' => 'unit' ],
+				['unit' => 'test', 'test' => 'unit'],
 				'test', 'units',
-				[ 'unit' => 'test', 'test' => 'units' ],
+				['unit' => 'test', 'test' => 'units'],
 			],
 			[
-				[ 'unit' => [ 'test' => 'unit' ] ],
+				['unit' => ['test' => 'unit']],
 				'unit', 'units',
-				[ 'unit' => 'units' ],
+				['unit' => 'units'],
 			],
 		];
 	}
@@ -51,7 +59,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$_GET       = $getData;
 		$requestUri = sprintf( '/domain/test_request_param/%s/%s', $uriKey, $uriValue );
 
-		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri ] );
+		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri] );
 
 		$expectedRequest = new ReadRequest(
 			$requestInfo, new ReadRequestInput( $expectedParams )
@@ -60,13 +68,13 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$requestHandler = $this->getMockBuilder( HandlesGetRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedRequest ) );
 
-		$regExp    = new RegExp( sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [ $uriKey ] );
+		$regExp    = new RegExp( sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [$uriKey] );
 		$readRoute = new ReadRoute( $regExp, $requestHandler );
 
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $readRoute ] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [$readRoute] );
 
 		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );
 		$readRequestHandler->handleRequest();
@@ -77,7 +85,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMissingReadRoutesHandledByFinaleReadResponder()
 	{
-		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] );
+		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test'] );
 
 		$finalReadResponder = $this->getMockBuilder( RespondsFinallyToReadRequest::class )->getMockForAbstractClass();
 		$finalReadResponder->method( 'handleUncaughtException' )
@@ -93,7 +101,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ ] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
 		$config->method( 'getFinalReadResponder' )->willReturn( $finalReadResponder );
 
 		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );
@@ -107,7 +115,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExceptionHandledByFinaleReadResponder()
 	{
-		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] );
+		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test'] );
 
 		$exception = new \Exception();
 
@@ -134,7 +142,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$readRoute = new ReadRoute( new Literal( '/test' ), $requestHandler );
 
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $readRoute ] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [$readRoute] );
 
 		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );
 		$readRequestHandler->handleRequest();

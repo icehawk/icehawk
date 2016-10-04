@@ -2,8 +2,7 @@ language: php
 
 php:
   - 7.0
-  - hhvm
-  - nightly
+  - 7.1
 
 branches:
   only:

@@ -7,6 +7,8 @@
 
 # ![IceHawk Framework](https://icehawk.github.io/images/Logo-Flying-Tail-White.png)
 
+[![Join the chat at https://gitter.im/icehawk/icehawk](https://badges.gitter.im/icehawk/icehawk.svg)](https://gitter.im/icehawk/icehawk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Lightweight PHP routing framework, respecting CQRS. 
 
 ## Requirements

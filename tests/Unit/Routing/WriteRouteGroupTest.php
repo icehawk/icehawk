@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
+use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\WriteRoute;
 use IceHawk\IceHawk\Routing\WriteRouteGroup;
@@ -239,5 +240,29 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );
 		$this->assertTrue( $result );
+	}
+
+	public function testWriteUriParamsAreBuiltFromGroupAndMatchingRoute()
+	{
+		$groupPattern   = new NamedRegExp( '^/group/(?<groupMatch>[0-9]+)/' );
+		$subPattern     = new NamedRegExp( '^/group/[0-9]+/(?<subMatch>[a-z]+)' );
+		$requestHandler = new ValidPostRequestHandler();
+		$routeGroup     = new WriteRouteGroup(
+			$groupPattern,
+			[
+				new WriteRoute( $subPattern, $requestHandler ),
+			]
+		);
+
+		$expectedUriParams = [
+			'groupMatch' => '0815',
+			'subMatch'   => 'test',
+		];
+
+		$result = $routeGroup->matches( '/group/0815/test' );
+
+		$this->assertTrue( $result );
+		$this->assertSame( $requestHandler, $routeGroup->getRequestHandler() );
+		$this->assertEquals( $expectedUriParams, $routeGroup->getUriParams() );
 	}
 }

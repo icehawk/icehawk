@@ -52,12 +52,14 @@ final class ReadRouteGroup implements RoutesToReadHandler
 	{
 		if ( $this->pattern->matches( $uri ) )
 		{
+			$this->uriParams = $this->pattern->getMatches();
+
 			foreach ( $this->routes as $route )
 			{
 				if ( $route->matches( $uri ) )
 				{
 					$this->requestHandler = $route->getRequestHandler();
-					$this->uriParams      = $route->getUriParams();
+					$this->uriParams      = array_merge( $this->uriParams, $route->getUriParams() );
 
 					return true;
 				}

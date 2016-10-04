@@ -38,7 +38,11 @@ final class ReadRouteGroup implements RoutesToReadHandler
 	public function __construct( ProvidesMatchResult $pattern, array $routes = [] )
 	{
 		$this->pattern = $pattern;
-		$this->routes  = $routes;
+
+		foreach ( $routes as $route )
+		{
+			$this->addRoute( $route );
+		}
 	}
 
 	public function addRoute( RoutesToReadHandler $route ) : self
@@ -52,12 +56,14 @@ final class ReadRouteGroup implements RoutesToReadHandler
 	{
 		if ( $this->pattern->matches( $uri ) )
 		{
+			$this->uriParams = $this->pattern->getMatches();
+
 			foreach ( $this->routes as $route )
 			{
 				if ( $route->matches( $uri ) )
 				{
 					$this->requestHandler = $route->getRequestHandler();
-					$this->uriParams      = $route->getUriParams();
+					$this->uriParams      = array_merge( $this->uriParams, $route->getUriParams() );
 
 					return true;
 				}

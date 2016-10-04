@@ -1,3 +1,4 @@
+[![Join the chat at https://gitter.im/icehawk/icehawk](https://badges.gitter.im/icehawk/icehawk.svg)](https://gitter.im/icehawk/icehawk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/icehawk/icehawk.svg?branch=master)](https://travis-ci.org/icehawk/icehawk)
 [![Coverage Status](https://coveralls.io/repos/github/icehawk/icehawk/badge.svg?branch=master)](https://coveralls.io/github/icehawk/icehawk?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/icehawk/icehawk/v/stable)](https://packagist.org/packages/icehawk/icehawk) 
@@ -13,6 +14,9 @@ Lightweight PHP routing framework, respecting CQRS.
 
  * PHP >= 7.0
  * [fileinfo extension](https://pecl.php.net/package/Fileinfo) for handling uploaded files correctly
+
+**For development only:**
+
  * [xdebug extension](https://pecl.php.net/package/Xdebug) for running the tests
 
 ## Installation
@@ -24,15 +28,107 @@ Add this to your `composer.json`:
     "icehawk/icehawk": "^2.0"
 }
 ```
+ 
+## Quickstart
 
-To run the tests, you should add this to your `composer.json` too:
+### Step 0 - Create a basic composer.json
 
 ```json
-"require-dev": {
-    "ext-xdebug": "*"
+{
+    "require": {
+        "icehawk/icehawk": "^2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "YourVendor\\YourProject\\": "./"
+        }
+    }
 }
 ```
+
+Then run:
  
+```bash
+composer update
+```
+
+### Step 1 - Create a request handler
+
+```php
+<?php declare(strict_types = 1);
+
+namespace YourVendor\YourProject;
+
+use IceHawk\IceHawk\Interfaces\HandlesGetRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
+
+final class SayHelloRequestHandler implements HandlesGetRequest
+{
+	public function handle( ProvidesReadRequestData $request ) 
+	{
+		echo "Hello World!";   
+	}	
+}
+```
+**`— SayHelloRequestHandler.php`**
+
+### Step 2 - Create a basic config
+ 
+All you need is at least one read or write route.
+ 
+```php
+<?php declare(strict_types = 1);
+
+namespace YourVendor\YourProject;
+
+use IceHawk\IceHawk\Routing\ReadRoute;
+use IceHawk\IceHawk\Routing\Patterns\Literal;
+use YourVendor\YourProject\SayHelloRequestHandler;
+
+final class IceHawkConfig extends \IceHawk\IceHawk\Defaults\IceHawkConfig
+{
+	public function getReadRoutes() 
+	{
+		return [
+			new ReadRoute( new Literal('/'), new SayHelloRequestHandler() ),	
+		];
+	}
+}
+```
+**`— IceHawkConfig.php`**
+ 
+### Step 3 - Create a bootstrap script
+
+```php
+<?php declare(strict_types = 1);
+
+namespace YourVendor\YourProject;
+
+use IceHawk\IceHawk\IceHawk;
+use IceHawk\IceHawk\Defaults\IceHawkDelegate;
+
+require('vendor/autoload.php');
+
+$iceHawk = new IceHawk(new IceHawkConfig(), new IceHawkDelegate());
+$iceHawk->init();
+
+$iceHawk->handleRequest();
+```
+**`— index.php`**
+ 
+### Step 4 - Say hello
+
+Go to your project folder an run:
+
+```bash
+php -S 127.0.0.1:8088
+```
+
+Go to your browser an visit: [http://127.0.0.1:8088/](http://127.0.0.1:8088/)
+
+> _Hello World!_
+
+
 ## Contributing
 
 Please see our [contribution guide](./CONTRIBUTING.md).

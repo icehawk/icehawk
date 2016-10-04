@@ -13,6 +13,8 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
+use IceHawk\IceHawk\Routing\Patterns\Literal;
+use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\ReadRoute;
 use IceHawk\IceHawk\Routing\ReadRouteGroup;
@@ -210,5 +212,37 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertTrue( $result );
 		$this->assertEquals( $expectedRequestHandler, $companyGroup->getRequestHandler() );
+	}
+
+	public function testReadUriParamsAreBuiltFromGroupAndMatchingRoute()
+	{
+		$groupPattern   = new NamedRegExp( '^/group/(?<groupMatch>[0-9]+)/' );
+		$subPattern     = new NamedRegExp( '^/group/[0-9]+/(?<subMatch>[a-z]+)' );
+		$requestHandler = new ValidGetRequestHandler();
+		$routeGroup     = new ReadRouteGroup(
+			$groupPattern,
+			[
+				new ReadRoute( $subPattern, $requestHandler ),
+			]
+		);
+
+		$expectedUriParams = [
+			'groupMatch' => '0815',
+			'subMatch'   => 'test',
+		];
+
+		$result = $routeGroup->matches( '/group/0815/test' );
+
+		$this->assertTrue( $result );
+		$this->assertSame( $requestHandler, $routeGroup->getRequestHandler() );
+		$this->assertEquals( $expectedUriParams, $routeGroup->getUriParams() );
+	}
+
+	/**
+	 * @expectedException \TypeError
+	 */
+	public function testAddingInvalidRouteInstancesToGroupThrowsException()
+	{
+		new ReadRouteGroup( new Literal( '/' ), [new \stdClass()] );
 	}
 }

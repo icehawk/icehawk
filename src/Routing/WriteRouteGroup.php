@@ -39,7 +39,11 @@ final class WriteRouteGroup implements RoutesToWriteHandler
 	public function __construct( ProvidesMatchResult $pattern, array $routes = [] )
 	{
 		$this->pattern = $pattern;
-		$this->routes  = $routes;
+
+		foreach ( $routes as $route )
+		{
+			$this->addRoute( $route );
+		}
 	}
 
 	public function addRoute( RoutesToWriteHandler $route ) : self
@@ -53,12 +57,14 @@ final class WriteRouteGroup implements RoutesToWriteHandler
 	{
 		if ( $this->pattern->matches( $uri ) )
 		{
+			$this->uriParams = $this->pattern->getMatches();
+
 			foreach ( $this->routes as $route )
 			{
 				if ( $route->matches( $uri ) )
 				{
 					$this->requestHandler = $route->getRequestHandler();
-					$this->uriParams      = $route->getUriParams();
+					$this->uriParams      = array_merge( $this->uriParams, $route->getUriParams() );
 
 					return true;
 				}

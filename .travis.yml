@@ -12,8 +12,6 @@ branches:
     - /^refactoring\/.+$/
     - /^issue\/.+$/
 
-before_install: echo "extension = xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-
 before_script:
  - composer self-update
  - mkdir -p vendor/bin

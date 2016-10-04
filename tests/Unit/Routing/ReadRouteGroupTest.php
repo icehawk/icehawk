@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
+use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\ReadRoute;
@@ -235,5 +236,13 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue( $result );
 		$this->assertSame( $requestHandler, $routeGroup->getRequestHandler() );
 		$this->assertEquals( $expectedUriParams, $routeGroup->getUriParams() );
+	}
+
+	/**
+	 * @expectedException \TypeError
+	 */
+	public function testAddingInvalidRouteInstancesToGroupThrowsException()
+	{
+		new ReadRouteGroup( new Literal( '/' ), [new \stdClass()] );
 	}
 }

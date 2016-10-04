@@ -81,20 +81,12 @@ All you need is at least one read or write route.
 
 namespace YourVendor\YourProject;
 
-use IceHawk\IceHawk\Defaults;
-use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 use IceHawk\IceHawk\Routing\ReadRoute;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use YourVendor\YourProject\SayHelloRequestHandler;
 
-final class IceHawkConfig implements ConfiguresIceHawk
+final class IceHawkConfig extends \IceHawk\IceHawk\Defaults\IceHawkConfig
 {
-	use Defaults\Traits\DefaultRequestInfoProviding;
-	use Defaults\Traits\DefaultWriteRouting;
-	use Defaults\Traits\DefaultEventSubscribing;
-	use Defaults\Traits\DefaultFinalReadResponding;
-	use Defaults\Traits\DefaultFinalWriteResponding;
-	
 	public function getReadRoutes() 
 	{
 		return [

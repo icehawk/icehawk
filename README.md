@@ -126,13 +126,13 @@ $iceHawk->handleRequest();
  
 ### Step 4 - Say hello
 
-1. Go to your project folder an run:
+Go to your project folder an run:
 
 ```bash
 php -S 127.0.0.1:8088
 ```
 
-2. Go to your browser an visit: [http://127.0.0.1:8088/](http://127.0.0.1:8088/)
+Go to your browser an visit: [http://127.0.0.1:8088/](http://127.0.0.1:8088/)
 
 > _Hello World!_
 

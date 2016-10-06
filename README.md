@@ -21,7 +21,11 @@ Lightweight PHP routing framework, respecting CQRS.
 
 ## Installation
 
-Add this to your `composer.json`:
+```bash
+composer require icehawk/icehawk:^2.0
+```
+
+or add to your `composer.json`:
 
 ```json
 "require": {
@@ -29,14 +33,24 @@ Add this to your `composer.json`:
 }
 ```
  
-## Quickstart
+## Quickstart (installer)
+ 
+We provide an installer package that creates a new IceHawk project for you. Simply run:
+
+```bash
+composer create-project icehawk/installer /path/to/new-project
+```
+ 
+Answer the questions of the interactive installer and you're good to go.
+ 
+## Quickstart (manual)
 
 ### Step 0 - Create a basic composer.json
 
 ```json
 {
     "require": {
-        "icehawk/icehawk": "^2.0.0"
+        "icehawk/icehawk": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -128,7 +142,10 @@ Go to your browser an visit: [http://127.0.0.1:8088/](http://127.0.0.1:8088/)
 
 > _Hello World!_
 
+## Documentation
+
+Further documentation can be found on our website: [icehawk.github.io](https://icehawk.github.io)
 
 ## Contributing
 
-Please see our [contribution guide](./CONTRIBUTING.md).
+Contributions are welcome! Please see our [contribution guide](./CONTRIBUTING.md).

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.0.0] - 2016-10-06
+
+### Added
+
+- Matches from a route group are added to the request input data
+- Sub routes of a route group are guarded to be of a valid type at construction, not at runtime
+
+### Changed
+
+- [Contribution guide](./CONTRIBUTING.md)
+
 ## [2.0.0-rc5] - 2016-09-27
 
 ### Added
@@ -154,6 +165,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - First release
 
+[2.0.0]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc5...v2.0.0
 [2.0.0-rc5]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc4...v2.0.0-rc5
 [2.0.0-rc4]: https://github.com/icehawk/icehawk/compare/v1.4.2...v2.0.0-rc4
 [1.4.2]: https://github.com/icehawk/icehawk/compare/v1.4.1...v1.4.2

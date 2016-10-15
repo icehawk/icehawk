@@ -39,7 +39,9 @@ final class RequestInfo implements ProvidesRequestInfo
 
 	public function isSecure() : bool
 	{
-		return ($this->get( 'HTTPS' ) == 'on');
+		$httpsValue = $this->get( 'HTTPS' ) ? : '';
+
+		return (strcasecmp( $httpsValue, 'on' ) === 0);
 	}
 
 	/**

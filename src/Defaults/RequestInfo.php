@@ -63,7 +63,7 @@ final class RequestInfo implements ProvidesRequestInfo
 	{
 		$method = $this->get( 'REQUEST_METHOD' );
 
-		if ( !is_null( $method ) )
+		if ( null !== $method )
 		{
 			return strtoupper( $method );
 		}
@@ -77,7 +77,7 @@ final class RequestInfo implements ProvidesRequestInfo
 	{
 		$uri = $this->get( 'REQUEST_URI' );
 
-		if ( !is_null( $uri ) )
+		if ( null !== $uri )
 		{
 			return preg_replace( ['#\/+#', '#\?.*$#'], ['/', ''], $uri );
 		}

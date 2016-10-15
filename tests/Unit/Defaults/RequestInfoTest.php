@@ -117,4 +117,17 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 			['pOSt', 'POST'],
 		];
 	}
+
+	public function testHttpsIsCheckedCaseInsensitive()
+	{
+		$requestInfo1 = new RequestInfo( ['HTTPS' => 'On'] );
+		$requestInfo2 = new RequestInfo( ['HTTPS' => 'on'] );
+		$requestInfo3 = new RequestInfo( ['HTTPS' => 'oN'] );
+		$requestInfo4 = new RequestInfo( ['HTTPS' => 'ON'] );
+
+		$this->assertTrue( $requestInfo1->isSecure() );
+		$this->assertTrue( $requestInfo2->isSecure() );
+		$this->assertTrue( $requestInfo3->isSecure() );
+		$this->assertTrue( $requestInfo4->isSecure() );
+	}
 }

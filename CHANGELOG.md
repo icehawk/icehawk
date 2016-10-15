@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.0.1] - 2016-10-16
+
+### Changed
+
+- Check for `HTTPS = On` is now case insensitive (`RequestInfo::isSecure()`)
+
 ## [2.0.0] - 2016-10-06
 
 ### Added
@@ -165,6 +171,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - First release
 
+[2.0.1]: https://github.com/icehawk/icehawk/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc5...v2.0.0
 [2.0.0-rc5]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc4...v2.0.0-rc5
 [2.0.0-rc4]: https://github.com/icehawk/icehawk/compare/v1.4.2...v2.0.0-rc4

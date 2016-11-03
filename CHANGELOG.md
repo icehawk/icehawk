@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.0.2] - 2016-11-03
+
+### Fixed
+
+- Fixed bug that causes a warning when using generators or traversable implementations for routes
+
 ## [2.0.1] - 2016-10-16
 
 ### Changed

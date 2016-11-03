@@ -20,6 +20,7 @@ use IceHawk\IceHawk\Routing\OptionsRouter;
 
 /**
  * Class OptionsRequestHandler
+ *
  * @package IceHawk\IceHawk\RequestHandlers
  */
 final class OptionsRequestHandler extends AbstractRequestHandler
@@ -49,12 +50,23 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 	{
 		$readRoutes  = $this->config->getReadRoutes();
 		$writeRoutes = $this->config->getWriteRoutes();
-		$routes      = array_merge( $readRoutes, $writeRoutes );
-
 		$requestInfo = $this->config->getRequestInfo();
-		$router      = new OptionsRouter( $routes );
 
-		return $router->findMatchingRoutes( $requestInfo->getUri() );
+		$matchingReadRoutes  = $this->getMatchingRoutes( $requestInfo->getUri(), $readRoutes );
+		$matchingWriteRoutes = $this->getMatchingRoutes( $requestInfo->getUri(), $writeRoutes );
+
+		return array_merge( $matchingReadRoutes, $matchingWriteRoutes );
+	}
+
+	/**
+	 * @param string             $uri
+	 * @param array|\Traversable $routes
+	 */
+	private function getMatchingRoutes( string $uri, $routes ) : array
+	{
+		$router = new OptionsRouter( $routes );
+
+		return $router->findMatchingRoutes( $uri );
 	}
 
 	private function getImplementedRequestMethods( HandlesRequest $handler ) : array

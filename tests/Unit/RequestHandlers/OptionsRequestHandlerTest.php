@@ -89,4 +89,40 @@ class OptionsRequestHandlerTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 	}
+
+	/**
+	 * @runInSeparateProcess
+	 */
+	public function testHeaderOutputWithGeneratedRoutes()
+	{
+		$routes = [ new ReadRoute( new Literal( '/get/this' ), new GetRequestHandler() ),
+		            new ReadRoute( new Literal( '/get/that' ), new HeadRequestHandler() ),
+		            new ReadRoute( new Literal( '/get/this/again' ), new GetRequestHandler() ) ];
+
+
+		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
+		$requestInfo = new RequestInfo(
+			[
+				'REQUEST_METHOD' => 'OPTIONS',
+				'REQUEST_URI'    => '/get/that',
+			]
+		);
+
+		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->method( 'getWriteRoutes' )->willReturn( [] );
+		$config->method( 'getReadRoutes' )->willReturn( $this->getGeneratedRoutes( $routes ) );
+
+		$optionsRequestHandler = new OptionsRequestHandler( $config, new EventPublisher() );
+		$optionsRequestHandler->handleRequest();
+
+		$this->assertContains( 'Allow: HEAD', xdebug_get_headers() );
+	}
+
+	public function getGeneratedRoutes( array $routes )
+	{
+		foreach ( $routes as $route )
+		{
+			yield $route;
+		}
+	}
 }

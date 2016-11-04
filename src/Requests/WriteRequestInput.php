@@ -75,12 +75,12 @@ final class WriteRequestInput implements ProvidesWriteRequestInputData
 	}
 
 	/**
-	 * @param string $fieldKey
-	 * @param int    $fileIndex
+	 * @param string     $fieldKey
+	 * @param int|string $fileIndex
 	 *
-	 * @return ProvidesUploadedFileData|null
+*@return ProvidesUploadedFileData|null
 	 */
-	public function getOneFile( string $fieldKey, int $fileIndex = 0 )
+	public function getOneFile( string $fieldKey, $fileIndex = 0 )
 	{
 		$files = $this->getFiles( $fieldKey );
 

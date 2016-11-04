@@ -3,24 +3,30 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.0.3] - 2016-11-04
+
+### Fixed
+
+- Fixed bug that prevents access to uploaded files having a string index ([#20](https://github.com/icehawk/icehawk/issues/20))
+
 ## [2.0.2] - 2016-11-03
 
 ### Fixed
 
-- Fixed bug that causes a warning when using generators or traversable implementations for routes
+- Fixed bug that causes a warning when using generators or traversable implementations for routes ([#18](https://github.com/icehawk/icehawk/issues/18))
 
 ## [2.0.1] - 2016-10-16
 
-### Changed
+### Fixed
 
-- Check for `HTTPS = On` is now case insensitive (`RequestInfo::isSecure()`)
+- Check for `HTTPS = On` is now case insensitive (`RequestInfo::isSecure()`) ([#13](https://github.com/icehawk/icehawk/issues/13))
 
 ## [2.0.0] - 2016-10-06
 
 ### Added
 
-- Matches from a route group are added to the request input data
-- Sub routes of a route group are guarded to be of a valid type at construction, not at runtime
+- Matches from a route group are added to the request input data ([#8](https://github.com/icehawk/icehawk/issues/8))
+- Sub routes of a route group are guarded to be of a valid type at construction, not at runtime ([#9](https://github.com/icehawk/icehawk/issues/9))
 
 ### Changed
 
@@ -30,7 +36,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 ### Added
 
-- `ReadRequestInput`/`WriteRequestInput`'s get method now support an optional default value, in case it was asked for a non-existing key. - #1
+- `ReadRequestInput`/`WriteRequestInput`'s get method now support an optional default value, in case it was asked for a non-existing key. (([#1](https://github.com/icehawk/icehawk/issues/1)))
 
 ### Changed
 
@@ -177,6 +183,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - First release
 
+[2.0.3]: https://github.com/icehawk/icehawk/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/icehawk/icehawk/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/icehawk/icehawk/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc5...v2.0.0

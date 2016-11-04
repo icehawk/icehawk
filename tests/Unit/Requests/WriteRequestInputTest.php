@@ -155,6 +155,27 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 				'File was uploaded partially.',
 				false,
 			],
+			# 4: The second file has a string index
+			[
+				[
+					'test_file' => [
+						'name'     => ['TestFile.dat', 'file1' => 'FileTest.html'],
+						'tmp_name' => ['/tmp/TestFile.dat', 'file1' => '/tmp/FileTest.html'],
+						'type'     => ['text/plain', 'file1' => 'text/html'],
+						'size'     => [1024, 'file1' => 2048],
+						'error'    => [UPLOAD_ERR_OK, 'file1' => UPLOAD_ERR_PARTIAL],
+					],
+				],
+				'test_file',
+				'file1',
+				'FileTest.html',
+				'text/html',
+				2048,
+				'/tmp/FileTest.html',
+				UPLOAD_ERR_PARTIAL,
+				'File was uploaded partially.',
+				false,
+			],
 		];
 	}
 
@@ -203,6 +224,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 
+		$uploadedFiles     = (new UploadedFilesMapper( $uploadedFiles ))->mapToInfoObjects();
 		$writeRequestInput = new WriteRequestInput( '', [], $uploadedFiles );
 		$oneFile           = $writeRequestInput->getOneFile( 'test_file', 1 );
 

@@ -17,7 +17,7 @@ namespace IceHawk\IceHawk\Interfaces;
  * Interface HandlesGetRequest
  * @package IceHawk\IceHawk\Interfaces
  */
-interface HandlesGetRequest extends HandlesReadRequest, HandlesHeadRequest
+interface HandlesGetRequest extends HandlesHeadRequest
 {
 
 }

@@ -19,6 +19,7 @@ use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
 /**
  * Interface ConfiguresIceHawk
+ *
  * @package IceHawk\IceHawk\Interfaces
  */
 interface ConfiguresIceHawk
@@ -43,4 +44,6 @@ interface ConfiguresIceHawk
 	public function getFinalReadResponder() : RespondsFinallyToReadRequest;
 
 	public function getFinalWriteResponder() : RespondsFinallyToWriteRequest;
+
+	public function getRequestProxy() : ProxiesRequest;
 }

@@ -24,4 +24,4 @@ after_success:
  - travis_retry php vendor/bin/coveralls.phar -v --exclude-no-stmt
 
 notifications:
-  slack: fortunesolutions:PoLjMJuARdFicBIEPzdNrZ96
+  slack: fortune-globe:PoLjMJuARdFicBIEPzdNrZ96

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.0.4] - 2016-11-12
+
+### Fixed
+
+- Removed obsolete interface inheritance from `HandlesGetRequest` interface ([#23](https://github.com/icehawk/icehawk/issues/23))
+
 ## [2.0.3] - 2016-11-04
 
 ### Fixed
@@ -183,6 +189,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - First release
 
+[2.0.4]: https://github.com/icehawk/icehawk/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/icehawk/icehawk/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/icehawk/icehawk/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/icehawk/icehawk/compare/v2.0.0...v2.0.1

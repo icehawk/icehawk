@@ -18,6 +18,7 @@ use IceHawk\IceHawk\Defaults\Traits\DefaultFinalReadResponding;
 use IceHawk\IceHawk\Defaults\Traits\DefaultFinalWriteResponding;
 use IceHawk\IceHawk\Defaults\Traits\DefaultReadRouting;
 use IceHawk\IceHawk\Defaults\Traits\DefaultRequestInfoProviding;
+use IceHawk\IceHawk\Defaults\Traits\DefaultRequestProxying;
 use IceHawk\IceHawk\Defaults\Traits\DefaultWriteRouting;
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 
@@ -33,4 +34,5 @@ class IceHawkConfig implements ConfiguresIceHawk
 	use DefaultRequestInfoProviding;
 	use DefaultFinalReadResponding;
 	use DefaultFinalWriteResponding;
+	use DefaultRequestProxying;
 }

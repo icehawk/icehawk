@@ -30,6 +30,7 @@ use IceHawk\IceHawk\Responses\MethodNotImplemented;
 
 /**
  * Class IceHawk
+ *
  * @package IceHawk\IceHawk
  */
 final class IceHawk
@@ -97,6 +98,7 @@ final class IceHawk
 	public function handleRequest()
 	{
 		$requestInfo = $this->config->getRequestInfo();
+		$requestInfo = $this->config->getRequestProxy()->proxyRequest( $requestInfo );
 
 		if ( in_array( $requestInfo->getMethod(), HttpMethod::WRITE_METHODS ) )
 		{

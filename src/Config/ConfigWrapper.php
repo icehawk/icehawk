@@ -15,6 +15,7 @@ namespace IceHawk\IceHawk\Config;
 
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+use IceHawk\IceHawk\Interfaces\ProxiesRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
@@ -47,6 +48,9 @@ final class ConfigWrapper implements ConfiguresIceHawk
 
 	/** @var RespondsFinallyToWriteRequest */
 	private $finalWriteResponder;
+
+	/** @var  ProxiesRequest */
+	private $requestProxy;
 
 	public function __construct( ConfiguresIceHawk $config )
 	{
@@ -120,5 +124,15 @@ final class ConfigWrapper implements ConfiguresIceHawk
 		}
 
 		return $this->finalWriteResponder;
+	}
+
+	public function getRequestProxy() : ProxiesRequest
+	{
+		if ( $this->requestProxy === null )
+		{
+			$this->requestProxy = $this->config->getRequestProxy();
+		}
+
+		return $this->requestProxy;
 	}
 }

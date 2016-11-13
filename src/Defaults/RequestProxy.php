@@ -23,7 +23,7 @@ final class RequestProxy implements ProxiesRequest
 	 */
 	public function __construct( $routeRedirects )
 	{
-		$this->$routeRedirects = $routeRedirects;
+		$this->routeRedirects = $routeRedirects;
 	}
 
 	public function proxyRequest( ProvidesRequestInfo $request ) : ProvidesRequestInfo

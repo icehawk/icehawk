@@ -28,10 +28,16 @@ composer require icehawk/icehawk:^2.0
 or add to your `composer.json`:
 
 ```json
-"require": {
-    "icehawk/icehawk": "^2.0"
+{
+	"require": {
+		"icehawk/icehawk": "^2.0"
+	}
 }
 ```
+ 
+## Documentation
+
+**A full documentation can be found on our website: [icehawk.github.io](https://icehawk.github.io/docs/icehawk.html)**
  
 ## Quickstart (installer)
  
@@ -42,6 +48,8 @@ composer create-project icehawk/installer /path/to/new-project
 ```
  
 Answer the questions of the interactive installer and you're good to go.
+
+[**&raquo; Watch our short video and see how it works:** Install IceHawk framework in less than 2 minutes](https://youtu.be/ns62lw52AOU)
  
 ## Quickstart (manual)
 
@@ -142,9 +150,8 @@ Go to your browser an visit: [http://127.0.0.1:8088/](http://127.0.0.1:8088/)
 
 > _Hello World!_
 
-## Documentation
 
-Further documentation can be found on our website: [icehawk.github.io](https://icehawk.github.io)
+**[Visit our website for the full documentation.](https://icehawk.github.io/docs/icehawk.html)**
 
 ## Contributing
 

@@ -13,31 +13,26 @@
 
 namespace IceHawk\IceHawk\Responses;
 
+use IceHawk\IceHawk\Constants\HttpCode;
+
 /**
  * Class Options
  * @package IceHawk\IceHawk\Responses
  */
-class Options extends AbstractHttpResponse
+final class Options
 {
 	/** @var array */
 	private $allowedRequestMethods;
 
 	public function __construct( array $allowedRequestMethods )
 	{
-		parent::__construct();
-
 		$this->allowedRequestMethods = $allowedRequestMethods;
 	}
 
-	protected function getAdditionalHeaders() : array
+	public function respond()
 	{
-		return [
-			'Allow: ' . join( ',', $this->allowedRequestMethods ),
-		];
-	}
-
-	protected function getBody() : string
-	{
-		return '';
+		header( 'Content-Type: text/plain; charset=utf-8', true, HttpCode::OK );
+		header( 'Allow: ' . join( ',', $this->allowedRequestMethods ) );
+		flush();
 	}
 }

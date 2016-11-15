@@ -5,8 +5,8 @@ php:
 
 branches:
   only:
-    - master
-    - development
+    - /^v2\.0\-dev$/
+    - /^v2\.0\-stable$/
     - /^feature\/.+$/
     - /^refactoring\/.+$/
     - /^issue\/.+$/

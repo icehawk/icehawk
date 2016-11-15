@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [Unreleased]
+
+### Removed
+
+- AbstractHttpResponse ([#24](https://github.com/icehawk/icehawk/issues/24))
+
+### Changed
+
+- Declared `Options` response class as final ([#24](https://github.com/icehawk/icehawk/issues/24))
+
 ## [2.0.4] - 2016-11-12
 
 ### Fixed
@@ -189,6 +199,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - First release
 
+[Unreleased]: https://github.com/icehawk/icehawk/compare/v2.0.4...development
 [2.0.4]: https://github.com/icehawk/icehawk/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/icehawk/icehawk/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/icehawk/icehawk/compare/v2.0.1...v2.0.2

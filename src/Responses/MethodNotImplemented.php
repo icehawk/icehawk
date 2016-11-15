@@ -19,20 +19,20 @@ use IceHawk\IceHawk\Constants\HttpCode;
  * Class MethodNotImplemented
  * @package IceHawk\IceHawk\Responses
  */
-final class MethodNotImplemented extends AbstractHttpResponse
+final class MethodNotImplemented
 {
 	/** @var string */
 	private $requestMethod;
 
 	public function __construct( string $requestMethod )
 	{
-		parent::__construct( 'text/plain', HttpCode::NOT_IMPLEMENTED );
-
 		$this->requestMethod = $requestMethod;
 	}
 
-	protected function getBody() : string
+	public function respond()
 	{
-		return sprintf( '%d - Method Not Implemented (%s)', $this->getHttpCode(), $this->requestMethod );
+		header( 'Content-Type: text/plain; charset=utf-8', true, HttpCode::NOT_IMPLEMENTED );
+		printf( '%d - Method Not Implemented (%s)', HttpCode::NOT_IMPLEMENTED, $this->requestMethod );
+		flush();
 	}
 }

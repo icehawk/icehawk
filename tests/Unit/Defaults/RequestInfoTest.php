@@ -130,4 +130,26 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue( $requestInfo3->isSecure() );
 		$this->assertTrue( $requestInfo4->isSecure() );
 	}
+
+	public function testCanGetCustomValue()
+	{
+		$requestInfo = new RequestInfo(
+			[
+				'custom1' => 'value',
+				'custom2' => 123,
+				'custom3' => 12.3,
+				'custom4' => false,
+				'custom5' => true,
+				'custom6' => null,
+			]
+		);
+
+		$this->assertSame( 'value', $requestInfo->getCustomValue( 'custom1' ) );
+		$this->assertSame( '123', $requestInfo->getCustomValue( 'custom2' ) );
+		$this->assertSame( '12.3', $requestInfo->getCustomValue( 'custom3' ) );
+		$this->assertSame( '', $requestInfo->getCustomValue( 'custom4' ) );
+		$this->assertSame( '1', $requestInfo->getCustomValue( 'custom5' ) );
+		$this->assertSame( '', $requestInfo->getCustomValue( 'custom6' ) );
+		$this->assertSame( '', $requestInfo->getCustomValue( 'not-existing' ) );
+	}
 }

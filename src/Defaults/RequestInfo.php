@@ -148,4 +148,9 @@ final class RequestInfo implements ProvidesRequestInfo
 	{
 		return $this->get( 'CONTENT_LENGTH' ) ? : '';
 	}
+
+	public function getCustomValue( string $key ) : string
+	{
+		return (string)$this->get( $key );
+	}
 }

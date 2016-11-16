@@ -12,6 +12,9 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 ### Changed
 
 - Declared `Options` response class as final ([#24](https://github.com/icehawk/icehawk/issues/24))
+- Return value of `WriteRequestInput::getOneFile()` is no longer `NULL`, if the `$fieldKey` or the `$fileIndex` does not exist, 
+instead it now returns an empty `UploadedFile` object with the error code `UPLOAD_ERR_NO_FILE` set. ([#22](https://github.com/icehawk/icehawk/issues/22))
+- Return type declaration of `WriteRequestInput::getOneFile()` is now `ProvidesUploadedFileData`. ([#22](https://github.com/icehawk/icehawk/issues/22))
 
 ## [2.0.4] - 2016-11-12
 

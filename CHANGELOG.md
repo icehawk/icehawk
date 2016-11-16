@@ -5,9 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 ## [Unreleased]
 
+### Added
+
+- Method `getCustomValue(string $key) : string` to access custom values via the `RequestInfo` object. ([#15](https://github.com/icehawk/icehawk/issues/15))
+
 ### Removed
 
-- AbstractHttpResponse ([#24](https://github.com/icehawk/icehawk/issues/24))
+- Class `AbstractHttpResponse` ([#24](https://github.com/icehawk/icehawk/issues/24))
 
 ### Changed
 

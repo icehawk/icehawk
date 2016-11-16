@@ -84,12 +84,22 @@ final class UploadedFile implements ProvidesUploadedFileData
 
 	public function getRealType() : string
 	{
-		return (new \finfo( FILEINFO_MIME_TYPE ))->file( $this->tmpName );
+		if ( !empty($this->tmpName) )
+		{
+			return (new \finfo( FILEINFO_MIME_TYPE ))->file( $this->tmpName );
+		}
+
+		return '';
 	}
 
 	public function getEncoding() : string
 	{
-		return (new \finfo( FILEINFO_MIME_ENCODING ))->file( $this->tmpName );
+		if ( !empty($this->tmpName) )
+		{
+			return (new \finfo( FILEINFO_MIME_ENCODING ))->file( $this->tmpName );
+		}
+
+		return '';
 	}
 
 	public function didUploadSucceed() : bool

@@ -1,14 +1,7 @@
 language: php
 
-matrix:
-  fast_finish: true
-  include:
-  - php: 7.0
-  - php: 7.1
-  - php: nightly
-  allow_failures:
-  - php: 7.1
-  - php: nightly
+php:
+  - 7.0
 
 branches:
   only:
@@ -17,8 +10,6 @@ branches:
     - /^feature\/.+$/
     - /^refactoring\/.+$/
     - /^issue\/.+$/
-
-before_install: echo "extension = xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 before_script:
  - composer self-update

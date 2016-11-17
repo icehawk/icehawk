@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 ### Added
 
 - Method `getCustomValue(string $key) : string` to access custom values via the `RequestInfo` object. ([#15](https://github.com/icehawk/icehawk/issues/15))
+- Missing getters for `$_SERVER` indices in `RequestInfo` class and interface `ProvidesRequestInfo`. ([#17](https://github.com/icehawk/icehawk/issues/17))
 
 ### Removed
 

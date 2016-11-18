@@ -15,10 +15,10 @@ namespace IceHawk\IceHawk\Config;
 
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
-use IceHawk\IceHawk\Interfaces\ProxiesRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\Routing\Interfaces\RedirectsRoute;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
@@ -37,6 +37,9 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	/** @var array|\Traversable|RoutesToWriteHandler[] */
 	private $writeRoutes;
 
+	/** @var array|\Traversable|RedirectsRoute[] */
+	private $redirectRoutes;
+
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
@@ -48,9 +51,6 @@ final class ConfigWrapper implements ConfiguresIceHawk
 
 	/** @var RespondsFinallyToWriteRequest */
 	private $finalWriteResponder;
-
-	/** @var  ProxiesRequest */
-	private $requestProxy;
 
 	public function __construct( ConfiguresIceHawk $config )
 	{
@@ -94,6 +94,19 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	}
 
 	/**
+	 * @return array|RedirectsRoute[]|\Traversable
+	 */
+	public function getRedirectRoutes()
+	{
+		if ( $this->redirectRoutes === null )
+		{
+			$this->redirectRoutes = $this->config->getRedirectRoutes();
+		}
+
+		return $this->redirectRoutes;
+	}
+
+	/**
 	 * @return array|SubscribesToEvents[]
 	 */
 	public function getEventSubscribers() : array
@@ -124,15 +137,5 @@ final class ConfigWrapper implements ConfiguresIceHawk
 		}
 
 		return $this->finalWriteResponder;
-	}
-
-	public function getRequestProxy() : ProxiesRequest
-	{
-		if ( $this->requestProxy === null )
-		{
-			$this->requestProxy = $this->config->getRequestProxy();
-		}
-
-		return $this->requestProxy;
 	}
 }

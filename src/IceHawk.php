@@ -16,10 +16,12 @@ namespace IceHawk\IceHawk;
 use IceHawk\IceHawk\Config\ConfigGuard;
 use IceHawk\IceHawk\Config\ConfigWrapper;
 use IceHawk\IceHawk\Constants\HttpMethod;
+use IceHawk\IceHawk\Defaults\RequestProxy;
 use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
 use IceHawk\IceHawk\Events\InitializingIceHawkEvent;
 use IceHawk\IceHawk\Exceptions\InvalidEventSubscriberCollection;
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Interfaces\SetsUpEnvironment;
 use IceHawk\IceHawk\PubSub\EventPublisher;
 use IceHawk\IceHawk\PubSub\Interfaces\PublishesEvents;
@@ -95,10 +97,22 @@ final class IceHawk
 		}
 	}
 
+	private function getFinalRequestInfo() : ProvidesRequestInfo
+	{
+		$requestInfo  = $this->config->getRequestInfo();
+		$requestProxy = new RequestProxy();
+
+		foreach ( $this->config->getRedirectRoutes() as $redirect )
+		{
+			$requestProxy->addRedirect( $redirect );
+		}
+
+		return $requestProxy->proxyRequest( $requestInfo );
+	}
+
 	public function handleRequest()
 	{
-		$requestInfo = $this->config->getRequestInfo();
-		$requestInfo = $this->config->getRequestProxy()->proxyRequest( $requestInfo );
+		$requestInfo = $this->getFinalRequestInfo();
 
 		if ( in_array( $requestInfo->getMethod(), HttpMethod::WRITE_METHODS ) )
 		{

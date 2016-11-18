@@ -14,6 +14,7 @@
 namespace IceHawk\IceHawk\Interfaces;
 
 use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\Routing\Interfaces\RedirectsRoute;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
@@ -35,6 +36,11 @@ interface ConfiguresIceHawk
 	public function getWriteRoutes();
 
 	/**
+	 * @return array|\Traversable|RedirectsRoute[]
+	 */
+	public function getRedirectRoutes();
+
+	/**
 	 * @return array|SubscribesToEvents[]
 	 */
 	public function getEventSubscribers() : array;
@@ -44,6 +50,4 @@ interface ConfiguresIceHawk
 	public function getFinalReadResponder() : RespondsFinallyToReadRequest;
 
 	public function getFinalWriteResponder() : RespondsFinallyToWriteRequest;
-
-	public function getRequestProxy() : ProxiesRequest;
 }

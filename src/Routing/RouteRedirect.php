@@ -20,6 +20,9 @@ final class RouteRedirect implements RedirectsRoute
 	/** @var  string */
 	private $finalMethod;
 
+	/** @var array */
+	private $uriParams = [];
+
 	public function __construct( ProvidesMatchResult $pattern, string $finalUri, string $finalMethod )
 	{
 		$this->pattern     = $pattern;
@@ -29,7 +32,14 @@ final class RouteRedirect implements RedirectsRoute
 
 	public function matches( string $uri ) : bool
 	{
-		return $this->pattern->matches( $uri );
+		if ( $this->pattern->matches( $uri ) )
+		{
+			$this->uriParams = $this->pattern->getMatches();
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public function getFinalUri() : string
@@ -40,5 +50,13 @@ final class RouteRedirect implements RedirectsRoute
 	public function getFinalMethod() : string
 	{
 		return $this->finalMethod;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getUriParams() : array
+	{
+		return $this->uriParams;
 	}
 }

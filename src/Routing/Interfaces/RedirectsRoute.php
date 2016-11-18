@@ -13,4 +13,6 @@ interface RedirectsRoute
 	public function getFinalUri() : string;
 
 	public function getFinalMethod() : string;
+
+	public function getUriParams() : array;
 }

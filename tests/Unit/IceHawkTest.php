@@ -14,6 +14,7 @@
 namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
 use IceHawk\IceHawk\Constants\HttpCode;
+use IceHawk\IceHawk\Constants\HttpMethod;
 use IceHawk\IceHawk\Defaults\IceHawkConfig;
 use IceHawk\IceHawk\Defaults\IceHawkDelegate;
 use IceHawk\IceHawk\Defaults\RequestInfo;
@@ -37,6 +38,7 @@ use IceHawk\IceHawk\Requests\WriteRequest;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\ReadRoute;
+use IceHawk\IceHawk\Routing\RouteRedirect;
 use IceHawk\IceHawk\Routing\WriteRoute;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
@@ -143,7 +145,9 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$route = new ReadRoute( new Literal( '/test' ), $requestHandler );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [
+			new RouteRedirect( new Literal( '/look_for_this' ), '/finalDestination', HttpMethod::GET )
+		] );
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $route ] );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
 

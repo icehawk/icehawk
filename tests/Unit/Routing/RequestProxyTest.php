@@ -19,8 +19,8 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 	 * @dataProvider routeWriteRedirectDataProvider
 	 */
 	public function testProxyWriteRoutes(
-		array $routeRedirects, ProvidesRequestInfo $request, string $expectedFinalUri, string $expectedFinalMethod,
-		string $expectedQueryString
+		array $routeRedirects, ProvidesRequestInfo $request, array $postData,
+		string $expectedFinalUri, string $expectedFinalMethod, string $expectedQueryString
 	)
 	{
 		$requestProxy = new RequestProxy();
@@ -30,11 +30,13 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 			$requestProxy->addRedirect( $routeRedirect );
 		}
 
+		$_POST   = $postData;
 		$request = $requestProxy->proxyRequest( $request );
 
 		$this->assertEquals( $expectedFinalUri, $request->getUri() );
 		$this->assertEquals( $expectedFinalMethod, $request->getMethod() );
 		$this->assertEquals( $expectedQueryString, $request->getQueryString() );
+		$this->assertEquals( $postData, $_GET );
 	}
 
 	public function routeWriteRedirectDataProvider()
@@ -61,6 +63,7 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 				new RequestInfo(
 					[ 'REQUEST_METHOD' => HttpMethod::POST, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
 				),
+				[ 'stock' => '3' ],
 				'/stocks/store/2',
 				HttpMethod::GET,
 				'companyId=1&storeId=2',
@@ -85,10 +88,11 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 				],
 				new RequestInfo(
 					[
-						'REQUEST_METHOD' => HttpMethod::PUT, 'REQUEST_URI' => '/companies/1/stores/2/stocks',
+						'REQUEST_METHOD' => HttpMethod::HEAD, 'REQUEST_URI' => '/companies/1/stores/2/stocks',
 						'QUERY_STRING'   => 'stock=1',
 					]
 				),
+				[],
 				'/stocks/store/2',
 				HttpMethod::GET,
 				'stock=1&companyId=1&storeId=2',
@@ -97,11 +101,11 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @dataProvider routeWriteRedirectDataProvider
+	 * @dataProvider routeReadRedirectDataProvider
 	 */
 	public function testProxyReadRoutes(
 		array $routeRedirects, ProvidesRequestInfo $request, string $expectedFinalUri, string $expectedFinalMethod,
-		string $expectedQueryString
+		array $expectedPostData
 	)
 	{
 		$requestProxy = new RequestProxy();
@@ -115,7 +119,7 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals( $expectedFinalUri, $request->getUri() );
 		$this->assertEquals( $expectedFinalMethod, $request->getMethod() );
-		$this->assertEquals( $expectedQueryString, $request->getQueryString() );
+		$this->assertEquals( $expectedPostData, $_POST );
 	}
 
 	public function routeReadRedirectDataProvider()
@@ -131,7 +135,7 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 					new RouteRedirect(
 						new NamedRegExp( '^/companies/(?<companyId>\d*)/stores/(?<storeId>\d*)/stocks$' ),
 						'/company/:companyId/stocks/store/:storeId',
-						HttpMethod::GET
+						HttpMethod::POST
 					),
 					new RouteRedirect(
 						new NamedRegExp( '^/companies/stores/(?<storeId>\d*)/(?<companyId>\d*)/stocks$' ),
@@ -140,7 +144,7 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 					),
 				],
 				new RequestInfo(
-					[ 'REQUEST_METHOD' => HttpMethod::HEAD, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
+					[ 'REQUEST_METHOD' => HttpMethod::GET, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
 				),
 				'/company/1/stocks/store/2',
 				HttpMethod::POST,
@@ -156,7 +160,7 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 					new RouteRedirect(
 						new NamedRegExp( '^/companies/(?<companyId>\d*)/stores/(?<storeId>\d*)/stocks$' ),
 						'/company/:companyId/stocks/store/:storeId',
-						HttpMethod::GET
+						HttpMethod::PUT
 					),
 					new RouteRedirect(
 						new NamedRegExp( '^/companies/stores/(?<storeId>\d*)/(?<companyId>\d*)/stocks$' ),
@@ -166,13 +170,12 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 				],
 				new RequestInfo(
 					[
-						'REQUEST_METHOD' => HttpMethod::GET, 'REQUEST_URI' => '/companies/1/stores/2/stocks',
-						'QUERY_STRING'   => 'stock=1',
+						'REQUEST_METHOD' => HttpMethod::POST, 'REQUEST_URI' => '/companies/1/stores/2/stocks',
 					]
 				),
 				'/company/1/stocks/store/2',
 				HttpMethod::PUT,
-				[ 'companyId' => '1', 'storeId' => '2', 'stock' => '1' ],
+				[ 'companyId' => '1', 'storeId' => '2' ],
 			],
 		];
 	}

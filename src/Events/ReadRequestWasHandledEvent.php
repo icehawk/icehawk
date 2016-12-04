@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Events;
 
+use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
 use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
 use IceHawk\IceHawk\Interfaces\ProvidesReadRequestInputData;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
@@ -40,5 +41,10 @@ final class ReadRequestWasHandledEvent implements CarriesEventData
 	public function getRequestInput() : ProvidesReadRequestInputData
 	{
 		return $this->request->getInput();
+	}
+
+	public function getRequestCookies() : ProvidesCookieData
+	{
+		return $this->request->getCookies();
 	}
 }

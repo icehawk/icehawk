@@ -11,18 +11,36 @@
  * all copies or substantial portions of the Software.
  */
 
-namespace IceHawk\IceHawk\PubSub\Interfaces;
+namespace IceHawk\IceHawk\Defaults;
 
 use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
-use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
- * Interface CarriesEventData
- * @package IceHawk\IceHawk\PubSub\Interfaces
+ * Class Cookies
+ * @package IceHawk\IceHawk\Defaults
  */
-interface CarriesEventData
+final class Cookies implements ProvidesCookieData
 {
-	public function getRequestInfo() : ProvidesRequestInfo;
+	/** @var array */
+	private $data;
 
-	public function getRequestCookies() : ProvidesCookieData;
+	public function __construct( array $cookieData )
+	{
+		$this->data = $cookieData;
+	}
+
+	public function getData() : array
+	{
+		return $this->data;
+	}
+
+	public function get( string $key, $default = null )
+	{
+		return $this->data[ $key ] ?? $default;
+	}
+
+	public static function fromEnv() : self
+	{
+		return new self( $_COOKIE );
+	}
 }

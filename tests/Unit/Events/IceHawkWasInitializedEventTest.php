@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Events;
 
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
 
@@ -24,10 +25,11 @@ class IceHawkWasInitializedEventTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{
-		$requestInfo = RequestInfo::fromEnv();
-
-		$event = new IceHawkWasInitializedEvent( $requestInfo );
+		$requestInfo    = RequestInfo::fromEnv();
+		$requestCookies = new Cookies( [] );
+		$event          = new IceHawkWasInitializedEvent( $requestInfo, $requestCookies );
 
 		$this->assertSame( $requestInfo, $event->getRequestInfo() );
+		$this->assertSame( $requestCookies, $event->getRequestCookies() );
 	}
 }

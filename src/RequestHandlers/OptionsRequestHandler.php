@@ -20,7 +20,6 @@ use IceHawk\IceHawk\Routing\OptionsRouter;
 
 /**
  * Class OptionsRequestHandler
- *
  * @package IceHawk\IceHawk\RequestHandlers
  */
 final class OptionsRequestHandler extends AbstractRequestHandler
@@ -61,6 +60,8 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 	/**
 	 * @param string             $uri
 	 * @param array|\Traversable $routes
+	 *
+	 * @return array
 	 */
 	private function getMatchingRoutes( string $uri, $routes ) : array
 	{

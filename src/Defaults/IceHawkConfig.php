@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Defaults;
 
+use IceHawk\IceHawk\Defaults\Traits\DefaultCookieProviding;
 use IceHawk\IceHawk\Defaults\Traits\DefaultEventSubscribing;
 use IceHawk\IceHawk\Defaults\Traits\DefaultFinalReadResponding;
 use IceHawk\IceHawk\Defaults\Traits\DefaultFinalWriteResponding;
@@ -31,6 +32,7 @@ class IceHawkConfig implements ConfiguresIceHawk
 	use DefaultWriteRouting;
 	use DefaultEventSubscribing;
 	use DefaultRequestInfoProviding;
+	use DefaultCookieProviding;
 	use DefaultFinalReadResponding;
 	use DefaultFinalWriteResponding;
 }

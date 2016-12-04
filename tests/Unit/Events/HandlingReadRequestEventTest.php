@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Events;
 
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\HandlingReadRequestEvent;
 use IceHawk\IceHawk\Requests\ReadRequest;
@@ -22,13 +23,15 @@ class HandlingReadRequestEventTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{
-		$requestInfo  = RequestInfo::fromEnv();
-		$requestInput = new ReadRequestInput( [] );
-		$readRequest  = new ReadRequest( $requestInfo, $requestInput );
+		$requestInfo    = RequestInfo::fromEnv();
+		$requestInput   = new ReadRequestInput( [] );
+		$requestCookies = new Cookies( [] );
+		$readRequest    = new ReadRequest( $requestInfo, $requestCookies, $requestInput );
 
 		$event = new HandlingReadRequestEvent( $readRequest );
 
 		$this->assertSame( $requestInfo, $event->getRequestInfo() );
 		$this->assertSame( $requestInput, $event->getRequestInput() );
+		$this->assertSame( $requestCookies, $event->getRequestCookies() );
 	}
 }

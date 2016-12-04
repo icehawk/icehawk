@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Events;
 
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\WriteRequestWasHandledEvent;
 use IceHawk\IceHawk\Requests\WriteRequest;
@@ -26,13 +27,15 @@ class WriteRequestWasHandledEventTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{
-		$requestInfo  = RequestInfo::fromEnv();
-		$requestInput = new WriteRequestInput( '', [] );
-		$writeRequest = new WriteRequest( $requestInfo, $requestInput );
+		$requestInfo    = RequestInfo::fromEnv();
+		$requestInput   = new WriteRequestInput( '', [] );
+		$requestCookies = new Cookies( [] );
+		$writeRequest   = new WriteRequest( $requestInfo, $requestCookies, $requestInput );
 
 		$event = new WriteRequestWasHandledEvent( $writeRequest );
 
 		$this->assertSame( $requestInfo, $event->getRequestInfo() );
 		$this->assertSame( $requestInput, $event->getRequestInput() );
+		$this->assertSame( $requestCookies, $event->getRequestCookies() );
 	}
 }

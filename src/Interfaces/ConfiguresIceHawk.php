@@ -40,6 +40,8 @@ interface ConfiguresIceHawk
 
 	public function getRequestInfo() : ProvidesRequestInfo;
 
+	public function getCookies() : ProvidesCookieData;
+
 	public function getFinalReadResponder() : RespondsFinallyToReadRequest;
 
 	public function getFinalWriteResponder() : RespondsFinallyToWriteRequest;

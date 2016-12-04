@@ -11,18 +11,19 @@
  * all copies or substantial portions of the Software.
  */
 
-namespace IceHawk\IceHawk\PubSub\Interfaces;
+namespace IceHawk\IceHawk\Defaults\Traits;
 
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
-use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
- * Interface CarriesEventData
- * @package IceHawk\IceHawk\PubSub\Interfaces
+ * Trait DefaultCookieProviding
+ * @package IceHawk\IceHawk\Defaults\Traits
  */
-interface CarriesEventData
+trait DefaultCookieProviding
 {
-	public function getRequestInfo() : ProvidesRequestInfo;
-
-	public function getRequestCookies() : ProvidesCookieData;
+	public function getCookies() : ProvidesCookieData
+	{
+		return Cookies::fromEnv();
+	}
 }

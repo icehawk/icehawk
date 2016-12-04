@@ -14,6 +14,7 @@
 namespace IceHawk\IceHawk\Config;
 
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
@@ -39,6 +40,9 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
+	/** @var ProvidesCookieData */
+	private $cookies;
+
 	/** @var array|SubscribesToEvents[] */
 	private $eventSubscribers;
 
@@ -61,6 +65,16 @@ final class ConfigWrapper implements ConfiguresIceHawk
 		}
 
 		return $this->requestInfo;
+	}
+
+	public function getCookies() : ProvidesCookieData
+	{
+		if ( $this->cookies === null )
+		{
+			$this->cookies = $this->config->getCookies();
+		}
+
+		return $this->cookies;
 	}
 
 	/**

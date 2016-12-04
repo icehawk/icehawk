@@ -11,18 +11,21 @@
  * all copies or substantial portions of the Software.
  */
 
-namespace IceHawk\IceHawk\PubSub\Interfaces;
-
-use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
-use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
+namespace IceHawk\IceHawk\Interfaces;
 
 /**
- * Interface CarriesEventData
- * @package IceHawk\IceHawk\PubSub\Interfaces
+ * Interface ProvidesCookieData
+ * @package IceHawk\IceHawk\Interfaces
  */
-interface CarriesEventData
+interface ProvidesCookieData
 {
-	public function getRequestInfo() : ProvidesRequestInfo;
+	public function getData() : array;
 
-	public function getRequestCookies() : ProvidesCookieData;
+	/**
+	 * @param string            $key
+	 * @param string|array|null $default
+	 *
+	 * @return string|array|null
+	 */
+	public function get( string $key, $default = null );
 }

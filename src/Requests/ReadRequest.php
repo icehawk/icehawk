@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Requests;
 
+use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
 use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
 use IceHawk\IceHawk\Interfaces\ProvidesReadRequestInputData;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
@@ -26,12 +27,20 @@ final class ReadRequest implements ProvidesReadRequestData
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
+	/** @var ProvidesCookieData */
+	private $cookies;
+
 	/** @var ProvidesReadRequestInputData */
 	private $inputData;
 
-	public function __construct( ProvidesRequestInfo $requestInfo, ProvidesReadRequestInputData $inputData )
+	public function __construct(
+		ProvidesRequestInfo $requestInfo,
+		ProvidesCookieData $cookies,
+		ProvidesReadRequestInputData $inputData
+	)
 	{
 		$this->requestInfo = $requestInfo;
+		$this->cookies = $cookies;
 		$this->inputData   = $inputData;
 	}
 
@@ -43,5 +52,10 @@ final class ReadRequest implements ProvidesReadRequestData
 	public function getInput() : ProvidesReadRequestInputData
 	{
 		return $this->inputData;
+	}
+
+	public function getCookies() : ProvidesCookieData
+	{
+		return $this->cookies;
 	}
 }

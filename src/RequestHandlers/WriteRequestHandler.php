@@ -77,6 +77,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 	private function getRequest( array $uriParams ) : ProvidesWriteRequestData
 	{
 		$requestInfo = $this->config->getRequestInfo();
+		$cookies = $this->config->getCookies();
 
 		$body          = $this->getRequestBody();
 		$requestData   = array_merge( $_POST, $uriParams );
@@ -84,7 +85,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 		$requestInput = new WriteRequestInput( $body, $requestData, $uploadedFiles );
 
-		return new WriteRequest( $requestInfo, $requestInput );
+		return new WriteRequest( $requestInfo, $cookies, $requestInput );
 	}
 
 	private function getRequestBody() : string

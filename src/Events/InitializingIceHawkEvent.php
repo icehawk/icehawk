@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Events;
 
+use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
 
@@ -25,13 +26,22 @@ final class InitializingIceHawkEvent implements CarriesEventData
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
 
-	public function __construct( ProvidesRequestInfo $requestInfo )
+	/** @var ProvidesCookieData */
+	private $requestCookies;
+
+	public function __construct( ProvidesRequestInfo $requestInfo, ProvidesCookieData $requestCookies )
 	{
-		$this->requestInfo = $requestInfo;
+		$this->requestInfo    = $requestInfo;
+		$this->requestCookies = $requestCookies;
 	}
 
 	public function getRequestInfo() : ProvidesRequestInfo
 	{
 		return $this->requestInfo;
+	}
+
+	public function getRequestCookies() : ProvidesCookieData
+	{
+		return $this->requestCookies;
 	}
 }

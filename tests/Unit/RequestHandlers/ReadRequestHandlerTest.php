@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
 
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 use IceHawk\IceHawk\Interfaces\HandlesGetRequest;
@@ -51,6 +52,11 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider parameterProvider
 	 * @runInSeparateProcess
+	 *
+	 * @param array  $getData
+	 * @param string $uriKey
+	 * @param string $uriValue
+	 * @param array  $expectedParams
 	 */
 	public function testUriParamsOverwritesGetParams(
 		array $getData, string $uriKey, string $uriValue, array $expectedParams
@@ -59,10 +65,12 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$_GET       = $getData;
 		$requestUri = sprintf( '/domain/test_request_param/%s/%s', $uriKey, $uriValue );
 
-		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri] );
-
+		$requestInfo     = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri] );
+		$cookies         = new Cookies( [] );
 		$expectedRequest = new ReadRequest(
-			$requestInfo, new ReadRequestInput( $expectedParams )
+			$requestInfo,
+			$cookies,
+			new ReadRequestInput( $expectedParams )
 		);
 
 		$requestHandler = $this->getMockBuilder( HandlesGetRequest::class )->getMockForAbstractClass();
@@ -74,6 +82,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [$readRoute] );
 
 		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );

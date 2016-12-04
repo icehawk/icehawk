@@ -66,15 +66,16 @@ final class IceHawk
 		$this->guardConfigIsValid();
 		$this->registerEventSubscribers();
 
-		$requestInfo = $this->config->getRequestInfo();
+		$requestInfo    = $this->config->getRequestInfo();
+		$requestCookies = $this->config->getCookies();
 
-		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
+		$initializingEvent = new InitializingIceHawkEvent( $requestInfo, $requestCookies );
 		$this->eventPublisher->publish( $initializingEvent );
 
 		$this->setUpDelegate->setUpSessionHandling( $requestInfo );
 		$this->setUpDelegate->setUpErrorHandling( $requestInfo );
 
-		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo );
+		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo, $requestCookies );
 		$this->eventPublisher->publish( $initializedEvent );
 	}
 

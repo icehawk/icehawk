@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\FinalWriteResponder;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
@@ -36,7 +37,7 @@ class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
-		$requestData  = new WriteRequest( $requestInfo, new WriteRequestInput( '', [] ) );
+		$requestData = new WriteRequest( $requestInfo, new Cookies( [] ), new WriteRequestInput( '', [] ) );
 
 		try
 		{

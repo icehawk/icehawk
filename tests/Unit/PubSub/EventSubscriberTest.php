@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Fixtures\PubSub;
 
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\HandlingReadRequestEvent;
 use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
@@ -29,9 +30,9 @@ class EventSubscriberTest extends \PHPUnit_Framework_TestCase
 {
 	public function testCanCheckForAcceptedEvents()
 	{
-		$initEvent     = new IceHawkWasInitializedEvent( RequestInfo::fromEnv() );
-		$handlingEvent =
-			new HandlingReadRequestEvent( new ReadRequest( RequestInfo::fromEnv(), new ReadRequestInput( [] ) ) );
+		$initEvent     = new IceHawkWasInitializedEvent( RequestInfo::fromEnv(), new Cookies( [] ) );
+		$readRequest   = new ReadRequest( RequestInfo::fromEnv(), new Cookies( [] ), new ReadRequestInput( [] ) );
+		$handlingEvent = new HandlingReadRequestEvent( $readRequest );
 
 		$mock = $this->getMockBuilder( TestEventSubscriber::class )
 		             ->setMethods( ['getAcceptedEvents', 'whenIceHawkWasInitialized'] )
@@ -48,7 +49,7 @@ class EventSubscriberTest extends \PHPUnit_Framework_TestCase
 
 	public function testNotImplementedListenerMethodThrowsException()
 	{
-		$initEvent = new IceHawkWasInitializedEvent( RequestInfo::fromEnv() );
+		$initEvent = new IceHawkWasInitializedEvent( RequestInfo::fromEnv(), new Cookies( [] ) );
 
 		try
 		{
@@ -73,7 +74,7 @@ class EventSubscriberTest extends \PHPUnit_Framework_TestCase
 
 	public function testCanHandleEventInListenerMethod()
 	{
-		$initEvent = new IceHawkWasInitializedEvent( RequestInfo::fromEnv() );
+		$initEvent = new IceHawkWasInitializedEvent( RequestInfo::fromEnv(), new Cookies( [] ) );
 
 		$mock = $this->getMockBuilder( TestEventSubscriber::class )
 		             ->setMethods( ['getAcceptedEvents', 'whenIceHawkWasInitialized'] )

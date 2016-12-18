@@ -16,7 +16,6 @@ namespace IceHawk\IceHawk;
 use IceHawk\IceHawk\Config\ConfigGuard;
 use IceHawk\IceHawk\Config\ConfigWrapper;
 use IceHawk\IceHawk\Constants\HttpMethod;
-use IceHawk\IceHawk\Defaults\RequestProxy;
 use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
 use IceHawk\IceHawk\Events\InitializingIceHawkEvent;
 use IceHawk\IceHawk\Exceptions\InvalidEventSubscriberCollection;
@@ -29,10 +28,10 @@ use IceHawk\IceHawk\RequestHandlers\OptionsRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\ReadRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\WriteRequestHandler;
 use IceHawk\IceHawk\Responses\MethodNotImplemented;
+use IceHawk\IceHawk\Routing\RequestProxy;
 
 /**
  * Class IceHawk
- *
  * @package IceHawk\IceHawk
  */
 final class IceHawk

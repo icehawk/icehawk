@@ -15,9 +15,9 @@ namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Constants\HttpMethod;
 use IceHawk\IceHawk\Defaults\RequestInfo;
-use IceHawk\IceHawk\Defaults\RequestProxy;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
+use IceHawk\IceHawk\Routing\RequestProxy;
 use IceHawk\IceHawk\Routing\RouteRedirect;
 
 /**
@@ -30,8 +30,12 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 	 * @dataProvider routeWriteRedirectDataProvider
 	 */
 	public function testProxyWriteRoutes(
-		array $routeRedirects, ProvidesRequestInfo $request, array $postData,
-		string $expectedFinalUri, string $expectedFinalMethod, string $expectedQueryString
+		array $routeRedirects,
+		ProvidesRequestInfo $requestInfo,
+		array $postData,
+		string $expectedFinalUri,
+		string $expectedFinalMethod,
+		string $expectedQueryString
 	)
 	{
 		$requestProxy = new RequestProxy();
@@ -42,11 +46,11 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 		}
 
 		$_POST   = $postData;
-		$request = $requestProxy->proxyRequest( $request );
+		$requestInfo = $requestProxy->proxyRequest( $requestInfo );
 
-		$this->assertEquals( $expectedFinalUri, $request->getUri() );
-		$this->assertEquals( $expectedFinalMethod, $request->getMethod() );
-		$this->assertEquals( $expectedQueryString, $request->getQueryString() );
+		$this->assertEquals( $expectedFinalUri, $requestInfo->getUri() );
+		$this->assertEquals( $expectedFinalMethod, $requestInfo->getMethod() );
+		$this->assertEquals( $expectedQueryString, $requestInfo->getQueryString() );
 		$this->assertEquals( $postData, $_GET );
 	}
 
@@ -72,9 +76,9 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 					),
 				],
 				new RequestInfo(
-					['REQUEST_METHOD' => HttpMethod::POST, 'REQUEST_URI' => '/companies/1/stores/2/stocks']
+					[ 'REQUEST_METHOD' => HttpMethod::POST, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
 				),
-				['stock' => '3'],
+				[ 'stock' => '3' ],
 				'/stocks/store/2',
 				HttpMethod::GET,
 				'companyId=1&storeId=2',
@@ -155,11 +159,11 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 					),
 				],
 				new RequestInfo(
-					['REQUEST_METHOD' => HttpMethod::GET, 'REQUEST_URI' => '/companies/1/stores/2/stocks']
+					[ 'REQUEST_METHOD' => HttpMethod::GET, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
 				),
 				'/company/1/stocks/store/2',
 				HttpMethod::POST,
-				['companyId' => '1', 'storeId' => '2'],
+				[ 'companyId' => '1', 'storeId' => '2' ],
 			],
 			[
 				[
@@ -186,7 +190,7 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 				),
 				'/company/1/stocks/store/2',
 				HttpMethod::PUT,
-				['companyId' => '1', 'storeId' => '2'],
+				[ 'companyId' => '1', 'storeId' => '2' ],
 			],
 		];
 	}

@@ -1,4 +1,16 @@
-<?php
+<?php declare(strict_types = 1);
+/**
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
 namespace IceHawk\IceHawk\Defaults;
 
 use IceHawk\IceHawk\Constants\HttpMethod;
@@ -7,7 +19,6 @@ use IceHawk\IceHawk\Routing\Interfaces\RedirectsRoute;
 
 /**
  * Class RequestProxy
- *
  * @package IceHawk\IceHawk\Defaults
  */
 final class RequestProxy
@@ -42,7 +53,7 @@ final class RequestProxy
 		$finalUri      = $redirect->getFinalUri();
 		$uriParams     = $redirect->getUriParams();
 
-		$readMethods     = array_intersect( [ $requestMethod, $redirect->getFinalMethod() ], HttpMethod::READ_METHODS );
+		$readMethods = array_intersect( [$requestMethod, $redirect->getFinalMethod()], HttpMethod::READ_METHODS );
 		$readMethodCount = count( $readMethods );
 
 		array_walk(
@@ -53,7 +64,7 @@ final class RequestProxy
 			}
 		);
 
-		$overWrites = [ 'REQUEST_METHOD' => $redirect->getFinalMethod(), 'REQUEST_URI' => $finalUri ];
+		$overWrites = ['REQUEST_METHOD' => $redirect->getFinalMethod(), 'REQUEST_URI' => $finalUri];
 
 		if ( $readMethodCount == 1 )
 		{

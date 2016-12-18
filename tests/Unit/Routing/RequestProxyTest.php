@@ -1,4 +1,16 @@
-<?php
+<?php declare(strict_types = 1);
+/**
+ * Copyright (c) 2016 Holger Woltersdorf & Contributors
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Constants\HttpMethod;
@@ -10,7 +22,6 @@ use IceHawk\IceHawk\Routing\RouteRedirect;
 
 /**
  * Class RouteRedirectTest
- *
  * @package IceHawk\IceHawk\Tests\Unit\Routing
  */
 class RequestProxyTest extends \PHPUnit_Framework_TestCase
@@ -61,9 +72,9 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 					),
 				],
 				new RequestInfo(
-					[ 'REQUEST_METHOD' => HttpMethod::POST, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
+					['REQUEST_METHOD' => HttpMethod::POST, 'REQUEST_URI' => '/companies/1/stores/2/stocks']
 				),
-				[ 'stock' => '3' ],
+				['stock' => '3'],
 				'/stocks/store/2',
 				HttpMethod::GET,
 				'companyId=1&storeId=2',
@@ -144,11 +155,11 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 					),
 				],
 				new RequestInfo(
-					[ 'REQUEST_METHOD' => HttpMethod::GET, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
+					['REQUEST_METHOD' => HttpMethod::GET, 'REQUEST_URI' => '/companies/1/stores/2/stocks']
 				),
 				'/company/1/stocks/store/2',
 				HttpMethod::POST,
-				[ 'companyId' => '1', 'storeId' => '2' ],
+				['companyId' => '1', 'storeId' => '2'],
 			],
 			[
 				[
@@ -175,7 +186,7 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 				),
 				'/company/1/stocks/store/2',
 				HttpMethod::PUT,
-				[ 'companyId' => '1', 'storeId' => '2' ],
+				['companyId' => '1', 'storeId' => '2'],
 			],
 		];
 	}

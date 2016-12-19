@@ -23,7 +23,7 @@ Lightweight PHP routing framework, respecting CQRS.
 ## Installation
 
 ```bash
-composer require icehawk/icehawk:^2.0
+composer require icehawk/icehawk:^2.1
 ```
 
 or add to your `composer.json`:
@@ -31,7 +31,7 @@ or add to your `composer.json`:
 ```json
 {
 	"require": {
-		"icehawk/icehawk": "^2.0"
+		"icehawk/icehawk": "^2.1"
 	}
 }
 ```
@@ -59,7 +59,7 @@ Answer the questions of the interactive installer and you're good to go.
 ```json
 {
     "require": {
-        "icehawk/icehawk": "^2.0"
+        "icehawk/icehawk": "^2.1"
     },
     "autoload": {
         "psr-4": {

@@ -14,10 +14,10 @@
 namespace IceHawk\IceHawk\Routing\Interfaces;
 
 /**
- * Interface ProxiesRoutes
+ * Interface BypassesRequest
  * @package IceHawk\IceHawk\Routing\Interfaces
  */
-interface RedirectsRoute
+interface BypassesRequest
 {
 	public function matches( string $uri ) : bool;
 

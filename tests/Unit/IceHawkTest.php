@@ -38,7 +38,7 @@ use IceHawk\IceHawk\Requests\WriteRequest;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\ReadRoute;
-use IceHawk\IceHawk\Routing\RouteRedirect;
+use IceHawk\IceHawk\Routing\RequestBypass;
 use IceHawk\IceHawk\Routing\WriteRoute;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
@@ -145,9 +145,11 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$route = new ReadRoute( new Literal( '/test' ), $requestHandler );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [
-			new RouteRedirect( new Literal( '/look_for_this' ), '/finalDestination', HttpMethod::GET )
-		] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn(
+			[
+				new RequestBypass( new Literal( '/look_for_this' ), '/finalDestination', HttpMethod::GET ),
+			]
+		);
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $route ] );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
 
@@ -186,7 +188,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$route = new WriteRoute( new Literal( '/test' ), $requestHandler );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $route ] );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
 
@@ -221,11 +223,19 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @param array  $readRoutes
+	 * @param array  $writeRoutes
+	 * @param string $uri
+	 * @param array  $expectedMethods
+	 *
 	 * @dataProvider RouteProvider
 	 * @runInSeparateProcess
 	 */
 	public function testCanCallHandlerForOptionRequest(
-		array $readRoutes, array $writeRoutes, string $uri, array $expectedMethods
+		array $readRoutes,
+		array $writeRoutes,
+		string $uri,
+		array $expectedMethods
 	)
 	{
 		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
@@ -237,7 +247,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->method( 'getReadRoutes' )->willReturn( $readRoutes );
 		$config->method( 'getWriteRoutes' )->willReturn( $writeRoutes );
 
@@ -293,7 +303,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		              );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $route ] );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ $eventListener ] );
 
@@ -347,7 +357,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		              );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $route ] );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ $eventListener ] );
 
@@ -384,7 +394,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		               );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
 		$config->method( 'getFinalReadResponder' )->willReturn( $finalResponder );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
@@ -425,7 +435,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
-		$config->expects( $this->once() )->method( 'getRedirectRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->method( 'getFinalWriteResponder' )->willReturn( $finalResponder );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
 

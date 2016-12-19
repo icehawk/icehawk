@@ -28,7 +28,7 @@ use IceHawk\IceHawk\RequestHandlers\OptionsRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\ReadRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\WriteRequestHandler;
 use IceHawk\IceHawk\Responses\MethodNotImplemented;
-use IceHawk\IceHawk\Routing\RequestProxy;
+use IceHawk\IceHawk\Routing\RequestBypasser;
 
 /**
  * Class IceHawk
@@ -98,15 +98,15 @@ final class IceHawk
 
 	private function getFinalRequestInfo() : ProvidesRequestInfo
 	{
-		$requestInfo  = $this->config->getRequestInfo();
-		$requestProxy = new RequestProxy();
+		$requestInfo   = $this->config->getRequestInfo();
+		$bypassHandler = new RequestBypasser();
 
-		foreach ( $this->config->getRedirectRoutes() as $redirect )
+		foreach ( $this->config->getRequestBypasses() as $requestBypass )
 		{
-			$requestProxy->addRedirect( $redirect );
+			$bypassHandler->addRequestBypass( $requestBypass );
 		}
 
-		return $requestProxy->proxyRequest( $requestInfo );
+		return $bypassHandler->bypassRequest( $requestInfo );
 	}
 
 	public function handleRequest()

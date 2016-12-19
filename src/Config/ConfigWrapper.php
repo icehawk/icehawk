@@ -18,7 +18,7 @@ use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
-use IceHawk\IceHawk\Routing\Interfaces\RedirectsRoute;
+use IceHawk\IceHawk\Routing\Interfaces\BypassesRequest;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
@@ -37,8 +37,8 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	/** @var array|\Traversable|RoutesToWriteHandler[] */
 	private $writeRoutes;
 
-	/** @var array|\Traversable|RedirectsRoute[] */
-	private $redirectRoutes;
+	/** @var array|\Traversable|BypassesRequest[] */
+	private $requestBypasses;
 
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
@@ -94,16 +94,16 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	}
 
 	/**
-	 * @return array|RedirectsRoute[]|\Traversable
+	 * @return array|BypassesRequest[]|\Traversable
 	 */
-	public function getRedirectRoutes()
+	public function getRequestBypasses()
 	{
-		if ( $this->redirectRoutes === null )
+		if ( $this->requestBypasses === null )
 		{
-			$this->redirectRoutes = $this->config->getRedirectRoutes();
+			$this->requestBypasses = $this->config->getRequestBypasses();
 		}
 
-		return $this->redirectRoutes;
+		return $this->requestBypasses;
 	}
 
 	/**

@@ -13,13 +13,18 @@
 
 namespace IceHawk\IceHawk\Defaults\Traits;
 
+use IceHawk\IceHawk\Routing\Interfaces\BypassesRequest;
+
 /**
- * Class DefaultRedirectRouting
+ * Class DefaultRequestBypassing
  * @package IceHawk\IceHawk\Defaults\Traits
  */
-trait DefaultRedirectRouting
+trait DefaultRequestBypassing
 {
-	public function getRedirectRoutes()
+	/**
+	 * @return array|\Traversable|BypassesRequest[]
+	 */
+	public function getRequestBypasses()
 	{
 		return [];
 	}

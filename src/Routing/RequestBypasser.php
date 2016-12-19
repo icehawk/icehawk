@@ -15,47 +15,47 @@ namespace IceHawk\IceHawk\Routing;
 
 use IceHawk\IceHawk\Constants\HttpMethod;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
-use IceHawk\IceHawk\Routing\Interfaces\RedirectsRoute;
+use IceHawk\IceHawk\Routing\Interfaces\BypassesRequest;
 
 /**
- * Class RequestProxy
+ * Class RequestBypasser
  * @package IceHawk\IceHawk\Defaults
  */
-final class RequestProxy
+final class RequestBypasser
 {
-	/** @var  array|RedirectsRoute[] */
-	private $routeRedirects = [];
+	/** @var  array|BypassesRequest[] */
+	private $requestBypasses = [];
 
-	public function addRedirect( RedirectsRoute $redirect )
+	public function addRequestBypass( BypassesRequest $requestBypass )
 	{
-		$this->routeRedirects[] = $redirect;
+		$this->requestBypasses[] = $requestBypass;
 	}
 
-	public function proxyRequest( ProvidesRequestInfo $requestInfo ) : ProvidesRequestInfo
+	public function bypassRequest( ProvidesRequestInfo $requestInfo ) : ProvidesRequestInfo
 	{
 		$uri    = $requestInfo->getUri();
 		$method = $requestInfo->getMethod();
 
-		foreach ( $this->routeRedirects as $redirect )
+		foreach ( $this->requestBypasses as $requestBypass )
 		{
-			if ( $redirect->matches( $uri ) && $method != $redirect->getFinalMethod() )
+			if ( $requestBypass->matches( $uri ) && $method != $requestBypass->getFinalMethod() )
 			{
-				$requestInfo = $this->createNewRequest( $requestInfo, $redirect );
+				$requestInfo = $this->createNewRequestInfo( $requestInfo, $requestBypass );
 			}
 		}
 
 		return $requestInfo;
 	}
 
-	private function createNewRequest(
+	private function createNewRequestInfo(
 		ProvidesRequestInfo $requestInfo,
-		RedirectsRoute $redirect
+		BypassesRequest $requestBypass
 	) : ProvidesRequestInfo
 	{
 		$requestMethod = $requestInfo->getMethod();
-		$uriParams  = $redirect->getUriParams();
-		$finalMethod   = $redirect->getFinalMethod();
-		$finalUri      = $this->buildFinalUri( $redirect->getFinalUri(), $uriParams );
+		$uriParams = $requestBypass->getUriParams();
+		$finalMethod = $requestBypass->getFinalMethod();
+		$finalUri = $this->buildFinalUri( $requestBypass->getFinalUri(), $uriParams );
 
 		$overWrites = [ 'REQUEST_METHOD' => $finalMethod, 'REQUEST_URI' => $finalUri ];
 

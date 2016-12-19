@@ -13,14 +13,14 @@
 
 namespace IceHawk\IceHawk\Routing;
 
+use IceHawk\IceHawk\Routing\Interfaces\BypassesRequest;
 use IceHawk\IceHawk\Routing\Interfaces\ProvidesMatchResult;
-use IceHawk\IceHawk\Routing\Interfaces\RedirectsRoute;
 
 /**
- * Class ReadRouteRedirect
+ * Class RequestBypass
  * @package IceHawk\IceHawk\Routing
  */
-final class RouteRedirect implements RedirectsRoute
+final class RequestBypass implements BypassesRequest
 {
 	/** @var ProvidesMatchResult */
 	private $pattern;
@@ -63,9 +63,6 @@ final class RouteRedirect implements RedirectsRoute
 		return $this->finalMethod;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function getUriParams() : array
 	{
 		return $this->uriParams;

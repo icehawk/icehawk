@@ -17,20 +17,27 @@ use IceHawk\IceHawk\Constants\HttpMethod;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
-use IceHawk\IceHawk\Routing\RequestProxy;
-use IceHawk\IceHawk\Routing\RouteRedirect;
+use IceHawk\IceHawk\Routing\RequestBypass;
+use IceHawk\IceHawk\Routing\RequestBypasser;
 
 /**
- * Class RouteRedirectTest
+ * Class RequestBypasserTest
  * @package IceHawk\IceHawk\Tests\Unit\Routing
  */
-class RequestProxyTest extends \PHPUnit_Framework_TestCase
+class RequestBypasserTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @dataProvider routeWriteRedirectDataProvider
+	 * @param array               $requestBypasses
+	 * @param ProvidesRequestInfo $requestInfo
+	 * @param array               $postData
+	 * @param string              $expectedFinalUri
+	 * @param string              $expectedFinalMethod
+	 * @param string              $expectedQueryString
+	 *
+	 * @dataProvider writeRequestBypassesProvider
 	 */
 	public function testProxyWriteRoutes(
-		array $routeRedirects,
+		array $requestBypasses,
 		ProvidesRequestInfo $requestInfo,
 		array $postData,
 		string $expectedFinalUri,
@@ -38,15 +45,15 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 		string $expectedQueryString
 	)
 	{
-		$requestProxy = new RequestProxy();
+		$requestBypasser = new RequestBypasser();
 
-		foreach ( $routeRedirects as $routeRedirect )
+		foreach ( $requestBypasses as $bypassRoute )
 		{
-			$requestProxy->addRedirect( $routeRedirect );
+			$requestBypasser->addRequestBypass( $bypassRoute );
 		}
 
-		$_POST   = $postData;
-		$requestInfo = $requestProxy->proxyRequest( $requestInfo );
+		$_POST       = $postData;
+		$requestInfo = $requestBypasser->bypassRequest( $requestInfo );
 
 		$this->assertEquals( $expectedFinalUri, $requestInfo->getUri() );
 		$this->assertEquals( $expectedFinalMethod, $requestInfo->getMethod() );
@@ -54,22 +61,22 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals( $postData, $_GET );
 	}
 
-	public function routeWriteRedirectDataProvider()
+	public function writeRequestBypassesProvider() : array
 	{
 		return [
 			[
 				[
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/stocks$' ),
 						'/stocks/company/:companyId',
 						HttpMethod::PUT
 					),
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/(?<companyId>\d*)/stores/(?<storeId>\d*)/stocks$' ),
 						'/stocks/store/:storeId',
 						HttpMethod::GET
 					),
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/stores/(?<storeId>\d*)/(?<companyId>\d*)/stocks$' ),
 						'/stocks/company/:companyId',
 						HttpMethod::PUT
@@ -85,17 +92,17 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 			],
 			[
 				[
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/stocks$' ),
 						'/stocks/company/:companyId',
 						HttpMethod::HEAD
 					),
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/(?<companyId>\d*)/stores/(?<storeId>\d*)/stocks$' ),
 						'/stocks/store/:storeId',
 						HttpMethod::GET
 					),
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/stores/(?<storeId>\d*)/(?<companyId>\d*)/stocks$' ),
 						'/stocks/company/:companyId',
 						HttpMethod::PUT
@@ -116,43 +123,52 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @dataProvider routeReadRedirectDataProvider
+	 * @param array               $requestBypasses
+	 * @param ProvidesRequestInfo $request
+	 * @param string              $expectedFinalUri
+	 * @param string              $expectedFinalMethod
+	 * @param array               $expectedPostData
+	 *
+	 * @dataProvider readRequestBypassesProvider
 	 */
 	public function testProxyReadRoutes(
-		array $routeRedirects, ProvidesRequestInfo $request, string $expectedFinalUri, string $expectedFinalMethod,
+		array $requestBypasses,
+		ProvidesRequestInfo $request,
+		string $expectedFinalUri,
+		string $expectedFinalMethod,
 		array $expectedPostData
 	)
 	{
-		$requestProxy = new RequestProxy();
+		$requestBypasser = new RequestBypasser();
 
-		foreach ( $routeRedirects as $routeRedirect )
+		foreach ( $requestBypasses as $bypassRoute )
 		{
-			$requestProxy->addRedirect( $routeRedirect );
+			$requestBypasser->addRequestBypass( $bypassRoute );
 		}
 
-		$request = $requestProxy->proxyRequest( $request );
+		$request = $requestBypasser->bypassRequest( $request );
 
 		$this->assertEquals( $expectedFinalUri, $request->getUri() );
 		$this->assertEquals( $expectedFinalMethod, $request->getMethod() );
 		$this->assertEquals( $expectedPostData, $_POST );
 	}
 
-	public function routeReadRedirectDataProvider()
+	public function readRequestBypassesProvider() : array
 	{
 		return [
 			[
 				[
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/stocks$' ),
 						'/stocks/company/:companyId',
 						HttpMethod::GET
 					),
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/(?<companyId>\d*)/stores/(?<storeId>\d*)/stocks$' ),
 						'/company/:companyId/stocks/store/:storeId',
 						HttpMethod::POST
 					),
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/stores/(?<storeId>\d*)/(?<companyId>\d*)/stocks$' ),
 						'/stocks/company/:companyId',
 						HttpMethod::GET
@@ -167,17 +183,17 @@ class RequestProxyTest extends \PHPUnit_Framework_TestCase
 			],
 			[
 				[
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/stocks$' ),
 						'/stocks/company/:companyId',
 						HttpMethod::DELETE
 					),
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/(?<companyId>\d*)/stores/(?<storeId>\d*)/stocks$' ),
 						'/company/:companyId/stocks/store/:storeId',
 						HttpMethod::PUT
 					),
-					new RouteRedirect(
+					new RequestBypass(
 						new NamedRegExp( '^/companies/stores/(?<storeId>\d*)/(?<companyId>\d*)/stocks$' ),
 						'/stocks/company/:companyId',
 						HttpMethod::POST

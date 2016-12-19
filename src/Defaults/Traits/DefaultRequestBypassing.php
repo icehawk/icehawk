@@ -11,31 +11,21 @@
  * all copies or substantial portions of the Software.
  */
 
-namespace IceHawk\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Defaults\Traits;
+
+use IceHawk\IceHawk\Routing\Interfaces\BypassesRequest;
 
 /**
- * Interface ServesUploadedFiles
- * @package IceHawk\IceHawk\Interfaces
+ * Class DefaultRequestBypassing
+ * @package IceHawk\IceHawk\Defaults\Traits
  */
-interface ProvidesUploadedFiles
+trait DefaultRequestBypassing
 {
 	/**
-	 * @return array|ProvidesUploadedFileData[][]
+	 * @return array|\Traversable|BypassesRequest[]
 	 */
-	public function getAllFiles() : array;
-
-	/**
-	 * @param string $fieldKey
-	 *
-	 * @return array|ProvidesUploadedFileData[]
-	 */
-	public function getFiles( string $fieldKey ) : array;
-
-	/**
-	 * @param string     $fieldKey
-	 * @param int|string $fileIndex
-	 *
-	 * @return ProvidesUploadedFileData
-	 */
-	public function getOneFile( string $fieldKey, $fileIndex = 0 ) : ProvidesUploadedFileData;
+	public function getRequestBypasses()
+	{
+		return [];
+	}
 }

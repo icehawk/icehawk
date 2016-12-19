@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\PubSub\Interfaces;
 
+use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 
 /**
@@ -22,4 +23,6 @@ use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 interface CarriesEventData
 {
 	public function getRequestInfo() : ProvidesRequestInfo;
+
+	public function getRequestCookies() : ProvidesCookieData;
 }

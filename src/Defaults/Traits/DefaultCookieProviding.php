@@ -11,31 +11,19 @@
  * all copies or substantial portions of the Software.
  */
 
-namespace IceHawk\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Defaults\Traits;
+
+use IceHawk\IceHawk\Defaults\Cookies;
+use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
 
 /**
- * Interface ServesUploadedFiles
- * @package IceHawk\IceHawk\Interfaces
+ * Trait DefaultCookieProviding
+ * @package IceHawk\IceHawk\Defaults\Traits
  */
-interface ProvidesUploadedFiles
+trait DefaultCookieProviding
 {
-	/**
-	 * @return array|ProvidesUploadedFileData[][]
-	 */
-	public function getAllFiles() : array;
-
-	/**
-	 * @param string $fieldKey
-	 *
-	 * @return array|ProvidesUploadedFileData[]
-	 */
-	public function getFiles( string $fieldKey ) : array;
-
-	/**
-	 * @param string     $fieldKey
-	 * @param int|string $fileIndex
-	 *
-	 * @return ProvidesUploadedFileData
-	 */
-	public function getOneFile( string $fieldKey, $fileIndex = 0 ) : ProvidesUploadedFileData;
+	public function getCookies() : ProvidesCookieData
+	{
+		return Cookies::fromEnv();
+	}
 }

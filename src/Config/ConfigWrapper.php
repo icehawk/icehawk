@@ -14,10 +14,12 @@
 namespace IceHawk\IceHawk\Config;
 
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\Routing\Interfaces\BypassesRequest;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
@@ -36,8 +38,14 @@ final class ConfigWrapper implements ConfiguresIceHawk
 	/** @var array|\Traversable|RoutesToWriteHandler[] */
 	private $writeRoutes;
 
+	/** @var array|\Traversable|BypassesRequest[] */
+	private $requestBypasses;
+
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
+
+	/** @var ProvidesCookieData */
+	private $cookies;
 
 	/** @var array|SubscribesToEvents[] */
 	private $eventSubscribers;
@@ -61,6 +69,16 @@ final class ConfigWrapper implements ConfiguresIceHawk
 		}
 
 		return $this->requestInfo;
+	}
+
+	public function getCookies() : ProvidesCookieData
+	{
+		if ( $this->cookies === null )
+		{
+			$this->cookies = $this->config->getCookies();
+		}
+
+		return $this->cookies;
 	}
 
 	/**
@@ -87,6 +105,19 @@ final class ConfigWrapper implements ConfiguresIceHawk
 		}
 
 		return $this->writeRoutes;
+	}
+
+	/**
+	 * @return array|BypassesRequest[]|\Traversable
+	 */
+	public function getRequestBypasses()
+	{
+		if ( $this->requestBypasses === null )
+		{
+			$this->requestBypasses = $this->config->getRequestBypasses();
+		}
+
+		return $this->requestBypasses;
 	}
 
 	/**

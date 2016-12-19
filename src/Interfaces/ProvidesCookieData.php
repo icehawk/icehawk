@@ -14,28 +14,18 @@
 namespace IceHawk\IceHawk\Interfaces;
 
 /**
- * Interface ServesUploadedFiles
+ * Interface ProvidesCookieData
  * @package IceHawk\IceHawk\Interfaces
  */
-interface ProvidesUploadedFiles
+interface ProvidesCookieData
 {
-	/**
-	 * @return array|ProvidesUploadedFileData[][]
-	 */
-	public function getAllFiles() : array;
+	public function getData() : array;
 
 	/**
-	 * @param string $fieldKey
+	 * @param string            $key
+	 * @param string|array|null $default
 	 *
-	 * @return array|ProvidesUploadedFileData[]
+	 * @return string|array|null
 	 */
-	public function getFiles( string $fieldKey ) : array;
-
-	/**
-	 * @param string     $fieldKey
-	 * @param int|string $fileIndex
-	 *
-	 * @return ProvidesUploadedFileData
-	 */
-	public function getOneFile( string $fieldKey, $fileIndex = 0 ) : ProvidesUploadedFileData;
+	public function get( string $key, $default = null );
 }

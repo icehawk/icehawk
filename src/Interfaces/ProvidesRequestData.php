@@ -20,4 +20,6 @@ namespace IceHawk\IceHawk\Interfaces;
 interface ProvidesRequestData
 {
 	public function getInfo() : ProvidesRequestInfo;
+
+	public function getCookies() : ProvidesCookieData;
 } 

@@ -20,6 +20,7 @@ use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
 use IceHawk\IceHawk\Events\InitializingIceHawkEvent;
 use IceHawk\IceHawk\Exceptions\InvalidEventSubscriberCollection;
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Interfaces\SetsUpEnvironment;
 use IceHawk\IceHawk\PubSub\EventPublisher;
 use IceHawk\IceHawk\PubSub\Interfaces\PublishesEvents;
@@ -27,6 +28,7 @@ use IceHawk\IceHawk\RequestHandlers\OptionsRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\ReadRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\WriteRequestHandler;
 use IceHawk\IceHawk\Responses\MethodNotImplemented;
+use IceHawk\IceHawk\Routing\RequestBypasser;
 
 /**
  * Class IceHawk
@@ -66,15 +68,16 @@ final class IceHawk
 		$this->guardConfigIsValid();
 		$this->registerEventSubscribers();
 
-		$requestInfo = $this->config->getRequestInfo();
+		$requestInfo    = $this->config->getRequestInfo();
+		$requestCookies = $this->config->getCookies();
 
-		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
+		$initializingEvent = new InitializingIceHawkEvent( $requestInfo, $requestCookies );
 		$this->eventPublisher->publish( $initializingEvent );
 
 		$this->setUpDelegate->setUpSessionHandling( $requestInfo );
 		$this->setUpDelegate->setUpErrorHandling( $requestInfo );
 
-		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo );
+		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo, $requestCookies );
 		$this->eventPublisher->publish( $initializedEvent );
 	}
 
@@ -94,9 +97,22 @@ final class IceHawk
 		}
 	}
 
+	private function getFinalRequestInfo() : ProvidesRequestInfo
+	{
+		$requestInfo   = $this->config->getRequestInfo();
+		$bypassHandler = new RequestBypasser();
+
+		foreach ( $this->config->getRequestBypasses() as $requestBypass )
+		{
+			$bypassHandler->addRequestBypass( $requestBypass );
+		}
+
+		return $bypassHandler->bypassRequest( $requestInfo );
+	}
+
 	public function handleRequest()
 	{
-		$requestInfo = $this->config->getRequestInfo();
+		$requestInfo = $this->getFinalRequestInfo();
 
 		if ( in_array( $requestInfo->getMethod(), HttpMethod::WRITE_METHODS ) )
 		{

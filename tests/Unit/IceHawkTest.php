@@ -14,6 +14,8 @@
 namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
 use IceHawk\IceHawk\Constants\HttpCode;
+use IceHawk\IceHawk\Defaults\Cookies;
+use IceHawk\IceHawk\Constants\HttpMethod;
 use IceHawk\IceHawk\Defaults\IceHawkConfig;
 use IceHawk\IceHawk\Defaults\IceHawkDelegate;
 use IceHawk\IceHawk\Defaults\RequestInfo;
@@ -37,6 +39,7 @@ use IceHawk\IceHawk\Requests\WriteRequest;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\ReadRoute;
+use IceHawk\IceHawk\Routing\RequestBypass;
 use IceHawk\IceHawk\Routing\WriteRoute;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
@@ -64,11 +67,12 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	public function testPublishesEventWhenInitializationIsDone()
 	{
 		$requestInfo       = RequestInfo::fromEnv();
-		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
-		$initializedEvent  = new IceHawkWasInitializedEvent( $requestInfo );
+		$cookies = Cookies::fromEnv();
+		$initializingEvent = new InitializingIceHawkEvent( $requestInfo, $cookies );
+		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo, $cookies );
 
 		$eventListener = $this->getMockBuilder( SubscribesToEvents::class )
-		                      ->setMethods( ['acceptsEvent', 'notify'] )
+		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )
 		                      ->getMockForAbstractClass();
 
 		$eventListener->expects( $this->at( 0 ) )
@@ -92,9 +96,10 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
 		$config->expects( $this->once() )
 		       ->method( 'getEventSubscribers' )
-		       ->willReturn( [$eventListener] );
+		       ->willReturn( [ $eventListener ] );
 
 		$iceHawk = new IceHawk( $config, new IceHawkDelegate() );
 		$iceHawk->init();
@@ -143,7 +148,12 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$route = new ReadRoute( new Literal( '/test' ), $requestHandler );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [$route] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn(
+			[
+				new RequestBypass( new Literal( '/look_for_this' ), '/finalDestination', HttpMethod::GET ),
+			]
+		);
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $route ] );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
 
 		$delegate = new IceHawkDelegate();
@@ -181,7 +191,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$route = new WriteRoute( new Literal( '/test' ), $requestHandler );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$route] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $route ] );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
 
 		$delegate = new IceHawkDelegate();
@@ -209,17 +220,25 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 					new WriteRoute( new Literal( '/do/whatever/you/want' ), new DeleteRequestHandler() ),
 				],
 				'/do/this',
-				['POST'],
+				[ 'POST' ],
 			],
 		];
 	}
 
 	/**
+	 * @param array  $readRoutes
+	 * @param array  $writeRoutes
+	 * @param string $uri
+	 * @param array  $expectedMethods
+	 *
 	 * @dataProvider RouteProvider
 	 * @runInSeparateProcess
 	 */
 	public function testCanCallHandlerForOptionRequest(
-		array $readRoutes, array $writeRoutes, string $uri, array $expectedMethods
+		array $readRoutes,
+		array $writeRoutes,
+		string $uri,
+		array $expectedMethods
 	)
 	{
 		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
@@ -231,6 +250,7 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->method( 'getReadRoutes' )->willReturn( $readRoutes );
 		$config->method( 'getWriteRoutes' )->willReturn( $writeRoutes );
 
@@ -249,45 +269,48 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	public function testPublishesEventsWhenHandlingReadRequest()
 	{
 		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
-		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test',] );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test', ] );
+		$cookies     = new Cookies( [] );
 
 		$requestHandler = $this->getMockBuilder( HandlesGetRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' );
 
 		$route = new ReadRoute( new Literal( '/test' ), $requestHandler );
 
-		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
-		$initEvent         = new IceHawkWasInitializedEvent( $requestInfo );
-		$request           = new ReadRequest( $requestInfo, new ReadRequestInput( [] ) );
+		$initializingEvent = new InitializingIceHawkEvent( $requestInfo, $cookies );
+		$initEvent         = new IceHawkWasInitializedEvent( $requestInfo, $cookies );
+		$request           = new ReadRequest( $requestInfo, $cookies, new ReadRequestInput( [] ) );
 		$handlingEvent     = new HandlingReadRequestEvent( $request );
 		$handledEvent      = new ReadRequestWasHandledEvent( $request );
 
 		$eventListener = $this->getMockBuilder( SubscribesToEvents::class )
-		                      ->setMethods( ['acceptsEvent', 'notify'] )
+		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )
 		                      ->getMockForAbstractClass();
 
 		$eventListener->expects( $this->exactly( 4 ) )
 		              ->method( 'acceptsEvent' )
 		              ->withConsecutive(
-			              [$this->equalTo( $initializingEvent )],
-			              [$this->equalTo( $initEvent )],
-			              [$this->equalTo( $handlingEvent )],
-			              [$this->equalTo( $handledEvent )]
+			              [ $this->equalTo( $initializingEvent ) ],
+			              [ $this->equalTo( $initEvent ) ],
+			              [ $this->equalTo( $handlingEvent ) ],
+			              [ $this->equalTo( $handledEvent ) ]
 		              )
 		              ->willReturn( true );
 
 		$eventListener->expects( $this->exactly( 4 ) )
 		              ->method( 'notify' )
 		              ->withConsecutive(
-			              [$this->equalTo( $initializingEvent )],
-			              [$this->equalTo( $initEvent )],
-			              [$this->equalTo( $handlingEvent )],
-			              [$this->equalTo( $handledEvent )]
+			              [ $this->equalTo( $initializingEvent ) ],
+			              [ $this->equalTo( $initEvent ) ],
+			              [ $this->equalTo( $handlingEvent ) ],
+			              [ $this->equalTo( $handledEvent ) ]
 		              );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [$route] );
-		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [$eventListener] );
+		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $route ] );
+		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ $eventListener ] );
 
 		$delegate = new IceHawkDelegate();
 
@@ -302,45 +325,48 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	public function testPublishesEventsWhenHandlingWriteRequest()
 	{
 		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
-		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test',] );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test', ] );
+		$cookies = new Cookies( [] );
 
 		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' );
 
 		$route = new WriteRoute( new Literal( '/test' ), $requestHandler );
 
-		$initializingEvent = new InitializingIceHawkEvent( $requestInfo );
-		$initEvent         = new IceHawkWasInitializedEvent( $requestInfo );
-		$request           = new WriteRequest( $requestInfo, new WriteRequestInput( '', [] ) );
+		$initializingEvent = new InitializingIceHawkEvent( $requestInfo, $cookies );
+		$initEvent         = new IceHawkWasInitializedEvent( $requestInfo, $cookies );
+		$request           = new WriteRequest( $requestInfo, $cookies, new WriteRequestInput( '', [] ) );
 		$handlingEvent     = new HandlingWriteRequestEvent( $request );
 		$handledEvent      = new WriteRequestWasHandledEvent( $request );
 
 		$eventListener = $this->getMockBuilder( SubscribesToEvents::class )
-		                      ->setMethods( ['acceptsEvent', 'notify'] )
+		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )
 		                      ->getMockForAbstractClass();
 
 		$eventListener->expects( $this->exactly( 4 ) )
 		              ->method( 'acceptsEvent' )
 		              ->withConsecutive(
-			              [$this->equalTo( $initializingEvent )],
-			              [$this->equalTo( $initEvent )],
-			              [$this->equalTo( $handlingEvent )],
-			              [$this->equalTo( $handledEvent )]
+			              [ $this->equalTo( $initializingEvent ) ],
+			              [ $this->equalTo( $initEvent ) ],
+			              [ $this->equalTo( $handlingEvent ) ],
+			              [ $this->equalTo( $handledEvent ) ]
 		              )
 		              ->willReturn( true );
 
 		$eventListener->expects( $this->exactly( 4 ) )
 		              ->method( 'notify' )
 		              ->withConsecutive(
-			              [$this->equalTo( $initializingEvent )],
-			              [$this->equalTo( $initEvent )],
-			              [$this->equalTo( $handlingEvent )],
-			              [$this->equalTo( $handledEvent )]
+			              [ $this->equalTo( $initializingEvent ) ],
+			              [ $this->equalTo( $initEvent ) ],
+			              [ $this->equalTo( $handlingEvent ) ],
+			              [ $this->equalTo( $handledEvent ) ]
 		              );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$route] );
-		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [$eventListener] );
+		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $route ] );
+		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [ $eventListener ] );
 
 		$delegate = new IceHawkDelegate();
 
@@ -362,6 +388,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
+		$cookies = new Cookies( [] );
+
 		$finalResponder = $this->getMockBuilder( RespondsFinallyToReadRequest::class )->getMockForAbstractClass();
 		$finalResponder->expects( $this->once() )
 		               ->method( 'handleUncaughtException' )
@@ -375,6 +403,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		               );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
 		$config->method( 'getFinalReadResponder' )->willReturn( $finalResponder );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
@@ -401,6 +431,8 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
+		$cookies = new Cookies( [] );
+
 		$finalResponder = $this->getMockBuilder( RespondsFinallyToWriteRequest::class )->getMockForAbstractClass();
 		$finalResponder->expects( $this->once() )
 		               ->method( 'handleUncaughtException' )
@@ -414,7 +446,9 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		               );
 
 		$config->expects( $this->once() )->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
+		$config->expects( $this->once() )->method( 'getRequestBypasses' )->willReturn( [] );
 		$config->method( 'getFinalWriteResponder' )->willReturn( $finalResponder );
 		$config->expects( $this->once() )->method( 'getEventSubscribers' )->willReturn( [] );
 

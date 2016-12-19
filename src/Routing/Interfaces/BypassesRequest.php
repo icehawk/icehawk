@@ -11,31 +11,19 @@
  * all copies or substantial portions of the Software.
  */
 
-namespace IceHawk\IceHawk\Interfaces;
+namespace IceHawk\IceHawk\Routing\Interfaces;
 
 /**
- * Interface ServesUploadedFiles
- * @package IceHawk\IceHawk\Interfaces
+ * Interface BypassesRequest
+ * @package IceHawk\IceHawk\Routing\Interfaces
  */
-interface ProvidesUploadedFiles
+interface BypassesRequest
 {
-	/**
-	 * @return array|ProvidesUploadedFileData[][]
-	 */
-	public function getAllFiles() : array;
+	public function matches( string $uri ) : bool;
 
-	/**
-	 * @param string $fieldKey
-	 *
-	 * @return array|ProvidesUploadedFileData[]
-	 */
-	public function getFiles( string $fieldKey ) : array;
+	public function getFinalUri() : string;
 
-	/**
-	 * @param string     $fieldKey
-	 * @param int|string $fileIndex
-	 *
-	 * @return ProvidesUploadedFileData
-	 */
-	public function getOneFile( string $fieldKey, $fileIndex = 0 ) : ProvidesUploadedFileData;
+	public function getFinalMethod() : string;
+
+	public function getUriParams() : array;
 }

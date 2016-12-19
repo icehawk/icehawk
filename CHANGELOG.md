@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.1.0] - 2016-12-19
+
+### Added
+
+- Method `getCustomValue(string $key) : string` to access custom values via the `RequestInfo` object. ([#15](https://github.com/icehawk/icehawk/issues/15))
+- Missing getters for `$_SERVER` indices in `RequestInfo` class and interface `ProvidesRequestInfo`. ([#17](https://github.com/icehawk/icehawk/issues/17))
+- Configurable wrapper for cookies with default implementation, accessible via `$request` and all events. ([#26](https://github.com/icehawk/icehawk/issues/26)) 
+- Optional request bypassing to reroute requests to another request method without redirect ([#16](https://github.com/icehawk/icehawk/issues/16))
+  - `getRequestBypasses()` method added to `ConfiguresIceHawk`
+  - `DefaultRequestBypassing` trait added to default IceHawkConfig
+  - `RequestBypass` class to configure a request bypass
+
+### Removed
+
+- Class `AbstractHttpResponse` ([#24](https://github.com/icehawk/icehawk/issues/24))
+
+### Changed
+
+- Declared `Options` response class as final ([#24](https://github.com/icehawk/icehawk/issues/24))
+- Return value of `WriteRequestInput::getOneFile()` is no longer `NULL`, if the `$fieldKey` or the `$fileIndex` does not exist, 
+instead it now returns an empty `UploadedFile` object with the error code `UPLOAD_ERR_NO_FILE` set. ([#22](https://github.com/icehawk/icehawk/issues/22))
+- Return type declaration of `WriteRequestInput::getOneFile()` is now `ProvidesUploadedFileData`. ([#22](https://github.com/icehawk/icehawk/issues/22))
+
 ## [2.0.4] - 2016-11-12
 
 ### Fixed
@@ -189,6 +212,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - First release
 
+[2.1.0]: https://github.com/icehawk/icehawk/compare/v2.0.4...v2.1.0
 [2.0.4]: https://github.com/icehawk/icehawk/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/icehawk/icehawk/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/icehawk/icehawk/compare/v2.0.1...v2.0.2

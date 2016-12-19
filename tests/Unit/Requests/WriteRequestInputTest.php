@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
+use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
 use IceHawk\IceHawk\Mappers\UploadedFilesMapper;
 use IceHawk\IceHawk\Requests\UploadedFile;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
@@ -22,7 +23,7 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	public function testCanGetBodyAndData()
 	{
 		$body = 'test';
-		$data = ['key' => 'value'];
+		$data = [ 'key' => 'value' ];
 
 		$writeRequestInput = new WriteRequestInput( 'test', $data );
 
@@ -34,19 +35,19 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'unit',
 				'test',
 			],
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'test',
 				'unit',
 			],
 			[
-				['unit' => ['test' => 'unit']],
+				[ 'unit' => [ 'test' => 'unit' ] ],
 				'unit',
-				['test' => 'unit'],
+				[ 'test' => 'unit' ],
 			],
 		];
 	}
@@ -65,15 +66,15 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'blubb',
 			],
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'blubb',
 			],
 			[
-				['unit' => ['test' => 'unit']],
+				[ 'unit' => [ 'test' => 'unit' ] ],
 				'blubb',
 			],
 		];
@@ -117,11 +118,11 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			[
 				[
 					'test_file' => [
-						'name'     => ['TestFile.dat', 'FileTest.html'],
-						'tmp_name' => ['/tmp/TestFile.dat', '/tmp/FileTest.html'],
-						'type'     => ['text/plain', 'text/html'],
-						'size'     => [1024, 2048],
-						'error'    => [UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL],
+						'name'     => [ 'TestFile.dat', 'FileTest.html' ],
+						'tmp_name' => [ '/tmp/TestFile.dat', '/tmp/FileTest.html' ],
+						'type'     => [ 'text/plain', 'text/html' ],
+						'size'     => [ 1024, 2048 ],
+						'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
 					],
 				],
 				'test_file',
@@ -138,11 +139,11 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			[
 				[
 					'test_file' => [
-						'name'     => ['TestFile.dat', 'FileTest.html'],
-						'tmp_name' => ['/tmp/TestFile.dat', '/tmp/FileTest.html'],
-						'type'     => ['text/plain', 'text/html'],
-						'size'     => [1024, 2048],
-						'error'    => [UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL],
+						'name'     => [ 'TestFile.dat', 'FileTest.html' ],
+						'tmp_name' => [ '/tmp/TestFile.dat', '/tmp/FileTest.html' ],
+						'type'     => [ 'text/plain', 'text/html' ],
+						'size'     => [ 1024, 2048 ],
+						'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
 					],
 				],
 				'test_file',
@@ -159,11 +160,11 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 			[
 				[
 					'test_file' => [
-						'name'     => ['TestFile.dat', 'file1' => 'FileTest.html'],
-						'tmp_name' => ['/tmp/TestFile.dat', 'file1' => '/tmp/FileTest.html'],
-						'type'     => ['text/plain', 'file1' => 'text/html'],
-						'size'     => [1024, 'file1' => 2048],
-						'error'    => [UPLOAD_ERR_OK, 'file1' => UPLOAD_ERR_PARTIAL],
+						'name'     => [ 'TestFile.dat', 'file1' => 'FileTest.html' ],
+						'tmp_name' => [ '/tmp/TestFile.dat', 'file1' => '/tmp/FileTest.html' ],
+						'type'     => [ 'text/plain', 'file1' => 'text/html' ],
+						'size'     => [ 1024, 'file1' => 2048 ],
+						'error'    => [ UPLOAD_ERR_OK, 'file1' => UPLOAD_ERR_PARTIAL ],
 					],
 				],
 				'test_file',
@@ -204,15 +205,23 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame( $expectedSuccess, $oneFile->didUploadSucceed() );
 	}
 
-	public function testGetOneFileReturnNullIfKeyIsNotSet()
+	public function testEmptyUploadedFileIsReturnedIfKeyIsNotSet()
 	{
 		$writeRequestInput = new WriteRequestInput( '', [], [] );
 		$oneFile           = $writeRequestInput->getOneFile( 'test' );
 
-		$this->assertNull( $oneFile );
+		$this->assertInstanceOf( ProvidesUploadedFileData::class, $oneFile );
+		$this->assertSame( '', $oneFile->getName() );
+		$this->assertSame( '', $oneFile->getTmpName() );
+		$this->assertSame( '', $oneFile->getEncoding() );
+		$this->assertSame( 0, $oneFile->getSize() );
+		$this->assertSame( '', $oneFile->getRealType() );
+		$this->assertSame( UPLOAD_ERR_NO_FILE, $oneFile->getError() );
+		$this->assertFalse( $oneFile->didUploadSucceed() );
+		$this->assertSame( 'No file uploaded.', $oneFile->getErrorMessage() );
 	}
 
-	public function testGetOneFileReturnNullIfFileIndexIsNotSet()
+	public function testEmptyUploadedFileIsReturnedIfFileIndexIsNotSet()
 	{
 		$uploadedFiles = [
 			'test_file' => [
@@ -228,7 +237,15 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 		$writeRequestInput = new WriteRequestInput( '', [], $uploadedFiles );
 		$oneFile           = $writeRequestInput->getOneFile( 'test_file', 1 );
 
-		$this->assertNull( $oneFile );
+		$this->assertInstanceOf( ProvidesUploadedFileData::class, $oneFile );
+		$this->assertSame( '', $oneFile->getName() );
+		$this->assertSame( '', $oneFile->getTmpName() );
+		$this->assertSame( '', $oneFile->getEncoding() );
+		$this->assertSame( 0, $oneFile->getSize() );
+		$this->assertSame( '', $oneFile->getRealType() );
+		$this->assertSame( UPLOAD_ERR_NO_FILE, $oneFile->getError() );
+		$this->assertFalse( $oneFile->didUploadSucceed() );
+		$this->assertSame( 'No file uploaded.', $oneFile->getErrorMessage() );
 	}
 
 	public function testGetFilesReturnsEmptyArrayIfFieldKeyIsNotSet()
@@ -244,18 +261,18 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		$uploadedFiles = [
 			'test_file'         => [
-				'name'     => ['TestFile.dat', 'FileTest.html'],
-				'tmp_name' => ['/tmp/TestFile.dat', '/tmp/FileTest.html'],
-				'type'     => ['text/plain', 'text/html'],
-				'size'     => [1024, 2048],
-				'error'    => [UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL],
+				'name'     => [ 'TestFile.dat', 'FileTest.html' ],
+				'tmp_name' => [ '/tmp/TestFile.dat', '/tmp/FileTest.html' ],
+				'type'     => [ 'text/plain', 'text/html' ],
+				'size'     => [ 1024, 2048 ],
+				'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
 			],
 			'another_test_file' => [
-				'name'     => ['AnotherTestFile.dat', 'AnotherFileTest.html'],
-				'tmp_name' => ['/tmp/AnotherTestFile.dat', '/tmp/AnotherFileTest.html'],
-				'type'     => ['text/plain', 'text/html'],
-				'size'     => [20, 40],
-				'error'    => [UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL],
+				'name'     => [ 'AnotherTestFile.dat', 'AnotherFileTest.html' ],
+				'tmp_name' => [ '/tmp/AnotherTestFile.dat', '/tmp/AnotherFileTest.html' ],
+				'type'     => [ 'text/plain', 'text/html' ],
+				'size'     => [ 20, 40 ],
+				'error'    => [ UPLOAD_ERR_OK, UPLOAD_ERR_PARTIAL ],
 			],
 		];
 
@@ -267,17 +284,17 @@ class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetterReturnsDefaultValueIfProvidedAndKeyIsNotFound()
 	{
-		$writeRequestInput = new WriteRequestInput( '', ['unit' => 'test'], [] );
+		$writeRequestInput = new WriteRequestInput( '', [ 'unit' => 'test' ], [] );
 
 		$stdObj = new \stdClass();
 
-		$this->assertSame( ['123'], $writeRequestInput->get( 'someKey', ['123'] ) );
+		$this->assertSame( [ '123' ], $writeRequestInput->get( 'someKey', [ '123' ] ) );
 		$this->assertSame( '123', $writeRequestInput->get( 'someKey', '123' ) );
 		$this->assertSame( 123, $writeRequestInput->get( 'someKey', 123 ) );
 		$this->assertSame( $stdObj, $writeRequestInput->get( 'someKey', $stdObj ) );
 		$this->assertSame( null, $writeRequestInput->get( 'someKey', null ) );
 		$this->assertSame( null, $writeRequestInput->get( 'someKey' ) );
 
-		$this->assertSame( 'test', $writeRequestInput->get( 'unit', ['123'] ) );
+		$this->assertSame( 'test', $writeRequestInput->get( 'unit', [ '123' ] ) );
 	}
 }

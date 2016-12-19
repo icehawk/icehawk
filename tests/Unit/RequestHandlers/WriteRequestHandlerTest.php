@@ -13,6 +13,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
 
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 use IceHawk\IceHawk\Interfaces\HandlesPostRequest;
@@ -52,6 +53,11 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider parameterProvider
 	 * @runInSeparateProcess
+	 *
+	 * @param array  $postData
+	 * @param string $uriKey
+	 * @param string $uriValue
+	 * @param array  $expectedInputParams
 	 */
 	public function testUriParamsOverwritesPostParams(
 		array $postData, string $uriKey, string $uriValue, array $expectedInputParams
@@ -66,8 +72,12 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 			]
 		);
 
+		$cookies = new Cookies( [] );
+
 		$expectedWriteRequest = new WriteRequest(
-			$requestInfo, new WriteRequestInput( '', $expectedInputParams )
+			$requestInfo,
+			$cookies,
+			new WriteRequestInput( '', $expectedInputParams )
 		);
 
 		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
@@ -81,6 +91,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$writeRoute] );
 
 		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
@@ -97,9 +108,12 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		file_put_contents( 'php://input', 'body data' );
 
 		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/domain/test_body_data'] );
+		$cookies     = new Cookies( [] );
 
 		$expectedWriteRequest = new WriteRequest(
-			$requestInfo, new WriteRequestInput( 'body data', [] )
+			$requestInfo,
+			$cookies,
+			new WriteRequestInput( 'body data', [] )
 		);
 
 		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
@@ -110,6 +124,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
+		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$writeRoute] );
 
 		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );

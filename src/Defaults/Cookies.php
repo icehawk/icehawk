@@ -11,33 +11,36 @@
  * all copies or substantial portions of the Software.
  */
 
-namespace IceHawk\IceHawk\Tests\Unit\Fixtures;
+namespace IceHawk\IceHawk\Defaults;
 
-use IceHawk\IceHawk\Responses\AbstractHttpResponse;
+use IceHawk\IceHawk\Interfaces\ProvidesCookieData;
 
 /**
- * Class SimpleResponse
- * @package IceHawk\IceHawk\Tests\Unit\Fixtures
+ * Class Cookies
+ * @package IceHawk\IceHawk\Defaults
  */
-class SimpleResponse extends AbstractHttpResponse
+final class Cookies implements ProvidesCookieData
 {
-	protected function getBody() : string
+	/** @var array */
+	private $data;
+
+	public function __construct( array $cookieData )
 	{
-		return '';
+		$this->data = $cookieData;
 	}
 
-	public function getCharsetToTest() : string
+	public function getData() : array
 	{
-		return $this->getCharset();
+		return $this->data;
 	}
 
-	public function getContentTypeToTest() : string
+	public function get( string $key, $default = null )
 	{
-		return $this->getContentType();
+		return $this->data[ $key ] ?? $default;
 	}
 
-	public function getHttpCodeToTest() : int
+	public static function fromEnv() : self
 	{
-		return $this->getHttpCode();
+		return new self( $_COOKIE );
 	}
 }

@@ -1,5 +1,6 @@
 [![Join the chat at https://gitter.im/icehawk/icehawk](https://badges.gitter.im/icehawk/icehawk.svg)](https://gitter.im/icehawk/icehawk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/icehawk/icehawk.svg?branch=master)](https://travis-ci.org/icehawk/icehawk)
+[![Tested PHP versions](https://php-eye.com/badge/icehawk/icehawk/tested.svg)](https://php-eye.com/package/icehawk/icehawk)
 [![Coverage Status](https://coveralls.io/repos/github/icehawk/icehawk/badge.svg?branch=master)](https://coveralls.io/github/icehawk/icehawk?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/icehawk/icehawk/v/stable)](https://packagist.org/packages/icehawk/icehawk) 
 [![Total Downloads](https://poser.pugx.org/icehawk/icehawk/downloads)](https://packagist.org/packages/icehawk/icehawk) 
@@ -22,7 +23,7 @@ Lightweight PHP routing framework, respecting CQRS.
 ## Installation
 
 ```bash
-composer require icehawk/icehawk:^2.0
+composer require icehawk/icehawk:^2.1
 ```
 
 or add to your `composer.json`:
@@ -30,7 +31,7 @@ or add to your `composer.json`:
 ```json
 {
 	"require": {
-		"icehawk/icehawk": "^2.0"
+		"icehawk/icehawk": "^2.1"
 	}
 }
 ```
@@ -58,7 +59,7 @@ Answer the questions of the interactive installer and you're good to go.
 ```json
 {
     "require": {
-        "icehawk/icehawk": "^2.0"
+        "icehawk/icehawk": "^2.1"
     },
     "autoload": {
         "psr-4": {

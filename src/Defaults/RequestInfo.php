@@ -37,6 +37,11 @@ final class RequestInfo implements ProvidesRequestInfo
 		return new self( $_SERVER );
 	}
 
+	public function newWithOverwrites( array $array ) : ProvidesRequestInfo
+	{
+		return new self( array_merge( $this->serverData, $array ) );
+	}
+
 	public function isSecure() : bool
 	{
 		$httpsValue = (string)$this->get( 'HTTPS' );

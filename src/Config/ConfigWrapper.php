@@ -19,6 +19,7 @@ use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use IceHawk\IceHawk\Routing\Interfaces\BypassesRequest;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToReadHandler;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
 
@@ -36,6 +37,9 @@ final class ConfigWrapper implements ConfiguresIceHawk
 
 	/** @var array|\Traversable|RoutesToWriteHandler[] */
 	private $writeRoutes;
+
+	/** @var array|\Traversable|BypassesRequest[] */
+	private $requestBypasses;
 
 	/** @var ProvidesRequestInfo */
 	private $requestInfo;
@@ -101,6 +105,19 @@ final class ConfigWrapper implements ConfiguresIceHawk
 		}
 
 		return $this->writeRoutes;
+	}
+
+	/**
+	 * @return array|BypassesRequest[]|\Traversable
+	 */
+	public function getRequestBypasses()
+	{
+		if ( $this->requestBypasses === null )
+		{
+			$this->requestBypasses = $this->config->getRequestBypasses();
+		}
+
+		return $this->requestBypasses;
 	}
 
 	/**

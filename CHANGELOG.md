@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 - Method `getCustomValue(string $key) : string` to access custom values via the `RequestInfo` object. ([#15](https://github.com/icehawk/icehawk/issues/15))
 - Missing getters for `$_SERVER` indices in `RequestInfo` class and interface `ProvidesRequestInfo`. ([#17](https://github.com/icehawk/icehawk/issues/17))
 - Configurable wrapper for cookies with default implementation, accessible via `$request` and all events. ([#26](https://github.com/icehawk/icehawk/issues/26)) 
+- Optional request bypassing to reroute requests to another request method without redirect ([#16](https://github.com/icehawk/icehawk/issues/16))
+  - `getRequestBypasses()` method added to `ConfiguresIceHawk`
+  - `DefaultRequestBypassing` trait added to default IceHawkConfig
+  - `RequestBypass` class to configure a request bypass
 
 ### Removed
 

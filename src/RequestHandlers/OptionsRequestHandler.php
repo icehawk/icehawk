@@ -16,6 +16,7 @@ namespace IceHawk\IceHawk\RequestHandlers;
 use IceHawk\IceHawk\Constants\HandlerMethodInterfaceMap;
 use IceHawk\IceHawk\Interfaces\HandlesRequest;
 use IceHawk\IceHawk\Responses\Options;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesToHandler;
 use IceHawk\IceHawk\Routing\OptionsRouter;
 
 /**
@@ -61,7 +62,7 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 	 * @param string             $uri
 	 * @param array|\Traversable $routes
 	 *
-	 * @return array
+	 * @return array|RoutesToHandler[]
 	 */
 	private function getMatchingRoutes( string $uri, $routes ) : array
 	{

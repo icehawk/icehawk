@@ -18,6 +18,7 @@ use IceHawk\IceHawk\Defaults\Traits\DefaultEventSubscribing;
 use IceHawk\IceHawk\Defaults\Traits\DefaultFinalReadResponding;
 use IceHawk\IceHawk\Defaults\Traits\DefaultFinalWriteResponding;
 use IceHawk\IceHawk\Defaults\Traits\DefaultReadRouting;
+use IceHawk\IceHawk\Defaults\Traits\DefaultRequestBypassing;
 use IceHawk\IceHawk\Defaults\Traits\DefaultRequestInfoProviding;
 use IceHawk\IceHawk\Defaults\Traits\DefaultWriteRouting;
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
@@ -30,6 +31,7 @@ class IceHawkConfig implements ConfiguresIceHawk
 {
 	use DefaultReadRouting;
 	use DefaultWriteRouting;
+	use DefaultRequestBypassing;
 	use DefaultEventSubscribing;
 	use DefaultRequestInfoProviding;
 	use DefaultCookieProviding;

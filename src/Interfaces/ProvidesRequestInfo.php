@@ -19,6 +19,8 @@ namespace IceHawk\IceHawk\Interfaces;
  */
 interface ProvidesRequestInfo
 {
+	public function newWithOverwrites( array $array ) : ProvidesRequestInfo;
+
 	public function getArgv() : array;
 
 	public function getArgc() : int;

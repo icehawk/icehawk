@@ -26,25 +26,25 @@ use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\ReadRoute;
 
-class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
+class ReadRequestHandlerTest extends \PHPUnit\Framework\TestCase
 {
 	public function parameterProvider()
 	{
 		return [
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'unit', 'tested',
-				['unit' => 'tested', 'test' => 'unit'],
+				[ 'unit' => 'tested', 'test' => 'unit' ],
 			],
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'test', 'units',
-				['unit' => 'test', 'test' => 'units'],
+				[ 'unit' => 'test', 'test' => 'units' ],
 			],
 			[
-				['unit' => ['test' => 'unit']],
+				[ 'unit' => [ 'test' => 'unit' ] ],
 				'unit', 'units',
-				['unit' => 'units'],
+				[ 'unit' => 'units' ],
 			],
 		];
 	}
@@ -65,7 +65,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$_GET       = $getData;
 		$requestUri = sprintf( '/domain/test_request_param/%s/%s', $uriKey, $uriValue );
 
-		$requestInfo     = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri] );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri ] );
 		$cookies         = new Cookies( [] );
 		$expectedRequest = new ReadRequest(
 			$requestInfo,
@@ -76,14 +76,14 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$requestHandler = $this->getMockBuilder( HandlesGetRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedRequest ) );
 
-		$regExp    = new RegExp( sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [$uriKey] );
+		$regExp = new RegExp( sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [ $uriKey ] );
 		$readRoute = new ReadRoute( $regExp, $requestHandler );
 
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [$readRoute] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $readRoute ] );
 
 		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );
 		$readRequestHandler->handleRequest();
@@ -94,7 +94,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMissingReadRoutesHandledByFinaleReadResponder()
 	{
-		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test'] );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] );
 
 		$finalReadResponder = $this->getMockBuilder( RespondsFinallyToReadRequest::class )->getMockForAbstractClass();
 		$finalReadResponder->method( 'handleUncaughtException' )
@@ -124,7 +124,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExceptionHandledByFinaleReadResponder()
 	{
-		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test'] );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] );
 
 		$exception = new \Exception();
 
@@ -151,7 +151,7 @@ class ReadRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$readRoute = new ReadRoute( new Literal( '/test' ), $requestHandler );
 
-		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [$readRoute] );
+		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $readRoute ] );
 
 		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );
 		$readRequestHandler->handleRequest();

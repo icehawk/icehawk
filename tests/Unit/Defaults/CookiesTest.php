@@ -15,7 +15,7 @@ namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
 use IceHawk\IceHawk\Defaults\Cookies;
 
-class CookiesTest extends \PHPUnit_Framework_TestCase
+class CookiesTest extends \PHPUnit\Framework\TestCase
 {
 	public function testEmptyCookiesReturnsEmptyArray()
 	{

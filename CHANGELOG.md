@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.1.1] - YYYY-MM-DD
+
+### Changed
+
+- Test suite updated for PHPUnit 6
+- PHPUnit dependency to 6.0.6 (PHAR)
+
 ## [2.1.0] - 2016-12-19
 
 ### Added

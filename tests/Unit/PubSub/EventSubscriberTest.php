@@ -26,7 +26,7 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\TestEventSubscriber;
  * Class EventSubscriberTest
  * @package IceHawk\IceHawk\Tests\Unit\Fixtures\PubSub
  */
-class EventSubscriberTest extends \PHPUnit_Framework_TestCase
+class EventSubscriberTest extends \PHPUnit\Framework\TestCase
 {
 	public function testCanCheckForAcceptedEvents()
 	{
@@ -35,12 +35,12 @@ class EventSubscriberTest extends \PHPUnit_Framework_TestCase
 		$handlingEvent = new HandlingReadRequestEvent( $readRequest );
 
 		$mock = $this->getMockBuilder( TestEventSubscriber::class )
-		             ->setMethods( ['getAcceptedEvents', 'whenIceHawkWasInitialized'] )
+		             ->setMethods( [ 'getAcceptedEvents', 'whenIceHawkWasInitialized' ] )
 		             ->getMockForAbstractClass();
 
 		$mock->expects( $this->exactly( 2 ) )
 		     ->method( 'getAcceptedEvents' )
-		     ->willReturn( [IceHawkWasInitializedEvent::class] );
+		     ->willReturn( [ IceHawkWasInitializedEvent::class ] );
 
 		/** @var TestEventSubscriber $mock */
 		$this->assertTrue( $mock->acceptsEvent( $initEvent ) );
@@ -54,7 +54,7 @@ class EventSubscriberTest extends \PHPUnit_Framework_TestCase
 		try
 		{
 			$mock = $this->getMockBuilder( TestEventSubscriber::class )
-			             ->setMethods( ['getAcceptedEvents'] )
+			             ->setMethods( [ 'getAcceptedEvents' ] )
 			             ->getMockForAbstractClass();
 
 			/** @var TestEventSubscriber $mock */
@@ -77,7 +77,7 @@ class EventSubscriberTest extends \PHPUnit_Framework_TestCase
 		$initEvent = new IceHawkWasInitializedEvent( RequestInfo::fromEnv(), new Cookies( [] ) );
 
 		$mock = $this->getMockBuilder( TestEventSubscriber::class )
-		             ->setMethods( ['getAcceptedEvents', 'whenIceHawkWasInitialized'] )
+		             ->setMethods( [ 'getAcceptedEvents', 'whenIceHawkWasInitialized' ] )
 		             ->getMockForAbstractClass();
 
 		$mock->expects( $this->once() )->method( 'whenIceHawkWasInitialized' )->with( $initEvent );

@@ -23,7 +23,7 @@ use IceHawk\IceHawk\Requests\ReadRequestInput;
  * Class ReadRequestWasHandledEventTest
  * @package IceHawk\IceHawk\Tests\Unit\Events
  */
-class ReadRequestWasHandledEventTest extends \PHPUnit_Framework_TestCase
+class ReadRequestWasHandledEventTest extends \PHPUnit\Framework\TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{

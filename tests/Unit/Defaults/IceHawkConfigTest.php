@@ -18,7 +18,7 @@ use IceHawk\IceHawk\Defaults\FinalWriteResponder;
 use IceHawk\IceHawk\Defaults\IceHawkConfig;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 
-class IceHawkConfigTest extends \PHPUnit_Framework_TestCase
+class IceHawkConfigTest extends \PHPUnit\Framework\TestCase
 {
 	public function testDefaults()
 	{

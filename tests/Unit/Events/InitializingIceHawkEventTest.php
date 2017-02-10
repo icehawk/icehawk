@@ -17,7 +17,7 @@ use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\InitializingIceHawkEvent;
 
-class InitializingIceHawkEventTest extends \PHPUnit_Framework_TestCase
+class InitializingIceHawkEventTest extends \PHPUnit\Framework\TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{

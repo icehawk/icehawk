@@ -22,14 +22,14 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\TestEventSubscriber;
  * Class ConfigGuardTest
  * @package IceHawk\IceHawk\Tests\Unit\Defaults
  */
-class ConfigGuardTest extends \PHPUnit_Framework_TestCase
+class ConfigGuardTest extends \PHPUnit\Framework\TestCase
 {
 	public function invalidSubscriberProvider()
 	{
 		return [
-			[['invalidSubscriber', new TestEventSubscriber(), null], [0, 2]],
-			[['', new \stdClass(), 1, new TestEventSubscriber()], [0, 1, 2]],
-			[[new TestEventSubscriber(), [], 0, true, false], [1, 2, 3, 4]],
+			[ [ 'invalidSubscriber', new TestEventSubscriber(), null ], [ 0, 2 ] ],
+			[ [ '', new \stdClass(), 1, new TestEventSubscriber() ], [ 0, 1, 2 ] ],
+			[ [ new TestEventSubscriber(), [], 0, true, false ], [ 1, 2, 3, 4 ] ],
 		];
 	}
 

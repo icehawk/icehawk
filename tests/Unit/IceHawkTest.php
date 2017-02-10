@@ -11,11 +11,11 @@
  * all copies or substantial portions of the Software.
  */
 
-namespace IceHawk\IceHawk\Tests\Unit\Defaults;
+namespace IceHawk\IceHawk\Tests\Unit;
 
 use IceHawk\IceHawk\Constants\HttpCode;
-use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Constants\HttpMethod;
+use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\IceHawkConfig;
 use IceHawk\IceHawk\Defaults\IceHawkDelegate;
 use IceHawk\IceHawk\Defaults\RequestInfo;
@@ -29,6 +29,7 @@ use IceHawk\IceHawk\IceHawk;
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 use IceHawk\IceHawk\Interfaces\HandlesGetRequest;
 use IceHawk\IceHawk\Interfaces\HandlesPostRequest;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToReadRequest;
 use IceHawk\IceHawk\Interfaces\RespondsFinallyToWriteRequest;
 use IceHawk\IceHawk\Interfaces\SetsUpEnvironment;
@@ -47,7 +48,7 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 
-class IceHawkTest extends \PHPUnit_Framework_TestCase
+class IceHawkTest extends \PHPUnit\Framework\TestCase
 {
 	public function testDelegateMethodsWillBeCalledDuringInitialization()
 	{
@@ -110,7 +111,19 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testHandlingMalformedRequestRespondsWithMethodNotImplemented()
 	{
-		$config   = new IceHawkConfig();
+		$config = new class extends IceHawkConfig
+		{
+			public function getRequestInfo() : ProvidesRequestInfo
+			{
+				return new RequestInfo(
+					[
+						'REQUEST_METHOD' => 'INVALID',
+						'REQUEST_URI'    => '/',
+					]
+				);
+			}
+		};
+
 		$delegate = new IceHawkDelegate();
 
 		$iceHawk = new IceHawk( $config, $delegate );
@@ -118,7 +131,9 @@ class IceHawkTest extends \PHPUnit_Framework_TestCase
 		$iceHawk->handleRequest();
 
 		$this->assertContains( sprintf( 'Content-Type: %s; charset=%s', 'text/plain', 'utf-8' ), xdebug_get_headers() );
-		$this->expectOutputString( sprintf( '%d - Method Not Implemented (%s)', HttpCode::NOT_IMPLEMENTED, '' ) );
+		$this->expectOutputString(
+			sprintf( '%d - Method Not Implemented (%s)', HttpCode::NOT_IMPLEMENTED, 'INVALID' )
+		);
 		$this->assertEquals( HttpCode::NOT_IMPLEMENTED, http_response_code() );
 	}
 

@@ -25,7 +25,7 @@ use IceHawk\IceHawk\Routing\RouteRequest;
  * Class FinalWriteRequestResponderTest
  * @package IceHawk\IceHawk\Tests\Unit\Defaults
  */
-class FinalWriteRequestResponderTest extends \PHPUnit_Framework_TestCase
+class FinalWriteRequestResponderTest extends \PHPUnit\Framework\TestCase
 {
 	public function testHandleUncaughtException()
 	{

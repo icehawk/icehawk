@@ -24,8 +24,14 @@ use IceHawk\IceHawk\Routing\RequestBypasser;
  * Class RequestBypasserTest
  * @package IceHawk\IceHawk\Tests\Unit\Routing
  */
-class RequestBypasserTest extends \PHPUnit_Framework_TestCase
+class RequestBypasserTest extends \PHPUnit\Framework\TestCase
 {
+	public function setUp()
+	{
+		$_GET  = [];
+		$_POST = [];
+	}
+
 	/**
 	 * @param array               $requestBypasses
 	 * @param ProvidesRequestInfo $requestInfo
@@ -36,7 +42,7 @@ class RequestBypasserTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider writeRequestBypassesProvider
 	 */
-	public function testProxyWriteRoutes(
+	public function testCanBypassWriteRoutes(
 		array $requestBypasses,
 		ProvidesRequestInfo $requestInfo,
 		array $postData,
@@ -83,7 +89,10 @@ class RequestBypasserTest extends \PHPUnit_Framework_TestCase
 					),
 				],
 				new RequestInfo(
-					[ 'REQUEST_METHOD' => HttpMethod::POST, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
+					[
+						'REQUEST_METHOD' => HttpMethod::POST,
+						'REQUEST_URI'    => '/companies/1/stores/2/stocks',
+					]
 				),
 				[ 'stock' => '3' ],
 				'/stocks/store/2',
@@ -110,7 +119,8 @@ class RequestBypasserTest extends \PHPUnit_Framework_TestCase
 				],
 				new RequestInfo(
 					[
-						'REQUEST_METHOD' => HttpMethod::HEAD, 'REQUEST_URI' => '/companies/1/stores/2/stocks',
+						'REQUEST_METHOD' => HttpMethod::HEAD,
+						'REQUEST_URI'    => '/companies/1/stores/2/stocks',
 						'QUERY_STRING'   => 'stock=1',
 					]
 				),
@@ -131,7 +141,7 @@ class RequestBypasserTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider readRequestBypassesProvider
 	 */
-	public function testProxyReadRoutes(
+	public function testCanBypassReadRoutes(
 		array $requestBypasses,
 		ProvidesRequestInfo $request,
 		string $expectedFinalUri,
@@ -175,7 +185,10 @@ class RequestBypasserTest extends \PHPUnit_Framework_TestCase
 					),
 				],
 				new RequestInfo(
-					[ 'REQUEST_METHOD' => HttpMethod::GET, 'REQUEST_URI' => '/companies/1/stores/2/stocks' ]
+					[
+						'REQUEST_METHOD' => HttpMethod::GET,
+						'REQUEST_URI'    => '/companies/1/stores/2/stocks',
+					]
 				),
 				'/company/1/stocks/store/2',
 				HttpMethod::POST,
@@ -201,7 +214,8 @@ class RequestBypasserTest extends \PHPUnit_Framework_TestCase
 				],
 				new RequestInfo(
 					[
-						'REQUEST_METHOD' => HttpMethod::POST, 'REQUEST_URI' => '/companies/1/stores/2/stocks',
+						'REQUEST_METHOD' => HttpMethod::POST,
+						'REQUEST_URI'    => '/companies/1/stores/2/stocks',
 					]
 				),
 				'/company/1/stocks/store/2',

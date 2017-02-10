@@ -21,7 +21,7 @@ use IceHawk\IceHawk\Events\IceHawkWasInitializedEvent;
  * Class IceHawkWasInitializedEventTest
  * @package IceHawk\IceHawk\Tests\Unit\Events
  */
-class IceHawkWasInitializedEventTest extends \PHPUnit_Framework_TestCase
+class IceHawkWasInitializedEventTest extends \PHPUnit\Framework\TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{

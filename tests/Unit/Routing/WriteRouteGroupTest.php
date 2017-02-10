@@ -27,7 +27,7 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidPostRequestHandler;
 
-class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
+class WriteRouteGroupTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @dataProvider routeProvider
@@ -272,6 +272,6 @@ class WriteRouteGroupTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testAddingInvalidRouteInstancesToGroupThrowsException()
 	{
-		new WriteRouteGroup( new Literal( '/' ), [new \stdClass()] );
+		new WriteRouteGroup( new Literal( '/' ), [ new \stdClass() ] );
 	}
 }

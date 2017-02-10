@@ -24,7 +24,7 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\IceHawkReadRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidGetRequestHandler;
 
-class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
+class ReadRouteGroupTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @dataProvider routeProvider
@@ -243,6 +243,6 @@ class ReadRouteGroupTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testAddingInvalidRouteInstancesToGroupThrowsException()
 	{
-		new ReadRouteGroup( new Literal( '/' ), [new \stdClass()] );
+		new ReadRouteGroup( new Literal( '/' ), [ new \stdClass() ] );
 	}
 }

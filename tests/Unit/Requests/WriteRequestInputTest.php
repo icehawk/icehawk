@@ -18,7 +18,7 @@ use IceHawk\IceHawk\Mappers\UploadedFilesMapper;
 use IceHawk\IceHawk\Requests\UploadedFile;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
 
-class WriteRequestInputTest extends \PHPUnit_Framework_TestCase
+class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 {
 	public function testCanGetBodyAndData()
 	{

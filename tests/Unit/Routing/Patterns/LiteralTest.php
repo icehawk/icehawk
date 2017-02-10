@@ -15,7 +15,7 @@ namespace IceHawk\IceHawk\Tests\Unit\Routing\Patterns;
 
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 
-class LiteralTest extends \PHPUnit_Framework_TestCase
+class LiteralTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @param string $string
@@ -35,13 +35,13 @@ class LiteralTest extends \PHPUnit_Framework_TestCase
 	public function literalMatchProvider()
 	{
 		return [
-			['/', '/', true],
-			['/path', '/path', true],
-			['/path/to-somewhere', '/path/to-somewhere', true],
-			['/path', '/Path', false],
-			['/path', '/other-path', false],
-			['', '/', false],
-			['', '/path', false],
+			[ '/', '/', true ],
+			[ '/path', '/path', true ],
+			[ '/path/to-somewhere', '/path/to-somewhere', true ],
+			[ '/path', '/Path', false ],
+			[ '/path', '/other-path', false ],
+			[ '', '/', false ],
+			[ '', '/path', false ],
 		];
 	}
 

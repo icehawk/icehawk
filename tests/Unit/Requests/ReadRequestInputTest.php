@@ -15,7 +15,7 @@ namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
 use IceHawk\IceHawk\Requests\ReadRequestInput;
 
-class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
+class ReadRequestInputTest extends \PHPUnit\Framework\TestCase
 {
 
 	/**
@@ -34,22 +34,22 @@ class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'unit',
 				'test',
 			],
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'test',
 				'unit',
 			],
 			[
-				['unit' => ['test' => 'unit']],
+				[ 'unit' => [ 'test' => 'unit' ] ],
 				'unit',
-				['test' => 'unit'],
+				[ 'test' => 'unit' ],
 			],
 			[
-				['unit' => ''],
+				[ 'unit' => '' ],
 				'unit',
 				'',
 			],
@@ -87,15 +87,15 @@ class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'blubb',
 			],
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'blubb',
 			],
 			[
-				['unit' => ['test' => 'unit']],
+				[ 'unit' => [ 'test' => 'unit' ] ],
 				'blubb',
 			],
 		];
@@ -103,17 +103,17 @@ class ReadRequestInputTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetterReturnsDefaultValueIfProvidedAndKeyIsNotFound()
 	{
-		$readRequestInput = new ReadRequestInput( ['unit' => 'test'] );
+		$readRequestInput = new ReadRequestInput( [ 'unit' => 'test' ] );
 
 		$stdObj = new \stdClass();
 
-		$this->assertSame( ['123'], $readRequestInput->get( 'someKey', ['123'] ) );
+		$this->assertSame( [ '123' ], $readRequestInput->get( 'someKey', [ '123' ] ) );
 		$this->assertSame( '123', $readRequestInput->get( 'someKey', '123' ) );
 		$this->assertSame( 123, $readRequestInput->get( 'someKey', 123 ) );
 		$this->assertSame( $stdObj, $readRequestInput->get( 'someKey', $stdObj ) );
 		$this->assertSame( null, $readRequestInput->get( 'someKey', null ) );
 		$this->assertSame( null, $readRequestInput->get( 'someKey' ) );
 
-		$this->assertSame( 'test', $readRequestInput->get( 'unit', ['123'] ) );
+		$this->assertSame( 'test', $readRequestInput->get( 'unit', [ '123' ] ) );
 	}
 }

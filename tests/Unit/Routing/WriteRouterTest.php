@@ -27,7 +27,7 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidPostRequestHandler;
 
-class WriteRouterTest extends \PHPUnit_Framework_TestCase
+class WriteRouterTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @dataProvider routeProvider
@@ -85,7 +85,7 @@ class WriteRouterTest extends \PHPUnit_Framework_TestCase
 	public function invalidRoutesProvider()
 	{
 		return [
-			['string'], [1], [0.0], [false], [true], [new \stdClass()], [null],
+			[ 'string' ], [ 1 ], [ 0.0 ], [ false ], [ true ], [ new \stdClass() ], [ null ],
 		];
 	}
 

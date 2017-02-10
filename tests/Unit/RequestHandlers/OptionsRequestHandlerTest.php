@@ -26,7 +26,7 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 
-class OptionsRequestHandlerTest extends \PHPUnit_Framework_TestCase
+class OptionsRequestHandlerTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @dataProvider RouteProvider
@@ -70,7 +70,7 @@ class OptionsRequestHandlerTest extends \PHPUnit_Framework_TestCase
 					new WriteRoute( new Literal( '/do/whatever/you/want' ), new DeleteRequestHandler() ),
 				],
 				'/do/this',
-				['POST'],
+				[ 'POST' ],
 			],
 			[
 				[
@@ -85,7 +85,7 @@ class OptionsRequestHandlerTest extends \PHPUnit_Framework_TestCase
 					new WriteRoute( new Literal( '/this' ), new DeleteRequestHandler() ),
 				],
 				'/this',
-				['HEAD', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
+				[ 'HEAD', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE' ],
 			],
 		];
 	}
@@ -95,10 +95,11 @@ class OptionsRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testHeaderOutputWithGeneratedRoutes()
 	{
-		$routes = [ new ReadRoute( new Literal( '/get/this' ), new GetRequestHandler() ),
-		            new ReadRoute( new Literal( '/get/that' ), new HeadRequestHandler() ),
-		            new ReadRoute( new Literal( '/get/this/again' ), new GetRequestHandler() ) ];
-
+		$routes = [
+			new ReadRoute( new Literal( '/get/this' ), new GetRequestHandler() ),
+			new ReadRoute( new Literal( '/get/that' ), new HeadRequestHandler() ),
+			new ReadRoute( new Literal( '/get/this/again' ), new GetRequestHandler() ),
+		];
 
 		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo(

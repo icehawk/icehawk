@@ -1,5 +1,5 @@
 <phpunit
-	bootstrap="../tests/Unit/bootstrap.php"
+	bootstrap="../tests/bootstrap.php"
 	verbose="true"
 	beStrictAboutOutputDuringTests="true"
 	beStrictAboutTestSize="true"
@@ -9,8 +9,11 @@
 	convertWarningsToExceptions="true"
 	backupGlobals="true">
 	<testsuites>
-		<testsuite name="IceHawk">
+		<testsuite name="IceHawk-Units">
 			<directory suffix="Test.php">../tests/Unit</directory>
+		</testsuite>
+		<testsuite name="IceHawk-Integration">
+			<directory suffix="Test.php">../tests/Integration</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
@@ -19,6 +22,7 @@
 		</whitelist>
 		<blacklist>
 			<directory suffix=".php">../tests/Unit</directory>
+			<directory suffix=".php">../tests/Integration</directory>
 			<directory>../tests/Unit/Fixtures</directory>
 			<directory>../vendor</directory>
 		</blacklist>

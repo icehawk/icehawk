@@ -94,7 +94,7 @@ class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
 
-		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
+		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
 	}
 
@@ -127,7 +127,7 @@ class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
 
-		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
+		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
 
 		stream_wrapper_restore( "php" );
@@ -157,7 +157,7 @@ class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->method( 'getFinalWriteResponder' )->willReturn( $finalWriteResponder );
 
-		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
+		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
 
 		$this->expectOutputString( 'fine' );
@@ -196,7 +196,7 @@ class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
 
-		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
+		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
 
 		$this->expectOutputString( get_class( $exception ) );

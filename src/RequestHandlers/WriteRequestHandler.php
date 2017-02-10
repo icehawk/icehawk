@@ -65,8 +65,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 	private function getHandlerRoute() : RoutesToWriteHandler
 	{
 		$routes       = $this->config->getWriteRoutes();
-		$requestInfo  = $this->config->getRequestInfo();
-		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
+		$routeRequest = new RouteRequest( $this->requestInfo->getUri(), $this->requestInfo->getMethod() );
 
 		$router       = new WriteRouter( $routes );
 		$handlerRoute = $router->findMatchingRoute( $routeRequest );
@@ -76,7 +75,6 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getRequest( array $uriParams ) : ProvidesWriteRequestData
 	{
-		$requestInfo = $this->config->getRequestInfo();
 		$cookies = $this->config->getCookies();
 
 		$body          = $this->getRequestBody();
@@ -85,7 +83,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 		$requestInput = new WriteRequestInput( $body, $requestData, $uploadedFiles );
 
-		return new WriteRequest( $requestInfo, $cookies, $requestInput );
+		return new WriteRequest( $this->requestInfo, $cookies, $requestInput );
 	}
 
 	private function getRequestBody() : string

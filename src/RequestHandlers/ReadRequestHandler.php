@@ -64,8 +64,7 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	private function getHandlerRoute() : RoutesToReadHandler
 	{
 		$readRoutes   = $this->config->getReadRoutes();
-		$requestInfo  = $this->config->getRequestInfo();
-		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
+		$routeRequest = new RouteRequest( $this->requestInfo->getUri(), $this->requestInfo->getMethod() );
 
 		$readRouter   = new ReadRouter( $readRoutes );
 		$handlerRoute = $readRouter->findMatchingRoute( $routeRequest );
@@ -80,12 +79,11 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	 */
 	private function getRequest( array $uriParams ) : ProvidesReadRequestData
 	{
-		$requestInfo = $this->config->getRequestInfo();
 		$cookies = $this->config->getCookies();
 
 		$requestData  = array_merge( $_GET, $uriParams );
 		$requestInput = new ReadRequestInput( $requestData );
 
-		return new ReadRequest( $requestInfo, $cookies, $requestInput );
+		return new ReadRequest( $this->requestInfo, $cookies, $requestInput );
 	}
 }

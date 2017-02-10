@@ -46,7 +46,7 @@ class OptionsRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$config->method( 'getWriteRoutes' )->willReturn( $writeRoutes );
 		$config->method( 'getReadRoutes' )->willReturn( $readRoutes );
 
-		$optionsRequestHandler = new OptionsRequestHandler( $config, new EventPublisher() );
+		$optionsRequestHandler = new OptionsRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$optionsRequestHandler->handleRequest();
 
 		$expectedHeader = 'Allow: ' . join( ',', $expectedMethods );
@@ -113,7 +113,7 @@ class OptionsRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$config->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->method( 'getReadRoutes' )->willReturn( $this->getGeneratedRoutes( $routes ) );
 
-		$optionsRequestHandler = new OptionsRequestHandler( $config, new EventPublisher() );
+		$optionsRequestHandler = new OptionsRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$optionsRequestHandler->handleRequest();
 
 		$this->assertContains( 'Allow: HEAD', xdebug_get_headers() );

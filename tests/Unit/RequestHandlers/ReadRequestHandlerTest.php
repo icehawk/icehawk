@@ -85,7 +85,7 @@ class ReadRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $readRoute ] );
 
-		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );
+		$readRequestHandler = new ReadRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$readRequestHandler->handleRequest();
 	}
 
@@ -113,7 +113,7 @@ class ReadRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [] );
 		$config->method( 'getFinalReadResponder' )->willReturn( $finalReadResponder );
 
-		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );
+		$readRequestHandler = new ReadRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$readRequestHandler->handleRequest();
 
 		$this->expectOutputString( 'fine' );
@@ -153,7 +153,7 @@ class ReadRequestHandlerTest extends \PHPUnit\Framework\TestCase
 
 		$config->expects( $this->once() )->method( 'getReadRoutes' )->willReturn( [ $readRoute ] );
 
-		$readRequestHandler = new ReadRequestHandler( $config, new EventPublisher() );
+		$readRequestHandler = new ReadRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$readRequestHandler->handleRequest();
 
 		$this->expectOutputString( get_class( $exception ) );

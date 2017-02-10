@@ -45,7 +45,7 @@ or add to your `composer.json`:
 We provide an installer package that creates a new IceHawk project for you. Simply run:
 
 ```bash
-composer create-project icehawk/installer /path/to/new-project
+composer create-project -n icehawk/installer /path/to/new-project
 ```
  
 Answer the questions of the interactive installer and you're good to go.
@@ -106,7 +106,6 @@ namespace YourVendor\YourProject;
 
 use IceHawk\IceHawk\Routing\ReadRoute;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
-use YourVendor\YourProject\SayHelloRequestHandler;
 
 final class IceHawkConfig extends \IceHawk\IceHawk\Defaults\IceHawkConfig
 {

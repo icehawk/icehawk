@@ -19,7 +19,7 @@ use IceHawk\IceHawk\Events\HandlingWriteRequestEvent;
 use IceHawk\IceHawk\Requests\WriteRequest;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
 
-class HandlingWriteRequestEventTest extends \PHPUnit_Framework_TestCase
+class HandlingWriteRequestEventTest extends \PHPUnit\Framework\TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{

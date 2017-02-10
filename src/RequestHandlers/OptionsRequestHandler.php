@@ -50,7 +50,7 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 	{
 		$readRoutes  = $this->config->getReadRoutes();
 		$writeRoutes = $this->config->getWriteRoutes();
-		$uri         = $this->config->getRequestInfo()->getUri();
+		$uri = $this->requestInfo->getUri();
 
 		$matchingReadRoutes  = $this->getMatchingRoutes( $uri, $readRoutes );
 		$matchingWriteRoutes = $this->getMatchingRoutes( $uri, $writeRoutes );

@@ -15,7 +15,7 @@ namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
 use IceHawk\IceHawk\Requests\UploadedFile;
 
-class UploadedFileTest extends \PHPUnit_Framework_TestCase
+class UploadedFileTest extends \PHPUnit\Framework\TestCase
 {
 	public function testInstanceFromFileArrayEqualsInstanceFromConstruct()
 	{
@@ -44,14 +44,14 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 		$size    = 1024;
 
 		return [
-			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_OK ), true],
-			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_CANT_WRITE ), false],
-			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_EXTENSION ), false],
-			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_FORM_SIZE ), false],
-			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_INI_SIZE ), false],
-			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_FILE ), false],
-			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_TMP_DIR ), false],
-			[new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_PARTIAL ), false],
+			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_OK ), true ],
+			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_CANT_WRITE ), false ],
+			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_EXTENSION ), false ],
+			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_FORM_SIZE ), false ],
+			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_INI_SIZE ), false ],
+			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_FILE ), false ],
+			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_NO_TMP_DIR ), false ],
+			[ new UploadedFile( $name, $tmpName, $type, $size, UPLOAD_ERR_PARTIAL ), false ],
 		];
 	}
 
@@ -126,8 +126,8 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 	public function filePathRealTypeProvider()
 	{
 		return [
-			[__DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'image/png'],
-			[__DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'text/plain'],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'image/png' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'text/plain' ],
 		];
 	}
 
@@ -149,8 +149,8 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 	public function filePathEncodingProvider()
 	{
 		return [
-			[__DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'binary'],
-			[__DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'utf-8'],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.png', 'binary' ],
+			[ __DIR__ . '/../Fixtures/UploadedFiles/UnitTest.txt', 'utf-8' ],
 		];
 	}
 

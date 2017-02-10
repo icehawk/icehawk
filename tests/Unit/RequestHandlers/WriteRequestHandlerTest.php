@@ -27,25 +27,25 @@ use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\WriteRoute;
 use IceHawk\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
 
-class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
+class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 {
 	public function parameterProvider()
 	{
 		return [
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'unit', 'tested',
-				['unit' => 'tested', 'test' => 'unit'],
+				[ 'unit' => 'tested', 'test' => 'unit' ],
 			],
 			[
-				['unit' => 'test', 'test' => 'unit'],
+				[ 'unit' => 'test', 'test' => 'unit' ],
 				'test', 'units',
-				['unit' => 'test', 'test' => 'units'],
+				[ 'unit' => 'test', 'test' => 'units' ],
 			],
 			[
-				['unit' => ['test' => 'unit']],
+				[ 'unit' => [ 'test' => 'unit' ] ],
 				'unit', 'units',
-				['unit' => 'units'],
+				[ 'unit' => 'units' ],
 			],
 		];
 	}
@@ -84,7 +84,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedWriteRequest ) );
 
 		$regExp     = new RegExp(
-			sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [$uriKey]
+			sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [ $uriKey ]
 		);
 		$writeRoute = new WriteRoute( $regExp, $requestHandler );
 
@@ -92,9 +92,9 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$writeRoute] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
 
-		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
+		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
 	}
 
@@ -107,7 +107,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		stream_wrapper_register( "php", PhpStreamMock::class );
 		file_put_contents( 'php://input', 'body data' );
 
-		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/domain/test_body_data'] );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/domain/test_body_data' ] );
 		$cookies     = new Cookies( [] );
 
 		$expectedWriteRequest = new WriteRequest(
@@ -125,9 +125,9 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$config->method( 'getRequestInfo' )->willReturn( $requestInfo );
 		$config->expects( $this->once() )->method( 'getCookies' )->willReturn( $cookies );
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$writeRoute] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
 
-		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
+		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
 
 		stream_wrapper_restore( "php" );
@@ -138,7 +138,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMissingWriteRoutesHandledByFinaleWriteResponder()
 	{
-		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test'] );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] );
 
 		$finalWriteResponder = $this->getMockBuilder( RespondsFinallyToWriteRequest::class )->getMockForAbstractClass();
 		$finalWriteResponder->method( 'handleUncaughtException' )
@@ -157,7 +157,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [] );
 		$config->method( 'getFinalWriteResponder' )->willReturn( $finalWriteResponder );
 
-		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
+		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
 
 		$this->expectOutputString( 'fine' );
@@ -168,7 +168,7 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testExceptionHandledByFinaleWriteResponder()
 	{
-		$requestInfo = new RequestInfo( ['REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test'] );
+		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test' ] );
 		$exception   = new \Exception();
 
 		$finalWriteResponder = $this->getMockBuilder( RespondsFinallyToWriteRequest::class )->getMockForAbstractClass();
@@ -194,9 +194,9 @@ class WriteRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$writeRoute = new WriteRoute( new Literal( '/test' ), $requestHandler );
 
-		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [$writeRoute] );
+		$config->expects( $this->once() )->method( 'getWriteRoutes' )->willReturn( [ $writeRoute ] );
 
-		$writeRequestHandler = new WriteRequestHandler( $config, new EventPublisher() );
+		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
 
 		$this->expectOutputString( get_class( $exception ) );

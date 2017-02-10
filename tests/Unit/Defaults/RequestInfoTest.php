@@ -15,14 +15,14 @@ namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
 use IceHawk\IceHawk\Defaults\RequestInfo;
 
-class RequestInfoTest extends \PHPUnit_Framework_TestCase
+class RequestInfoTest extends \PHPUnit\Framework\TestCase
 {
 	public function testCanInstantiateFromEnvUsingGlobalServerVariable()
 	{
 		$requestTime      = microtime();
 		$requestTimeFloat = microtime( true );
 
-		$_SERVER['argv']                 = ['unit', 'test'];
+		$_SERVER['argv'] = [ 'unit', 'test' ];
 		$_SERVER['argc']                 = 2;
 		$_SERVER['REQUEST_URI']          = '/unit/test';
 		$_SERVER['REQUEST_METHOD']       = 'POST';
@@ -70,7 +70,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf( RequestInfo::class, $requestInfo );
 
-		$this->assertSame( ['unit', 'test'], $requestInfo->getArgv() );
+		$this->assertSame( [ 'unit', 'test' ], $requestInfo->getArgv() );
 		$this->assertSame( 2, $requestInfo->getArgc() );
 		$this->assertSame( '/unit/test', $requestInfo->getUri() );
 		$this->assertSame( 'POST', $requestInfo->getMethod() );
@@ -173,7 +173,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetUriOnlyReturnsThePathWithoutQueryString()
 	{
-		$serverData  = ['REQUEST_URI' => '/unit/test?unit=test'];
+		$serverData  = [ 'REQUEST_URI' => '/unit/test?unit=test' ];
 		$requestInfo = new RequestInfo( $serverData );
 
 		$this->assertEquals( '/unit/test', $requestInfo->getUri() );
@@ -184,7 +184,7 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetMethodAlwaysReturnsRequestMethodInUpperCase( $requestMethod, $expectedRequestMethod )
 	{
-		$serverData  = ['REQUEST_METHOD' => $requestMethod];
+		$serverData  = [ 'REQUEST_METHOD' => $requestMethod ];
 		$requestInfo = new RequestInfo( $serverData );
 
 		$this->assertEquals( $expectedRequestMethod, $requestInfo->getMethod() );
@@ -193,22 +193,22 @@ class RequestInfoTest extends \PHPUnit_Framework_TestCase
 	public function requestMethodProvider()
 	{
 		return [
-			['get', 'GET'],
-			['Get', 'GET'],
-			['GeT', 'GET'],
-			['head', 'HEAD'],
-			['HeaD', 'HEAD'],
-			['post', 'POST'],
-			['pOSt', 'POST'],
+			[ 'get', 'GET' ],
+			[ 'Get', 'GET' ],
+			[ 'GeT', 'GET' ],
+			[ 'head', 'HEAD' ],
+			[ 'HeaD', 'HEAD' ],
+			[ 'post', 'POST' ],
+			[ 'pOSt', 'POST' ],
 		];
 	}
 
 	public function testHttpsIsCheckedCaseInsensitive()
 	{
-		$requestInfo1 = new RequestInfo( ['HTTPS' => 'On'] );
-		$requestInfo2 = new RequestInfo( ['HTTPS' => 'on'] );
-		$requestInfo3 = new RequestInfo( ['HTTPS' => 'oN'] );
-		$requestInfo4 = new RequestInfo( ['HTTPS' => 'ON'] );
+		$requestInfo1 = new RequestInfo( [ 'HTTPS' => 'On' ] );
+		$requestInfo2 = new RequestInfo( [ 'HTTPS' => 'on' ] );
+		$requestInfo3 = new RequestInfo( [ 'HTTPS' => 'oN' ] );
+		$requestInfo4 = new RequestInfo( [ 'HTTPS' => 'ON' ] );
 
 		$this->assertTrue( $requestInfo1->isSecure() );
 		$this->assertTrue( $requestInfo2->isSecure() );

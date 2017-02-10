@@ -25,6 +25,6 @@ class TestEventSubscriber extends AbstractEventSubscriber
 {
 	protected function getAcceptedEvents() : array
 	{
-		return [IceHawkWasInitializedEvent::class, WriteRequestWasHandledEvent::class];
+		return [ IceHawkWasInitializedEvent::class, WriteRequestWasHandledEvent::class ];
 	}
 }

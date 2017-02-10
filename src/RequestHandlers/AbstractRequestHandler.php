@@ -14,6 +14,7 @@
 namespace IceHawk\IceHawk\RequestHandlers;
 
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
+use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
 use IceHawk\IceHawk\PubSub\Interfaces\PublishesEvents;
 
@@ -23,18 +24,22 @@ use IceHawk\IceHawk\PubSub\Interfaces\PublishesEvents;
  */
 abstract class AbstractRequestHandler
 {
+	/** @var ProvidesRequestInfo */
+	protected $requestInfo;
+
 	/** @var ConfiguresIceHawk */
 	protected $config;
 
 	/** @var PublishesEvents */
 	private $eventPublisher;
 
-	/**
-	 * @param ConfiguresIceHawk $config
-	 * @param PublishesEvents   $eventPublisher
-	 */
-	final public function __construct( ConfiguresIceHawk $config, PublishesEvents $eventPublisher )
+	final public function __construct(
+		ProvidesRequestInfo $requestInfo,
+		ConfiguresIceHawk $config,
+		PublishesEvents $eventPublisher
+	)
 	{
+		$this->requestInfo    = $requestInfo;
 		$this->config         = $config;
 		$this->eventPublisher = $eventPublisher;
 	}

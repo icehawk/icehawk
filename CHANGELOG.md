@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.1.1] - 2017-02-10
+
+### Fixed
+
+- Wrong request info instance used for route matching, when request bypassing is used. ([#27](https://github.com/icehawk/icehawk/issues/27)) 
+
+### Added
+
+- Integration test suite
+
+### Changed
+
+- Test suites updated for PHPUnit 6. ([#28](https://github.com/icehawk/icehawk/issues/28))
+- PHPUnit dependency to 6.0.6 (PHAR).
+
 ## [2.1.0] - 2016-12-19
 
 ### Added
@@ -212,6 +227,7 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 - First release
 
+[2.1.1]: https://github.com/icehawk/icehawk/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/icehawk/icehawk/compare/v2.0.4...v2.1.0
 [2.0.4]: https://github.com/icehawk/icehawk/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/icehawk/icehawk/compare/v2.0.2...v2.0.3

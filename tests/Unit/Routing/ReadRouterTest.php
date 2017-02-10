@@ -25,7 +25,7 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 
-class ReadRouterTest extends \PHPUnit_Framework_TestCase
+class ReadRouterTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @dataProvider routeProvider

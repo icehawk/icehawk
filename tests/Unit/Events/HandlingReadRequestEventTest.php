@@ -19,7 +19,7 @@ use IceHawk\IceHawk\Events\HandlingReadRequestEvent;
 use IceHawk\IceHawk\Requests\ReadRequest;
 use IceHawk\IceHawk\Requests\ReadRequestInput;
 
-class HandlingReadRequestEventTest extends \PHPUnit_Framework_TestCase
+class HandlingReadRequestEventTest extends \PHPUnit\Framework\TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{

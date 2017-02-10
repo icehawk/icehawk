@@ -15,7 +15,7 @@ namespace IceHawk\IceHawk\Tests\Unit\Routing\Patterns;
 
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 
-class RegExpTest extends \PHPUnit_Framework_TestCase
+class RegExpTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @param string $pattern
@@ -36,12 +36,12 @@ class RegExpTest extends \PHPUnit_Framework_TestCase
 	public function regExpMatchProvider()
 	{
 		return [
-			['##', '', true],
-			['#/#', '/', true],
-			['#/path#', '/path', true],
-			['#/(unit|test)#', '/unit', true],
-			['#/(unit|test)#', '/test', true],
-			['#^/(unit|test)$#', '/unit/test', false],
+			[ '##', '', true ],
+			[ '#/#', '/', true ],
+			[ '#/path#', '/path', true ],
+			[ '#/(unit|test)#', '/unit', true ],
+			[ '#/(unit|test)#', '/test', true ],
+			[ '#^/(unit|test)$#', '/unit/test', false ],
 		];
 	}
 
@@ -69,29 +69,29 @@ class RegExpTest extends \PHPUnit_Framework_TestCase
 			[
 				'pattern'         => '#^/path/to/(somewhere|anywhere)$#',
 				'other'           => '/path/to/somewhere',
-				'matchKeys'       => ['where'],
-				'expectedMatches' => ['where' => 'somewhere'],
+				'matchKeys'       => [ 'where' ],
+				'expectedMatches' => [ 'where' => 'somewhere' ],
 			],
 			# Simply match 1:1
 			[
 				'pattern'         => '#^/path/to/(somewhere|anywhere)$#',
 				'other'           => '/path/to/anywhere',
-				'matchKeys'       => ['where'],
-				'expectedMatches' => ['where' => 'anywhere'],
+				'matchKeys'       => [ 'where' ],
+				'expectedMatches' => [ 'where' => 'anywhere' ],
 			],
 			# Test matchKeys not empty, but no matchValues
 			[
 				'pattern'         => '#^/path/to/(somewhere|anywhere)$#',
 				'other'           => '/path/to/elsewhere',
-				'matchKeys'       => ['where'],
+				'matchKeys'       => [ 'where' ],
 				'expectedMatches' => [],
 			],
 			# Test more matchKeys than matchValues, matchKeys are preserved, but null
 			[
 				'pattern'         => '#^/path/to/(somewhere|anywhere)$#',
 				'other'           => '/path/to/anywhere',
-				'matchKeys'       => ['where', 'to', 'go'],
-				'expectedMatches' => ['where' => 'anywhere', 'to' => null, 'go' => null],
+				'matchKeys'       => [ 'where', 'to', 'go' ],
+				'expectedMatches' => [ 'where' => 'anywhere', 'to' => null, 'go' => null ],
 			],
 			# Test empty matchKeys when matchValues are not empty
 			[
@@ -104,8 +104,8 @@ class RegExpTest extends \PHPUnit_Framework_TestCase
 			[
 				'pattern'         => '#^/path/to/(somewhere|anywhere)$#',
 				'other'           => '/path/to/anywhere',
-				'matchKeys'       => ['1' => 'where'],
-				'expectedMatches' => ['where' => 'anywhere'],
+				'matchKeys'       => [ '1' => 'where' ],
+				'expectedMatches' => [ 'where' => 'anywhere' ],
 			],
 		];
 	}

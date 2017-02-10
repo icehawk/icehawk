@@ -15,6 +15,7 @@ branches:
     - /^issue\/.+$/
 
 before_script:
+ - git fetch
  - git checkout "${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}"
  - git reset --hard "$TRAVIS_COMMIT"
  - composer self-update

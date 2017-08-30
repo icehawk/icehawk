@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -14,8 +14,9 @@
 namespace IceHawk\IceHawk\Tests\Unit\Routing\Patterns;
 
 use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
+use PHPUnit\Framework\TestCase;
 
-class NamedRegExpTest extends \PHPUnit\Framework\TestCase
+class NamedRegExpTest extends TestCase
 {
 	/**
 	 * @param string $pattern

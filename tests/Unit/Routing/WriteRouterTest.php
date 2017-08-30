@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,14 +26,21 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\IceHawkWriteRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidPostRequestHandler;
+use PHPUnit\Framework\TestCase;
 
-class WriteRouterTest extends \PHPUnit\Framework\TestCase
+class WriteRouterTest extends TestCase
 {
 	/**
 	 * @dataProvider routeProvider
+	 *
+	 * @param ProvidesDestinationInfo $routeRequest
+	 * @param array                   $routes
+	 * @param HandlesWriteRequest     $expectedRequestHandler
 	 */
 	public function testFindRouteForRequest(
-		ProvidesDestinationInfo $routeRequest, array $routes, HandlesWriteRequest $expectedRequestHandler
+		ProvidesDestinationInfo $routeRequest,
+		array $routes,
+		HandlesWriteRequest $expectedRequestHandler
 	)
 	{
 		$router = new WriteRouter( $routes );
@@ -61,6 +68,9 @@ class WriteRouterTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider invalidRouteProvider
 	 * @expectedException \IceHawk\IceHawk\Exceptions\UnresolvedRequest
+	 *
+	 * @param ProvidesDestinationInfo $routeRequest
+	 * @param array                   $routes
 	 */
 	public function testMissingRouteForRequestThrowsException( ProvidesDestinationInfo $routeRequest, array $routes )
 	{
@@ -92,6 +102,8 @@ class WriteRouterTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider invalidRoutesProvider
 	 * @expectedException \IceHawk\IceHawk\Routing\Exceptions\RoutesAreNotTraversable
+	 *
+	 * @param $invalidRoutes
 	 */
 	public function testNonTraversableRoutesThrowsException( $invalidRoutes )
 	{

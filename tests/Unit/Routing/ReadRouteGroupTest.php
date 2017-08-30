@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,11 +23,16 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\IceHawkReadRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\ValidGetRequestHandler;
+use PHPUnit\Framework\TestCase;
 
-class ReadRouteGroupTest extends \PHPUnit\Framework\TestCase
+class ReadRouteGroupTest extends TestCase
 {
 	/**
 	 * @dataProvider routeProvider
+	 *
+	 * @param ReadRouteGroup $groupedRoute
+	 * @param string         $uri
+	 * @param                $expectedRequestHandler
 	 */
 	public function testFindRouteForRequest( ReadRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{

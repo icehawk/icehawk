@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -14,8 +14,9 @@
 namespace IceHawk\IceHawk\Tests\Unit\Requests;
 
 use IceHawk\IceHawk\Requests\ReadRequestInput;
+use PHPUnit\Framework\TestCase;
 
-class ReadRequestInputTest extends \PHPUnit\Framework\TestCase
+class ReadRequestInputTest extends TestCase
 {
 
 	/**
@@ -111,8 +112,8 @@ class ReadRequestInputTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame( '123', $readRequestInput->get( 'someKey', '123' ) );
 		$this->assertSame( 123, $readRequestInput->get( 'someKey', 123 ) );
 		$this->assertSame( $stdObj, $readRequestInput->get( 'someKey', $stdObj ) );
-		$this->assertSame( null, $readRequestInput->get( 'someKey', null ) );
-		$this->assertSame( null, $readRequestInput->get( 'someKey' ) );
+		$this->assertNull( $readRequestInput->get( 'someKey', null ) );
+		$this->assertNull( $readRequestInput->get( 'someKey' ) );
 
 		$this->assertSame( 'test', $readRequestInput->get( 'unit', [ '123' ] ) );
 	}

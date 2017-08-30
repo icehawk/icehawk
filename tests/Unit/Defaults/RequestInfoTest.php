@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -14,15 +14,16 @@
 namespace IceHawk\IceHawk\Tests\Unit\Defaults;
 
 use IceHawk\IceHawk\Defaults\RequestInfo;
+use PHPUnit\Framework\TestCase;
 
-class RequestInfoTest extends \PHPUnit\Framework\TestCase
+class RequestInfoTest extends TestCase
 {
 	public function testCanInstantiateFromEnvUsingGlobalServerVariable()
 	{
 		$requestTime      = microtime();
 		$requestTimeFloat = microtime( true );
 
-		$_SERVER['argv'] = [ 'unit', 'test' ];
+		$_SERVER['argv']                 = [ 'unit', 'test' ];
 		$_SERVER['argc']                 = 2;
 		$_SERVER['REQUEST_URI']          = '/unit/test';
 		$_SERVER['REQUEST_METHOD']       = 'POST';
@@ -181,6 +182,9 @@ class RequestInfoTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @dataProvider requestMethodProvider
+	 *
+	 * @param $requestMethod
+	 * @param $expectedRequestMethod
 	 */
 	public function testGetMethodAlwaysReturnsRequestMethodInUpperCase( $requestMethod, $expectedRequestMethod )
 	{

@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,12 +19,13 @@ use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
 use IceHawk\IceHawk\Routing\RequestBypass;
 use IceHawk\IceHawk\Routing\RequestBypasser;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RequestBypasserTest
  * @package IceHawk\IceHawk\Tests\Unit\Routing
  */
-class RequestBypasserTest extends \PHPUnit\Framework\TestCase
+class RequestBypasserTest extends TestCase
 {
 	public function setUp()
 	{

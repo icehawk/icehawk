@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -16,8 +16,9 @@ namespace IceHawk\IceHawk\Tests\Unit\Events;
 use IceHawk\IceHawk\Defaults\Cookies;
 use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\InitializingIceHawkEvent;
+use PHPUnit\Framework\TestCase;
 
-class InitializingIceHawkEventTest extends \PHPUnit\Framework\TestCase
+class InitializingIceHawkEventTest extends TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{

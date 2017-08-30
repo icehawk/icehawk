@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,8 +25,9 @@ use IceHawk\IceHawk\Requests\ReadRequestInput;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\ReadRoute;
+use PHPUnit\Framework\TestCase;
 
-class ReadRequestHandlerTest extends \PHPUnit\Framework\TestCase
+class ReadRequestHandlerTest extends TestCase
 {
 	public function parameterProvider()
 	{
@@ -59,13 +60,16 @@ class ReadRequestHandlerTest extends \PHPUnit\Framework\TestCase
 	 * @param array  $expectedParams
 	 */
 	public function testUriParamsOverwritesGetParams(
-		array $getData, string $uriKey, string $uriValue, array $expectedParams
+		array $getData,
+		string $uriKey,
+		string $uriValue,
+		array $expectedParams
 	)
 	{
 		$_GET       = $getData;
 		$requestUri = sprintf( '/domain/test_request_param/%s/%s', $uriKey, $uriValue );
 
-		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri ] );
+		$requestInfo     = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => $requestUri ] );
 		$cookies         = new Cookies( [] );
 		$expectedRequest = new ReadRequest(
 			$requestInfo,
@@ -76,7 +80,7 @@ class ReadRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$requestHandler = $this->getMockBuilder( HandlesGetRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' )->with( $this->equalTo( $expectedRequest ) );
 
-		$regExp = new RegExp( sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [ $uriKey ] );
+		$regExp    = new RegExp( sprintf( '#^/domain/test_request_param/%s/(%s)$#', $uriKey, $uriValue ), [ $uriKey ] );
 		$readRoute = new ReadRoute( $regExp, $requestHandler );
 
 		$config = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();

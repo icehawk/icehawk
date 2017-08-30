@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -47,8 +47,9 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
+use PHPUnit\Framework\TestCase;
 
-class IceHawkTest extends \PHPUnit\Framework\TestCase
+class IceHawkTest extends TestCase
 {
 	public function testDelegateMethodsWillBeCalledDuringInitialization()
 	{
@@ -68,9 +69,9 @@ class IceHawkTest extends \PHPUnit\Framework\TestCase
 	public function testPublishesEventWhenInitializationIsDone()
 	{
 		$requestInfo       = RequestInfo::fromEnv();
-		$cookies = Cookies::fromEnv();
+		$cookies           = Cookies::fromEnv();
 		$initializingEvent = new InitializingIceHawkEvent( $requestInfo, $cookies );
-		$initializedEvent = new IceHawkWasInitializedEvent( $requestInfo, $cookies );
+		$initializedEvent  = new IceHawkWasInitializedEvent( $requestInfo, $cookies );
 
 		$eventListener = $this->getMockBuilder( SubscribesToEvents::class )
 		                      ->setMethods( [ 'acceptsEvent', 'notify' ] )
@@ -341,7 +342,7 @@ class IceHawkTest extends \PHPUnit\Framework\TestCase
 	{
 		$config      = $this->getMockBuilder( ConfiguresIceHawk::class )->getMockForAbstractClass();
 		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/test', ] );
-		$cookies = new Cookies( [] );
+		$cookies     = new Cookies( [] );
 
 		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
 		$requestHandler->expects( $this->once() )->method( 'handle' );
@@ -350,7 +351,7 @@ class IceHawkTest extends \PHPUnit\Framework\TestCase
 
 		$initializingEvent = new InitializingIceHawkEvent( $requestInfo, $cookies );
 		$initEvent         = new IceHawkWasInitializedEvent( $requestInfo, $cookies );
-		$request           = new WriteRequest( $requestInfo, $cookies, new WriteRequestInput( '', [] ) );
+		$request           = new WriteRequest( $requestInfo, $cookies, new WriteRequestInput( [] ) );
 		$handlingEvent     = new HandlingWriteRequestEvent( $request );
 		$handledEvent      = new WriteRequestWasHandledEvent( $request );
 

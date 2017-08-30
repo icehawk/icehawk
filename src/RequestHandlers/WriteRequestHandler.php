@@ -76,20 +76,12 @@ final class WriteRequestHandler extends AbstractRequestHandler
 	{
 		$cookies = $this->config->getCookies();
 
-		$body          = $this->getRequestBody();
 		$requestData   = array_merge( $_POST, $uriParams );
 		$uploadedFiles = $this->getUploadedFiles();
 
-		$requestInput = new WriteRequestInput( $body, $requestData, $uploadedFiles );
+		$requestInput = new WriteRequestInput( $requestData, $uploadedFiles );
 
 		return new WriteRequest( $this->requestInfo, $cookies, $requestInput );
-	}
-
-	private function getRequestBody() : string
-	{
-		$body = @stream_get_contents( fopen( 'php://input', 'rb' ) );
-
-		return $body ? : '';
 	}
 
 	private function getUploadedFiles() : array

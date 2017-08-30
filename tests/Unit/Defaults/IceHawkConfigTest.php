@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,8 +17,9 @@ use IceHawk\IceHawk\Defaults\FinalReadResponder;
 use IceHawk\IceHawk\Defaults\FinalWriteResponder;
 use IceHawk\IceHawk\Defaults\IceHawkConfig;
 use IceHawk\IceHawk\Defaults\RequestInfo;
+use PHPUnit\Framework\TestCase;
 
-class IceHawkConfigTest extends \PHPUnit\Framework\TestCase
+class IceHawkConfigTest extends TestCase
 {
 	public function testDefaults()
 	{

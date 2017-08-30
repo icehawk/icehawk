@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,12 +21,13 @@ use IceHawk\IceHawk\PubSub\Exceptions\EventSubscriberMethodNotCallable;
 use IceHawk\IceHawk\Requests\ReadRequest;
 use IceHawk\IceHawk\Requests\ReadRequestInput;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\TestEventSubscriber;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class EventSubscriberTest
  * @package IceHawk\IceHawk\Tests\Unit\Fixtures\PubSub
  */
-class EventSubscriberTest extends \PHPUnit\Framework\TestCase
+class EventSubscriberTest extends TestCase
 {
 	public function testCanCheckForAcceptedEvents()
 	{

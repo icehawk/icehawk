@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,8 +18,9 @@ use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\HandlingReadRequestEvent;
 use IceHawk\IceHawk\Requests\ReadRequest;
 use IceHawk\IceHawk\Requests\ReadRequestInput;
+use PHPUnit\Framework\TestCase;
 
-class HandlingReadRequestEventTest extends \PHPUnit\Framework\TestCase
+class HandlingReadRequestEventTest extends TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{

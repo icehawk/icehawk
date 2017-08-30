@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,12 +25,18 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\DeleteRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
+use PHPUnit\Framework\TestCase;
 
-class OptionsRequestHandlerTest extends \PHPUnit\Framework\TestCase
+class OptionsRequestHandlerTest extends TestCase
 {
 	/**
 	 * @dataProvider RouteProvider
 	 * @runInSeparateProcess
+	 *
+	 * @param array  $readRoutes
+	 * @param array  $writeRoutes
+	 * @param string $uri
+	 * @param array  $expectedMethods
 	 */
 	public function testHeaderOutput( array $readRoutes, array $writeRoutes, string $uri, array $expectedMethods )
 	{
@@ -49,7 +55,7 @@ class OptionsRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$optionsRequestHandler = new OptionsRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$optionsRequestHandler->handleRequest();
 
-		$expectedHeader = 'Allow: ' . join( ',', $expectedMethods );
+		$expectedHeader = 'Allow: ' . implode( ',', $expectedMethods );
 
 		$this->assertContains( $expectedHeader, xdebug_get_headers() );
 	}

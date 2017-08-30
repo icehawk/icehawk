@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,15 +25,17 @@ final class WriteRequestInput implements ProvidesWriteRequestInputData
 	/** @var string */
 	private $body;
 
+	/** @var resource */
+	private $inputStream;
+
 	/** @var array */
 	private $data;
 
 	/** @var array|ProvidesUploadedFileData[] */
 	private $uploadedFiles;
 
-	public function __construct( string $body, array $data, array $uploadedFiles = [] )
+	public function __construct( array $data, array $uploadedFiles = [] )
 	{
-		$this->body          = $body;
 		$this->data          = $data;
 		$this->uploadedFiles = $uploadedFiles;
 	}
@@ -56,7 +58,28 @@ final class WriteRequestInput implements ProvidesWriteRequestInputData
 
 	public function getBody() : string
 	{
+		if ( null === $this->body )
+		{
+			$stream = $this->getBodyAsStream();
+			$body   = @stream_get_contents( $stream );
+
+			$this->body = $body ? : '';
+		}
+
 		return $this->body;
+	}
+
+	/**
+	 * @return bool|resource
+	 */
+	public function getBodyAsStream()
+	{
+		if ( null === $this->inputStream )
+		{
+			$this->inputStream = fopen( 'php://input', 'rb' );
+		}
+
+		return $this->inputStream;
 	}
 
 	public function getAllFiles() : array

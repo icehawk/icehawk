@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,7 +25,7 @@ class PhpStreamMock
 {
 	protected $index  = 0;
 
-	protected $length = null;
+	protected $length;
 
 	protected $data   = 'hello world';
 
@@ -33,24 +33,17 @@ class PhpStreamMock
 
 	public function __construct()
 	{
-		if ( file_exists( $this->buffer_filename() ) )
-		{
-			$this->data = file_get_contents( $this->buffer_filename() );
-		}
-		else
-		{
-			$this->data = '';
-		}
+		$this->data   = file_exists( $this->buffer_filename() ) ? file_get_contents( $this->buffer_filename() ) : '';
 		$this->index  = 0;
 		$this->length = strlen( $this->data );
 	}
 
-	protected function buffer_filename()
+	protected function buffer_filename() : string
 	{
 		return sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'php_input.txt';
 	}
 
-	public function stream_open( $path, $mode, $options, &$opened_path )
+	public function stream_open( $path, $mode, $options, &$opened_path ) : bool
 	{
 		return true;
 	}
@@ -59,34 +52,45 @@ class PhpStreamMock
 	{
 	}
 
-	public function stream_stat()
+	public function stream_stat() : array
 	{
 		return [];
 	}
 
-	public function stream_flush()
+	public function stream_flush() : bool
 	{
 		return true;
 	}
 
+	/**
+	 * @param int $count
+	 *
+	 * @return bool|string
+	 */
 	public function stream_read( $count )
 	{
-		if ( is_null( $this->length ) === true )
+		if ( null === $this->length )
 		{
 			$this->length = strlen( $this->data );
 		}
+
 		$length      = min( $count, $this->length - $this->index );
 		$data        = substr( $this->data, $this->index );
-		$this->index = $this->index + $length;
+		$this->index += $length;
 
 		return $data;
 	}
 
-	public function stream_eof()
+	public function stream_eof() : bool
 	{
-		return ($this->index >= $this->length ? true : false);
+		return ($this->index >= $this->length);
 	}
 
+	/**
+	 * @param string $data
+	 *
+	 * @return bool|int
+	 */
 	public function stream_write( $data )
 	{
 		return file_put_contents( $this->buffer_filename(), $data );
@@ -98,6 +102,7 @@ class PhpStreamMock
 		{
 			unlink( $this->buffer_filename() );
 		}
+
 		$this->data   = '';
 		$this->index  = 0;
 		$this->length = 0;

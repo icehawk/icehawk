@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,14 +24,21 @@ use IceHawk\IceHawk\Routing\WriteRoute;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\GetRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Read\HeadRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
+use PHPUnit\Framework\TestCase;
 
-class ReadRouterTest extends \PHPUnit\Framework\TestCase
+class ReadRouterTest extends TestCase
 {
 	/**
 	 * @dataProvider routeProvider
+	 *
+	 * @param ProvidesDestinationInfo $routeRequest
+	 * @param array                   $routes
+	 * @param HandlesReadRequest      $expectedRequestHandler
 	 */
 	public function testFindRouteForRequest(
-		ProvidesDestinationInfo $routeRequest, array $routes, HandlesReadRequest $expectedRequestHandler
+		ProvidesDestinationInfo $routeRequest,
+		array $routes,
+		HandlesReadRequest $expectedRequestHandler
 	)
 	{
 		$router = new ReadRouter( $routes );
@@ -59,6 +66,9 @@ class ReadRouterTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @dataProvider invalidRouteProvider
 	 * @expectedException \IceHawk\IceHawk\Exceptions\UnresolvedRequest
+	 *
+	 * @param ProvidesDestinationInfo $routeRequest
+	 * @param array                   $routes
 	 */
 	public function testMissingRouteForRequestThrowsException( ProvidesDestinationInfo $routeRequest, array $routes )
 	{

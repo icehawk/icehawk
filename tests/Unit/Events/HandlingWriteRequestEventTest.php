@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,13 +18,14 @@ use IceHawk\IceHawk\Defaults\RequestInfo;
 use IceHawk\IceHawk\Events\HandlingWriteRequestEvent;
 use IceHawk\IceHawk\Requests\WriteRequest;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
+use PHPUnit\Framework\TestCase;
 
-class HandlingWriteRequestEventTest extends \PHPUnit\Framework\TestCase
+class HandlingWriteRequestEventTest extends TestCase
 {
 	public function testCanRetrieveInjectedObjects()
 	{
 		$requestInfo    = RequestInfo::fromEnv();
-		$requestInput   = new WriteRequestInput( '', [] );
+		$requestInput   = new WriteRequestInput( [] );
 		$requestCookies = new Cookies( [] );
 		$writeRequest   = new WriteRequest( $requestInfo, $requestCookies, $requestInput );
 

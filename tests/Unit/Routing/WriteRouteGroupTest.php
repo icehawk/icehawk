@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,11 +26,16 @@ use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PatchRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PostRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\PutRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\Domain\Write\ValidPostRequestHandler;
+use PHPUnit\Framework\TestCase;
 
-class WriteRouteGroupTest extends \PHPUnit\Framework\TestCase
+class WriteRouteGroupTest extends TestCase
 {
 	/**
 	 * @dataProvider routeProvider
+	 *
+	 * @param WriteRouteGroup $groupedRoute
+	 * @param string          $uri
+	 * @param                 $expectedRequestHandler
 	 */
 	public function testFindRouteForRequest( WriteRouteGroup $groupedRoute, string $uri, $expectedRequestHandler )
 	{

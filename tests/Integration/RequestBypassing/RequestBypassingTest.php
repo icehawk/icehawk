@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2017 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,12 +27,13 @@ use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\ReadRoute;
 use IceHawk\IceHawk\Routing\RequestBypass;
 use IceHawk\IceHawk\Routing\WriteRoute;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RequestBypassingTest
  * @package IceHawk\IceHawk\Tests\Integration\RequestBypassing
  */
-class RequestBypassingTest extends \PHPUnit\Framework\TestCase
+class RequestBypassingTest extends TestCase
 {
 	public function testCanBypassRequestToWriteHandler()
 	{
@@ -41,7 +42,7 @@ class RequestBypassingTest extends \PHPUnit\Framework\TestCase
 			public function handle( ProvidesWriteRequestData $request )
 			{
 				$requestInfo = $request->getInfo();
-				echo "bypassed to " . $requestInfo->getMethod();
+				echo 'bypassed to ' . $requestInfo->getMethod();
 			}
 		};
 
@@ -77,7 +78,7 @@ class RequestBypassingTest extends \PHPUnit\Framework\TestCase
 				];
 			}
 
-			public function getWriteRoutes()
+			public function getWriteRoutes() : array
 			{
 				return [
 					new WriteRoute( new Literal( '/bypassed/to/post' ), $this->postHandler ),
@@ -99,7 +100,7 @@ class RequestBypassingTest extends \PHPUnit\Framework\TestCase
 			public function handle( ProvidesReadRequestData $request )
 			{
 				$requestInfo = $request->getInfo();
-				echo "bypassed to " . $requestInfo->getMethod();
+				echo 'bypassed to ' . $requestInfo->getMethod();
 			}
 		};
 
@@ -135,7 +136,7 @@ class RequestBypassingTest extends \PHPUnit\Framework\TestCase
 				];
 			}
 
-			public function getReadRoutes()
+			public function getReadRoutes() : array
 			{
 				return [
 					new ReadRoute( new Literal( '/bypassed/to/get' ), $this->getHandler ),

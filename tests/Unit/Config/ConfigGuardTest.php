@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,12 +17,13 @@ use IceHawk\IceHawk\Config\ConfigGuard;
 use IceHawk\IceHawk\Exceptions\InvalidEventSubscriberCollection;
 use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 use IceHawk\IceHawk\Tests\Unit\Fixtures\TestEventSubscriber;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ConfigGuardTest
  * @package IceHawk\IceHawk\Tests\Unit\Defaults
  */
-class ConfigGuardTest extends \PHPUnit\Framework\TestCase
+class ConfigGuardTest extends TestCase
 {
 	public function invalidSubscriberProvider()
 	{
@@ -35,6 +36,9 @@ class ConfigGuardTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @dataProvider invalidSubscriberProvider
+	 *
+	 * @param array $invalidSubscribers
+	 * @param array $invalidKeys
 	 */
 	public function testInvalidSubscribersThrowsException( array $invalidSubscribers, array $invalidKeys )
 	{

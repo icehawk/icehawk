@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,9 +25,9 @@ use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\Patterns\Literal;
 use IceHawk\IceHawk\Routing\Patterns\RegExp;
 use IceHawk\IceHawk\Routing\WriteRoute;
-use IceHawk\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
+use PHPUnit\Framework\TestCase;
 
-class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
+class WriteRequestHandlerTest extends TestCase
 {
 	public function parameterProvider()
 	{
@@ -60,7 +60,10 @@ class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 	 * @param array  $expectedInputParams
 	 */
 	public function testUriParamsOverwritesPostParams(
-		array $postData, string $uriKey, string $uriValue, array $expectedInputParams
+		array $postData,
+		string $uriKey,
+		string $uriValue,
+		array $expectedInputParams
 	)
 	{
 		$_POST = $postData;
@@ -77,7 +80,7 @@ class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$expectedWriteRequest = new WriteRequest(
 			$requestInfo,
 			$cookies,
-			new WriteRequestInput( '', $expectedInputParams )
+			new WriteRequestInput( $expectedInputParams )
 		);
 
 		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
@@ -98,22 +101,15 @@ class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 		$writeRequestHandler->handleRequest();
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 */
 	public function testCanGetBodyDataFromInputStream()
 	{
-		stream_wrapper_unregister( "php" );
-		stream_wrapper_register( "php", PhpStreamMock::class );
-		file_put_contents( 'php://input', 'body data' );
-
 		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'POST', 'REQUEST_URI' => '/domain/test_body_data' ] );
 		$cookies     = new Cookies( [] );
 
 		$expectedWriteRequest = new WriteRequest(
 			$requestInfo,
 			$cookies,
-			new WriteRequestInput( 'body data', [] )
+			new WriteRequestInput( [] )
 		);
 
 		$requestHandler = $this->getMockBuilder( HandlesPostRequest::class )->getMockForAbstractClass();
@@ -129,13 +125,8 @@ class WriteRequestHandlerTest extends \PHPUnit\Framework\TestCase
 
 		$writeRequestHandler = new WriteRequestHandler( $requestInfo, $config, new EventPublisher() );
 		$writeRequestHandler->handleRequest();
-
-		stream_wrapper_restore( "php" );
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 */
 	public function testMissingWriteRoutesHandledByFinaleWriteResponder()
 	{
 		$requestInfo = new RequestInfo( [ 'REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/test' ] );

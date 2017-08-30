@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,12 +20,13 @@ use IceHawk\IceHawk\Exceptions\UnresolvedRequest;
 use IceHawk\IceHawk\Requests\WriteRequest;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
 use IceHawk\IceHawk\Routing\RouteRequest;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class FinalWriteRequestResponderTest
  * @package IceHawk\IceHawk\Tests\Unit\Defaults
  */
-class FinalWriteRequestResponderTest extends \PHPUnit\Framework\TestCase
+class FinalWriteRequestResponderTest extends TestCase
 {
 	public function testHandleUncaughtException()
 	{
@@ -37,7 +38,7 @@ class FinalWriteRequestResponderTest extends \PHPUnit\Framework\TestCase
 		);
 
 		$routeRequest = new RouteRequest( $requestInfo->getUri(), $requestInfo->getMethod() );
-		$requestData = new WriteRequest( $requestInfo, new Cookies( [] ), new WriteRequestInput( '', [] ) );
+		$requestData  = new WriteRequest( $requestInfo, new Cookies( [] ), new WriteRequestInput( [] ) );
 
 		try
 		{

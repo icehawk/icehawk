@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17,17 +17,18 @@ use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
 use IceHawk\IceHawk\Mappers\UploadedFilesMapper;
 use IceHawk\IceHawk\Requests\UploadedFile;
 use IceHawk\IceHawk\Requests\WriteRequestInput;
+use IceHawk\IceHawk\Tests\Unit\Mocks\PhpStreamMock;
+use PHPUnit\Framework\TestCase;
 
-class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
+class WriteRequestInputTest extends TestCase
 {
 	public function testCanGetBodyAndData()
 	{
-		$body = 'test';
 		$data = [ 'key' => 'value' ];
 
-		$writeRequestInput = new WriteRequestInput( 'test', $data );
+		$writeRequestInput = new WriteRequestInput( $data );
 
-		$this->assertEquals( $body, $writeRequestInput->getBody() );
+		$this->assertEquals( '', $writeRequestInput->getBody() );
 		$this->assertEquals( $data, $writeRequestInput->getData() );
 	}
 
@@ -54,10 +55,14 @@ class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @dataProvider requestDataProvider
+	 *
+	 * @param array $writeData
+	 * @param       $key
+	 * @param       $expectedValue
 	 */
 	public function testCanGetRequestValueByKey( array $writeData, $key, $expectedValue )
 	{
-		$writeRequestInput = new WriteRequestInput( '', $writeData );
+		$writeRequestInput = new WriteRequestInput( $writeData );
 
 		$this->assertEquals( $expectedValue, $writeRequestInput->get( $key ) );
 	}
@@ -82,10 +87,13 @@ class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @dataProvider nullKeyDataProvider
+	 *
+	 * @param array $writeData
+	 * @param       $key
 	 */
 	public function testGetterReturnsNullIfKeyIsNotSet( array $writeData, $key )
 	{
-		$writeRequestInput = new WriteRequestInput( '', $writeData );
+		$writeRequestInput = new WriteRequestInput( $writeData );
 
 		$this->assertNull( $writeRequestInput->get( $key ) );
 	}
@@ -182,16 +190,34 @@ class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @dataProvider uploadedFilesProvider
+	 *
+	 * @param array $uploadedFiles
+	 * @param       $fieldKey
+	 * @param       $fileIndex
+	 * @param       $expectedFileName
+	 * @param       $expectedType
+	 * @param       $expectedSize
+	 * @param       $expectedTmpName
+	 * @param       $expectedError
+	 * @param       $expectedErrorMessage
+	 * @param       $expectedSuccess
 	 */
 	public function testCanGetOneUploadedFile(
-		array $uploadedFiles, $fieldKey, $fileIndex,
-		$expectedFileName, $expectedType, $expectedSize, $expectedTmpName,
-		$expectedError, $expectedErrorMessage, $expectedSuccess
+		array $uploadedFiles,
+		$fieldKey,
+		$fileIndex,
+		$expectedFileName,
+		$expectedType,
+		$expectedSize,
+		$expectedTmpName,
+		$expectedError,
+		$expectedErrorMessage,
+		$expectedSuccess
 	)
 	{
 		$uploadedFiles = (new UploadedFilesMapper( $uploadedFiles ))->mapToInfoObjects();
 
-		$writeRequestInput = new WriteRequestInput( '', [], $uploadedFiles );
+		$writeRequestInput = new WriteRequestInput( [], $uploadedFiles );
 
 		$oneFile = $writeRequestInput->getOneFile( $fieldKey, $fileIndex );
 
@@ -207,7 +233,7 @@ class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 
 	public function testEmptyUploadedFileIsReturnedIfKeyIsNotSet()
 	{
-		$writeRequestInput = new WriteRequestInput( '', [], [] );
+		$writeRequestInput = new WriteRequestInput( [], [] );
 		$oneFile           = $writeRequestInput->getOneFile( 'test' );
 
 		$this->assertInstanceOf( ProvidesUploadedFileData::class, $oneFile );
@@ -234,7 +260,7 @@ class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 		];
 
 		$uploadedFiles     = (new UploadedFilesMapper( $uploadedFiles ))->mapToInfoObjects();
-		$writeRequestInput = new WriteRequestInput( '', [], $uploadedFiles );
+		$writeRequestInput = new WriteRequestInput( [], $uploadedFiles );
 		$oneFile           = $writeRequestInput->getOneFile( 'test_file', 1 );
 
 		$this->assertInstanceOf( ProvidesUploadedFileData::class, $oneFile );
@@ -250,7 +276,7 @@ class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetFilesReturnsEmptyArrayIfFieldKeyIsNotSet()
 	{
-		$writeRequestInput = new WriteRequestInput( '', [], [] );
+		$writeRequestInput = new WriteRequestInput( [], [] );
 		$files             = $writeRequestInput->getFiles( 'test' );
 
 		$this->assertInternalType( 'array', $files );
@@ -277,14 +303,14 @@ class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 		];
 
 		$uploadedFiles     = (new UploadedFilesMapper( $uploadedFiles ))->mapToInfoObjects();
-		$writeRequestInput = new WriteRequestInput( '', [], $uploadedFiles );
+		$writeRequestInput = new WriteRequestInput( [], $uploadedFiles );
 
 		$this->assertEquals( $uploadedFiles, $writeRequestInput->getAllFiles() );
 	}
 
 	public function testGetterReturnsDefaultValueIfProvidedAndKeyIsNotFound()
 	{
-		$writeRequestInput = new WriteRequestInput( '', [ 'unit' => 'test' ], [] );
+		$writeRequestInput = new WriteRequestInput( [ 'unit' => 'test' ], [] );
 
 		$stdObj = new \stdClass();
 
@@ -292,9 +318,26 @@ class WriteRequestInputTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame( '123', $writeRequestInput->get( 'someKey', '123' ) );
 		$this->assertSame( 123, $writeRequestInput->get( 'someKey', 123 ) );
 		$this->assertSame( $stdObj, $writeRequestInput->get( 'someKey', $stdObj ) );
-		$this->assertSame( null, $writeRequestInput->get( 'someKey', null ) );
-		$this->assertSame( null, $writeRequestInput->get( 'someKey' ) );
+		$this->assertNull( $writeRequestInput->get( 'someKey', null ) );
+		$this->assertNull( $writeRequestInput->get( 'someKey' ) );
 
 		$this->assertSame( 'test', $writeRequestInput->get( 'unit', [ '123' ] ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 */
+	public function testCanGetBodyAsStream()
+	{
+		stream_wrapper_unregister( 'php' );
+		stream_wrapper_register( 'php', PhpStreamMock::class );
+		file_put_contents( 'php://input', 'body data' );
+
+		$writeRequestInput = new WriteRequestInput( [] );
+
+		$this->assertInternalType( 'resource', $writeRequestInput->getBodyAsStream() );
+		$this->assertSame( 'body data', fread( $writeRequestInput->getBodyAsStream(), 1024 ) );
+
+		stream_wrapper_restore( 'php' );
 	}
 }

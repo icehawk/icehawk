@@ -32,7 +32,7 @@ final class Options
 	public function respond()
 	{
 		header( 'Content-Type: text/plain; charset=utf-8', true, HttpCode::OK );
-		header( 'Allow: ' . join( ',', $this->allowedRequestMethods ) );
+		header( 'Allow: ' . implode( ',', $this->allowedRequestMethods ) );
 		flush();
 	}
 }

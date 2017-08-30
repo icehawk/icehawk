@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,8 +39,11 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 		$requestMethods = [];
 		foreach ( $handlerRoutes as $handlerRoute )
 		{
-			$handler        = $handlerRoute->getRequestHandler();
-			$requestMethods = array_merge( $requestMethods, $this->getImplementedRequestMethods( $handler ) );
+			$handler = $handlerRoute->getRequestHandler();
+			foreach ( $this->getImplementedRequestMethods( $handler ) as $requestMethod )
+			{
+				$requestMethods[] = $requestMethod;
+			}
 		}
 
 		return $requestMethods;
@@ -50,7 +53,7 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 	{
 		$readRoutes  = $this->config->getReadRoutes();
 		$writeRoutes = $this->config->getWriteRoutes();
-		$uri = $this->requestInfo->getUri();
+		$uri         = $this->requestInfo->getUri();
 
 		$matchingReadRoutes  = $this->getMatchingRoutes( $uri, $readRoutes );
 		$matchingWriteRoutes = $this->getMatchingRoutes( $uri, $writeRoutes );
@@ -63,6 +66,7 @@ final class OptionsRequestHandler extends AbstractRequestHandler
 	 * @param array|\Traversable $routes
 	 *
 	 * @return array|RoutesToHandler[]
+	 * @throws \IceHawk\IceHawk\Routing\Exceptions\RoutesAreNotTraversable
 	 */
 	private function getMatchingRoutes( string $uri, $routes ) : array
 	{

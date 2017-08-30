@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -60,16 +60,15 @@ final class ReadRequestHandler extends AbstractRequestHandler
 
 	/**
 	 * @throws UnresolvedRequest
+	 * @throws \IceHawk\IceHawk\Routing\Exceptions\RoutesAreNotTraversable
 	 */
 	private function getHandlerRoute() : RoutesToReadHandler
 	{
 		$readRoutes   = $this->config->getReadRoutes();
 		$routeRequest = new RouteRequest( $this->requestInfo->getUri(), $this->requestInfo->getMethod() );
-
 		$readRouter   = new ReadRouter( $readRoutes );
-		$handlerRoute = $readRouter->findMatchingRoute( $routeRequest );
 
-		return $handlerRoute;
+		return $readRouter->findMatchingRoute( $routeRequest );
 	}
 
 	/**

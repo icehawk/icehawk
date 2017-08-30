@@ -3,11 +3,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [2.2.0] - YYYY-MM-DD
+
+### Fixed
+
+- Code inspection issues and non-optimal array usage in loops
+- Non-binary-safe reading of `php://input`, related to ([#31])
+
+### Added
+
+- Method `getBodyAsStream() : resource` to `WriteRequestInput` class. ([#31])
+
 ## [2.1.1] - 2017-02-10
 
 ### Fixed
 
-- Wrong request info instance used for route matching, when request bypassing is used. ([#27](https://github.com/icehawk/icehawk/issues/27)) 
+- Wrong request info instance used for route matching, when request bypassing is used. ([#27]) 
 
 ### Added
 
@@ -15,62 +26,62 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 ### Changed
 
-- Test suites updated for PHPUnit 6. ([#28](https://github.com/icehawk/icehawk/issues/28))
+- Test suites updated for PHPUnit 6. ([#28])
 - PHPUnit dependency to 6.0.6 (PHAR).
 
 ## [2.1.0] - 2016-12-19
 
 ### Added
 
-- Method `getCustomValue(string $key) : string` to access custom values via the `RequestInfo` object. ([#15](https://github.com/icehawk/icehawk/issues/15))
-- Missing getters for `$_SERVER` indices in `RequestInfo` class and interface `ProvidesRequestInfo`. ([#17](https://github.com/icehawk/icehawk/issues/17))
-- Configurable wrapper for cookies with default implementation, accessible via `$request` and all events. ([#26](https://github.com/icehawk/icehawk/issues/26)) 
-- Optional request bypassing to reroute requests to another request method without redirect ([#16](https://github.com/icehawk/icehawk/issues/16))
+- Method `getCustomValue(string $key) : string` to access custom values via the `RequestInfo` object. ([#15])
+- Missing getters for `$_SERVER` indices in `RequestInfo` class and interface `ProvidesRequestInfo`. ([#17])
+- Configurable wrapper for cookies with default implementation, accessible via `$request` and all events. ([#26]) 
+- Optional request bypassing to reroute requests to another request method without redirect ([#16])
   - `getRequestBypasses()` method added to `ConfiguresIceHawk`
   - `DefaultRequestBypassing` trait added to default IceHawkConfig
   - `RequestBypass` class to configure a request bypass
 
 ### Removed
 
-- Class `AbstractHttpResponse` ([#24](https://github.com/icehawk/icehawk/issues/24))
+- Class `AbstractHttpResponse` ([#24])
 
 ### Changed
 
-- Declared `Options` response class as final ([#24](https://github.com/icehawk/icehawk/issues/24))
+- Declared `Options` response class as final ([#24])
 - Return value of `WriteRequestInput::getOneFile()` is no longer `NULL`, if the `$fieldKey` or the `$fileIndex` does not exist, 
-instead it now returns an empty `UploadedFile` object with the error code `UPLOAD_ERR_NO_FILE` set. ([#22](https://github.com/icehawk/icehawk/issues/22))
-- Return type declaration of `WriteRequestInput::getOneFile()` is now `ProvidesUploadedFileData`. ([#22](https://github.com/icehawk/icehawk/issues/22))
+instead it now returns an empty `UploadedFile` object with the error code `UPLOAD_ERR_NO_FILE` set. ([#22])
+- Return type declaration of `WriteRequestInput::getOneFile()` is now `ProvidesUploadedFileData`. ([#22])
 
 ## [2.0.4] - 2016-11-12
 
 ### Fixed
 
-- Removed obsolete interface inheritance from `HandlesGetRequest` interface ([#23](https://github.com/icehawk/icehawk/issues/23))
+- Removed obsolete interface inheritance from `HandlesGetRequest` interface ([#23])
 
 ## [2.0.3] - 2016-11-04
 
 ### Fixed
 
-- Fixed bug that prevents access to uploaded files having a string index ([#20](https://github.com/icehawk/icehawk/issues/20))
+- Fixed bug that prevents access to uploaded files having a string index ([#20])
 
 ## [2.0.2] - 2016-11-03
 
 ### Fixed
 
-- Fixed bug that causes a warning when using generators or traversable implementations for routes ([#18](https://github.com/icehawk/icehawk/issues/18))
+- Fixed bug that causes a warning when using generators or traversable implementations for routes ([#18])
 
 ## [2.0.1] - 2016-10-16
 
 ### Fixed
 
-- Check for `HTTPS = On` is now case insensitive (`RequestInfo::isSecure()`) ([#13](https://github.com/icehawk/icehawk/issues/13))
+- Check for `HTTPS = On` is now case insensitive (`RequestInfo::isSecure()`) ([#13])
 
 ## [2.0.0] - 2016-10-06
 
 ### Added
 
-- Matches from a route group are added to the request input data ([#8](https://github.com/icehawk/icehawk/issues/8))
-- Sub routes of a route group are guarded to be of a valid type at construction, not at runtime ([#9](https://github.com/icehawk/icehawk/issues/9))
+- Matches from a route group are added to the request input data ([#8])
+- Sub routes of a route group are guarded to be of a valid type at construction, not at runtime ([#9])
 
 ### Changed
 
@@ -80,12 +91,12 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 ### Added
 
-- `ReadRequestInput`/`WriteRequestInput`'s get method now support an optional default value, in case it was asked for a non-existing key. (([#1](https://github.com/icehawk/icehawk/issues/1)))
+- `ReadRequestInput`/`WriteRequestInput`'s get method now support an optional default value, in case it was asked for a non-existing key. ([#1])
 
 ### Changed
 
 - Renamed accessors for RequestInfo and InputData on `$request` object to `$request->getInfo()` and `$request->getInput()`
-- All php files are setting strict types `declare(strict_types = 1);` - #2
+- All php files are setting strict types `declare(strict_types = 1);` ([#2])
 
 ## [2.0.0-rc4] - 2016-07-13
 
@@ -227,6 +238,7 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 - First release
 
+[2.2.0]: https://github.com/icehawk/icehawk/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/icehawk/icehawk/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/icehawk/icehawk/compare/v2.0.4...v2.1.0
 [2.0.4]: https://github.com/icehawk/icehawk/compare/v2.0.3...v2.0.4
@@ -241,3 +253,21 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 [1.4.0]: https://github.com/icehawk/icehawk/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/icehawk/icehawk/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/icehawk/icehawk/compare/v1.0.0...v1.3.0
+
+[#31]: https://github.com/icehawk/icehawk/issues/31
+[#28]: https://github.com/icehawk/icehawk/issues/28
+[#27]: https://github.com/icehawk/icehawk/issues/27
+[#26]: https://github.com/icehawk/icehawk/issues/26
+[#24]: https://github.com/icehawk/icehawk/issues/24
+[#23]: https://github.com/icehawk/icehawk/issues/23
+[#22]: https://github.com/icehawk/icehawk/issues/21
+[#20]: https://github.com/icehawk/icehawk/issues/20
+[#18]: https://github.com/icehawk/icehawk/issues/18
+[#17]: https://github.com/icehawk/icehawk/issues/17
+[#16]: https://github.com/icehawk/icehawk/issues/16
+[#15]: https://github.com/icehawk/icehawk/issues/15
+[#13]: https://github.com/icehawk/icehawk/issues/13
+[#9]: https://github.com/icehawk/icehawk/issues/9
+[#8]: https://github.com/icehawk/icehawk/issues/8
+[#2]: https://github.com/icehawk/icehawk/issues/2
+[#1]: https://github.com/icehawk/icehawk/issues/1

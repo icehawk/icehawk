@@ -34,7 +34,7 @@ final class UploadedFilesMapper
 	}
 
 	/**
-	 * @return array|ProvidesUploadedFileData
+	 * @return array|ProvidesUploadedFileData[]
 	 */
 	public function mapToInfoObjects() : array
 	{

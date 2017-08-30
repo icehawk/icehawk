@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -44,17 +44,16 @@ final class RegExp implements ProvidesMatchResult
 
 	public function getMatches() : array
 	{
+		if ( empty( $this->matchValues ) )
+		{
+			return [];
+		}
+
 		$matches = [];
 
-		if ( !empty($this->matchValues) )
+		foreach ( $this->matchKeys as $index => $key )
 		{
-			for ( $i = 0; $i < count( $this->matchKeys ); $i++ )
-			{
-				$key   = $this->matchKeys[ $i ];
-				$value = $this->matchValues[ $i + 1 ] ?? null;
-
-				$matches[ $key ] = $value;
-			}
+			$matches[ $key ] = $this->matchValues[ $index + 1 ] ?? null;
 		}
 
 		return $matches;

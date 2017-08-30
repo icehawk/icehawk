@@ -22,7 +22,7 @@ use IceHawk\IceHawk\Interfaces\HandlesWriteRequest;
 interface RoutesToWriteHandler extends RoutesToHandler
 {
 	/**
-	 * @return HandlesWriteRequest
+	 * @return HandlesWriteRequest|null
 	 */
 	public function getRequestHandler();
 }

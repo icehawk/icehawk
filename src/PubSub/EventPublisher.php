@@ -34,7 +34,7 @@ final class EventPublisher implements RegistersEventSubscribers, PublishesEvents
 
 	public function register( SubscribesToEvents $subscriber )
 	{
-		if ( !in_array( $subscriber, $this->subscribers ) )
+		if ( !in_array( $subscriber, $this->subscribers, false ) )
 		{
 			$this->subscribers[] = $subscriber;
 		}

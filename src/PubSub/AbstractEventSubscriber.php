@@ -25,7 +25,7 @@ abstract class AbstractEventSubscriber implements SubscribesToEvents
 {
 	final public function acceptsEvent( CarriesEventData $event ) : bool
 	{
-		return in_array( get_class( $event ), $this->getAcceptedEvents() );
+		return in_array( get_class( $event ), $this->getAcceptedEvents(), true );
 	}
 
 	abstract protected function getAcceptedEvents() : array;
@@ -38,7 +38,7 @@ abstract class AbstractEventSubscriber implements SubscribesToEvents
 	final public function notify( CarriesEventData $event )
 	{
 		$namespaceComponents = explode( "\\", get_class( $event ) );
-		$methodName          = sprintf( 'when%s', preg_replace( "#Event$#", '', end( $namespaceComponents ) ) );
+		$methodName          = sprintf( 'when%s', preg_replace( '#Event$#', '', end( $namespaceComponents ) ) );
 
 		if ( is_callable( [$this, $methodName] ) )
 		{

@@ -48,11 +48,11 @@
 	"extra": {
 		"tools": {
 			"phpunit": {
-				"url": "https://phar.phpunit.de/phpunit-6.0.6.phar",
+				"url": "https://phar.phpunit.de/phpunit-6.3.0.phar",
 				"only-dev": true
 			},
 			"phpdox": {
-				"url": "https://github.com/theseer/phpdox/releases/download/0.8.1.1/phpdox-0.8.1.1.phar",
+				"url": "https://github.com/theseer/phpdox/releases/download/0.10.1/phpdox-0.10.1.phar",
 				"only-dev": true
 			},
 			"coveralls": {
@@ -60,7 +60,7 @@
 				"only-dev": true
 			},
 			"phpmetrics": {
-				"url": "https://github.com/phpmetrics/PhpMetrics/releases/download/v2.0.0-rc/phpmetrics.phar",
+				"url": "https://github.com/phpmetrics/PhpMetrics/releases/download/v2.2.0/phpmetrics.phar",
 				"only-dev": true
 			}
 		}

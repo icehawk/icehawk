@@ -114,19 +114,19 @@ final class IceHawk
 	{
 		$requestInfo = $this->getFinalRequestInfo();
 
-		if ( in_array( $requestInfo->getMethod(), HttpMethod::WRITE_METHODS ) )
+		if ( in_array( $requestInfo->getMethod(), HttpMethod::WRITE_METHODS, true ) )
 		{
 			$requestHandler = new WriteRequestHandler( $requestInfo, $this->config, $this->eventPublisher );
 
 			$requestHandler->handleRequest();
 		}
-		elseif ( in_array( $requestInfo->getMethod(), HttpMethod::READ_METHODS ) )
+		elseif ( in_array( $requestInfo->getMethod(), HttpMethod::READ_METHODS, true ) )
 		{
 			$requestHandler = new ReadRequestHandler( $requestInfo, $this->config, $this->eventPublisher );
 
 			$requestHandler->handleRequest();
 		}
-		elseif ( $requestInfo->getMethod() == HttpMethod::OPTIONS )
+		elseif ( $requestInfo->getMethod() === HttpMethod::OPTIONS )
 		{
 			$requestHandler = new OptionsRequestHandler( $requestInfo, $this->config, $this->eventPublisher );
 

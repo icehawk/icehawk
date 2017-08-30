@@ -1,6 +1,5 @@
 [![Join the chat at https://gitter.im/icehawk/icehawk](https://badges.gitter.im/icehawk/icehawk.svg)](https://gitter.im/icehawk/icehawk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/icehawk/icehawk.svg?branch=master)](https://travis-ci.org/icehawk/icehawk)
-[![Tested PHP versions](https://php-eye.com/badge/icehawk/icehawk/tested.svg)](https://php-eye.com/package/icehawk/icehawk)
 [![Coverage Status](https://coveralls.io/repos/github/icehawk/icehawk/badge.svg?branch=master)](https://coveralls.io/github/icehawk/icehawk?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/icehawk/icehawk/v/stable)](https://packagist.org/packages/icehawk/icehawk) 
 [![Total Downloads](https://poser.pugx.org/icehawk/icehawk/downloads)](https://packagist.org/packages/icehawk/icehawk) 

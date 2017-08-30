@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -44,8 +44,8 @@ final class UploadedFilesMapper
 		foreach ( $files as $fieldName => $filesArray )
 		{
 			$infoObjects[ $fieldName ] = array_merge(
-				isset($infoObjects[ $fieldName ]) ? $infoObjects[ $fieldName ] : [],
-				array_map( [UploadedFile::class, 'fromFileArray'], $filesArray )
+				$infoObjects[ $fieldName ] ?? [],
+				array_map( [ UploadedFile::class, 'fromFileArray' ], $filesArray )
 			);
 		}
 
@@ -61,11 +61,11 @@ final class UploadedFilesMapper
 
 		foreach ( $this->uploadedFiles as $field => $fileInfos )
 		{
-			foreach ( $fileInfos as $keyField => $values )
+			foreach ( (array)$fileInfos as $keyField => $values )
 			{
 				if ( is_array( $values ) )
 				{
-					foreach ( $values as $index => $value )
+					foreach ( (array)$values as $index => $value )
 					{
 						$flatArray[ $field ][ $index ][ $keyField ] = $value;
 					}

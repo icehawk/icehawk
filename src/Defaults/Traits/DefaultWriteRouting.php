@@ -19,7 +19,7 @@ namespace IceHawk\IceHawk\Defaults\Traits;
  */
 trait DefaultWriteRouting
 {
-	public function getWriteRoutes()
+	public function getWriteRoutes() : array
 	{
 		return [];
 	}

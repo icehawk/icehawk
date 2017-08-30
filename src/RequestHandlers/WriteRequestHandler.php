@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -61,16 +61,15 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	/**
 	 * @throws UnresolvedRequest
+	 * @throws \IceHawk\IceHawk\Routing\Exceptions\RoutesAreNotTraversable
 	 */
 	private function getHandlerRoute() : RoutesToWriteHandler
 	{
 		$routes       = $this->config->getWriteRoutes();
 		$routeRequest = new RouteRequest( $this->requestInfo->getUri(), $this->requestInfo->getMethod() );
-
 		$router       = new WriteRouter( $routes );
-		$handlerRoute = $router->findMatchingRoute( $routeRequest );
 
-		return $handlerRoute;
+		return $router->findMatchingRoute( $routeRequest );
 	}
 
 	private function getRequest( array $uriParams ) : ProvidesWriteRequestData
@@ -88,7 +87,7 @@ final class WriteRequestHandler extends AbstractRequestHandler
 
 	private function getRequestBody() : string
 	{
-		$body = @stream_get_contents( fopen( 'php://input', 'r' ) );
+		$body = @stream_get_contents( fopen( 'php://input', 'rb' ) );
 
 		return $body ? : '';
 	}

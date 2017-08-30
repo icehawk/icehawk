@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,7 +38,7 @@ final class RequestBypasser
 
 		foreach ( $this->requestBypasses as $requestBypass )
 		{
-			if ( $requestBypass->matches( $uri ) && $method != $requestBypass->getFinalMethod() )
+			if ( $requestBypass->matches( $uri ) && $method !== $requestBypass->getFinalMethod() )
 			{
 				$requestInfo = $this->createNewRequestInfo( $requestInfo, $requestBypass );
 			}
@@ -53,9 +53,9 @@ final class RequestBypasser
 	) : ProvidesRequestInfo
 	{
 		$requestMethod = $requestInfo->getMethod();
-		$uriParams = $requestBypass->getUriParams();
-		$finalMethod = $requestBypass->getFinalMethod();
-		$finalUri = $this->buildFinalUri( $requestBypass->getFinalUri(), $uriParams );
+		$uriParams     = $requestBypass->getUriParams();
+		$finalMethod   = $requestBypass->getFinalMethod();
+		$finalUri      = $this->buildFinalUri( $requestBypass->getFinalUri(), $uriParams );
 
 		$overWrites = [ 'REQUEST_METHOD' => $finalMethod, 'REQUEST_URI' => $finalUri ];
 
@@ -64,19 +64,25 @@ final class RequestBypasser
 			$_GET = $_POST;
 
 			$overWrites['QUERY_STRING'] = $this->createQueryString( $requestInfo, $uriParams );
+
+			return $requestInfo->newWithOverwrites( $overWrites );
 		}
-		elseif ( $this->isReadMethod( $requestMethod ) && $this->isWriteMethod( $finalMethod ) )
+
+		if ( $this->isReadMethod( $requestMethod ) && $this->isWriteMethod( $finalMethod ) )
 		{
 			$_POST = array_merge( $_GET, $uriParams );
+
+			return $requestInfo->newWithOverwrites( $overWrites );
 		}
-		elseif ( $this->isWriteMethod( $requestMethod ) && $this->isWriteMethod( $finalMethod ) )
+
+		if ( $this->isWriteMethod( $requestMethod ) && $this->isWriteMethod( $finalMethod ) )
 		{
 			$_POST = array_merge( $_POST, $uriParams );
+
+			return $requestInfo->newWithOverwrites( $overWrites );
 		}
-		else
-		{
-			$overWrites['QUERY_STRING'] = $this->createQueryString( $requestInfo, $uriParams );
-		}
+
+		$overWrites['QUERY_STRING'] = $this->createQueryString( $requestInfo, $uriParams );
 
 		return $requestInfo->newWithOverwrites( $overWrites );
 	}
@@ -96,12 +102,12 @@ final class RequestBypasser
 
 	private function isReadMethod( string $httpMethod ) : bool
 	{
-		return in_array( $httpMethod, HttpMethod::READ_METHODS );
+		return in_array( $httpMethod, HttpMethod::READ_METHODS, true );
 	}
 
 	private function isWriteMethod( string $httpMethod ) : bool
 	{
-		return in_array( $httpMethod, HttpMethod::WRITE_METHODS );
+		return in_array( $httpMethod, HttpMethod::WRITE_METHODS, true );
 	}
 
 	private function createQueryString( ProvidesRequestInfo $requestInfo, array $uriParams ) : string

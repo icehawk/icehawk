@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,6 +27,8 @@ abstract class AbstractRouter
 
 	/**
 	 * @param array|\Traversable $routes
+	 *
+	 * @throws \IceHawk\IceHawk\Routing\Exceptions\RoutesAreNotTraversable
 	 */
 	public function __construct( $routes )
 	{
@@ -44,7 +46,7 @@ abstract class AbstractRouter
 	{
 		if ( !is_array( $routes ) && !($routes instanceof \Traversable) )
 		{
-			throw new RoutesAreNotTraversable();
+			throw new RoutesAreNotTraversable( 'Routes are not traversable.' );
 		}
 	}
 

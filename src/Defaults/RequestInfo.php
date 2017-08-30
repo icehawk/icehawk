@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2016 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,7 +22,7 @@ use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 final class RequestInfo implements ProvidesRequestInfo
 {
 	/** @var array */
-	private $serverData = [];
+	private $serverData;
 
 	/**
 	 * @param array $serverData
@@ -82,7 +82,7 @@ final class RequestInfo implements ProvidesRequestInfo
 
 		if ( '' !== $uri )
 		{
-			return preg_replace( ['#\/+#', '#\?.*$#'], ['/', ''], $uri );
+			return preg_replace( [ '#\/+#', '#\?.*$#' ], [ '/', '' ], $uri );
 		}
 
 		return '/';

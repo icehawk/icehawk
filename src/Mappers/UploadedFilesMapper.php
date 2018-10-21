@@ -13,8 +13,8 @@
 
 namespace IceHawk\IceHawk\Mappers;
 
-use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
 use IceHawk\IceHawk\Requests\UploadedFile;
+use function is_array;
 
 /**
  * Class UploadedFilesMapper
@@ -34,7 +34,7 @@ final class UploadedFilesMapper
 	}
 
 	/**
-	 * @return array|ProvidesUploadedFileData[]
+	 * @return array
 	 */
 	public function mapToInfoObjects() : array
 	{
@@ -45,7 +45,7 @@ final class UploadedFilesMapper
 		{
 			$infoObjects[ $fieldName ] = array_merge(
 				$infoObjects[ $fieldName ] ?? [],
-				array_map( [ UploadedFile::class, 'fromFileArray' ], $filesArray )
+				array_map( [UploadedFile::class, 'fromFileArray'], $filesArray )
 			);
 		}
 
@@ -65,15 +65,15 @@ final class UploadedFilesMapper
 			{
 				if ( is_array( $values ) )
 				{
-					foreach ( (array)$values as $index => $value )
+					foreach ( $values as $index => $value )
 					{
 						$flatArray[ $field ][ $index ][ $keyField ] = $value;
 					}
+
+					continue;
 				}
-				else
-				{
-					$flatArray[ $field ][0][ $keyField ] = $values;
-				}
+
+				$flatArray[ $field ][0][ $keyField ] = $values;
 			}
 		}
 

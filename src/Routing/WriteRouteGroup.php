@@ -16,7 +16,6 @@ namespace IceHawk\IceHawk\Routing;
 use IceHawk\IceHawk\Interfaces\HandlesWriteRequest;
 use IceHawk\IceHawk\Routing\Interfaces\ProvidesMatchResult;
 use IceHawk\IceHawk\Routing\Interfaces\RoutesToWriteHandler;
-use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
 
 /**
  * Class WriteRouteGroup
@@ -24,10 +23,10 @@ use IceHawk\IceHawk\Routing\Patterns\NamedRegExp;
  */
 final class WriteRouteGroup implements RoutesToWriteHandler
 {
-	/** @var NamedRegExp */
+	/** @var ProvidesMatchResult */
 	private $pattern;
 
-	/** @var HandlesWriteRequest */
+	/** @var null|HandlesWriteRequest */
 	private $requestHandler;
 
 	/** @var array|RoutesToWriteHandler[] */

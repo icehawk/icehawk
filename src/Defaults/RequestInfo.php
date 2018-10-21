@@ -82,7 +82,7 @@ final class RequestInfo implements ProvidesRequestInfo
 
 		if ( '' !== $uri )
 		{
-			return preg_replace( [ '#\/+#', '#\?.*$#' ], [ '/', '' ], $uri );
+			return (string)preg_replace( ['#\/+#', '#\?.*$#'], ['/', ''], $uri );
 		}
 
 		return '/';

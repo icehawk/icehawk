@@ -1,68 +1,72 @@
 {
-	"name": "icehawk/icehawk",
-	"description": "Lightweight PHP routing framework, respecting CQRS",
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Holger Woltersdorf",
-			"email": "hw@hollo.me"
-		},
-		{
-			"name": "Tobias Mißner",
-			"email": "tobias.missner@fortuneglobe.com"
-		},
-		{
-			"name": "Benjamin Bruska",
-			"email": "benjamin.bruska@fortuneglobe.com"
-		}
-	],
-	"support": {
-		"email": "hw@hollo.me",
-		"source": "https://github.com/icehawk/icehawk",
-		"issues": "https://github.com/icehawk/icehawk/issues"
-	},
-	"require": {
-		"php": ">=7.0",
-		"ext-fileinfo": "*"
-	},
-	"require-dev": {
-		"ext-xdebug": "*",
-		"tm/tooly-composer-script": "^1.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"IceHawk\\IceHawk\\": "src/"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"IceHawk\\IceHawk\\Tests\\": "tests/"
-		}
-	},
-	"scripts": {
-		"post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
-		"post-update-cmd": "Tooly\\ScriptHandler::installPharTools"
-	},
-	"extra": {
-		"tools": {
-			"phpunit": {
-				"url": "https://phar.phpunit.de/phpunit-6.3.0.phar",
-				"only-dev": true
-			},
-			"phpdox": {
-				"url": "https://github.com/theseer/phpdox/releases/download/0.10.1/phpdox-0.10.1.phar",
-				"only-dev": true
-			},
-			"coveralls": {
-				"url": "https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar",
-				"only-dev": true
-			},
-			"phpmetrics": {
-				"url": "https://github.com/phpmetrics/PhpMetrics/releases/download/v2.2.0/phpmetrics.phar",
-				"only-dev": true
-			}
-		}
-	}
+  "name": "icehawk/icehawk",
+  "description": "Lightweight PHP routing framework, respecting CQRS",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Holger Woltersdorf",
+      "email": "hw@hollo.me"
+    },
+    {
+      "name": "Tobias Mißner",
+      "email": "tobias.missner@fortuneglobe.com"
+    },
+    {
+      "name": "Benjamin Bruska",
+      "email": "benjamin.bruska@fortuneglobe.com"
+    }
+  ],
+  "support": {
+    "email": "hw@hollo.me",
+    "source": "https://github.com/icehawk/icehawk",
+    "issues": "https://github.com/icehawk/icehawk/issues"
+  },
+  "require": {
+    "php": ">=7.0",
+    "ext-fileinfo": "*"
+  },
+  "require-dev": {
+    "ext-xdebug": "*",
+    "tm/tooly-composer-script": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "IceHawk\\IceHawk\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "IceHawk\\IceHawk\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
+    "post-update-cmd": "Tooly\\ScriptHandler::installPharTools"
+  },
+  "extra": {
+    "tools": {
+      "phpunit": {
+        "url": "https://phar.phpunit.de/phpunit-7.phar",
+        "only-dev": true
+      },
+      "phpdox": {
+        "url": "https://github.com/theseer/phpdox/releases/download/0.11.2/phpdox-0.11.2.phar",
+        "only-dev": true
+      },
+      "coveralls": {
+        "url": "https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar",
+        "only-dev": true
+      },
+      "phpmetrics": {
+        "url": "https://github.com/phpmetrics/PhpMetrics/releases/download/v2.4.1/phpmetrics.phar",
+        "only-dev": true
+      },
+      "phpstan": {
+        "url": "https://github.com/phpstan/phpstan/releases/download/0.10.5/phpstan.phar",
+        "only-dev": true
+      }
+    }
+  }
 }

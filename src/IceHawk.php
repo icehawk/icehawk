@@ -23,7 +23,6 @@ use IceHawk\IceHawk\Interfaces\ConfiguresIceHawk;
 use IceHawk\IceHawk\Interfaces\ProvidesRequestInfo;
 use IceHawk\IceHawk\Interfaces\SetsUpEnvironment;
 use IceHawk\IceHawk\PubSub\EventPublisher;
-use IceHawk\IceHawk\PubSub\Interfaces\PublishesEvents;
 use IceHawk\IceHawk\RequestHandlers\OptionsRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\ReadRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\WriteRequestHandler;
@@ -42,7 +41,7 @@ final class IceHawk
 	/** @var SetsUpEnvironment */
 	private $setUpDelegate;
 
-	/** @var PublishesEvents */
+	/** @var EventPublisher */
 	private $eventPublisher;
 
 	/**

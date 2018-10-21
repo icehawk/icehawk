@@ -15,6 +15,7 @@ namespace IceHawk\IceHawk\Requests;
 
 use IceHawk\IceHawk\Interfaces\ProvidesUploadedFileData;
 use IceHawk\IceHawk\Interfaces\ProvidesWriteRequestInputData;
+use function is_resource;
 
 /**
  * Class RequestInput
@@ -25,13 +26,13 @@ final class WriteRequestInput implements ProvidesWriteRequestInputData
 	/** @var string */
 	private $body;
 
-	/** @var resource */
+	/** @var false|resource */
 	private $inputStream;
 
 	/** @var array */
 	private $data;
 
-	/** @var array|ProvidesUploadedFileData[] */
+	/** @var array */
 	private $uploadedFiles;
 
 	public function __construct( array $data, array $uploadedFiles = [] )
@@ -61,16 +62,16 @@ final class WriteRequestInput implements ProvidesWriteRequestInputData
 		if ( null === $this->body )
 		{
 			$stream = $this->getBodyAsStream();
-			$body   = @stream_get_contents( $stream );
+			$body   = is_resource( $stream ) ? @stream_get_contents( $stream ) : '';
 
-			$this->body = $body ? : '';
+			$this->body = $body ?: '';
 		}
 
 		return $this->body;
 	}
 
 	/**
-	 * @return bool|resource
+	 * @return false|resource
 	 */
 	public function getBodyAsStream()
 	{
@@ -90,7 +91,7 @@ final class WriteRequestInput implements ProvidesWriteRequestInputData
 	/**
 	 * @param string $fieldKey
 	 *
-	 * @return array|ProvidesUploadedFileData[]
+	 * @return array
 	 */
 	public function getFiles( string $fieldKey ) : array
 	{

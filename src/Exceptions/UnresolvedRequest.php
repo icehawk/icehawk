@@ -22,7 +22,7 @@ use IceHawk\IceHawk\Routing\Interfaces\ProvidesDestinationInfo;
 final class UnresolvedRequest extends IceHawkException
 {
 	/** @var ProvidesDestinationInfo */
-	private $destinationInfo = '';
+	private $destinationInfo;
 
 	public function withDestinationInfo( ProvidesDestinationInfo $destinationInfo ) : self
 	{

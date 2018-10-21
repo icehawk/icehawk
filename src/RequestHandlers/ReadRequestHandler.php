@@ -49,13 +49,16 @@ final class ReadRequestHandler extends AbstractRequestHandler
 		$request        = $this->getRequest( $handlerRoute->getUriParams() );
 		$requestHandler = $handlerRoute->getRequestHandler();
 
-		$handlingEvent = new HandlingReadRequestEvent( $request );
-		$this->publishEvent( $handlingEvent );
+		if ( null !== $requestHandler )
+		{
+			$handlingEvent = new HandlingReadRequestEvent( $request );
+			$this->publishEvent( $handlingEvent );
 
-		$requestHandler->handle( $request );
+			$requestHandler->handle( $request );
 
-		$handledEvent = new ReadRequestWasHandledEvent( $request );
-		$this->publishEvent( $handledEvent );
+			$handledEvent = new ReadRequestWasHandledEvent( $request );
+			$this->publishEvent( $handledEvent );
+		}
 	}
 
 	/**
@@ -66,9 +69,8 @@ final class ReadRequestHandler extends AbstractRequestHandler
 	{
 		$readRoutes   = $this->config->getReadRoutes();
 		$routeRequest = new RouteRequest( $this->requestInfo->getUri(), $this->requestInfo->getMethod() );
-		$readRouter   = new ReadRouter( $readRoutes );
 
-		return $readRouter->findMatchingRoute( $routeRequest );
+		return (new ReadRouter( $readRoutes ))->findMatchingRoute( $routeRequest );
 	}
 
 	/**

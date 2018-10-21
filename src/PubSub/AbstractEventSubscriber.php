@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * Copyright (c) 2017 Holger Woltersdorf & Contributors
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -16,6 +16,9 @@ namespace IceHawk\IceHawk\PubSub;
 use IceHawk\IceHawk\PubSub\Exceptions\EventSubscriberMethodNotCallable;
 use IceHawk\IceHawk\PubSub\Interfaces\CarriesEventData;
 use IceHawk\IceHawk\PubSub\Interfaces\SubscribesToEvents;
+use function get_class;
+use function in_array;
+use function is_callable;
 
 /**
  * Class AbstractEventSubscriber
@@ -38,7 +41,8 @@ abstract class AbstractEventSubscriber implements SubscribesToEvents
 	final public function notify( CarriesEventData $event )
 	{
 		$namespaceComponents = explode( "\\", get_class( $event ) );
-		$methodName          = sprintf( 'when%s', preg_replace( '#Event$#', '', end( $namespaceComponents ) ) );
+		$lastComponent       = (string)end( $namespaceComponents );
+		$methodName          = sprintf( 'when%s', preg_replace( '#Event$#', '', $lastComponent ) );
 
 		if ( is_callable( [$this, $methodName] ) )
 		{

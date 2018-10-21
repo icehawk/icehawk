@@ -1,10 +1,10 @@
 language: php
 
 php:
-  - 7.0
   - 7.1
-  - 7.0snapshot
+  - 7.2
   - 7.1snapshot
+  - 7.2snapshot
 
 branches:
   only:
@@ -24,7 +24,8 @@ before_script:
  - mkdir build/logs
 
 script:
- - php vendor/bin/phpunit.phar -c build/
+- php vendor/bin/phpunit.phar -c build/ --coverage-clover build/logs/clover.xml
+- php vendor/bin/phpstan.phar analyze --level max src
 
 after_success:
  - travis_retry php vendor/bin/coveralls.phar -v --exclude-no-stmt

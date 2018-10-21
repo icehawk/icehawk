@@ -26,7 +26,7 @@ final class ReadRouteGroup implements RoutesToReadHandler
 	/** @var ProvidesMatchResult */
 	private $pattern;
 
-	/** @var HandlesReadRequest */
+	/** @var null|HandlesReadRequest */
 	private $requestHandler;
 
 	/** @var array|RoutesToReadHandler[] */

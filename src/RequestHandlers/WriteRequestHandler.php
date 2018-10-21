@@ -50,13 +50,16 @@ final class WriteRequestHandler extends AbstractRequestHandler
 		$request        = $this->getRequest( $handlerRoute->getUriParams() );
 		$requestHandler = $handlerRoute->getRequestHandler();
 
-		$handlingEvent = new HandlingWriteRequestEvent( $request );
-		$this->publishEvent( $handlingEvent );
+		if ( null !== $requestHandler )
+		{
+			$handlingEvent = new HandlingWriteRequestEvent( $request );
+			$this->publishEvent( $handlingEvent );
 
-		$requestHandler->handle( $request );
+			$requestHandler->handle( $request );
 
-		$handledEvent = new WriteRequestWasHandledEvent( $request );
-		$this->publishEvent( $handledEvent );
+			$handledEvent = new WriteRequestWasHandledEvent( $request );
+			$this->publishEvent( $handledEvent );
+		}
 	}
 
 	/**

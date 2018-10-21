@@ -14,7 +14,6 @@
 namespace IceHawk\IceHawk\Routing;
 
 use IceHawk\IceHawk\Routing\Exceptions\RoutesAreNotTraversable;
-use IceHawk\IceHawk\Routing\Interfaces\RoutesToHandler;
 
 /**
  * Class AbstractRouter
@@ -51,7 +50,7 @@ abstract class AbstractRouter
 	}
 
 	/**
-	 * @return array|\Traversable|RoutesToHandler[]
+	 * @return array|\Traversable
 	 */
 	final protected function getRoutes()
 	{

@@ -11,6 +11,7 @@ branches:
     - /^feature\/.+$/
     - /^refactoring\/.+$/
     - /^issue\/.+$/
+    - 3.x-dev
 
 before_script:
  - git fetch

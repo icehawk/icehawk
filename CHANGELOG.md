@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [3.0.0] - YYYY-MM-DD
+
 ## [2.2.0] - 2017-09-01
 
 ### Fixed
@@ -85,7 +87,7 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 ### Changed
 
-- [Contribution guide](./CONTRIBUTING.md)
+- [Contribution guide](./.github/CONTRIBUTING.md)
 
 ## [2.0.0-rc5] - 2016-09-27
 
@@ -238,6 +240,7 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 - First release
 
+[3.0.0]: https://github.com/icehawk/icehawk/compare/v2.2.0...v3.0.0
 [2.2.0]: https://github.com/icehawk/icehawk/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/icehawk/icehawk/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/icehawk/icehawk/compare/v2.0.4...v2.1.0

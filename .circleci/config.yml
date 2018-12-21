@@ -1,9 +1,5 @@
 version: 2
 
-general:
-  branches:
-    only: 3.x-dev
-
 shared-build: &shared-build
   working_directory: ~/repo
   steps:
@@ -122,22 +118,22 @@ jobs:
     docker:
       - image: hollodotme/icehawk:7.3-cli
 
-  "php-7.2-unit-test":
+  "php-7.2-unit-tests":
     <<: *shared-unit-tests
     docker:
       - image: hollodotme/icehawk:7.2-cli
 
-  "php-7.3-unit-test":
+  "php-7.3-unit-tests":
     <<: *shared-unit-tests
     docker:
       - image: hollodotme/icehawk:7.3-cli
 
-  "php-7.2-integration-test":
+  "php-7.2-integration-tests":
     <<: *shared-integration-tests
     docker:
       - image: hollodotme/icehawk:7.2-cli
 
-  "php-7.3-integration-test":
+  "php-7.3-integration-tests":
     <<: *shared-integration-tests
     docker:
       - image: hollodotme/icehawk:7.3-cli

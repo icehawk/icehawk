@@ -50,6 +50,7 @@ shared-build: &shared-build
           - composer.json
 
 shared-unit-tests: &shared-unit-tests
+  working_directory: ~/repo
   steps:
     - attach_workspace:
         at: ~/repo
@@ -70,6 +71,7 @@ shared-unit-tests: &shared-unit-tests
         destination: code-coverage-html
 
 shared-integration-tests: &shared-integration-tests
+  working_directory: ~/repo
   steps:
     - attach_workspace:
         at: ~/repo
@@ -86,6 +88,7 @@ shared-integration-tests: &shared-integration-tests
         destination: code-coverage-junit
 
 shared-phpmetrics: &shared-phpmetrics
+  working_directory: ~/repo
   steps:
     - attach_workspace:
         at: ~/repo
@@ -99,6 +102,7 @@ shared-phpmetrics: &shared-phpmetrics
         destination: php-metrics-report
 
 shared-phpstan: &shared-phpstan
+  working_directory: ~/repo
   steps:
     - attach_workspace:
         at: ~/repo

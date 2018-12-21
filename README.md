@@ -1,9 +1,5 @@
-[![Join the chat at https://gitter.im/icehawk/icehawk](https://badges.gitter.im/icehawk/icehawk.svg)](https://gitter.im/icehawk/icehawk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/icehawk/icehawk.svg?branch=master)](https://travis-ci.org/icehawk/icehawk)
-[![Coverage Status](https://coveralls.io/repos/github/icehawk/icehawk/badge.svg?branch=master)](https://coveralls.io/github/icehawk/icehawk?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/icehawk/icehawk/v/stable)](https://packagist.org/packages/icehawk/icehawk) 
-[![Total Downloads](https://poser.pugx.org/icehawk/icehawk/downloads)](https://packagist.org/packages/icehawk/icehawk) 
-[![Latest Unstable Version](https://poser.pugx.org/icehawk/icehawk/v/unstable)](https://packagist.org/packages/icehawk/icehawk) 
+[![CircleCI](https://circleci.com/gh/icehawk/icehawk/tree/3.x-dev.svg?style=svg)](https://circleci.com/gh/icehawk/icehawk/tree/3.x-dev)
+[![codecov](https://codecov.io/gh/icehawk/icehawk/branch/3.x-dev/graph/badge.svg)](https://codecov.io/gh/icehawk/icehawk)
 [![License](https://poser.pugx.org/icehawk/icehawk/license)](https://packagist.org/packages/icehawk/icehawk)
 [![phpstan enabled](https://img.shields.io/badge/phpstan-enabled-green.svg)](https://github.com/phpstan/phpstan)
 
@@ -13,7 +9,7 @@ Lightweight PHP routing framework, respecting CQRS.
 
 ## Requirements
 
- * PHP >= 7.0
+ * PHP >= 7.2
  * [fileinfo extension](https://pecl.php.net/package/Fileinfo) for handling uploaded files correctly
 
 **For development only:**
@@ -23,7 +19,7 @@ Lightweight PHP routing framework, respecting CQRS.
 ## Installation
 
 ```bash
-composer require icehawk/icehawk:^2.1
+composer require icehawk/icehawk:~3.0
 ```
 
 or add to your `composer.json`:
@@ -31,7 +27,7 @@ or add to your `composer.json`:
 ```json
 {
 	"require": {
-		"icehawk/icehawk": "^2.1"
+		"icehawk/icehawk": "~3.0"
 	}
 }
 ```

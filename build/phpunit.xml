@@ -1,23 +1,25 @@
 <phpunit
-	bootstrap="../tests/bootstrap.php"
-	verbose="true"
-	beStrictAboutOutputDuringTests="true"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	backupGlobals="true">
-	<testsuites>
-		<testsuite name="Unit">
-			<directory suffix="Test.php">../tests/Unit</directory>
-		</testsuite>
-		<testsuite name="Integration">
-			<directory suffix="Test.php">../tests/Integration</directory>
-		</testsuite>
-	</testsuites>
-	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">../src</directory>
-		</whitelist>
-	</filter>
+        bootstrap="../tests/bootstrap.php"
+        verbose="true"
+        beStrictAboutOutputDuringTests="true"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        backupGlobals="true"
+        stopOnError="true"
+        stopOnFailure="true">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">../tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory suffix="Test.php">../tests/Integration</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../src</directory>
+        </whitelist>
+    </filter>
 </phpunit>

@@ -1,0 +1,199 @@
+version: 2
+
+general:
+  branches:
+    only: 3.x-dev
+
+shared-build: &shared-build
+  working_directory: ~/repo
+  steps:
+    - checkout
+
+    # Download and cache dependencies
+    - restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "composer.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+    - run:
+        name: Update composer
+        command: composer self-update
+
+    - run:
+        name: Install dependencies
+        command: |
+          composer config --global github-oauth.github.com ${GITHUB_OAUTH_TOKEN}
+          composer install -o --prefer-dist --no-interaction
+
+    - run:
+        name: Check for PHP parse errors
+        command: find . -path ./vendor/sentry -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+
+    - save_cache:
+        paths:
+          - ./vendor
+        key: v1-dependencies-{{ checksum "composer.json" }}
+
+    - run:
+        name: Prepare log directories
+        command: |
+          mkdir -p build/logs/coverage
+          mkdir -p build/logs/junit
+          mkdir -p build/logs/phpmetrics
+
+    - persist_to_workspace:
+        root: .
+        paths:
+          - bin
+          - build
+          - config
+          - public
+          - src
+          - tests
+          - vendor
+          - composer.json
+
+shared-unit-tests: &shared-unit-tests
+  steps:
+    - attach_workspace:
+        at: ~/repo
+
+    - run:
+        name: Run unit tests
+        command: vendor/bin/phpunit.phar -c build --testsuite Unit --log-junit build/logs/junit/junit.xml --coverage-html build/logs/coverage
+
+    - store_test_results:
+        path: build/logs/junit
+
+    - store_artifacts:
+        path: build/logs/junit
+        destination: code-coverage-junit
+
+    - store_artifacts:
+        path: build/logs/coverage
+        destination: code-coverage-html
+
+shared-integration-tests: &shared-integration-tests
+  steps:
+    - attach_workspace:
+        at: ~/repo
+
+    - run:
+        name: Run integration tests
+        command: vendor/bin/phpunit.phar -c build --testsuite Integration --log-junit build/logs/junit/junit.xml
+
+    - store_test_results:
+        path: build/logs/junit
+
+    - store_artifacts:
+        path: build/logs/junit
+        destination: code-coverage-junit
+
+shared-phpmetrics: &shared-phpmetrics
+  steps:
+    - attach_workspace:
+        at: ~/repo
+
+    - run:
+        name: Run PHP metrics
+        command: vendor/bin/phpmetrics.phar --report-html=build/logs/phpmetrics src/
+
+    - store_artifacts:
+        path: build/logs/phpmetrics
+        destination: php-metrics-report
+
+shared-phpstan: &shared-phpstan
+  steps:
+    - attach_workspace:
+        at: ~/repo
+
+    - run:
+        name: Run PHPStan
+        command: vendor/bin/phpstan.phar analyze --level max src/
+
+jobs:
+  "php-7.2-build":
+    <<: *shared-build
+    docker:
+      - image: hollodotme/icehawk:7.2-cli
+
+  "php-7.3-build":
+    <<: *shared-build
+    docker:
+      - image: hollodotme/icehawk:7.3-cli
+
+  "php-7.2-unit-test":
+    <<: *shared-unit-tests
+    docker:
+      - image: hollodotme/icehawk:7.2-cli
+
+  "php-7.3-unit-test":
+    <<: *shared-unit-tests
+    docker:
+      - image: hollodotme/icehawk:7.3-cli
+
+  "php-7.2-integration-test":
+    <<: *shared-integration-tests
+    docker:
+      - image: hollodotme/icehawk:7.2-cli
+
+  "php-7.3-integration-test":
+    <<: *shared-integration-tests
+    docker:
+      - image: hollodotme/icehawk:7.3-cli
+
+  "php-7.2-phpstan":
+    <<: *shared-phpstan
+    docker:
+      - image: hollodotme/icehawk:7.2-cli
+
+  "php-7.3-phpstan":
+    <<: *shared-phpstan
+    docker:
+      - image: hollodotme/icehawk:7.3-cli
+
+  "php-7.2-phpmetrics":
+    <<: *shared-phpmetrics
+    docker:
+      - image: hollodotme/icehawk:7.2-cli
+
+  "php-7.3-phpmetrics":
+    <<: *shared-phpmetrics
+    docker:
+      - image: hollodotme/icehawk:7.3-cli
+
+workflows:
+  version: 2
+  build-test-analyze:
+    jobs:
+      - "php-7.2-build"
+      - "php-7.3-build"
+      - "php-7.2-unit-tests":
+          requires:
+            - "php-7.2-build"
+      - "php-7.3-unit-tests":
+          requires:
+            - "php-7.3-build"
+      - "php-7.2-integration-tests":
+          requires:
+            - "php-7.2-build"
+      - "php-7.3-integration-tests":
+          requires:
+            - "php-7.3-build"
+      - "php-7.2-phpstan":
+          requires:
+            - "php-7.2-build"
+      - "php-7.3-phpstan":
+          requires:
+            - "php-7.3-build"
+      - "php-7.2-phpmetrics":
+          requires:
+            - "php-7.2-unit-tests"
+            - "php-7.2-integration-tests"
+            - "php-7.2-phpstan"
+      - "php-7.3-phpmetrics":
+          requires:
+            - "php-7.3-unit-tests"
+            - "php-7.3-integration-tests"
+            - "php-7.3-phpstan"

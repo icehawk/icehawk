@@ -1,16 +1,33 @@
 version: 2
 
-shared-code: &shared-code
+shared-build: &shared-build
   working_directory: ~/repo
+  machine:
+    docker_layer_caching: true
+  steps:
+    - checkout
+    - run:
+        name: Build docker image
+        command: |
+          docker build -t "hollodotme/icehawk:$PHP_VERSION-cli" -f .docker/php/$PHP_VERSION/Dockerfile .docker/php/$PHP_VERSION
+    - run:
+        name: Login to hub.docker.com
+        command: |
+          echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USER --password-stdin
+    - run:
+        name: Push docker image
+        command: |
+          docker push "hollodotme/icehawk:$PHP_VERSION-cli"
+
+shared-code: &shared-code
+  working_directory: ~/repo/$PHP_VERSION
   steps:
     - checkout
 
     # Download and cache dependencies
     - restore_cache:
         keys:
-          - v1-dependencies-{{ checksum "composer.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          - v1-dependencies-{{ checksum "composer.json" }}-$PHP_VERSION
 
     - run:
         name: Update composer
@@ -28,7 +45,7 @@ shared-code: &shared-code
     - save_cache:
         paths:
           - ./vendor
-        key: v1-dependencies-{{ checksum "composer.json" }}
+        key: v1-dependencies-{{ checksum "composer.json" }}-$PHP_VERSION
 
     - run:
         name: Prepare log directories
@@ -38,19 +55,12 @@ shared-code: &shared-code
           mkdir -p build/logs/phpmetrics
 
     - persist_to_workspace:
-        root: .
+        root: ~/repo
         paths:
-          - bin
-          - build
-          - config
-          - public
-          - src
-          - tests
-          - vendor
-          - composer.json
+          - $PHP_VERSION
 
 shared-unit-tests: &shared-unit-tests
-  working_directory: ~/repo
+  working_directory: ~/repo/$PHP_VERSION
   steps:
     - attach_workspace:
         at: ~/repo
@@ -71,7 +81,7 @@ shared-unit-tests: &shared-unit-tests
         destination: code-coverage-html
 
 shared-integration-tests: &shared-integration-tests
-  working_directory: ~/repo
+  working_directory: ~/repo/$PHP_VERSION
   steps:
     - attach_workspace:
         at: ~/repo
@@ -88,7 +98,7 @@ shared-integration-tests: &shared-integration-tests
         destination: code-coverage-junit
 
 shared-phpmetrics: &shared-phpmetrics
-  working_directory: ~/repo
+  working_directory: ~/repo/$PHP_VERSION
   steps:
     - attach_workspace:
         at: ~/repo
@@ -102,7 +112,7 @@ shared-phpmetrics: &shared-phpmetrics
         destination: php-metrics-report
 
 shared-phpstan: &shared-phpstan
-  working_directory: ~/repo
+  working_directory: ~/repo/$PHP_VERSION
   steps:
     - attach_workspace:
         at: ~/repo
@@ -113,42 +123,10 @@ shared-phpstan: &shared-phpstan
 
 jobs:
   "php-7.2-build":
-    working_directory: ~/repo
-    machine:
-      docker_layer_caching: true
-    steps:
-      - checkout
-      - run:
-          name: Build docker image
-          command: |
-            docker build -t "hollodotme/icehawk:7.2-cli" -f .docker/php/7.2/Dockerfile .docker/php/7.2
-      - run:
-          name: Login to hub.docker.com
-          command: |
-            echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USER --password-stdin
-      - run:
-          name: Push docker image
-          command: |
-            docker push "hollodotme/icehawk:7.2-cli"
+    <<: *shared-build
 
   "php-7.3-build":
-    working_directory: ~/repo
-    machine:
-      docker_layer_caching: true
-    steps:
-      - checkout
-      - run:
-          name: Build docker image
-          command: |
-            docker build -t "hollodotme/icehawk:7.3-cli" -f .docker/php/7.3/Dockerfile .docker/php/7.3
-      - run:
-          name: Login to hub.docker.com
-          command: |
-            echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USER --password-stdin
-      - run:
-          name: Push docker image
-          command: |
-            docker push "hollodotme/icehawk:7.3-cli"
+    <<: *shared-build
 
   "php-7.2-code":
     <<: *shared-code
@@ -205,39 +183,49 @@ workflows:
   build-test-analyze:
     jobs:
       - "php-7.2-build":
-          context: dockerhub
+          context: php72
       - "php-7.3-build":
-          context: dockerhub
+          context: php73
       - "php-7.2-code":
+          context: php72
           requires:
             - "php-7.2-build"
       - "php-7.3-code":
+          context: php73
           requires:
             - "php-7.3-build"
       - "php-7.2-unit-tests":
+          context: php72
           requires:
             - "php-7.2-code"
       - "php-7.3-unit-tests":
+          context: php73
           requires:
             - "php-7.3-code"
       - "php-7.2-integration-tests":
+          context: php72
           requires:
             - "php-7.2-code"
       - "php-7.3-integration-tests":
+          context: php73
           requires:
             - "php-7.3-code"
       - "php-7.2-phpstan":
+          context: php72
           requires:
             - "php-7.2-code"
       - "php-7.3-phpstan":
+          context: php73
           requires:
             - "php-7.3-code"
       - "php-7.2-phpmetrics":
+          context: php72
           requires:
             - "php-7.2-unit-tests"
             - "php-7.2-integration-tests"
             - "php-7.2-phpstan"
       - "php-7.3-phpmetrics":
+          context: php73
           requires:
             - "php-7.3-unit-tests"
             - "php-7.3-integration-tests"

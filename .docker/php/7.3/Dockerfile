@@ -1,7 +1,7 @@
 FROM php:7.3-cli
 # Install packages
 RUN apt-get update \
-    && apt-get install -y zlib1g-dev
+    && apt-get install -y libzip-dev
 # Install xdebug
 RUN pecl install xdebug-2.7.0beta1
 # Install extensions

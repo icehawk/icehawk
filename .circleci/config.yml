@@ -182,48 +182,54 @@ workflows:
   version: 2
   build-test-analyze:
     jobs:
+
+      # PHP 7.2 jobs
+
       - "php-7.2-build":
           context: php72
-      - "php-7.3-build":
-          context: php73
       - "php-7.2-code":
           context: php72
           requires:
             - "php-7.2-build"
-      - "php-7.3-code":
-          context: php73
-          requires:
-            - "php-7.3-build"
       - "php-7.2-unit-tests":
           context: php72
           requires:
             - "php-7.2-code"
-      - "php-7.3-unit-tests":
-          context: php73
-          requires:
-            - "php-7.3-code"
       - "php-7.2-integration-tests":
           context: php72
           requires:
             - "php-7.2-code"
-      - "php-7.3-integration-tests":
-          context: php73
-          requires:
-            - "php-7.3-code"
       - "php-7.2-phpstan":
           context: php72
           requires:
             - "php-7.2-code"
-      - "php-7.3-phpstan":
-          context: php73
-          requires:
-            - "php-7.3-code"
       - "php-7.2-phpmetrics":
           context: php72
           requires:
             - "php-7.2-unit-tests"
             - "php-7.2-integration-tests"
             - "php-7.2-phpstan"
+
+      # PHP 7.3 jobs
+
+      - "php-7.3-build":
+          context: php73
+      - "php-7.3-code":
+          context: php73
+          requires:
+            - "php-7.3-build"
+      - "php-7.3-unit-tests":
+          context: php73
+          requires:
+            - "php-7.3-code"
+      - "php-7.3-integration-tests":
+          context: php73
+          requires:
+            - "php-7.3-code"
+      - "php-7.3-phpstan":
+          context: php73
+          requires:
+            - "php-7.3-code"
       - "php-7.3-phpmetrics":
           context: php73
           requires:

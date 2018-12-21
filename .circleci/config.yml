@@ -114,7 +114,8 @@ shared-phpstan: &shared-phpstan
 jobs:
   "php-7.2-build":
     working_directory: ~/repo
-    machine: true
+    machine:
+      docker_layer_caching: true
     steps:
       - checkout
       - run:
@@ -124,7 +125,7 @@ jobs:
       - run:
           name: Login to hub.docker.com
           command: |
-            docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+            echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USER --password-stdin
       - run:
           name: Push docker image
           command: |
@@ -132,7 +133,8 @@ jobs:
 
   "php-7.3-build":
     working_directory: ~/repo
-    machine: true
+    machine:
+      docker_layer_caching: true
     steps:
       - checkout
       - run:
@@ -142,7 +144,7 @@ jobs:
       - run:
           name: Login to hub.docker.com
           command: |
-            docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+            echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USER --password-stdin
       - run:
           name: Push docker image
           command: |

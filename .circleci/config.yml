@@ -1,6 +1,6 @@
 version: 2
 
-shared-build: &shared-build
+shared-code: &shared-code
   working_directory: ~/repo
   steps:
     - checkout
@@ -113,12 +113,48 @@ shared-phpstan: &shared-phpstan
 
 jobs:
   "php-7.2-build":
-    <<: *shared-build
+    working_directory: ~/repo
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t "hollodotme/icehawk:7.2-cli" -f .docker/php/7.2/Dockerfile .docker/php/7.2
+      - run:
+          name: Login to hub.docker.com
+          command: |
+            docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+      - run:
+          name: Push docker image
+          command: |
+            docker push "hollodotme/icehawk:7.2-cli"
+
+  "php-7.3-build":
+    working_directory: ~/repo
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t "hollodotme/icehawk:7.3-cli" -f .docker/php/7.3/Dockerfile .docker/php/7.3
+      - run:
+          name: Login to hub.docker.com
+          command: |
+            docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+      - run:
+          name: Push docker image
+          command: |
+            docker push "hollodotme/icehawk:7.3-cli"
+
+  "php-7.2-code":
+    <<: *shared-code
     docker:
       - image: hollodotme/icehawk:7.2-cli
 
-  "php-7.3-build":
-    <<: *shared-build
+  "php-7.3-code":
+    <<: *shared-code
     docker:
       - image: hollodotme/icehawk:7.3-cli
 
@@ -166,26 +202,34 @@ workflows:
   version: 2
   build-test-analyze:
     jobs:
-      - "php-7.2-build"
-      - "php-7.3-build"
+      - "php-7.2-build":
+          context: dockerhub
+      - "php-7.3-build":
+          context: dockerhub
+      - "php-7.2-code":
+          requires:
+            - "php-7.2-build"
+      - "php-7.3-code":
+          requires:
+            - "php-7.3-build"
       - "php-7.2-unit-tests":
           requires:
-            - "php-7.2-build"
+            - "php-7.2-code"
       - "php-7.3-unit-tests":
           requires:
-            - "php-7.3-build"
+            - "php-7.3-code"
       - "php-7.2-integration-tests":
           requires:
-            - "php-7.2-build"
+            - "php-7.2-code"
       - "php-7.3-integration-tests":
           requires:
-            - "php-7.3-build"
+            - "php-7.3-code"
       - "php-7.2-phpstan":
           requires:
-            - "php-7.2-build"
+            - "php-7.2-code"
       - "php-7.3-phpstan":
           requires:
-            - "php-7.3-build"
+            - "php-7.3-code"
       - "php-7.2-phpmetrics":
           requires:
             - "php-7.2-unit-tests"

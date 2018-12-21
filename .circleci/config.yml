@@ -23,7 +23,6 @@ shared-build: &shared-build
     - run:
         name: Install dependencies
         command: |
-          composer config --global github-oauth.github.com ${GITHUB_OAUTH_TOKEN}
           composer install -o --prefer-dist --no-interaction
 
     - run:

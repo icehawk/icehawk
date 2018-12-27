@@ -1,5 +1,15 @@
 version: 2
 
+# Specify working directories for each PHP version
+# Unfortunately Circle CI is not able to expand environment/context variables in
+# the value for working_directory
+workdir-72: &workdir-72
+  working_directory: ~/repo/7.2
+
+workdir-73: &workdir-73
+  working_directory: ~/repo/7.3
+
+# Define steps to build docker images for each PHP version
 shared-build: &shared-build
   working_directory: ~/repo
   machine:
@@ -19,8 +29,9 @@ shared-build: &shared-build
         command: |
           docker push "hollodotme/icehawk:$PHP_VERSION-cli"
 
+# Define steps to build the code and its dependencies
+# Persist it to the workspace when done
 shared-code: &shared-code
-  working_directory: ~/repo/$PHP_VERSION
   docker:
     - image: hollodotme/icehawk:$PHP_VERSION-cli
   steps:
@@ -59,10 +70,10 @@ shared-code: &shared-code
     - persist_to_workspace:
         root: ~/repo
         paths:
-          - $PHP_VERSION
+          - "*"
 
+# Define steps to run unit tests
 shared-unit-tests: &shared-unit-tests
-  working_directory: ~/repo/$PHP_VERSION
   docker:
     - image: hollodotme/icehawk:$PHP_VERSION-cli
   steps:
@@ -84,8 +95,8 @@ shared-unit-tests: &shared-unit-tests
         path: build/logs/coverage
         destination: code-coverage-html
 
+# Define steps to run integration tests
 shared-integration-tests: &shared-integration-tests
-  working_directory: ~/repo/$PHP_VERSION
   docker:
     - image: hollodotme/icehawk:$PHP_VERSION-cli
   steps:
@@ -103,8 +114,8 @@ shared-integration-tests: &shared-integration-tests
         path: build/logs/junit
         destination: code-coverage-junit
 
+# Define steps to run phpmetrics
 shared-phpmetrics: &shared-phpmetrics
-  working_directory: ~/repo/$PHP_VERSION
   docker:
     - image: hollodotme/icehawk:$PHP_VERSION-cli
   steps:
@@ -119,8 +130,8 @@ shared-phpmetrics: &shared-phpmetrics
         path: build/logs/phpmetrics
         destination: php-metrics-report
 
+# Define steps to run phpstan
 shared-phpstan: &shared-phpstan
-  working_directory: ~/repo/$PHP_VERSION
   docker:
     - image: hollodotme/icehawk:$PHP_VERSION-cli
   steps:
@@ -131,6 +142,34 @@ shared-phpstan: &shared-phpstan
         name: Run PHPStan
         command: vendor/bin/phpstan.phar analyze --level max src/
 
+# Define steps to auto-create a github release, if a tag is present
+shared-github-release: &shared-github-release
+  docker:
+    - image: cibuilds/github
+  steps:
+    - attach_workspace:
+        at: ~/repo
+    - run:
+        name: Display git tag file
+        command: |
+          VERSION=$(cat ./TAG)
+          echo ${VERSION}
+    - run:
+        name: Create release at GitHub
+        command: VERSION=$(cat ./TAG) &&
+          if [[ $VERSION =~ ^v.*$ ]] ;
+          then
+          ghr -t ${GITHUB_OAUTH_TOKEN}
+          -u $CIRCLE_PROJECT_USERNAME
+          -r $CIRCLE_PROJECT_REPONAME
+          -c ${CIRCLE_SHA1}
+          -b "See [CHANGELOG](https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/blob/${VERSION}/CHANGELOG.md)"
+          -delete ${VERSION} ./docs;
+          else
+          echo "No version found - no release triggered";
+          fi
+
+# Define the actual jobs from the templates above
 jobs:
   "php-7.2-build":
     <<: *shared-build
@@ -140,34 +179,53 @@ jobs:
 
   "php-7.2-code":
     <<: *shared-code
+    <<: *workdir-72
 
   "php-7.3-code":
     <<: *shared-code
+    <<: *workdir-73
 
   "php-7.2-unit-tests":
     <<: *shared-unit-tests
+    <<: *workdir-72
 
   "php-7.3-unit-tests":
     <<: *shared-unit-tests
+    <<: *workdir-73
 
   "php-7.2-integration-tests":
     <<: *shared-integration-tests
+    <<: *workdir-72
 
   "php-7.3-integration-tests":
     <<: *shared-integration-tests
+    <<: *workdir-73
 
   "php-7.2-phpstan":
     <<: *shared-phpstan
+    <<: *workdir-72
 
   "php-7.3-phpstan":
     <<: *shared-phpstan
+    <<: *workdir-73
 
   "php-7.2-phpmetrics":
     <<: *shared-phpmetrics
+    <<: *workdir-72
 
   "php-7.3-phpmetrics":
     <<: *shared-phpmetrics
+    <<: *workdir-73
 
+  "php-7.2-github-release":
+    <<: *shared-github-release
+    <<: *workdir-72
+
+  "php-7.3-github-release":
+    <<: *shared-github-release
+    <<: *workdir-73
+
+# Define the workflows for each PHP version
 workflows:
   version: 2
   build-test-analyze:
@@ -198,6 +256,13 @@ workflows:
           requires:
             - "php-7.2-unit-tests"
             - "php-7.2-integration-tests"
+      - "php-7.2-github-release":
+          context: php72
+          requires:
+            - "php-7.2-phpmetrics"
+          filters:
+            branches:
+              only: master
 
       # PHP 7.3 jobs
 
@@ -224,3 +289,10 @@ workflows:
           requires:
             - "php-7.3-unit-tests"
             - "php-7.3-integration-tests"
+      - "php-7.3-github-release":
+          context: php73
+          requires:
+            - "php-7.3-phpmetrics"
+          filters:
+            branches:
+              only: master

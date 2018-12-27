@@ -3,7 +3,7 @@ FROM php:7.2-cli
 RUN apt-get update \
     && apt-get install -y zlib1g-dev
 # Install xdebug
-RUN pecl install xdebug-2.7.0beta1
+RUN pecl install xdebug
 # Install extensions
 RUN docker-php-ext-install zip
 # Install composer

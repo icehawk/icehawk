@@ -51,10 +51,6 @@ shared-code: &shared-code
         command: |
           composer install -o --prefer-dist --no-interaction
 
-    - run:
-        name: Check for PHP parse errors
-        command: find . -path ./vendor/sentry -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
-
     - save_cache:
         paths:
           - ./vendor
@@ -71,6 +67,18 @@ shared-code: &shared-code
         root: ~/repo
         paths:
           - "*"
+
+# Define steps to check for PHP parse errors
+shared-linting: &shared-linting
+  docker:
+    - image: hollodotme/icehawk:$PHP_VERSION-cli
+  steps:
+    - attach_workspace:
+        at: ~/repo
+
+    - run:
+        name: Check for PHP parse errors
+        command: find ./src -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
 
 # Define steps to run unit tests
 shared-unit-tests: &shared-unit-tests
@@ -189,6 +197,14 @@ jobs:
     <<: *shared-code
     <<: *workdir-73
 
+  "php-7.2-linting":
+    <<: *shared-linting
+    <<: *workdir-72
+
+  "php-7.3-linting":
+    <<: *shared-linting
+    <<: *workdir-73
+
   "php-7.2-unit-tests":
     <<: *shared-unit-tests
     <<: *workdir-72
@@ -243,6 +259,10 @@ workflows:
           context: php72
           requires:
             - "php-7.2-build"
+      - "php-7.2-linting":
+          context: php72
+          requires:
+            - "php-7.2-code"
       - "php-7.2-phpstan":
           context: php72
           requires:
@@ -250,10 +270,12 @@ workflows:
       - "php-7.2-unit-tests":
           context: php72
           requires:
+            - "php-7.2-linting"
             - "php-7.2-phpstan"
       - "php-7.2-integration-tests":
           context: php72
           requires:
+            - "php-7.2-linting"
             - "php-7.2-phpstan"
       - "php-7.2-phpmetrics":
           context: php72
@@ -276,6 +298,10 @@ workflows:
           context: php73
           requires:
             - "php-7.3-build"
+      - "php-7.3-linting":
+          context: php73
+          requires:
+            - "php-7.3-code"
       - "php-7.3-phpstan":
           context: php73
           requires:
@@ -283,10 +309,12 @@ workflows:
       - "php-7.3-unit-tests":
           context: php73
           requires:
+            - "php-7.3-linting"
             - "php-7.3-phpstan"
       - "php-7.3-integration-tests":
           context: php73
           requires:
+            - "php-7.3-linting"
             - "php-7.3-phpstan"
       - "php-7.3-phpmetrics":
           context: php73

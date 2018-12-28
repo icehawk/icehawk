@@ -18,8 +18,11 @@ shared-build: &shared-build
     - checkout
     - run:
         name: Build docker image
-        command: |
-          docker build -t "hollodotme/icehawk:$PHP_VERSION-cli" -f .docker/php/$PHP_VERSION/Dockerfile .docker/php/$PHP_VERSION
+        command: >
+          docker build
+          -t "hollodotme/icehawk:$PHP_VERSION-cli"
+          -f .docker/php/$PHP_VERSION/Dockerfile
+          .docker/php/$PHP_VERSION
     - run:
         name: Login to hub.docker.com
         command: |

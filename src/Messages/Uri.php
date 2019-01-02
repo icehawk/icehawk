@@ -24,9 +24,9 @@ final class Uri implements UriInterface
 		return new self( $components );
 	}
 
-	public function getScheme()
+	public function getScheme() : string
 	{
-		return $this->components['scheme'];
+		return $this->components['scheme'] ?? '';
 	}
 
 	public function getAuthority() : string
@@ -142,7 +142,7 @@ final class Uri implements UriInterface
 	{
 		return sprintf(
 			'%s%s%s%s%s',
-			$this->getScheme() ?: "{$this->getScheme()}://",
+			$this->getScheme() ? "{$this->getScheme()}://" : '//',
 			$this->getAuthority(),
 			$this->getPath(),
 			$this->getQuery() ? "?{$this->getQuery()}" : '',

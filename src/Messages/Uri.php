@@ -2,7 +2,9 @@
 
 namespace IceHawk\IceHawk\Messages;
 
+use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
+use function parse_url;
 
 final class Uri implements UriInterface
 {
@@ -19,9 +21,22 @@ final class Uri implements UriInterface
 		return new self( parse_url( $uri ) );
 	}
 
+	/**
+	 * @param array $components
+	 *
+	 * @throws InvalidArgumentException
+	 * @return Uri
+	 */
 	public static function fromComponents( array $components ) : self
 	{
-		return new self( $components );
+		$uri = new self( $components );
+
+		if ( false === parse_url( (string)$uri ) )
+		{
+			throw new InvalidArgumentException( 'Invalid URI components.' );
+		}
+
+		return $uri;
 	}
 
 	public function getScheme() : string
@@ -89,6 +104,13 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param string $user
+	 * @param null   $password
+	 *
+	 * @throws InvalidArgumentException
+	 * @return Uri
+	 */
 	public function withUserInfo( $user, $password = null ) : self
 	{
 		$components         = $this->components;
@@ -98,6 +120,12 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param string $host
+	 *
+	 * @throws InvalidArgumentException
+	 * @return Uri
+	 */
 	public function withHost( $host ) : self
 	{
 		$components         = $this->components;
@@ -106,6 +134,12 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param int|null $port
+	 *
+	 * @throws InvalidArgumentException
+	 * @return Uri
+	 */
 	public function withPort( $port ) : self
 	{
 		$components         = $this->components;
@@ -130,6 +164,12 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param string $fragment
+	 *
+	 * @throws InvalidArgumentException
+	 * @return Uri
+	 */
 	public function withFragment( $fragment ) : self
 	{
 		$components             = $this->components;

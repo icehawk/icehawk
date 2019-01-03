@@ -2,6 +2,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
+use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
 use IceHawk\IceHawk\Messages\Uri;
 use PHPUnit\Framework\TestCase;
 
@@ -168,6 +169,7 @@ final class UriTest extends TestCase
 	/**
 	 * @throws \PHPUnit\Framework\ExpectationFailedException
 	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithFragment() : void
 	{
@@ -298,6 +300,7 @@ final class UriTest extends TestCase
 	 *
 	 * @throws \PHPUnit\Framework\ExpectationFailedException
 	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws \IceHawk\IceHawk\Exceptions\InvalidArgumentException
 	 *
 	 * @dataProvider toStringProvider
 	 */
@@ -381,29 +384,50 @@ final class UriTest extends TestCase
 					'scheme'   => '',
 					'user'     => '',
 					'pass'     => '',
-					'host'     => '',
+					'host'     => 'example.com',
 					'port'     => null,
 					'path'     => '/some/path',
-					'query'    => 'var=value',
+					'query'    => '',
 					'fragment' => 'anchor',
 				],
-				'expectedUrl' => '///some/path?var=value#anchor',
+				'expectedUrl' => '//example.com/some/path#anchor',
 			],
 			[
 				'components'  => [
 					'scheme'   => '',
 					'user'     => '',
 					'pass'     => '',
-					'host'     => '',
+					'host'     => 'example.com',
 					'port'     => null,
-					'path'     => '/some/path',
+					'path'     => '',
 					'query'    => '',
-					'fragment' => 'anchor',
+					'fragment' => '',
 				],
-				'expectedUrl' => '///some/path#anchor',
+				'expectedUrl' => '//example.com',
 			],
+		];
+	}
+
+	/**
+	 * @param array $components
+	 *
+	 * @throws InvalidArgumentException
+	 * @dataProvider invalidComponentsProvider
+	 */
+	public function testThrowsExceptionForInvalidComponents( array $components ) : void
+	{
+		$this->expectException( InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'Invalid URI components.' );
+
+		/** @noinspection UnusedFunctionResultInspection */
+		Uri::fromComponents( $components );
+	}
+
+	public function invalidComponentsProvider() : array
+	{
+		return [
 			[
-				'components'  => [
+				'components' => [
 					'scheme'   => '',
 					'user'     => '',
 					'pass'     => '',
@@ -413,7 +437,18 @@ final class UriTest extends TestCase
 					'query'    => '',
 					'fragment' => '',
 				],
-				'expectedUrl' => '//',
+			],
+			[
+				'components' => [
+					'scheme'   => '',
+					'user'     => '',
+					'pass'     => '',
+					'host'     => '',
+					'port'     => null,
+					'path'     => '/some/path',
+					'query'    => '',
+					'fragment' => '',
+				],
 			],
 		];
 	}
@@ -421,6 +456,7 @@ final class UriTest extends TestCase
 	/**
 	 * @throws \PHPUnit\Framework\ExpectationFailedException
 	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithUserInfo() : void
 	{
@@ -472,6 +508,7 @@ final class UriTest extends TestCase
 	 *
 	 * @throws \PHPUnit\Framework\ExpectationFailedException
 	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider toStringProvider
 	 */

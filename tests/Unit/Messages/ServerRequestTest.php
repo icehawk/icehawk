@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
+
 use Generator;
 use IceHawk\IceHawk\Exceptions\RuntimeException;
 use IceHawk\IceHawk\Messages\ServerRequest;
@@ -141,6 +142,7 @@ final class ServerRequestTest extends TestCase
         yield ['test', 'eventName=OrderPlaced&limit=2', 'test?eventName=OrderPlaced&limit=2'];
     }
 
+
     public function testWithRequestTarget() : void
     {
         $expectedServerParameters = [
@@ -219,14 +221,72 @@ final class ServerRequestTest extends TestCase
     public function getUriDataProvider() : Generator
     {
         yield ['', '', '', '', '', '', '', '', 'http://'];
-        yield ['on', '', '', '', '', '', '', '', 'https://'];
-        yield ['on', 'api', '', '', '', '', '', '', 'https://api@'];
-        yield ['on', 'api', 'pass', '', '', '', '', '', 'https://api:pass@'];
-        yield ['on', 'api', 'pass', 'api.example.com', '', '', '', '', 'https://api:pass@api.example.com'];
-        yield ['on', 'api', 'pass', 'api.example.com', '8380', '', '', '', 'https://api:pass@api.example.com:8380'];
-        yield ['on', 'api', 'pass', 'api.example.com', '8380', '/info', '', '', 'https://api:pass@api.example.com:8380/info'];
-        yield ['on', 'api', 'pass', 'api.example.com', '8380', '/info', 'eventName=OrderPlaced&limit=2', '', 'https://api:pass@api.example.com:8380/info?eventName=OrderPlaced&limit=2'];
-        yield ['on', 'api', 'pass', 'api.example.com', '8380', '/info', 'eventName=OrderPlaced&limit=2', 'fragment', 'https://api:pass@api.example.com:8380/info?eventName=OrderPlaced&limit=2#fragment'];
+        yield ['https', '', '', '', '', '', '', '', 'https://'];
+        yield ['https', 'api', '', '', '', '', '', '', 'https://api@'];
+        yield ['https', 'api', 'pass', '', '', '', '', '', 'https://api:pass@'];
+        yield ['https', 'api', 'pass', 'api.example.com', '', '', '', '', 'https://api:pass@api.example.com'];
+        yield ['https', 'api', 'pass', 'api.example.com', '8380', '', '', '', 'https://api:pass@api.example.com:8380'];
+        yield ['https', 'api', 'pass', 'api.example.com', '8380', '/info', '', '', 'https://api:pass@api.example.com:8380/info'];
+        yield ['https', 'api', 'pass', 'api.example.com', '8380', '/info', 'eventName=OrderPlaced&limit=2', '', 'https://api:pass@api.example.com:8380/info?eventName=OrderPlaced&limit=2'];
+        yield ['https', 'api', 'pass', 'api.example.com', '8380', '/info', 'eventName=OrderPlaced&limit=2', 'fragment', 'https://api:pass@api.example.com:8380/info?eventName=OrderPlaced&limit=2#fragment'];
+    }
+
+    /**
+     * @dataProvider withUriDataProvider
+     *
+     * @param string $https
+     * @param string $authUser
+     * @param string $authPassword
+     * @param string $host
+     * @param string $port
+     * @param string $pathInfo
+     * @param string $queryString
+     * @param string $fragment
+     * @param string $expected
+     */
+    public function testWithUri(
+        string $https,
+        string $authUser,
+        string $authPassword,
+        string $host,
+        string $port,
+        string $pathInfo,
+        string $queryString,
+        string $fragment,
+        string $expected
+    ) : void
+    {
+
+        $uri = Uri::fromComponents(
+            [
+                'scheme'   => $https,
+                'user'     => $authUser,
+                'pass'     => $authPassword,
+                'host'     => $host,
+                'port'     => $port,
+                'path'     => $pathInfo,
+                'query'    => $queryString,
+                'fragment' => $fragment,
+            ]
+        );
+
+        $serverRequest = ServerRequest::fromGlobals()->withUri($uri, true);
+
+        $this->assertEquals($expected, $serverRequest->getUri()->__toString());
+
+    }
+
+    public function withUriDataProvider() : Generator
+    {
+        yield ['', '', '', '', '', '', '', '', 'http://'];
+        yield ['https', '', '', '', '', '', '', '', 'https://'];
+        yield ['https', 'api', '', '', '', '', '', '', 'https://api@'];
+        yield ['https', 'api', 'pass', '', '', '', '', '', 'https://api:pass@'];
+        yield ['https', 'api', 'pass', 'api.example.com', '', '', '', '', 'https://api:pass@api.example.com'];
+        yield ['https', 'api', 'pass', 'api.example.com', '', '', '', '', 'https://api:pass@api.example.com'];
+        yield ['https', 'api', 'pass', 'api.example.com', '', '/info', '', '', 'https://api:pass@api.example.com/info'];
+        yield ['https', 'api', 'pass', 'api.example.com', '', '/info', 'eventName=OrderPlaced&limit=2', '', 'https://api:pass@api.example.com/info?eventName=OrderPlaced&limit=2'];
+        yield ['https', 'api', 'pass', 'api.example.com', '', '/info', 'eventName=OrderPlaced&limit=2', 'fragment', 'https://api:pass@api.example.com/info?eventName=OrderPlaced&limit=2#fragment'];
     }
 
     public function testItReturnsCookieParameters() : void
@@ -301,7 +361,7 @@ final class ServerRequestTest extends TestCase
         $this->assertIsArray($attributes);
         $this->assertEmpty($attributes);
     }
-    
+
     public function testWithAttribute() : void
     {
         $serverRequest = ServerRequest::fromGlobals()->withAttribute('foo', 'bar');
@@ -337,7 +397,7 @@ final class ServerRequestTest extends TestCase
         $serverRequest = ServerRequest::fromGlobals();
 
         $this->expectException(RuntimeException::class);
-        
+
         $serverRequest->getInputString('foo');
     }
 
@@ -354,7 +414,7 @@ final class ServerRequestTest extends TestCase
     {
         $_REQUEST['foo'] = 'bar';
         $serverRequest = ServerRequest::fromGlobals();
-        
+
         $this->assertEquals('bar', $serverRequest->getInputString('foo'));
     }
 

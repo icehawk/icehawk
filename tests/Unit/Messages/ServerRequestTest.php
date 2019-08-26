@@ -118,6 +118,29 @@ final class ServerRequestTest extends TestCase
         $this->assertSame($anotherServerRequest->getBody()->__toString(), $stream->__toString());
     }
 
+    /**
+     * @dataProvider requestTargetDataProvider
+     *
+     * @param mixed  $uri
+     * @param mixed  $queryString
+     * @param string $expected
+     */
+    public function testRequestTarget($uri, $queryString, string $expected) : void
+    {
+        $_SERVER['REQUEST_URI'] = $uri;
+        $_SERVER['QUERY_STRING'] = $queryString;
+        $serverRequest = ServerRequest::fromGlobals();
+
+        $this->assertEquals($expected, $serverRequest->getRequestTarget());
+    }
+
+    public function requestTargetDataProvider() : Generator
+    {
+        yield [null, null, DIRECTORY_SEPARATOR];
+        yield ['test', null, 'test'];
+        yield ['test', 'eventName=OrderPlaced&limit=2', 'test?eventName=OrderPlaced&limit=2'];
+    }
+
     public function testWithRequestTarget() : void
     {
         $expectedServerParameters = [
@@ -152,11 +175,58 @@ final class ServerRequestTest extends TestCase
         $this->assertEquals($requestMethod, $serverRequest->getMethod());
     }
 
-    public function testGetUri() : void
+    /**
+     * @dataProvider getUriDataProvider
+     *
+     * @param string $https
+     * @param string $authUser
+     * @param string $authPassword
+     * @param string $host
+     * @param string $port
+     * @param string $pathInfo
+     * @param string $queryString
+     * @param string $fragment
+     * @param string $expected
+     */
+    public function testGetUri(
+        string $https,
+        string $authUser,
+        string $authPassword,
+        string $host,
+        string $port,
+        string $pathInfo,
+        string $queryString,
+        string $fragment,
+        string $expected
+    ) : void
     {
-        $serverRequest = ServerRequest::fromGlobals();
+        $_SERVER['HTTPS']          = $https;
+        $_SERVER['HTTP_AUTH_USER'] = $authUser;
+        $_SERVER['HTTP_AUTH_PW']   = $authPassword;
+        $_SERVER['HTTP_HOST']      = $host;
+        $_SERVER['SERVER_PORT']    = $port;
+        $_SERVER['PATH_INFO']      = $pathInfo;
+        $_SERVER['QUERY_STRING']   = $queryString;
+        $_SERVER['FRAGMENT']       = $fragment;
 
-        $this->assertInstanceOf(Uri::class, $serverRequest->getUri());
+        $serverRequest = ServerRequest::fromGlobals();
+        $uri = $serverRequest->getUri();
+
+        $this->assertInstanceOf(Uri::class, $uri);
+        $this->assertEquals($expected, $uri->__toString());
+    }
+
+    public function getUriDataProvider() : Generator
+    {
+        yield ['', '', '', '', '', '', '', '', 'http://'];
+        yield ['on', '', '', '', '', '', '', '', 'https://'];
+        yield ['on', 'api', '', '', '', '', '', '', 'https://api@'];
+        yield ['on', 'api', 'pass', '', '', '', '', '', 'https://api:pass@'];
+        yield ['on', 'api', 'pass', 'api.example.com', '', '', '', '', 'https://api:pass@api.example.com'];
+        yield ['on', 'api', 'pass', 'api.example.com', '8380', '', '', '', 'https://api:pass@api.example.com:8380'];
+        yield ['on', 'api', 'pass', 'api.example.com', '8380', '/info', '', '', 'https://api:pass@api.example.com:8380/info'];
+        yield ['on', 'api', 'pass', 'api.example.com', '8380', '/info', 'eventName=OrderPlaced&limit=2', '', 'https://api:pass@api.example.com:8380/info?eventName=OrderPlaced&limit=2'];
+        yield ['on', 'api', 'pass', 'api.example.com', '8380', '/info', 'eventName=OrderPlaced&limit=2', 'fragment', 'https://api:pass@api.example.com:8380/info?eventName=OrderPlaced&limit=2#fragment'];
     }
 
     public function testItReturnsCookieParameters() : void

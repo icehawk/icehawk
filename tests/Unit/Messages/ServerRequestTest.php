@@ -37,11 +37,10 @@ final class ServerRequestTest extends TestCase
 
     public function testWithProtocolVersion() : void
     {
-        $protocolVersion       = 'HTTP/1.2';
-        $serverRequest         = ServerRequest::fromGlobals();
-        $clonedRequestInstance = $serverRequest->withProtocolVersion($protocolVersion);
+        $protocolVersion = 'HTTP/1.2';
+        $serverRequest   = ServerRequest::fromGlobals()->withProtocolVersion($protocolVersion);
 
-        $this->assertEquals($protocolVersion, $clonedRequestInstance->getProtocolVersion());
+        $this->assertEquals($protocolVersion, $serverRequest->getProtocolVersion());
     }
 
     public function testHeaderLine() : void
@@ -99,8 +98,7 @@ final class ServerRequestTest extends TestCase
         $this->assertCount(1, $headers);
         $this->assertFalse($clonedInstance->hasHeader('User-Agent'));
 
-        $anotherInstance = $serverRequest->withoutHeader('foo');
-        $headers = $anotherInstance->getHeaders();
+        $headers = $serverRequest->withoutHeader('foo')->getHeaders();
 
         $this->assertIsArray($headers);
         $this->assertCount(2, $headers);
@@ -116,7 +114,7 @@ final class ServerRequestTest extends TestCase
         $stream->write('Unit-Test');
 
         $anotherServerRequest = $serverRequest->withBody($stream);
-        $this->assertSame($anotherServerRequest->getBody()->__toString(), $stream->__toString());
+        $this->assertSame((string)$anotherServerRequest->getBody(), (string)$stream);
     }
 
     /**
@@ -142,7 +140,6 @@ final class ServerRequestTest extends TestCase
         yield ['test', 'eventName=OrderPlaced&limit=2', 'test?eventName=OrderPlaced&limit=2'];
     }
 
-
     public function testWithRequestTarget() : void
     {
         $expectedServerParameters = [
@@ -151,12 +148,10 @@ final class ServerRequestTest extends TestCase
         ];
 
         $uri = 'https://api.localhost/api/v1/streams/mega-stream/events?eventName=OrderPlaced&limit=2';
+        $serverRequest = ServerRequest::fromGlobals()->withRequestTarget($uri);
 
-        $serverRequest   = ServerRequest::fromGlobals();
-        $anotherInstance = $serverRequest->withRequestTarget($uri);
-
-        $this->assertEquals($expectedServerParameters['REQUEST_URI'], $anotherInstance->getServerParams()['REQUEST_URI']);
-        $this->assertEquals($expectedServerParameters['QUERY_STRING'], $anotherInstance->getServerParams()['QUERY_STRING']);
+        $this->assertEquals($expectedServerParameters['REQUEST_URI'], $serverRequest->getServerParams()['REQUEST_URI']);
+        $this->assertEquals($expectedServerParameters['QUERY_STRING'], $serverRequest->getServerParams()['QUERY_STRING']);
     }
 
     public function testItReturnsRequestMethod() : void
@@ -211,11 +206,10 @@ final class ServerRequestTest extends TestCase
         $_SERVER['QUERY_STRING']   = $queryString;
         $_SERVER['FRAGMENT']       = $fragment;
 
-        $serverRequest = ServerRequest::fromGlobals();
-        $uri = $serverRequest->getUri();
+        $uri = ServerRequest::fromGlobals()->getUri();
 
         $this->assertInstanceOf(Uri::class, $uri);
-        $this->assertEquals($expected, $uri->__toString());
+        $this->assertEquals($expected, (string)$uri);
     }
 
     public function getUriDataProvider() : Generator
@@ -272,7 +266,7 @@ final class ServerRequestTest extends TestCase
 
         $serverRequest = ServerRequest::fromGlobals()->withUri($uri, true);
 
-        $this->assertEquals($expected, $serverRequest->getUri()->__toString());
+        $this->assertEquals($expected, (string)$serverRequest->getUri());
 
     }
 
@@ -292,7 +286,6 @@ final class ServerRequestTest extends TestCase
     public function testItReturnsCookieParameters() : void
     {
         $_COOKIE['foo'] = 'bar';
-
         $serverRequest = ServerRequest::fromGlobals();
 
         $this->assertNotEmpty($serverRequest->getCookieParams());

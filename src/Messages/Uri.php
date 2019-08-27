@@ -16,18 +16,24 @@ final class Uri implements UriInterface
 		$this->components = $components;
 	}
 
-	public static function fromString( string $uri ) : self
+	/**
+	 * @param string $uri
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
+	public static function fromString( string $uri ) : UriInterface
 	{
-		return new self( parse_url( $uri ) );
+		return self::fromComponents( (array)parse_url( $uri ) );
 	}
 
 	/**
 	 * @param array $components
 	 *
-	 * @throws InvalidArgumentException
 	 * @return Uri
+	 * @throws InvalidArgumentException
 	 */
-	public static function fromComponents( array $components ) : self
+	public static function fromComponents( array $components ) : UriInterface
 	{
 		$uri = new self( $components );
 
@@ -108,8 +114,8 @@ final class Uri implements UriInterface
 	 * @param string $user
 	 * @param null   $password
 	 *
-	 * @throws InvalidArgumentException
 	 * @return Uri
+	 * @throws InvalidArgumentException
 	 */
 	public function withUserInfo( $user, $password = null ) : self
 	{
@@ -123,8 +129,8 @@ final class Uri implements UriInterface
 	/**
 	 * @param string $host
 	 *
-	 * @throws InvalidArgumentException
 	 * @return Uri
+	 * @throws InvalidArgumentException
 	 */
 	public function withHost( $host ) : self
 	{
@@ -137,8 +143,8 @@ final class Uri implements UriInterface
 	/**
 	 * @param int|null $port
 	 *
-	 * @throws InvalidArgumentException
 	 * @return Uri
+	 * @throws InvalidArgumentException
 	 */
 	public function withPort( $port ) : self
 	{
@@ -167,8 +173,8 @@ final class Uri implements UriInterface
 	/**
 	 * @param string $fragment
 	 *
-	 * @throws InvalidArgumentException
 	 * @return Uri
+	 * @throws InvalidArgumentException
 	 */
 	public function withFragment( $fragment ) : self
 	{

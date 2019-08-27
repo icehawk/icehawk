@@ -42,7 +42,7 @@ final class UploadedFilesCollection
 		{
 			foreach ( $files as $fileArray )
 			{
-				$collection->addFile( $field, UploadedFile::fromArray( $fileArray ) );
+				$collection->addFile( (string)$field, UploadedFile::fromArray( $fileArray ) );
 			}
 		}
 

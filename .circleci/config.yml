@@ -118,6 +118,10 @@ shared-unit-tests: &shared-unit-tests
         command: vendor/bin/phpunit.phar -c build --testsuite Unit --log-junit build/logs/junit/junit.xml --coverage-html build/logs/coverage --coverage-clover=coverage.xml
 
     - run:
+        name: Install bash
+        command: apk add --no-cache bash
+
+    - run:
         name: Upload code coverage to codecov.io
         command: bash <(curl -s https://codecov.io/bash)
 

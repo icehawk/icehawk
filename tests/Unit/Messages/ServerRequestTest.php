@@ -180,7 +180,7 @@ final class ServerRequestTest extends TestCase
      * @param string $authUser
      * @param string $authPassword
      * @param string $host
-     * @param string $port
+     * @param int    $port
      * @param string $pathInfo
      * @param string $queryString
      * @param string $fragment
@@ -191,14 +191,13 @@ final class ServerRequestTest extends TestCase
         string $authUser,
         string $authPassword,
         string $host,
-        string $port,
+        $port,
         string $pathInfo,
         string $queryString,
         string $fragment,
         string $expected
     ) : void
     {
-        $this->markTestSkipped();
         $_SERVER['HTTPS']          = $https;
         $_SERVER['HTTP_AUTH_USER'] = $authUser;
         $_SERVER['HTTP_AUTH_PW']   = $authPassword;
@@ -216,15 +215,14 @@ final class ServerRequestTest extends TestCase
 
     public function getUriDataProvider() : Generator
     {
-        yield ['', '', '', '', '', '', '', '', 'http://'];
-        yield ['https', '', '', '', '', '', '', '', 'https://'];
-        yield ['https', 'api', '', '', '', '', '', '', 'https://api@'];
-        yield ['https', 'api', 'pass', '', '', '', '', '', 'https://api:pass@'];
-        yield ['https', 'api', 'pass', 'api.example.com', '', '', '', '', 'https://api:pass@api.example.com'];
-        yield ['https', 'api', 'pass', 'api.example.com', '8380', '', '', '', 'https://api:pass@api.example.com:8380'];
-        yield ['https', 'api', 'pass', 'api.example.com', '8380', '/info', '', '', 'https://api:pass@api.example.com:8380/info'];
-        yield ['https', 'api', 'pass', 'api.example.com', '8380', '/info', 'eventName=OrderPlaced&limit=2', '', 'https://api:pass@api.example.com:8380/info?eventName=OrderPlaced&limit=2'];
-        yield ['https', 'api', 'pass', 'api.example.com', '8380', '/info', 'eventName=OrderPlaced&limit=2', 'fragment', 'https://api:pass@api.example.com:8380/info?eventName=OrderPlaced&limit=2#fragment'];
+        yield ['', '', '', 'example.com', null, '', '', '', 'http://example.com'];
+        yield ['', '', '', 'example.com', null, '', '', 'anchor', 'http://example.com#anchor'];
+        yield ['', '', '', 'example.com', null, '', 'var=value', 'anchor', 'http://example.com?var=value#anchor'];
+        yield ['', '', '', 'example.com', null, '/some/path', 'var=value', 'anchor', 'http://example.com/some/path?var=value#anchor'];
+        yield ['', '', '', 'example.com', 8080, '/some/path', 'var=value', 'anchor', 'http://example.com:8080/some/path?var=value#anchor'];
+        yield ['', '', 'pass', 'example.com', 8080, '/some/path', 'var=value', 'anchor', 'http://:pass@example.com:8080/some/path?var=value#anchor'];
+        yield ['', 'user', 'pass', 'example.com', 8080, '/some/path', 'var=value', 'anchor', 'http://user:pass@example.com:8080/some/path?var=value#anchor'];
+        yield ['https', 'user', 'pass', 'example.com', 8080, '/some/path', 'var=value', 'anchor', 'https://user:pass@example.com:8080/some/path?var=value#anchor'];
     }
 
     /**
@@ -245,14 +243,13 @@ final class ServerRequestTest extends TestCase
         string $authUser,
         string $authPassword,
         string $host,
-        string $port,
+        $port,
         string $pathInfo,
         string $queryString,
         string $fragment,
         string $expected
     ) : void
     {
-        $this->markTestSkipped();
         $uri = Uri::fromComponents(
             [
                 'scheme'   => $https,
@@ -274,15 +271,14 @@ final class ServerRequestTest extends TestCase
 
     public function withUriDataProvider() : Generator
     {
-        yield ['', '', '', '', '', '', '', '', 'http://'];
-        yield ['https', '', '', '', '', '', '', '', 'https://'];
-        yield ['https', 'api', '', '', '', '', '', '', 'https://api@'];
-        yield ['https', 'api', 'pass', '', '', '', '', '', 'https://api:pass@'];
-        yield ['https', 'api', 'pass', 'api.example.com', '', '', '', '', 'https://api:pass@api.example.com'];
-        yield ['https', 'api', 'pass', 'api.example.com', '', '', '', '', 'https://api:pass@api.example.com'];
-        yield ['https', 'api', 'pass', 'api.example.com', '', '/info', '', '', 'https://api:pass@api.example.com/info'];
-        yield ['https', 'api', 'pass', 'api.example.com', '', '/info', 'eventName=OrderPlaced&limit=2', '', 'https://api:pass@api.example.com/info?eventName=OrderPlaced&limit=2'];
-        yield ['https', 'api', 'pass', 'api.example.com', '', '/info', 'eventName=OrderPlaced&limit=2', 'fragment', 'https://api:pass@api.example.com/info?eventName=OrderPlaced&limit=2#fragment'];
+        yield ['', '', '', 'example.com', null, '', '', '', 'http://example.com'];
+        yield ['', '', '', 'example.com', null, '', '', 'anchor', 'http://example.com#anchor'];
+        yield ['', '', '', 'example.com', null, '', 'var=value', 'anchor', 'http://example.com?var=value#anchor'];
+        yield ['', '', '', 'example.com', null, '/some/path', 'var=value', 'anchor', 'http://example.com/some/path?var=value#anchor'];
+        yield ['', '', '', 'example.com', 8080, '/some/path', 'var=value', 'anchor', 'http://example.com/some/path?var=value#anchor'];
+        yield ['', '', 'pass', 'example.com', 8080, '/some/path', 'var=value', 'anchor', 'http://:pass@example.com/some/path?var=value#anchor'];
+        yield ['', 'user', 'pass', 'example.com', 8080, '/some/path', 'var=value', 'anchor', 'http://user:pass@example.com/some/path?var=value#anchor'];
+        yield ['https', 'user', 'pass', 'example.com', 8080, '/some/path', 'var=value', 'anchor', 'https://user:pass@example.com/some/path?var=value#anchor'];
     }
 
     public function testItReturnsCookieParameters() : void
@@ -319,13 +315,15 @@ final class ServerRequestTest extends TestCase
 
     public function testItReturnsUploadedFiles() : void
     {
-        $this->markTestSkipped();
-        $_FILES['foo'] = 'bar';
+        $fileKey = 'foo';
+        $_FILES[$fileKey] = ['name' => 'unit'];
 
         $serverRequest = ServerRequest::fromGlobals();
 
         $this->assertNotEmpty($serverRequest->getUploadedFiles());
-        $this->assertContainsOnlyInstancesOf(UploadedFile::class, $serverRequest->getUploadedFiles()['foo']);
+        $this->assertContainsOnlyInstancesOf(
+            UploadedFile::class, $serverRequest->getUploadedFiles()[$fileKey]
+        );
     }
 
     public function testWithUploadedFiles() : void

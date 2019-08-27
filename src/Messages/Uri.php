@@ -2,7 +2,9 @@
 
 namespace IceHawk\IceHawk\Messages;
 
+use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
+use function parse_url;
 
 final class Uri implements UriInterface
 {
@@ -14,14 +16,33 @@ final class Uri implements UriInterface
 		$this->components = $components;
 	}
 
-	public static function fromString( string $uri ) : self
+	/**
+	 * @param string $uri
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
+	public static function fromString( string $uri ) : UriInterface
 	{
-		return new self( parse_url( $uri ) );
+		return self::fromComponents( (array)parse_url( $uri ) );
 	}
 
-	public static function fromComponents( array $components ) : self
+	/**
+	 * @param array $components
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
+	public static function fromComponents( array $components ) : UriInterface
 	{
-		return new self( $components );
+		$uri = new self( $components );
+
+		if ( false === parse_url( (string)$uri ) )
+		{
+			throw new InvalidArgumentException( 'Invalid URI components.' );
+		}
+
+		return $uri;
 	}
 
 	public function getScheme() : string
@@ -89,6 +110,13 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param string $user
+	 * @param null   $password
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
 	public function withUserInfo( $user, $password = null ) : self
 	{
 		$components         = $this->components;
@@ -98,6 +126,12 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param string $host
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
 	public function withHost( $host ) : self
 	{
 		$components         = $this->components;
@@ -106,6 +140,12 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param int|null $port
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
 	public function withPort( $port ) : self
 	{
 		$components         = $this->components;
@@ -130,6 +170,12 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param string $fragment
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
 	public function withFragment( $fragment ) : self
 	{
 		$components             = $this->components;

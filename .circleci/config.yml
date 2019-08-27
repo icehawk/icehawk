@@ -9,6 +9,9 @@ workdir-72: &workdir-72
 workdir-73: &workdir-73
   working_directory: ~/repo/7.3
 
+workdir-74: &workdir-74
+  working_directory: ~/repo/7.4
+
 # Define steps to build docker images for each PHP version
 shared-build: &shared-build
   working_directory: ~/repo
@@ -44,6 +47,25 @@ shared-code: &shared-code
     - restore_cache:
         keys:
           - v1-dependencies-{{ checksum "composer.json" }}-$PHP_VERSION
+
+    - run:
+        name: Install composer
+        command: |
+          EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+          if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]
+          then
+              >&2 echo 'ERROR: Invalid installer signature'
+              rm composer-setup.php
+              exit 1
+          fi
+
+          php composer-setup.php --quiet --install-dir=/usr/bin --filename=composer
+          RESULT=$?
+          rm composer-setup.php
+          exit $RESULT
 
     - run:
         name: Update composer
@@ -192,6 +214,9 @@ jobs:
   "php-7.3-build":
     <<: *shared-build
 
+  "php-7.4-build":
+    <<: *shared-build
+
   "php-7.2-code":
     <<: *shared-code
     <<: *workdir-72
@@ -199,6 +224,10 @@ jobs:
   "php-7.3-code":
     <<: *shared-code
     <<: *workdir-73
+
+  "php-7.4-code":
+    <<: *shared-code
+    <<: *workdir-74
 
   "php-7.2-linting":
     <<: *shared-linting
@@ -208,6 +237,10 @@ jobs:
     <<: *shared-linting
     <<: *workdir-73
 
+  "php-7.4-linting":
+    <<: *shared-linting
+    <<: *workdir-74
+
   "php-7.2-unit-tests":
     <<: *shared-unit-tests
     <<: *workdir-72
@@ -215,6 +248,10 @@ jobs:
   "php-7.3-unit-tests":
     <<: *shared-unit-tests
     <<: *workdir-73
+
+  "php-7.4-unit-tests":
+    <<: *shared-unit-tests
+    <<: *workdir-74
 
   "php-7.2-integration-tests":
     <<: *shared-integration-tests
@@ -224,6 +261,10 @@ jobs:
     <<: *shared-integration-tests
     <<: *workdir-73
 
+  "php-7.4-integration-tests":
+    <<: *shared-integration-tests
+    <<: *workdir-74
+
   "php-7.2-phpstan":
     <<: *shared-phpstan
     <<: *workdir-72
@@ -231,6 +272,10 @@ jobs:
   "php-7.3-phpstan":
     <<: *shared-phpstan
     <<: *workdir-73
+
+  "php-7.4-phpstan":
+    <<: *shared-phpstan
+    <<: *workdir-74
 
   "php-7.2-phpmetrics":
     <<: *shared-phpmetrics
@@ -240,6 +285,10 @@ jobs:
     <<: *shared-phpmetrics
     <<: *workdir-73
 
+  "php-7.4-phpmetrics":
+    <<: *shared-phpmetrics
+    <<: *workdir-74
+
   "php-7.2-github-release":
     <<: *shared-github-release
     <<: *workdir-72
@@ -247,6 +296,10 @@ jobs:
   "php-7.3-github-release":
     <<: *shared-github-release
     <<: *workdir-73
+
+  "php-7.4-github-release":
+    <<: *shared-github-release
+    <<: *workdir-74
 
 # Define the workflows for each PHP version
 workflows:
@@ -328,6 +381,45 @@ workflows:
           context: php73
           requires:
             - "php-7.3-phpmetrics"
+          filters:
+            branches:
+              only: master
+
+      # PHP 7.4 jobs
+
+      - "php-7.4-build":
+          context: php74
+      - "php-7.4-code":
+          context: php74
+          requires:
+            - "php-7.4-build"
+      - "php-7.4-linting":
+          context: php74
+          requires:
+            - "php-7.4-code"
+      - "php-7.4-phpstan":
+          context: php74
+          requires:
+            - "php-7.4-code"
+      - "php-7.4-unit-tests":
+          context: php74
+          requires:
+            - "php-7.4-linting"
+            - "php-7.4-phpstan"
+      - "php-7.4-integration-tests":
+          context: php74
+          requires:
+            - "php-7.4-linting"
+            - "php-7.4-phpstan"
+      - "php-7.4-phpmetrics":
+          context: php74
+          requires:
+            - "php-7.4-unit-tests"
+            - "php-7.4-integration-tests"
+      - "php-7.4-github-release":
+          context: php74
+          requires:
+            - "php-7.4-phpmetrics"
           filters:
             branches:
               only: master

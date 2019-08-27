@@ -37,21 +37,21 @@ final class ServerRequest implements ProvidesRequestData
 	/** @var array */
 	private $mergedParams;
 
-	/** @var array */
+	/** @var UploadedFilesCollection */
 	private $uploadedFiles;
 
 	/** @var array */
 	private $attributes;
 
 	/**
-	 * @param array             $serverParams
-	 * @param array             $queryParams
-	 * @param StreamInterface   $body
-	 * @param null|array|object $parsedBody
-	 * @param array             $cookieParams
-	 * @param array             $mergedParams
-	 * @param array             $uploadedFiles
-	 * @param array             $attributes
+	 * @param array                   $serverParams
+	 * @param array                   $queryParams
+	 * @param StreamInterface         $body
+	 * @param null|array|object       $parsedBody
+	 * @param array                   $cookieParams
+	 * @param array                   $mergedParams
+	 * @param UploadedFilesCollection $uploadedFiles
+	 * @param array                   $attributes
 	 */
 	private function __construct(
 		array $serverParams,
@@ -60,7 +60,7 @@ final class ServerRequest implements ProvidesRequestData
 		$parsedBody,
 		array $cookieParams,
 		array $mergedParams,
-		array $uploadedFiles,
+		UploadedFilesCollection $uploadedFiles,
 		array $attributes
 	)
 	{
@@ -107,8 +107,8 @@ final class ServerRequest implements ProvidesRequestData
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @return ServerRequest
+	 * @throws InvalidArgumentException
 	 */
 	public static function fromGlobals() : self
 	{
@@ -119,7 +119,7 @@ final class ServerRequest implements ProvidesRequestData
 			$_POST ?? [],
 			$_COOKIE ?? [],
 			$_REQUEST,
-			$_FILES ?? [],
+			UploadedFilesCollection::fromGlobals(),
 			[]
 		);
 	}
@@ -243,6 +243,10 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @return UriInterface
+	 * @throws InvalidArgumentException
+	 */
 	public function getUri() : UriInterface
 	{
 		return Uri::fromComponents(
@@ -315,13 +319,13 @@ final class ServerRequest implements ProvidesRequestData
 
 	public function getUploadedFiles() : array
 	{
-		return $this->uploadedFiles;
+		return $this->uploadedFiles->toArray();
 	}
 
 	public function withUploadedFiles( array $uploadedFiles ) : self
 	{
 		$request                = clone $this;
-		$request->uploadedFiles = $uploadedFiles;
+		$request->uploadedFiles = UploadedFilesCollection::fromUploadedFilesArray( $uploadedFiles );
 
 		return $request;
 	}
@@ -369,8 +373,8 @@ final class ServerRequest implements ProvidesRequestData
 	 * @param string      $key
 	 * @param string|null $default
 	 *
-	 * @throws RuntimeException
 	 * @return string
+	 * @throws RuntimeException
 	 */
 	public function getInputString( string $key, ?string $default = null ) : string
 	{
@@ -378,12 +382,7 @@ final class ServerRequest implements ProvidesRequestData
 
 		if ( !is_string( $value ) )
 		{
-			throw new RuntimeException(
-				sprintf(
-					'Input for key "%s" is not a string',
-					$key
-				)
-			);
+			throw new RuntimeException( sprintf( 'Input for key "%s" is not a string', $key ) );
 		}
 
 		return $value;
@@ -393,8 +392,8 @@ final class ServerRequest implements ProvidesRequestData
 	 * @param string     $key
 	 * @param array|null $default
 	 *
-	 * @throws RuntimeException
 	 * @return array
+	 * @throws RuntimeException
 	 */
 	public function getInputArray( string $key, ?array $default = null ) : array
 	{
@@ -402,12 +401,7 @@ final class ServerRequest implements ProvidesRequestData
 
 		if ( !is_array( $value ) )
 		{
-			throw new RuntimeException(
-				sprintf(
-					'Input for key "%s" is not an array',
-					$key
-				)
-			);
+			throw new RuntimeException( sprintf( 'Input for key "%s" is not an array', $key ) );
 		}
 
 		return $value;

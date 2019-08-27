@@ -1,4 +1,4 @@
-FROM php:7.3-cli-alpine
+FROM php:7.4-rc-cli-alpine
 ENV XDEBUG_VERSION "2.8.0beta2"
 RUN apk update && apk add --no-cache $PHPIZE_DEPS bash git curl
 RUN pecl install xdebug-${XDEBUG_VERSION} \

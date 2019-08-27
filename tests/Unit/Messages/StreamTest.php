@@ -317,7 +317,7 @@ final class StreamTest extends TestCase
 
 		$resource = $stream->detach();
 
-		$this->assertInternalType( 'resource', $resource );
+        $this->assertIsResource( $resource );
 
 		$this->assertNull( $stream->detach() );
 	}

@@ -21,6 +21,24 @@ final class ServerRequestTest extends TestCase
         $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
     }
 
+    public function testItCanBeCreatedFromGlobals() : void
+    {
+        $_SERVER['SERVER_PROTOCOL'] = 'test';
+        $_GET['foo'] = 'bar';
+        $_POST['foo'] = 'bar';
+        $_COOKIE['foo'] = 'bar';
+        $_REQUEST['foo'] = 'bar';
+        $_FILES['foo'] = ['name' => 'test'];
+
+        $serverRequest = ServerRequest::fromGlobals();
+        $expectedParameters = ['foo' => 'bar'];
+
+        $this->assertEquals($expectedParameters, $serverRequest->getParsedBody());
+        $this->assertEquals($expectedParameters, $serverRequest->getCookieParams());
+        $this->assertCount(1, $serverRequest->getUploadedFiles());
+
+    }
+
     public function testItReturnsServerProtocol() :void
     {
         $_SERVER['SERVER_PROTOCOL'] = 'test';
@@ -328,11 +346,19 @@ final class ServerRequestTest extends TestCase
 
     public function testWithUploadedFiles() : void
     {
-        $this->markTestSkipped();
-        $uploadedFiles = ['foo' => ['foo' => UploadedFile::fromArray([])]];
+        $fileKey = 'foo';
+        $uploadedFiles = [
+            $fileKey => [
+                'foo' => UploadedFile::fromArray(['name' => 'test']),
+                'bar' => UploadedFile::fromArray(['name' => 'unit'])
+            ]
+        ];
         $serverRequest = ServerRequest::fromGlobals()->withUploadedFiles($uploadedFiles);
 
-        $this->assertEquals($uploadedFiles, $serverRequest->getUploadedFiles());
+        $this->assertCount(2, $serverRequest->getUploadedFiles()[$fileKey]);
+        $this->assertContainsOnlyInstancesOf(
+            UploadedFile::class, $serverRequest->getUploadedFiles()[$fileKey]
+        );
     }
 
     public function testItReturnsParsedBody() : void

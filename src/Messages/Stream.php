@@ -5,7 +5,6 @@ namespace IceHawk\IceHawk\Messages;
 use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
 use IceHawk\IceHawk\Exceptions\RuntimeException;
 use Psr\Http\Message\StreamInterface;
-use function array_key_exists;
 use function fclose;
 use function ftell;
 use function is_int;
@@ -35,7 +34,7 @@ final class Stream implements StreamInterface
 		if ( is_string( $stream ) )
 		{
 			set_error_handler(
-				static function ()
+				function ()
 				{
 					throw new InvalidArgumentException(
 						'Invalid file provided for stream; must be a valid path with valid permissions'

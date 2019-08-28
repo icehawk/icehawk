@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Fortuneglobe\IceLynx\Server\Tests\Unit;
+namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
 use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;

@@ -2,6 +2,7 @@
 
 namespace IceHawk\IceHawk\Tests\Fixtures\Traits;
 
+use IceHawk\IceHawk\Messages\UploadedFile;
 
 trait UploadedFilesProviding
 {

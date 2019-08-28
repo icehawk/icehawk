@@ -3,6 +3,7 @@
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
 use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
+use IceHawk\IceHawk\Messages\UploadedFile;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UploadedFileInterface;
 

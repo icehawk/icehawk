@@ -27,7 +27,6 @@ final class ServerRequestTest extends TestCase
         $_GET['foo'] = 'bar';
         $_POST['foo'] = 'bar';
         $_COOKIE['foo'] = 'bar';
-        $_REQUEST['foo'] = 'bar';
         $_FILES['foo'] = ['name' => 'test'];
 
         $serverRequest = ServerRequest::fromGlobals();
@@ -346,15 +345,32 @@ final class ServerRequestTest extends TestCase
 
     public function testWithUploadedFiles() : void
     {
-        $fileKey = 'foo';
+        $fileKey = 'test';
+
         $uploadedFiles = [
             $fileKey => [
-                'foo' => UploadedFile::fromArray(['name' => 'test']),
-                'bar' => UploadedFile::fromArray(['name' => 'unit'])
+                'foo' => UploadedFile::fromArray(
+                    [
+                        'name'      => 'test.txt',
+                        'type'      => 'text/plain',
+                        'tmp_name'  => '/tmp/php/efgwef98',
+                        'error'     => UPLOAD_ERR_OK,
+                        'size'      => 563
+                    ]
+                ),
+                'bar' => UploadedFile::fromArray(
+                    [
+                        'name'      => 'test.txt',
+                        'type'      => 'text/plain',
+                        'tmp_name'  => '/tmp/php/efgwef98',
+                        'error'     => UPLOAD_ERR_NO_FILE,
+                        'size'      => 0
+                    ]
+                ),
             ]
         ];
-        $serverRequest = ServerRequest::fromGlobals()->withUploadedFiles($uploadedFiles);
 
+        $serverRequest = ServerRequest::fromGlobals()->withUploadedFiles($uploadedFiles);
         $this->assertCount(2, $serverRequest->getUploadedFiles()[$fileKey]);
         $this->assertContainsOnlyInstancesOf(
             UploadedFile::class, $serverRequest->getUploadedFiles()[$fileKey]

@@ -7,6 +7,7 @@ use IceHawk\IceHawk\Exceptions\RuntimeException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use function move_uploaded_file;
+use function is_string;
 
 final class UploadedFile implements UploadedFileInterface
 {
@@ -54,13 +55,23 @@ final class UploadedFile implements UploadedFileInterface
 		return new Stream( $this->tempName, 'rb' );
 	}
 
-	public function moveTo( $targetPath ) : void
-	{
-		if ( !move_uploaded_file( $this->tempName, $targetPath ) )
-		{
-			throw new RuntimeException( 'Could not move uploaded file.' );
-		}
-	}
+    public function moveTo( $targetPath ) : void
+    {
+        if (!$this->isNotEmptyString($targetPath)) {
+            throw new InvalidArgumentException(
+                'Invalid path provided for move operation. Must be a non-empty string.'
+            );
+        }
+
+        $moved = 'cli' === PHP_SAPI
+            ? rename($this->tempName, $targetPath)
+            : move_uploaded_file($this->tempName, $targetPath);
+
+        if ( !$moved )
+        {
+            throw new RuntimeException( 'Could not move uploaded file.' );
+        }
+    }
 
 	public function getSize() : int
 	{
@@ -81,4 +92,9 @@ final class UploadedFile implements UploadedFileInterface
 	{
 		return $this->type;
 	}
+
+    private function isNotEmptyString($value) : bool
+    {
+        return is_string($value) && !empty($value);
+    }
 }

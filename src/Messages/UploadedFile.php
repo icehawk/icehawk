@@ -58,9 +58,7 @@ final class UploadedFile implements UploadedFileInterface
     public function moveTo( $targetPath ) : void
     {
         if (!$this->isNotEmptyString($targetPath)) {
-            throw new InvalidArgumentException(
-                'Invalid path provided for move operation. Must be a non-empty string.'
-            );
+            throw InvalidArgumentException::invalidFileMovePath();
         }
 
         $moved = 'cli' === PHP_SAPI

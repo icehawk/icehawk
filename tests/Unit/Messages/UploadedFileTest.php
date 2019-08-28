@@ -56,6 +56,7 @@ final class UploadedFileTest extends TestCase
     public function testMoveToRaisesExceptionForInvalidPath($path) : void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(InvalidArgumentException::invalidFileMovePath()->getMessage());
 
         $this->uploadedFile->moveTo($path);
     }

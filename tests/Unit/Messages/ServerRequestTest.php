@@ -8,11 +8,14 @@ use IceHawk\IceHawk\Messages\ServerRequest;
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\Messages\UploadedFile;
 use IceHawk\IceHawk\Messages\Uri;
+use IceHawk\IceHawk\Tests\Fixtures\Traits\UploadedFilesProviding;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 final class ServerRequestTest extends TestCase
 {
+    use UploadedFilesProviding;
+
     private const VALID_HEADER_NAME = 'Authorization';
 
     public function setUp() : void
@@ -345,35 +348,11 @@ final class ServerRequestTest extends TestCase
 
     public function testWithUploadedFiles() : void
     {
-        $fileKey = 'test';
+        $serverRequest = ServerRequest::fromGlobals()->withUploadedFiles($this->uploadedFilesArray());
 
-        $uploadedFiles = [
-            $fileKey => [
-                'foo' => UploadedFile::fromArray(
-                    [
-                        'name'      => 'test.txt',
-                        'type'      => 'text/plain',
-                        'tmp_name'  => '/tmp/php/efgwef98',
-                        'error'     => UPLOAD_ERR_OK,
-                        'size'      => 563
-                    ]
-                ),
-                'bar' => UploadedFile::fromArray(
-                    [
-                        'name'      => 'test.txt',
-                        'type'      => 'text/plain',
-                        'tmp_name'  => '/tmp/php/efgwef98',
-                        'error'     => UPLOAD_ERR_NO_FILE,
-                        'size'      => 0
-                    ]
-                ),
-            ]
-        ];
-
-        $serverRequest = ServerRequest::fromGlobals()->withUploadedFiles($uploadedFiles);
-        $this->assertCount(2, $serverRequest->getUploadedFiles()[$fileKey]);
+        $this->assertCount(2, $serverRequest->getUploadedFiles()['test']);
         $this->assertContainsOnlyInstancesOf(
-            UploadedFile::class, $serverRequest->getUploadedFiles()[$fileKey]
+            UploadedFile::class, $serverRequest->getUploadedFiles()['test']
         );
     }
 

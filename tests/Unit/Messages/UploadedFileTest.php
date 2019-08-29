@@ -80,7 +80,8 @@ final class UploadedFileTest extends TestCase
         $stream = new Stream($this->tempName, 'w+b');
         $stream->write('foo bar.');
 
-        $this->files[] = $to = $this->tempName;
+        $to = $this->tempName;
+        $this->files[] = $to;
 
         $this->uploadedFile->moveTo($to);
         $this->assertFileExists($to);

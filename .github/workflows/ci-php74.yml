@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Check for PHP parse errors
-        run: docker run --rm -v $(pwd):/app php:7.4-cli find /app/src -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+        run: docker run --rm -v $(pwd):/app php:7.4-cli -c 'find /app/src -type f -name "*.php" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )'
 
       - name: Composer validate
         run: docker run --rm -v $(pwd):/app composer validate

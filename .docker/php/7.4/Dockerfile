@@ -1,8 +1,8 @@
-FROM php:7.4-rc-cli-alpine
-ENV XDEBUG_VERSION "2.8.0beta2"
-RUN apk update && apk add --no-cache $PHPIZE_DEPS bash git curl
+FROM php:7.4-cli-alpine
+ENV XDEBUG_VERSION "2.9.4"
+RUN apk update && apk add --no-cache $PHPIZE_DEPS
 RUN pecl install xdebug-${XDEBUG_VERSION} \
     && docker-php-ext-enable xdebug
 RUN apk del $PHPIZE_DEPS && rm -rf /var/cache/apk/*
-WORKDIR /code
-ENTRYPOINT ["/bin/bash"]
+VOLUME ["/app"]
+WORKDIR /app

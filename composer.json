@@ -1,60 +1,61 @@
 {
-  "name": "icehawk/icehawk",
-  "description": "Lightweight PHP framework implementing PSR-15",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "license": "MIT",
-  "type": "library",
-  "authors": [
-    {
-      "name": "Holger Woltersdorf",
-      "email": "hw@hollo.me"
+    "name": "icehawk/icehawk",
+    "description": "Lightweight PHP framework implementing PSR-15",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Holger Woltersdorf",
+            "email": "hw@hollo.me"
+        },
+        {
+            "name": "Tobias Mißner",
+            "email": "tobias.missner@fortuneglobe.com"
+        },
+        {
+            "name": "Benjamin Bruska",
+            "email": "benjamin.bruska@fortuneglobe.com"
+        }
+    ],
+    "support": {
+        "email": "hw@hollo.me",
+        "source": "https://github.com/icehawk/icehawk",
+        "issues": "https://github.com/icehawk/icehawk/issues"
     },
-    {
-      "name": "Tobias Mißner",
-      "email": "tobias.missner@fortuneglobe.com"
+    "require": {
+        "php": ">=7.4",
+        "ext-fileinfo": "*",
+        "psr/http-message": "~1.0",
+        "psr/http-server-handler": "~1.0",
+        "psr/http-server-middleware": "~1.0"
     },
-    {
-      "name": "Benjamin Bruska",
-      "email": "benjamin.bruska@fortuneglobe.com"
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "tm/tooly-composer-script": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "IceHawk\\IceHawk\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IceHawk\\IceHawk\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
+        "post-update-cmd": "Tooly\\ScriptHandler::installPharTools"
+    },
+    "extra": {
+        "tools": {
+            "phpunit": {
+                "url": "https://phar.phpunit.de/phpunit-9.phar",
+                "only-dev": true,
+                "replace": true
+            }
+        }
     }
-  ],
-  "support": {
-    "email": "hw@hollo.me",
-    "source": "https://github.com/icehawk/icehawk",
-    "issues": "https://github.com/icehawk/icehawk/issues"
-  },
-  "require": {
-    "php": ">=7.4",
-    "ext-fileinfo": "*",
-    "psr/http-message": "~1.0",
-    "psr/http-server-handler": "~1.0",
-    "psr/http-server-middleware": "~1.0"
-  },
-  "require-dev": {
-    "roave/security-advisories": "dev-master",
-    "tm/tooly-composer-script": "^1.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "IceHawk\\IceHawk\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "IceHawk\\IceHawk\\Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "post-install-cmd": "Tooly\\ScriptHandler::installPharTools",
-    "post-update-cmd": "Tooly\\ScriptHandler::installPharTools"
-  },
-  "extra": {
-    "tools": {
-      "phpunit": {
-        "url": "https://phar.phpunit.de/phpunit-9.phar",
-        "only-dev": true
-      }
-    }
-  }
 }

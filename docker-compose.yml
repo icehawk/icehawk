@@ -1,20 +1,23 @@
-version: "3"
+version: "3.7"
 
 services:
-  php72:
-    build:
-      context: .docker/php/7.2
-    volumes:
-      - ./:/code
-
-  php73:
-    build:
-      context: .docker/php/7.3
-    volumes:
-      - ./:/code
-
-  php74:
+  php:
     build:
       context: .docker/php/7.4
+    container_name: icehawk_php
     volumes:
-      - ./:/code
+      - ./:/app
+
+  composer:
+    image: composer
+    container_name: icehawk_composer
+    volumes:
+      - ./:/app
+    command: update -o -v
+
+  phpstan:
+    image: phpstan/phpstan
+    container_name: icehawk_phpstan
+    volumes:
+      - ./:/app
+    command: analyze --level=max /app/src

@@ -1,14 +1,14 @@
 <phpunit
-        bootstrap="../tests/bootstrap.php"
-        verbose="true"
-        beStrictAboutOutputDuringTests="true"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
-        backupGlobals="true"
-        stopOnError="true"
-        stopOnFailure="true">
+    bootstrap="../vendor/autoload.php"
+    verbose="true"
+    beStrictAboutOutputDuringTests="true"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    backupGlobals="true"
+    stopOnError="true"
+    stopOnFailure="true">
     <testsuites>
         <testsuite name="Unit">
             <directory suffix="Test.php">../tests/Unit</directory>

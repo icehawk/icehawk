@@ -7,10 +7,22 @@ use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use function array_slice;
 use function fclose;
+use function feof;
+use function fopen;
+use function fread;
+use function fseek;
+use function fstat;
 use function ftell;
+use function fwrite;
 use function is_int;
 use function is_resource;
 use function is_string;
+use function is_writable;
+use function restore_error_handler;
+use function set_error_handler;
+use function stream_get_contents;
+use function stream_get_meta_data;
+use function strpos;
 
 final class Stream implements StreamInterface
 {

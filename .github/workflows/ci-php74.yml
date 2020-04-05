@@ -45,7 +45,10 @@ jobs:
         run: docker run --rm -v $(pwd):/app composer update -o -v
 
       - name: Run unit tests
-        run: docker run --rm -v $(pwd):/app icehawk_php /app/vendor/bin/phpunit.phar -c /app/build/phpunit.xml
+        run: docker run --rm -v $(pwd):/app icehawk_php /app/vendor/bin/phpunit.phar -c /app/build/phpunit.xml --coverage-clover=/app/coverage.xml
+
+      - name: Upload code coverage to codecov.io
+        run: bash <(curl -s https://codecov.io/bash)
 
   release:
     needs:

@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/icehawk/icehawk/tree/3.x-dev.svg?style=svg)](https://circleci.com/gh/icehawk/icehawk/tree/3.x-dev)
+![IceHawk CI PHP 7.4](https://github.com/icehawk/icehawk/workflows/IceHawk%20CI%20PHP%207.4/badge.svg?branch=3.x-dev)
 [![codecov](https://codecov.io/gh/icehawk/icehawk/branch/3.x-dev/graph/badge.svg)](https://codecov.io/gh/icehawk/icehawk)
 [![License](https://poser.pugx.org/icehawk/icehawk/license)](https://packagist.org/packages/icehawk/icehawk)
 [![phpstan enabled](https://img.shields.io/badge/phpstan-enabled-green.svg)](https://github.com/phpstan/phpstan)

@@ -25,14 +25,13 @@
     "issues": "https://github.com/icehawk/icehawk/issues"
   },
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.4",
     "ext-fileinfo": "*",
     "psr/http-message": "~1.0",
     "psr/http-server-handler": "~1.0",
     "psr/http-server-middleware": "~1.0"
   },
   "require-dev": {
-    "ext-xdebug": "*",
     "roave/security-advisories": "dev-master",
     "tm/tooly-composer-script": "^1.0"
   },
@@ -53,15 +52,7 @@
   "extra": {
     "tools": {
       "phpunit": {
-        "url": "https://phar.phpunit.de/phpunit-8.phar",
-        "only-dev": true
-      },
-      "phpmetrics": {
-        "url": "https://github.com/phpmetrics/PhpMetrics/releases/download/v2.4.1/phpmetrics.phar",
-        "only-dev": true
-      },
-      "phpstan": {
-        "url": "https://github.com/phpstan/phpstan/releases/download/0.11.15/phpstan.phar",
+        "url": "https://phar.phpunit.de/phpunit-9.phar",
         "only-dev": true
       }
     }

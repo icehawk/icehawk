@@ -2,23 +2,36 @@
 
 namespace IceHawk\IceHawk\Messages;
 
+use Countable;
+use Iterator;
+use IteratorAggregate;
 use Psr\Http\Message\UploadedFileInterface;
 use function is_array;
 
-final class UploadedFilesCollection
+/**
+ * @implements IteratorAggregate<int, UploadedFileInterface>
+ */
+final class UploadedFilesCollection implements Countable, IteratorAggregate
 {
-	/** @var array|UploadedFileInterface[] */
-	private $uploadedFiles;
+	/** @var array<int,UploadedFileInterface> */
+	private array $uploadedFiles;
 
 	private function __construct()
 	{
 		$this->uploadedFiles = [];
 	}
 
+	/**
+	 * @param array<string, string|array<string, array<int,string|int>>> $filesArray
+	 *
+	 * @return UploadedFilesCollection
+	 */
 	public static function fromFilesArray( array $filesArray ) : self
 	{
 		$collection = new self();
-		$flatArray  = [];
+
+		/** @var array<string, array<int, array<string, int|string>>> $flatArray */
+		$flatArray = [];
 
 		foreach ( $filesArray as $field => $files )
 		{
@@ -40,6 +53,7 @@ final class UploadedFilesCollection
 
 		foreach ( $flatArray as $field => $files )
 		{
+			/** @var array<string, int|string> $fileArray */
 			foreach ( $files as $fileArray )
 			{
 				$collection->addFile( (string)$field, UploadedFile::fromArray( $fileArray ) );
@@ -59,6 +73,11 @@ final class UploadedFilesCollection
 		return self::fromFilesArray( $_FILES ?? [] );
 	}
 
+	/**
+	 * @param array<string, array<int, UploadedFileInterface>> $uploadedFiles
+	 *
+	 * @return UploadedFilesCollection
+	 */
 	public static function fromUploadedFilesArray( array $uploadedFiles ) : self
 	{
 		$collection = new self();
@@ -71,6 +90,10 @@ final class UploadedFilesCollection
 		return $collection;
 	}
 
+	/**
+	 * @param string                            $field
+	 * @param array<int, UploadedFileInterface> $files
+	 */
 	private function addFiles( string $field, array $files ) : void
 	{
 		foreach ( $files as $file )
@@ -79,8 +102,24 @@ final class UploadedFilesCollection
 		}
 	}
 
+	/**
+	 * @return array<int, UploadedFileInterface>
+	 */
 	public function toArray() : array
 	{
 		return $this->uploadedFiles;
+	}
+
+	/**
+	 * @return Iterator<int, UploadedFileInterface>
+	 */
+	public function getIterator() : Iterator
+	{
+		yield from $this->uploadedFiles;
+	}
+
+	public function count() : int
+	{
+		return count( $this->uploadedFiles );
 	}
 }

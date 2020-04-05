@@ -2,15 +2,18 @@
 
 namespace IceHawk\IceHawk\Messages;
 
-use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
+use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 use function parse_url;
 
 final class Uri implements UriInterface
 {
-	/** @var array */
-	private $components;
+	/** @var array<int|string, int|string|false|null> */
+	private array $components;
 
+	/**
+	 * @param array<int|string, int|string|false|null> $components
+	 */
 	private function __construct( array $components )
 	{
 		$this->components = $components;
@@ -28,7 +31,7 @@ final class Uri implements UriInterface
 	}
 
 	/**
-	 * @param array $components
+	 * @param array<int|string, int|string|false|null> $components
 	 *
 	 * @return Uri
 	 * @throws InvalidArgumentException
@@ -47,7 +50,7 @@ final class Uri implements UriInterface
 
 	public function getScheme() : string
 	{
-		return $this->components['scheme'] ?? '';
+		return (string)($this->components['scheme'] ?? '');
 	}
 
 	public function getAuthority() : string
@@ -74,7 +77,7 @@ final class Uri implements UriInterface
 
 	public function getHost() : string
 	{
-		return $this->components['host'] ?? '';
+		return (string)($this->components['host'] ?? '');
 	}
 
 	public function getPort() : ?int
@@ -89,19 +92,25 @@ final class Uri implements UriInterface
 
 	public function getPath() : string
 	{
-		return $this->components['path'] ?? '';
+		return (string)($this->components['path'] ?? '');
 	}
 
 	public function getQuery() : string
 	{
-		return $this->components['query'] ?? '';
+		return (string)($this->components['query'] ?? '');
 	}
 
 	public function getFragment() : string
 	{
-		return $this->components['fragment'] ?? '';
+		return (string)($this->components['fragment'] ?? '');
 	}
 
+	/**
+	 * @param string $scheme
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
 	public function withScheme( $scheme ) : self
 	{
 		$components           = $this->components;
@@ -154,6 +163,12 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param string $path
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
 	public function withPath( $path ) : self
 	{
 		$components         = $this->components;
@@ -162,6 +177,12 @@ final class Uri implements UriInterface
 		return self::fromComponents( $components );
 	}
 
+	/**
+	 * @param string $query
+	 *
+	 * @return Uri
+	 * @throws InvalidArgumentException
+	 */
 	public function withQuery( $query ) : self
 	{
 		$components          = $this->components;

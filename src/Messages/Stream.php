@@ -2,9 +2,10 @@
 
 namespace IceHawk\IceHawk\Messages;
 
-use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
-use IceHawk\IceHawk\Exceptions\RuntimeException;
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
+use function array_slice;
 use function fclose;
 use function ftell;
 use function is_int;
@@ -34,7 +35,7 @@ final class Stream implements StreamInterface
 		if ( is_string( $stream ) )
 		{
 			set_error_handler(
-				function ()
+				static function ()
 				{
 					throw new InvalidArgumentException(
 						'Invalid file provided for stream; must be a valid path with valid permissions'
@@ -113,14 +114,14 @@ final class Stream implements StreamInterface
 			return null;
 		}
 
-		$stats = fstat( $this->resource );
+		$stats = array_slice( (array)fstat( $this->resource ), 13 );
 
-		return $stats['size'];
+		return $stats['size'] ?? null;
 	}
 
 	/**
-	 * @throws RuntimeException
 	 * @return int
+	 * @throws RuntimeException
 	 */
 	public function tell() : int
 	{
@@ -171,8 +172,8 @@ final class Stream implements StreamInterface
 	 * @param int $offset
 	 * @param int $whence
 	 *
-	 * @throws RuntimeException
 	 * @return bool
+	 * @throws RuntimeException
 	 */
 	public function seek( $offset, $whence = SEEK_SET ) : bool
 	{
@@ -197,8 +198,8 @@ final class Stream implements StreamInterface
 	}
 
 	/**
-	 * @throws RuntimeException
 	 * @return bool
+	 * @throws RuntimeException
 	 */
 	public function rewind() : bool
 	{
@@ -223,8 +224,8 @@ final class Stream implements StreamInterface
 	/**
 	 * @param string $string
 	 *
-	 * @throws RuntimeException
 	 * @return bool|int
+	 * @throws RuntimeException
 	 */
 	public function write( $string )
 	{
@@ -262,8 +263,8 @@ final class Stream implements StreamInterface
 	/**
 	 * @param int $length
 	 *
-	 * @throws RuntimeException
 	 * @return string
+	 * @throws RuntimeException
 	 */
 	public function read( $length ) : string
 	{
@@ -288,8 +289,8 @@ final class Stream implements StreamInterface
 	}
 
 	/**
-	 * @throws RuntimeException
 	 * @return string
+	 * @throws RuntimeException
 	 */
 	public function getContents() : string
 	{
@@ -309,7 +310,7 @@ final class Stream implements StreamInterface
 	}
 
 	/**
-	 * @param null $key
+	 * @param string|null $key
 	 *
 	 * @return array|mixed|null
 	 */
@@ -327,11 +328,6 @@ final class Stream implements StreamInterface
 
 		$metadata = stream_get_meta_data( $this->resource );
 
-		if ( !array_key_exists( $key, $metadata ) )
-		{
-			return null;
-		}
-
-		return $metadata[ $key ];
+		return $metadata[ $key ] ?? null;
 	}
 }

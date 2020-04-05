@@ -3,13 +3,15 @@
 namespace IceHawk\IceHawk\Tests\Integration;
 
 use IceHawk\IceHawk\IceHawk;
+use PHPUnit\Framework\Exception;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
 final class IceHawkTest extends TestCase
 {
 	/**
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws Exception
 	 */
 	public function testCanCreateInstance() : void
 	{

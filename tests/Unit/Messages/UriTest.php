@@ -2,8 +2,9 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
-use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
 use IceHawk\IceHawk\Messages\Uri;
+use InvalidArgumentException;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
 final class UriTest extends TestCase
@@ -12,8 +13,8 @@ final class UriTest extends TestCase
 	 * @param string $url
 	 * @param string $expectedAuthority
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider authorityProvider
 	 */
@@ -48,7 +49,7 @@ final class UriTest extends TestCase
 
 	/**
 	 * @throws \InvalidArgumentException
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
+	 * @throws ExpectationFailedException
 	 */
 	public function testWithHost() : void
 	{
@@ -68,8 +69,8 @@ final class UriTest extends TestCase
 	 * @param string $url
 	 * @param string $expectedPath
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider pathProvider
 	 */
@@ -108,8 +109,8 @@ final class UriTest extends TestCase
 
 	/**
 	 * @throws \InvalidArgumentException
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithPath() : void
 	{
@@ -129,8 +130,8 @@ final class UriTest extends TestCase
 	 * @param string   $url
 	 * @param int|null $expectedPort
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider portProvider
 	 */
@@ -156,8 +157,8 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetHost() : void
 	{
@@ -167,8 +168,7 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 */
 	public function testWithFragment() : void
@@ -188,8 +188,8 @@ final class UriTest extends TestCase
 	 * @param string $url
 	 * @param string $expectedFragment
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider fragmentProvider
 	 */
@@ -226,8 +226,8 @@ final class UriTest extends TestCase
 	 * @param string $url
 	 * @param string $expectedUserInfo
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider userInfoProvider
 	 */
@@ -264,8 +264,8 @@ final class UriTest extends TestCase
 	 * @param string $url
 	 * @param string $expectedScheme
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider schemeProvider
 	 */
@@ -298,9 +298,8 @@ final class UriTest extends TestCase
 	 * @param array  $components
 	 * @param string $expectedUrl
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-	 * @throws \IceHawk\IceHawk\Exceptions\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider toStringProvider
 	 */
@@ -454,8 +453,7 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 */
 	public function testWithUserInfo() : void
@@ -476,8 +474,8 @@ final class UriTest extends TestCase
 	 * @param string $url
 	 * @param string $expectedQuery
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider queryProvider
 	 */
@@ -506,8 +504,7 @@ final class UriTest extends TestCase
 	 * @param array  $components
 	 * @param string $expectedUrl
 	 *
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider toStringProvider
@@ -521,8 +518,8 @@ final class UriTest extends TestCase
 
 	/**
 	 * @throws \InvalidArgumentException
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithPort() : void
 	{
@@ -539,8 +536,8 @@ final class UriTest extends TestCase
 
 	/**
 	 * @throws \InvalidArgumentException
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithQuery() : void
 	{
@@ -556,8 +553,8 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testFromString() : void
 	{
@@ -575,8 +572,8 @@ final class UriTest extends TestCase
 
 	/**
 	 * @throws \InvalidArgumentException
-	 * @throws \PHPUnit\Framework\ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithScheme() : void
 	{

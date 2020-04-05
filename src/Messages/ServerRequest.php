@@ -2,11 +2,12 @@
 
 namespace IceHawk\IceHawk\Messages;
 
-use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
-use IceHawk\IceHawk\Exceptions\RuntimeException;
 use IceHawk\IceHawk\Messages\Interfaces\ProvidesRequestData;
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
+use RuntimeException;
 use function implode;
 use function is_array;
 use function is_string;
@@ -16,42 +17,40 @@ use const PHP_URL_QUERY;
 
 final class ServerRequest implements ProvidesRequestData
 {
-	/** @var array */
-	private $serverParams;
+	/** @var array<string,mixed> */
+	private array $serverParams;
 
-	/** @var array */
-	private $headers;
+	/** @var array<string,array> */
+	private array $headers;
 
-	/** @var array */
-	private $queryParams;
+	/** @var array<string,mixed> */
+	private array $queryParams;
 
-	/** @var StreamInterface */
-	private $body;
+	private StreamInterface $body;
 
-	/** @var null|array|object */
+	/** @var null|array<mixed>|object */
 	private $parsedBody;
 
-	/** @var array */
-	private $cookieParams;
+	/** @var array<string,mixed> */
+	private array $cookieParams;
 
-	/** @var array */
-	private $mergedParams;
+	/** @var array<string,mixed> */
+	private array $mergedParams;
 
-	/** @var UploadedFilesCollection */
-	private $uploadedFiles;
+	private UploadedFilesCollection $uploadedFiles;
 
-	/** @var array */
-	private $attributes;
+	/** @var array<string,mixed> */
+	private array $attributes;
 
 	/**
-	 * @param array                   $serverParams
-	 * @param array                   $queryParams
-	 * @param StreamInterface         $body
-	 * @param null|array|object       $parsedBody
-	 * @param array                   $cookieParams
-	 * @param array                   $mergedParams
-	 * @param UploadedFilesCollection $uploadedFiles
-	 * @param array                   $attributes
+	 * @param array<string,mixed>      $serverParams
+	 * @param array<string,mixed>      $queryParams
+	 * @param StreamInterface          $body
+	 * @param null|array<mixed>|object $parsedBody
+	 * @param array<string,mixed>      $cookieParams
+	 * @param array<string,mixed>      $mergedParams
+	 * @param UploadedFilesCollection  $uploadedFiles
+	 * @param array<string,mixed>      $attributes
 	 */
 	private function __construct(
 		array $serverParams,
@@ -129,6 +128,11 @@ final class ServerRequest implements ProvidesRequestData
 		return $this->serverParams['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
 	}
 
+	/**
+	 * @param string $version
+	 *
+	 * @return ServerRequest
+	 */
 	public function withProtocolVersion( $version ) : self
 	{
 		$request                                  = clone $this;
@@ -137,21 +141,39 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @return array<string,array>
+	 */
 	public function getHeaders() : array
 	{
 		return $this->headers;
 	}
 
+	/**
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
 	public function hasHeader( $name ) : bool
 	{
 		return isset( $this->headers[ (string)$name ] );
 	}
 
-	public function getHeader( $name )
+	/**
+	 * @param string $name
+	 *
+	 * @return array<int,string>
+	 */
+	public function getHeader( $name ) : array
 	{
 		return $this->headers[ (string)$name ] ?? [];
 	}
 
+	/**
+	 * @param string $name
+	 *
+	 * @return string
+	 */
 	public function getHeaderLine( $name ) : string
 	{
 		if ( !$this->hasHeader( $name ) )
@@ -162,6 +184,12 @@ final class ServerRequest implements ProvidesRequestData
 		return implode( ',', $this->getHeader( $name ) );
 	}
 
+	/**
+	 * @param string               $name
+	 * @param string|array<string> $value
+	 *
+	 * @return ServerRequest
+	 */
 	public function withHeader( $name, $value ) : self
 	{
 		$request                           = clone $this;
@@ -170,6 +198,12 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @param string               $name
+	 * @param string|array<string> $value
+	 *
+	 * @return ServerRequest
+	 */
 	public function withAddedHeader( $name, $value ) : self
 	{
 		$request = clone $this;
@@ -185,6 +219,11 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @param string $name
+	 *
+	 * @return ServerRequest
+	 */
 	public function withoutHeader( $name ) : self
 	{
 		$request = clone $this;
@@ -198,6 +237,11 @@ final class ServerRequest implements ProvidesRequestData
 		return $this->body;
 	}
 
+	/**
+	 * @param StreamInterface $body
+	 *
+	 * @return ServerRequest
+	 */
 	public function withBody( StreamInterface $body ) : self
 	{
 		$request       = clone $this;
@@ -216,6 +260,11 @@ final class ServerRequest implements ProvidesRequestData
 		);
 	}
 
+	/**
+	 * @param mixed $requestTarget
+	 *
+	 * @return ServerRequest
+	 */
 	public function withRequestTarget( $requestTarget ) : self
 	{
 		$url         = (string)$requestTarget;
@@ -234,6 +283,11 @@ final class ServerRequest implements ProvidesRequestData
 		return $this->serverParams['REQUEST_METHOD'] ?? 'UNKNOWN';
 	}
 
+	/**
+	 * @param string $method
+	 *
+	 * @return ServerRequest
+	 */
 	public function withMethod( $method ) : self
 	{
 		$request = clone $this;
@@ -263,6 +317,12 @@ final class ServerRequest implements ProvidesRequestData
 		);
 	}
 
+	/**
+	 * @param UriInterface $uri
+	 * @param bool         $preserveHost
+	 *
+	 * @return ServerRequest
+	 */
 	public function withUri( UriInterface $uri, $preserveHost = false ) : self
 	{
 		$request                        = clone $this;
@@ -286,16 +346,27 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getServerParams() : array
 	{
 		return $this->serverParams;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getCookieParams() : array
 	{
 		return $this->cookieParams;
 	}
 
+	/**
+	 * @param array<string, mixed> $cookies
+	 *
+	 * @return ServerRequest
+	 */
 	public function withCookieParams( array $cookies ) : self
 	{
 		$request               = clone $this;
@@ -304,11 +375,19 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getQueryParams() : array
 	{
 		return $this->queryParams;
 	}
 
+	/**
+	 * @param array<string, mixed> $query
+	 *
+	 * @return ServerRequest
+	 */
 	public function withQueryParams( array $query ) : self
 	{
 		$request              = clone $this;
@@ -317,11 +396,19 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @return array<int, UploadedFileInterface>
+	 */
 	public function getUploadedFiles() : array
 	{
 		return $this->uploadedFiles->toArray();
 	}
 
+	/**
+	 * @param array<string, array<int,UploadedFileInterface>> $uploadedFiles
+	 *
+	 * @return ServerRequest
+	 */
 	public function withUploadedFiles( array $uploadedFiles ) : self
 	{
 		$request                = clone $this;
@@ -330,12 +417,20 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @return array<mixed>|object|null
+	 */
 	public function getParsedBody()
 	{
 		return $this->parsedBody;
 	}
 
-	public function withParsedBody( $data )
+	/**
+	 * @param array<mixed>|object|null $data
+	 *
+	 * @return ServerRequest
+	 */
+	public function withParsedBody( $data ) : self
 	{
 		$request             = clone $this;
 		$request->parsedBody = $data;
@@ -343,16 +438,31 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getAttributes() : array
 	{
 		return $this->attributes;
 	}
 
+	/**
+	 * @param string $name
+	 * @param null   $default
+	 *
+	 * @return mixed|null
+	 */
 	public function getAttribute( $name, $default = null )
 	{
 		return $this->attributes[ (string)$name ] ?? $default;
 	}
 
+	/**
+	 * @param string $name
+	 * @param mixed  $value
+	 *
+	 * @return ServerRequest
+	 */
 	public function withAttribute( $name, $value ) : self
 	{
 		$request                              = clone $this;
@@ -361,6 +471,11 @@ final class ServerRequest implements ProvidesRequestData
 		return $request;
 	}
 
+	/**
+	 * @param string $name
+	 *
+	 * @return ServerRequest
+	 */
 	public function withoutAttribute( $name ) : self
 	{
 		$request = clone $this;
@@ -389,10 +504,10 @@ final class ServerRequest implements ProvidesRequestData
 	}
 
 	/**
-	 * @param string     $key
-	 * @param array|null $default
+	 * @param string            $key
+	 * @param array<mixed>|null $default
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 * @throws RuntimeException
 	 */
 	public function getInputArray( string $key, ?array $default = null ) : array

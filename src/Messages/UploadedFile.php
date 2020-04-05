@@ -2,28 +2,23 @@
 
 namespace IceHawk\IceHawk\Messages;
 
-use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
-use IceHawk\IceHawk\Exceptions\RuntimeException;
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use RuntimeException;
 use function move_uploaded_file;
 
 final class UploadedFile implements UploadedFileInterface
 {
-	/** @var string */
-	private $name;
+	private string $name;
 
-	/** @var string */
-	private $type;
+	private string $type;
 
-	/** @var string */
-	private $tempName;
+	private string $tempName;
 
-	/** @var int */
-	private $error;
+	private int $error;
 
-	/** @var int */
-	private $size;
+	private int $size;
 
 	private function __construct( string $name, string $type, string $tempName, int $error, int $size )
 	{
@@ -34,6 +29,11 @@ final class UploadedFile implements UploadedFileInterface
 		$this->size     = $size;
 	}
 
+	/**
+	 * @param array<string, string|int> $fileData
+	 *
+	 * @return UploadedFileInterface
+	 */
 	public static function fromArray( array $fileData ) : UploadedFileInterface
 	{
 		return new self(
@@ -54,6 +54,11 @@ final class UploadedFile implements UploadedFileInterface
 		return new Stream( $this->tempName, 'rb' );
 	}
 
+	/**
+	 * @param string $targetPath
+	 *
+	 * @throws RuntimeException
+	 */
 	public function moveTo( $targetPath ) : void
 	{
 		if ( !move_uploaded_file( $this->tempName, $targetPath ) )

@@ -2,8 +2,8 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
-use IceHawk\IceHawk\Exceptions\InvalidArgumentException;
-use IceHawk\IceHawk\Exceptions\RuntimeException;
+use InvalidArgumentException;
+use RuntimeException;
 use IceHawk\IceHawk\Messages\Stream;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
@@ -13,9 +13,8 @@ use function tempnam;
 final class StreamTest extends TestCase
 {
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testRead() : void
@@ -64,7 +63,6 @@ final class StreamTest extends TestCase
 	 * @throws RuntimeException
 	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 */
 	public function testSeek() : void
 	{
@@ -121,7 +119,6 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testGetSize() : void
@@ -137,9 +134,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 */
 	public function testGetMetadata() : void
 	{
@@ -167,9 +163,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function test__toString() : void
@@ -188,9 +183,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testEof() : void
@@ -215,9 +209,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 */
 	public function testIsWritable() : void
 	{
@@ -238,9 +231,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testRewind() : void
@@ -256,9 +248,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 */
 	public function testClose() : void
 	{
@@ -273,9 +264,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testTell() : void
@@ -306,9 +296,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testDetach() : void
@@ -324,9 +313,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testGetContents() : void
@@ -348,9 +336,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 */
 	public function testIsReadable() : void
 	{
@@ -368,9 +355,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testWrite() : void
@@ -396,9 +382,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 */
 	public function testIsSeekable() : void
 	{
@@ -412,9 +397,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
-	 * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
 	 */
 	public function testCanConstructStreamFromResource() : void
 	{

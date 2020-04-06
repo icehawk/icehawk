@@ -6,7 +6,9 @@ use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
+use function is_uploaded_file;
 use function move_uploaded_file;
+use function rename;
 
 final class UploadedFile implements UploadedFileInterface
 {
@@ -57,13 +59,33 @@ final class UploadedFile implements UploadedFileInterface
 	/**
 	 * @param string $targetPath
 	 *
+	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function moveTo( $targetPath ) : void
 	{
-		if ( !move_uploaded_file( $this->tempName, $targetPath ) )
+		$this->guardTargetPathIsValid( $targetPath );
+
+		$moved = is_uploaded_file( $this->tempName )
+			? move_uploaded_file( $this->tempName, $targetPath )
+			: rename( $this->tempName, $targetPath );
+
+		if ( !$moved )
 		{
 			throw new RuntimeException( 'Could not move uploaded file.' );
+		}
+	}
+
+	/**
+	 * @param mixed $targetPath
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	private function guardTargetPathIsValid( $targetPath ) : void
+	{
+		if ( !is_string( $targetPath ) || '' === trim( $targetPath ) )
+		{
+			throw new InvalidArgumentException( 'Target path is empty.' );
 		}
 	}
 

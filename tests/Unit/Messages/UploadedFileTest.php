@@ -9,19 +9,21 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
+use function sys_get_temp_dir;
+use function tempnam;
+use const UPLOAD_ERR_OK;
 
 final class UploadedFileTest extends TestCase
 {
 	private UploadedFileInterface $uploadedFile;
 
-	/** @var bool|string */
-	private $tempName;
+	private string $tempName;
 
 	private array $files;
 
 	public function setUp() : void
 	{
-		$this->tempName = tempnam( sys_get_temp_dir(), 'success' );
+		$this->tempName = (string)tempnam( sys_get_temp_dir(), 'success' );
 		$primitiveArray = [
 			'name'     => 'test.txt',
 			'type'     => 'text/plain',
@@ -60,6 +62,8 @@ final class UploadedFileTest extends TestCase
 
 	/**
 	 * @dataProvider invalidPathsDataProvider
+	 *
+	 * @param mixed $path
 	 *
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
@@ -101,5 +105,17 @@ final class UploadedFileTest extends TestCase
 		$this->uploadedFile->moveTo( $to );
 		$this->assertFileExists( $to );
 		$this->assertEquals( (string)$stream, file_get_contents( $to ) );
+	}
+
+	/**
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 */
+	public function testMoveToThrowsExceptionIfMoveWasNotSuccessful() : void
+	{
+		$this->expectException( RuntimeException::class );
+		$this->expectExceptionMessage( 'Could not move uploaded file' );
+
+		$this->uploadedFile->moveTo( '/unknown/bar' );
 	}
 }

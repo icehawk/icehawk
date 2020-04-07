@@ -793,7 +793,7 @@ final class ServerRequestTest extends TestCase
 	}
 
 	/**
-	 * @param $value
+	 * @param mixed $value
 	 *
 	 * @throws InvalidArgumentException
 	 * @throws UnexpectedValueException

@@ -6,6 +6,7 @@ use Countable;
 use Iterator;
 use IteratorAggregate;
 use Psr\Http\Message\UploadedFileInterface;
+use function count;
 use function is_array;
 
 /**
@@ -115,11 +116,20 @@ final class UploadedFilesCollection implements Countable, IteratorAggregate
 	 */
 	public function getIterator() : Iterator
 	{
-		yield from $this->uploadedFiles;
+		foreach ( $this->uploadedFiles as $field => $files )
+		{
+			yield from $files;
+		}
 	}
 
 	public function count() : int
 	{
-		return count( $this->uploadedFiles );
+		$count = 0;
+		foreach ( $this->uploadedFiles as $field => $files )
+		{
+			$count += count( $files );
+		}
+
+		return $count;
 	}
 }

@@ -14,6 +14,11 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
+use UnexpectedValueException;
+use const PHP_FLOAT_MAX;
+use const PHP_FLOAT_MIN;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
 
 final class ServerRequestTest extends TestCase
 {
@@ -631,7 +636,8 @@ final class ServerRequestTest extends TestCase
 		$_REQUEST['foo'] = $value;
 		$serverRequest   = ServerRequest::fromGlobals();
 
-		$this->expectException( RuntimeException::class );
+		$this->expectException( UnexpectedValueException::class );
+		$this->expectExceptionMessage( 'Input for key "foo" is not a string' );
 
 		/** @noinspection UnusedFunctionResultInspection */
 		$serverRequest->getInputString( 'foo' );
@@ -680,12 +686,13 @@ final class ServerRequestTest extends TestCase
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
-	public function testGetInputArrayThrowsExceptionIfValueIsNotAString( $value ) : void
+	public function testGetInputArrayThrowsExceptionIfValueIsNotAnArray( $value ) : void
 	{
 		$_REQUEST['foo'] = $value;
 		$serverRequest   = ServerRequest::fromGlobals();
 
-		$this->expectException( RuntimeException::class );
+		$this->expectException( UnexpectedValueException::class );
+		$this->expectExceptionMessage( 'Input for key "foo" is not an array' );
 
 		/** @noinspection UnusedFunctionResultInspection */
 		$serverRequest->getInputArray( 'foo' );
@@ -726,5 +733,154 @@ final class ServerRequestTest extends TestCase
 		$serverRequest = ServerRequest::fromGlobals();
 
 		$this->assertEquals( $defaultValue, $serverRequest->getInputArray( 'unit', $defaultValue ) );
+	}
+
+	/**
+	 * @param mixed $value
+	 *
+	 * @throws InvalidArgumentException
+	 * @throws UnexpectedValueException
+	 *
+	 * @dataProvider invalidGetInputIntProvider
+	 */
+	public function testGetInputIntThrowsExceptionIfValueIsNotCastableToInt( $value ) : void
+	{
+		$_REQUEST['foo'] = $value;
+		$serverRequest   = ServerRequest::fromGlobals();
+
+		$this->expectException( UnexpectedValueException::class );
+		$this->expectExceptionMessage( 'Input for key "foo" is not castable as integer' );
+
+		$serverRequest->getInputInt( 'foo' );
+	}
+
+	public function invalidGetInputIntProvider() : Generator
+	{
+		yield [null];
+		yield [false];
+		yield [true];
+		yield [''];
+		yield ['test'];
+		yield [12.3];
+		yield [PHP_INT_MAX . '1'];
+		yield [PHP_INT_MIN . '1'];
+	}
+
+	/**
+	 * @throws InvalidArgumentException
+	 * @throws UnexpectedValueException
+	 */
+	public function testGetInputIntThrowsExceptionIfKeyIsNotSetAndDefaultValueIsNull() : void
+	{
+		unset( $_REQUEST['foo'] );
+
+		$this->expectException( UnexpectedValueException::class );
+		$this->expectExceptionMessage( 'Input for key "foo" is not castable as integer' );
+
+		ServerRequest::fromGlobals()->getInputInt( 'foo', null );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws UnexpectedValueException
+	 */
+	public function testGetInputIntReturnsDefaultValueIfKeyIsNotSet() : void
+	{
+		unset( $_REQUEST['foo'] );
+
+		$this->assertSame( 123, ServerRequest::fromGlobals()->getInputInt( 'foo', 123 ) );
+	}
+
+	/**
+	 * @param $value
+	 *
+	 * @throws InvalidArgumentException
+	 * @throws UnexpectedValueException
+	 *
+	 * @dataProvider invalidGetInputFloatProvider
+	 */
+	public function testGetInputFloatThrowsExceptionIfValueIsNotCastableToFloat( $value ) : void
+	{
+		$this->expectException( UnexpectedValueException::class );
+		$this->expectExceptionMessage( 'Input for key "foo" is not castable as float' );
+
+		$_REQUEST['foo'] = $value;
+		$serverRequest   = ServerRequest::fromGlobals();
+
+		/** @noinspection UnusedFunctionResultInspection */
+		$serverRequest->getInputFloat( 'foo' );
+	}
+
+	public function invalidGetInputFloatProvider() : Generator
+	{
+		yield [null];
+		yield [false];
+		yield [true];
+		yield [''];
+		yield ['test'];
+		yield [123];
+		yield [PHP_FLOAT_MAX . '1'];
+		yield [PHP_FLOAT_MIN . '1'];
+	}
+
+	/**
+	 * @throws InvalidArgumentException
+	 * @throws UnexpectedValueException
+	 */
+	public function testGetInputFloatThrowsExceptionIfKeyIsNotSetAndDefaultValueIsNull() : void
+	{
+		unset( $_REQUEST['foo'] );
+
+		$this->expectException( UnexpectedValueException::class );
+		$this->expectExceptionMessage( 'Input for key "foo" is not castable as float' );
+
+		/** @noinspection UnusedFunctionResultInspection */
+		ServerRequest::fromGlobals()->getInputFloat( 'foo', null );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws UnexpectedValueException
+	 */
+	public function testGetInputFloatReturnsDefaultValueIfKeyIsNotSet() : void
+	{
+		unset( $_REQUEST['foo'] );
+
+		$this->assertSame( 12.3, ServerRequest::fromGlobals()->getInputFloat( 'foo', 12.3 ) );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testHasInputKey() : void
+	{
+		$_REQUEST['foo'] = null;
+		$_REQUEST['bar'] = 'string';
+		$_REQUEST['baz'] = ['array'];
+
+		$serverRequest = ServerRequest::fromGlobals();
+
+		$this->assertTrue( $serverRequest->hasInputKey( 'foo' ) );
+		$this->assertTrue( $serverRequest->hasInputKey( 'bar' ) );
+		$this->assertTrue( $serverRequest->hasInputKey( 'baz' ) );
+
+		$this->assertFalse( $serverRequest->hasInputKey( 'foo-bar-baz' ) );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testIsInputNull() : void
+	{
+		$_REQUEST['foo'] = null;
+
+		$serverRequest = ServerRequest::fromGlobals();
+
+		$this->assertTrue( $serverRequest->isInputNull( 'foo' ) );
+		$this->assertFalse( $serverRequest->isInputNull( 'bar' ) );
 	}
 }

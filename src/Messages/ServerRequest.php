@@ -7,11 +7,13 @@ use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use RuntimeException;
+use UnexpectedValueException;
+use function array_key_exists;
 use function implode;
 use function is_array;
 use function is_string;
 use function parse_url;
+use function sprintf;
 use const PHP_URL_PATH;
 use const PHP_URL_QUERY;
 
@@ -92,17 +94,7 @@ final class ServerRequest implements ProvidesRequestData
 
 	private function parseHeaderKey( string $key ) : string
 	{
-		return str_replace(
-			' ',
-			'-',
-			ucwords(
-				str_replace(
-					'_',
-					' ',
-					strtolower( substr( $key, 5 ) )
-				)
-			)
-		);
+		return str_replace( ' ', '-', ucwords( str_replace( '_', ' ', strtolower( substr( $key, 5 ) ) ) ) );
 	}
 
 	/**
@@ -489,7 +481,7 @@ final class ServerRequest implements ProvidesRequestData
 	 * @param string|null $default
 	 *
 	 * @return string
-	 * @throws RuntimeException
+	 * @throws UnexpectedValueException
 	 */
 	public function getInputString( string $key, ?string $default = null ) : string
 	{
@@ -497,7 +489,7 @@ final class ServerRequest implements ProvidesRequestData
 
 		if ( !is_string( $value ) )
 		{
-			throw new RuntimeException( sprintf( 'Input for key "%s" is not a string', $key ) );
+			throw new UnexpectedValueException( sprintf( 'Input for key "%s" is not a string', $key ) );
 		}
 
 		return $value;
@@ -508,7 +500,7 @@ final class ServerRequest implements ProvidesRequestData
 	 * @param array<mixed>|null $default
 	 *
 	 * @return array<mixed>
-	 * @throws RuntimeException
+	 * @throws UnexpectedValueException
 	 */
 	public function getInputArray( string $key, ?array $default = null ) : array
 	{
@@ -516,9 +508,59 @@ final class ServerRequest implements ProvidesRequestData
 
 		if ( !is_array( $value ) )
 		{
-			throw new RuntimeException( sprintf( 'Input for key "%s" is not an array', $key ) );
+			throw new UnexpectedValueException( sprintf( 'Input for key "%s" is not an array', $key ) );
 		}
 
 		return $value;
+	}
+
+	public function hasInputKey( string $key ) : bool
+	{
+		return array_key_exists( $key, $this->mergedParams );
+	}
+
+	public function isInputNull( string $key ) : bool
+	{
+		return $this->hasInputKey( $key ) && null === $this->mergedParams[ $key ];
+	}
+
+	/**
+	 * @param string   $key
+	 * @param int|null $default
+	 *
+	 * @return int
+	 * @throws UnexpectedValueException
+	 */
+	public function getInputInt( string $key, ?int $default = null ) : int
+	{
+		$value    = $this->mergedParams[ $key ] ?? (string)$default;
+		$intValue = (int)$value;
+
+		if ( (string)$intValue !== $value )
+		{
+			throw new UnexpectedValueException( sprintf( 'Input for key "%s" is not castable as integer', $key ) );
+		}
+
+		return $intValue;
+	}
+
+	/**
+	 * @param string     $key
+	 * @param float|null $default
+	 *
+	 * @return float
+	 * @throws UnexpectedValueException
+	 */
+	public function getInputFloat( string $key, ?float $default = null ) : float
+	{
+		$value      = $this->mergedParams[ $key ] ?? (string)$default;
+		$floatValue = (float)$value;
+
+		if ( (string)$floatValue !== $value )
+		{
+			throw new UnexpectedValueException( sprintf( 'Input for key "%s" is not castable as float', $key ) );
+		}
+
+		return $floatValue;
 	}
 }

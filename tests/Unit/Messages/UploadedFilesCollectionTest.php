@@ -2,11 +2,13 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
+use IceHawk\IceHawk\Messages\UploadedFile;
 use IceHawk\IceHawk\Messages\UploadedFilesCollection;
 use IceHawk\IceHawk\Tests\Fixtures\Traits\UploadedFilesProviding;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use function iterator_to_array;
 
 final class UploadedFilesCollectionTest extends TestCase
 {
@@ -52,6 +54,18 @@ final class UploadedFilesCollectionTest extends TestCase
 	 * @throws Exception
 	 * @throws ExpectationFailedException
 	 */
+	public function testCanBeCreatedFromNestedFilesArray() : void
+	{
+		$files           = $this->nestedFilesArray();
+		$filesCollection = UploadedFilesCollection::fromFilesArray( $files );
+
+		$this->assertCount( self::EXPECTED_FILES_COUNT, $filesCollection );
+	}
+
+	/**
+	 * @throws Exception
+	 * @throws ExpectationFailedException
+	 */
 	public function testItCanBeCreatedFromGlobals() : void
 	{
 		$_FILES = [];
@@ -62,5 +76,26 @@ final class UploadedFilesCollectionTest extends TestCase
 
 		$this->assertCount( self::EXPECTED_FILES_COUNT, UploadedFilesCollection::fromGlobals() );
 		$this->assertCount( self::EXPECTED_FILES_COUNT, UploadedFilesCollection::fromGlobals()->toArray() );
+	}
+
+	/**
+	 * @throws Exception
+	 * @throws ExpectationFailedException
+	 */
+	public function testGetIterator() : void
+	{
+		$_FILES = $this->filesArray();
+
+		$collection = UploadedFilesCollection::fromFilesArray( $_FILES );
+
+		$this->assertCount( self::EXPECTED_FILES_COUNT, iterator_to_array( $collection->getIterator(), false ) );
+		$this->assertInstanceOf( UploadedFile::class, $collection->getIterator()->current() );
+
+		$_FILES = $this->nestedFilesArray();
+
+		$collection = UploadedFilesCollection::fromFilesArray( $_FILES );
+
+		$this->assertCount( self::EXPECTED_FILES_COUNT, iterator_to_array( $collection->getIterator(), false ) );
+		$this->assertInstanceOf( UploadedFile::class, $collection->getIterator()->current() );
 	}
 }

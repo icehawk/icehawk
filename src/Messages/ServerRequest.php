@@ -109,7 +109,7 @@ final class ServerRequest implements ProvidesRequestData
 			new Stream( 'php://input', 'rb' ),
 			$_POST ?? [],
 			$_COOKIE ?? [],
-			$_REQUEST,
+			$_REQUEST ?? [],
 			UploadedFilesCollection::fromGlobals(),
 			[]
 		);

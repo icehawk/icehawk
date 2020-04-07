@@ -14,7 +14,7 @@ use function is_array;
  */
 final class UploadedFilesCollection implements Countable, IteratorAggregate
 {
-	/** @var array<int,UploadedFileInterface> */
+	/** @var array<int|string, array<int, UploadedFileInterface>> */
 	private array $uploadedFiles;
 
 	private function __construct()
@@ -104,7 +104,7 @@ final class UploadedFilesCollection implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * @return array<int, UploadedFileInterface>
+	 * @return array<int|string, array<int, UploadedFileInterface>>
 	 */
 	public function toArray() : array
 	{

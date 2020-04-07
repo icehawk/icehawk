@@ -389,7 +389,7 @@ final class ServerRequest implements ProvidesRequestData
 	}
 
 	/**
-	 * @return array<int, UploadedFileInterface>
+	 * @return array<int|string, array<int, UploadedFileInterface>>
 	 */
 	public function getUploadedFiles() : array
 	{

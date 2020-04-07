@@ -6,9 +6,9 @@ use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
-use function is_uploaded_file;
 use function move_uploaded_file;
 use function rename;
+use const PHP_SAPI;
 
 final class UploadedFile implements UploadedFileInterface
 {
@@ -66,13 +66,13 @@ final class UploadedFile implements UploadedFileInterface
 	{
 		$this->guardTargetPathIsValid( $targetPath );
 
-		$moved = is_uploaded_file( $this->tempName )
-			? move_uploaded_file( $this->tempName, $targetPath )
-			: rename( $this->tempName, $targetPath );
+		$moved = 'cli' === PHP_SAPI
+			? @rename( $this->tempName, $targetPath )
+			: @move_uploaded_file( $this->tempName, $targetPath );
 
 		if ( !$moved )
 		{
-			throw new RuntimeException( 'Could not move uploaded file.' );
+			throw new RuntimeException( 'Could not move uploaded file' );
 		}
 	}
 
@@ -85,7 +85,7 @@ final class UploadedFile implements UploadedFileInterface
 	{
 		if ( !is_string( $targetPath ) || '' === trim( $targetPath ) )
 		{
-			throw new InvalidArgumentException( 'Target path is empty.' );
+			throw new InvalidArgumentException( 'Target path is empty' );
 		}
 	}
 

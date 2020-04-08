@@ -69,6 +69,21 @@ final class Stream implements StreamInterface
 	}
 
 	/**
+	 * @param string $content
+	 *
+	 * @return Stream
+	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
+	 */
+	public static function newWithContent( string $content ) : self
+	{
+		$stream = new self( 'php://temp', 'ab' );
+		$stream->write( $content );
+
+		return $stream;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function __toString() : string

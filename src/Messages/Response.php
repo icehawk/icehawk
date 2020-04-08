@@ -34,7 +34,7 @@ class Response implements ResponseInterface
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
-	private function __construct()
+	final private function __construct()
 	{
 		$this->statusCode      = self::DEFAULT_STATUS_CODE;
 		$this->reasonPhrase    = self::DEFAULT_REASON_PHRASE;
@@ -119,8 +119,8 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * @param string          $name
-	 * @param string|string[] $value
+	 * @param string               $name
+	 * @param string|array<string> $value
 	 *
 	 * @return $this
 	 */
@@ -134,8 +134,8 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * @param string          $name
-	 * @param string|string[] $value
+	 * @param string               $name
+	 * @param string|array<string> $value
 	 *
 	 * @return $this
 	 */
@@ -147,7 +147,10 @@ class Response implements ResponseInterface
 
 		if ( isset( $response->headers[ (string)$name ] ) )
 		{
-			$response->headers[ (string)$name ] = array_merge( $response->headers[ (string)$name ], $headerValues );
+			/** @var array<int, string> $mergedHeaders */
+			$mergedHeaders = array_merge( $response->headers[ (string)$name ], $headerValues );
+
+			$response->headers[ (string)$name ] = $mergedHeaders;
 		}
 		else
 		{

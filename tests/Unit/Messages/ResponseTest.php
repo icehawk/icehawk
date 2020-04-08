@@ -54,15 +54,19 @@ final class ResponseTest extends TestCase
 	{
 		$response = Response::new()
 		                    ->withHeader( 'X-Test', 'Unit-Test' )
-		                    ->withAddedHeader( 'X-Test', 'Test-Unit' );
+		                    ->withAddedHeader( 'X-Test', 'Test-Unit' )
+		                    ->withAddedHeader( 'X-Custom', 'Value' );
 
 		$expectedHeaders = [
-			'Status' => [
+			'Status'   => [
 				'HTTP/1.1 200 OK',
 			],
-			'X-Test' => [
+			'X-Test'   => [
 				'Unit-Test',
 				'Test-Unit',
+			],
+			'X-Custom' => [
+				'Value',
 			],
 		];
 

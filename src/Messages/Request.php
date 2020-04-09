@@ -9,6 +9,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use UnexpectedValueException;
 use function array_key_exists;
+use function array_merge;
 use function implode;
 use function is_array;
 use function is_string;
@@ -382,8 +383,9 @@ final class Request implements ProvidesRequestData
 	 */
 	public function withQueryParams( array $query ) : self
 	{
-		$request              = clone $this;
-		$request->queryParams = $query;
+		$request               = clone $this;
+		$request->queryParams  = $query;
+		$request->mergedParams = array_merge( $request->mergedParams, $query );
 
 		return $request;
 	}
@@ -426,6 +428,11 @@ final class Request implements ProvidesRequestData
 	{
 		$request             = clone $this;
 		$request->parsedBody = $data;
+
+		if ( is_array( $data ) )
+		{
+			$request->mergedParams = array_merge( $request->mergedParams, $data );
+		}
 
 		return $request;
 	}

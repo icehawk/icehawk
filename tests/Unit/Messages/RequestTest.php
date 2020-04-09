@@ -3,7 +3,7 @@
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
 use Generator;
-use IceHawk\IceHawk\Messages\ServerRequest;
+use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\Messages\UploadedFile;
 use IceHawk\IceHawk\Messages\Uri;
@@ -20,7 +20,7 @@ use const PHP_FLOAT_MIN;
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
 
-final class ServerRequestTest extends TestCase
+final class RequestTest extends TestCase
 {
 	use UploadedFilesProviding;
 
@@ -45,12 +45,12 @@ final class ServerRequestTest extends TestCase
 		$_COOKIE['foo']             = 'bar';
 		$_FILES['foo']              = ['name' => 'test'];
 
-		$serverRequest      = ServerRequest::fromGlobals();
+		$request            = Request::fromGlobals();
 		$expectedParameters = ['foo' => 'bar'];
 
-		$this->assertEquals( $expectedParameters, $serverRequest->getParsedBody() );
-		$this->assertEquals( $expectedParameters, $serverRequest->getCookieParams() );
-		$this->assertCount( 1, $serverRequest->getUploadedFiles() );
+		$this->assertEquals( $expectedParameters, $request->getParsedBody() );
+		$this->assertEquals( $expectedParameters, $request->getCookieParams() );
+		$this->assertCount( 1, $request->getUploadedFiles() );
 	}
 
 	/**
@@ -61,15 +61,15 @@ final class ServerRequestTest extends TestCase
 	{
 		$_SERVER['SERVER_PROTOCOL'] = 'test';
 
-		$serverRequest = ServerRequest::fromGlobals();
+		$request = Request::fromGlobals();
 
-		$this->assertEquals( 'test', $serverRequest->getProtocolVersion() );
+		$this->assertEquals( 'test', $request->getProtocolVersion() );
 
 		unset( $_SERVER['SERVER_PROTOCOL'] );
 
-		$serverRequest = ServerRequest::fromGlobals();
+		$request = Request::fromGlobals();
 
-		$this->assertEquals( 'HTTP/1.1', $serverRequest->getProtocolVersion() );
+		$this->assertEquals( 'HTTP/1.1', $request->getProtocolVersion() );
 	}
 
 	/**
@@ -79,9 +79,9 @@ final class ServerRequestTest extends TestCase
 	public function testWithProtocolVersion() : void
 	{
 		$protocolVersion = 'HTTP/1.2';
-		$serverRequest   = ServerRequest::fromGlobals()->withProtocolVersion( $protocolVersion );
+		$request         = Request::fromGlobals()->withProtocolVersion( $protocolVersion );
 
-		$this->assertEquals( $protocolVersion, $serverRequest->getProtocolVersion() );
+		$this->assertEquals( $protocolVersion, $request->getProtocolVersion() );
 	}
 
 	/**
@@ -92,10 +92,10 @@ final class ServerRequestTest extends TestCase
 	{
 		$headerValueArray              = 'Basic foo, Bearer bar';
 		$_SERVER['HTTP_AUTHORIZATION'] = $headerValueArray;
-		$serverRequest                 = ServerRequest::fromGlobals();
+		$request                       = Request::fromGlobals();
 
-		$this->assertEquals( $headerValueArray, $serverRequest->getHeaderLine( self::VALID_HEADER_NAME ) );
-		$this->assertEmpty( $serverRequest->getHeaderLine( 'foo' ) );
+		$this->assertEquals( $headerValueArray, $request->getHeaderLine( self::VALID_HEADER_NAME ) );
+		$this->assertEmpty( $request->getHeaderLine( 'foo' ) );
 	}
 
 	/**
@@ -108,12 +108,12 @@ final class ServerRequestTest extends TestCase
 		$headerValue                   = 'Basic test';
 		$_SERVER['HTTP_AUTHORIZATION'] = $headerValue;
 
-		$serverRequest = ServerRequest::fromGlobals()->withHeader( self::VALID_HEADER_NAME, $headerValue );
-		$headers       = $serverRequest->getHeaders();
+		$request = Request::fromGlobals()->withHeader( self::VALID_HEADER_NAME, $headerValue );
+		$headers = $request->getHeaders();
 		$this->assertIsArray( $headers );
 		$this->assertCount( 1, $headers );
 
-		$header = $serverRequest->getHeader( self::VALID_HEADER_NAME );
+		$header = $request->getHeader( self::VALID_HEADER_NAME );
 		$this->assertEquals( $headerValue, array_shift( $header ) );
 	}
 
@@ -129,8 +129,8 @@ final class ServerRequestTest extends TestCase
 		$headerValueArray              = 'Basic foo, Bearer bar';
 		$_SERVER['HTTP_AUTHORIZATION'] = $headerValue;
 
-		$serverRequest         = ServerRequest::fromGlobals()->withHeader( self::VALID_HEADER_NAME, $headerValue );
-		$anotherClonedInstance = $serverRequest->withAddedHeader( self::VALID_HEADER_NAME, $headerValueArray );
+		$request               = Request::fromGlobals()->withHeader( self::VALID_HEADER_NAME, $headerValue );
+		$anotherClonedInstance = $request->withAddedHeader( self::VALID_HEADER_NAME, $headerValueArray );
 
 		$this->assertTrue( $anotherClonedInstance->hasHeader( self::VALID_HEADER_NAME ) );
 		$this->assertCount( $expectedCountHeaders, $anotherClonedInstance->getHeaders()[ self::VALID_HEADER_NAME ] );
@@ -151,19 +151,19 @@ final class ServerRequestTest extends TestCase
 		$_SERVER['HTTP_USER_AGENT']    = 'bar';
 		$_SERVER['HTTP_AUTHORIZATION'] = $headerValue;
 
-		$serverRequest  = ServerRequest::fromGlobals();
-		$clonedInstance = $serverRequest->withoutHeader( 'User-Agent' );
+		$request        = Request::fromGlobals();
+		$clonedInstance = $request->withoutHeader( 'User-Agent' );
 		$headers        = $clonedInstance->getHeaders();
 
 		$this->assertCount( 1, $headers );
 		$this->assertFalse( $clonedInstance->hasHeader( 'User-Agent' ) );
 
-		$headers = $serverRequest->withoutHeader( 'foo' )->getHeaders();
+		$headers = $request->withoutHeader( 'foo' )->getHeaders();
 
 		$this->assertIsArray( $headers );
 		$this->assertCount( 2, $headers );
 
-		$header = $serverRequest->getHeader( self::VALID_HEADER_NAME );
+		$header = $request->getHeader( self::VALID_HEADER_NAME );
 		$this->assertEquals( $headerValue, array_shift( $header ) );
 	}
 
@@ -174,11 +174,11 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testItReturnsBody() : void
 	{
-		$serverRequest = ServerRequest::fromGlobals();
-		$stream        = new Stream( 'php://memory', 'w+b' );
+		$request = Request::fromGlobals();
+		$stream  = new Stream( 'php://memory', 'w+b' );
 		$stream->write( 'Unit-Test' );
 
-		$anotherServerRequest = $serverRequest->withBody( $stream );
+		$anotherServerRequest = $request->withBody( $stream );
 		$this->assertSame( (string)$anotherServerRequest->getBody(), (string)$stream );
 	}
 
@@ -196,9 +196,9 @@ final class ServerRequestTest extends TestCase
 	{
 		$_SERVER['REQUEST_URI']  = $uri;
 		$_SERVER['QUERY_STRING'] = $queryString;
-		$serverRequest           = ServerRequest::fromGlobals();
+		$request                 = Request::fromGlobals();
 
-		$this->assertEquals( $expected, $serverRequest->getRequestTarget() );
+		$this->assertEquals( $expected, $request->getRequestTarget() );
 	}
 
 	public function requestTargetDataProvider() : Generator
@@ -219,16 +219,16 @@ final class ServerRequestTest extends TestCase
 			'QUERY_STRING' => 'eventName=OrderPlaced&limit=2',
 		];
 
-		$uri           = 'https://api.localhost/api/v1/streams/mega-stream/events?eventName=OrderPlaced&limit=2';
-		$serverRequest = ServerRequest::fromGlobals()->withRequestTarget( $uri );
+		$uri     = 'https://api.localhost/api/v1/streams/mega-stream/events?eventName=OrderPlaced&limit=2';
+		$request = Request::fromGlobals()->withRequestTarget( $uri );
 
 		$this->assertEquals(
 			$expectedServerParameters['REQUEST_URI'],
-			$serverRequest->getServerParams()['REQUEST_URI']
+			$request->getServerParams()['REQUEST_URI']
 		);
 		$this->assertEquals(
 			$expectedServerParameters['QUERY_STRING'],
-			$serverRequest->getServerParams()['QUERY_STRING']
+			$request->getServerParams()['QUERY_STRING']
 		);
 	}
 
@@ -238,12 +238,12 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testItReturnsRequestMethod() : void
 	{
-		$serverRequest = ServerRequest::fromGlobals();
-		$this->assertEquals( 'UNKNOWN', $serverRequest->getMethod() );
+		$request = Request::fromGlobals();
+		$this->assertEquals( 'UNKNOWN', $request->getMethod() );
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$serverRequest             = ServerRequest::fromGlobals();
-		$this->assertEquals( 'GET', $serverRequest->getMethod() );
+		$request                   = Request::fromGlobals();
+		$this->assertEquals( 'GET', $request->getMethod() );
 	}
 
 	/**
@@ -253,9 +253,9 @@ final class ServerRequestTest extends TestCase
 	public function testWithMethod() : void
 	{
 		$requestMethod = 'GET';
-		$serverRequest = ServerRequest::fromGlobals()->withMethod( $requestMethod );
+		$request       = Request::fromGlobals()->withMethod( $requestMethod );
 
-		$this->assertEquals( $requestMethod, $serverRequest->getMethod() );
+		$this->assertEquals( $requestMethod, $request->getMethod() );
 	}
 
 	/**
@@ -297,7 +297,7 @@ final class ServerRequestTest extends TestCase
 		$_SERVER['QUERY_STRING'] = $queryString;
 		$_SERVER['FRAGMENT']     = $fragment;
 
-		$uri = ServerRequest::fromGlobals()->getUri();
+		$uri = Request::fromGlobals()->getUri();
 
 		$this->assertInstanceOf( Uri::class, $uri );
 		$this->assertEquals( $expected, (string)$uri );
@@ -406,9 +406,9 @@ final class ServerRequestTest extends TestCase
 			]
 		);
 
-		$serverRequest = ServerRequest::fromGlobals()->withUri( $uri, true );
+		$request = Request::fromGlobals()->withUri( $uri, true );
 
-		$this->assertEquals( $expected, (string)$serverRequest->getUri() );
+		$this->assertEquals( $expected, (string)$request->getUri() );
 	}
 
 	public function withUriDataProvider() : Generator
@@ -480,10 +480,10 @@ final class ServerRequestTest extends TestCase
 	public function testItReturnsCookieParameters() : void
 	{
 		$_COOKIE['foo'] = 'bar';
-		$serverRequest  = ServerRequest::fromGlobals();
+		$request        = Request::fromGlobals();
 
-		$this->assertNotEmpty( $serverRequest->getCookieParams() );
-		$this->assertEquals( 'bar', $serverRequest->getCookieParams()['foo'] );
+		$this->assertNotEmpty( $request->getCookieParams() );
+		$this->assertEquals( 'bar', $request->getCookieParams()['foo'] );
 	}
 
 	/**
@@ -493,9 +493,9 @@ final class ServerRequestTest extends TestCase
 	public function testWithCookieParameters() : void
 	{
 		$cookieParameters = ['unit' => 'test'];
-		$serverRequest    = ServerRequest::fromGlobals()->withCookieParams( $cookieParameters );
+		$request          = Request::fromGlobals()->withCookieParams( $cookieParameters );
 
-		$this->assertEquals( $cookieParameters, $serverRequest->getCookieParams() );
+		$this->assertEquals( $cookieParameters, $request->getCookieParams() );
 	}
 
 	/**
@@ -506,7 +506,7 @@ final class ServerRequestTest extends TestCase
 	{
 		$_GET['foo'] = 'bar';
 
-		$this->assertEquals( ['foo' => 'bar'], ServerRequest::fromGlobals()->getQueryParams() );
+		$this->assertEquals( ['foo' => 'bar'], Request::fromGlobals()->getQueryParams() );
 	}
 
 	/**
@@ -516,9 +516,9 @@ final class ServerRequestTest extends TestCase
 	public function testWithQueryParameters() : void
 	{
 		$queryParameters = ['foo' => 'bar'];
-		$serverRequest   = ServerRequest::fromGlobals()->withQueryParams( $queryParameters );
+		$request         = Request::fromGlobals()->withQueryParams( $queryParameters );
 
-		$this->assertEquals( $queryParameters, $serverRequest->getQueryParams() );
+		$this->assertEquals( $queryParameters, $request->getQueryParams() );
 	}
 
 	/**
@@ -530,12 +530,12 @@ final class ServerRequestTest extends TestCase
 		$fileKey            = 'foo';
 		$_FILES[ $fileKey ] = ['name' => 'unit'];
 
-		$serverRequest = ServerRequest::fromGlobals();
+		$request = Request::fromGlobals();
 
-		$this->assertNotEmpty( $serverRequest->getUploadedFiles() );
+		$this->assertNotEmpty( $request->getUploadedFiles() );
 		$this->assertContainsOnlyInstancesOf(
 			UploadedFile::class,
-			$serverRequest->getUploadedFiles()[ $fileKey ]
+			$request->getUploadedFiles()[ $fileKey ]
 		);
 	}
 
@@ -546,12 +546,12 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testWithUploadedFiles() : void
 	{
-		$serverRequest = ServerRequest::fromGlobals()->withUploadedFiles( $this->uploadedFilesArray() );
+		$request = Request::fromGlobals()->withUploadedFiles( $this->uploadedFilesArray() );
 
-		$this->assertCount( 2, $serverRequest->getUploadedFiles()['test'] );
+		$this->assertCount( 2, $request->getUploadedFiles()['test'] );
 		$this->assertContainsOnlyInstancesOf(
 			UploadedFile::class,
-			$serverRequest->getUploadedFiles()['test']
+			$request->getUploadedFiles()['test']
 		);
 	}
 
@@ -563,7 +563,7 @@ final class ServerRequestTest extends TestCase
 	{
 		$_POST['foo'] = 'bar';
 
-		$this->assertEquals( ['foo' => 'bar'], ServerRequest::fromGlobals()->getParsedBody() );
+		$this->assertEquals( ['foo' => 'bar'], Request::fromGlobals()->getParsedBody() );
 	}
 
 	/**
@@ -572,10 +572,10 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testWithParsedBody() : void
 	{
-		$parsedBody    = ['foo' => 'bar'];
-		$serverRequest = ServerRequest::fromGlobals()->withParsedBody( $parsedBody );
+		$parsedBody = ['foo' => 'bar'];
+		$request    = Request::fromGlobals()->withParsedBody( $parsedBody );
 
-		$this->assertEquals( $parsedBody, $serverRequest->getParsedBody() );
+		$this->assertEquals( $parsedBody, $request->getParsedBody() );
 	}
 
 	/**
@@ -584,7 +584,7 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testItReturnsAttributes() : void
 	{
-		$attributes = ServerRequest::fromGlobals()->getAttributes();
+		$attributes = Request::fromGlobals()->getAttributes();
 
 		$this->assertIsArray( $attributes );
 		$this->assertEmpty( $attributes );
@@ -597,10 +597,10 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testWithAttribute() : void
 	{
-		$serverRequest = ServerRequest::fromGlobals()->withAttribute( 'foo', 'bar' );
+		$request = Request::fromGlobals()->withAttribute( 'foo', 'bar' );
 
-		$this->assertCount( 1, $serverRequest->getAttributes() );
-		$this->assertEquals( 'bar', $serverRequest->getAttribute( 'foo' ) );
+		$this->assertCount( 1, $request->getAttributes() );
+		$this->assertEquals( 'bar', $request->getAttribute( 'foo' ) );
 	}
 
 	/**
@@ -610,12 +610,12 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testWithoutAttribute() : void
 	{
-		$serverRequest = ServerRequest::fromGlobals()->withAttribute( 'foo', 'bar' );
+		$request = Request::fromGlobals()->withAttribute( 'foo', 'bar' );
 
-		$this->assertCount( 1, $serverRequest->getAttributes() );
-		$this->assertEquals( 'bar', $serverRequest->getAttribute( 'foo' ) );
+		$this->assertCount( 1, $request->getAttributes() );
+		$this->assertEquals( 'bar', $request->getAttribute( 'foo' ) );
 
-		$clonedInstance = $serverRequest->withoutAttribute( 'test' );
+		$clonedInstance = $request->withoutAttribute( 'test' );
 		$this->assertCount( 1, $clonedInstance->getAttributes() );
 		$this->assertEquals( 'bar', $clonedInstance->getAttribute( 'foo' ) );
 
@@ -634,13 +634,13 @@ final class ServerRequestTest extends TestCase
 	public function testGetInputStringThrowsExceptionIfValueIsNotAString( $value ) : void
 	{
 		$_REQUEST['foo'] = $value;
-		$serverRequest   = ServerRequest::fromGlobals();
+		$request         = Request::fromGlobals();
 
 		$this->expectException( UnexpectedValueException::class );
 		$this->expectExceptionMessage( 'Input for key "foo" is not a string' );
 
 		/** @noinspection UnusedFunctionResultInspection */
-		$serverRequest->getInputString( 'foo' );
+		$request->getInputString( 'foo' );
 	}
 
 	public function invalidInputStringDataProvider() : Generator
@@ -660,9 +660,9 @@ final class ServerRequestTest extends TestCase
 	public function testItReturnsInputString() : void
 	{
 		$_REQUEST['foo'] = 'bar';
-		$serverRequest   = ServerRequest::fromGlobals();
+		$request         = Request::fromGlobals();
 
-		$this->assertEquals( 'bar', $serverRequest->getInputString( 'foo' ) );
+		$this->assertEquals( 'bar', $request->getInputString( 'foo' ) );
 	}
 
 	/**
@@ -672,10 +672,10 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testItReturnsInputStringIfDefaultParameterProvided() : void
 	{
-		$defaultValue  = 'test';
-		$serverRequest = ServerRequest::fromGlobals();
+		$defaultValue = 'test';
+		$request      = Request::fromGlobals();
 
-		$this->assertEquals( $defaultValue, $serverRequest->getInputString( 'unit', $defaultValue ) );
+		$this->assertEquals( $defaultValue, $request->getInputString( 'unit', $defaultValue ) );
 	}
 
 	/**
@@ -689,13 +689,13 @@ final class ServerRequestTest extends TestCase
 	public function testGetInputArrayThrowsExceptionIfValueIsNotAnArray( $value ) : void
 	{
 		$_REQUEST['foo'] = $value;
-		$serverRequest   = ServerRequest::fromGlobals();
+		$request         = Request::fromGlobals();
 
 		$this->expectException( UnexpectedValueException::class );
 		$this->expectExceptionMessage( 'Input for key "foo" is not an array' );
 
 		/** @noinspection UnusedFunctionResultInspection */
-		$serverRequest->getInputArray( 'foo' );
+		$request->getInputArray( 'foo' );
 	}
 
 	public function invalidInputArrayDataProvider() : Generator
@@ -717,9 +717,9 @@ final class ServerRequestTest extends TestCase
 	{
 		$value           = ['unit' => 'test'];
 		$_REQUEST['foo'] = $value;
-		$serverRequest   = ServerRequest::fromGlobals();
+		$request         = Request::fromGlobals();
 
-		$this->assertEquals( $value, $serverRequest->getInputArray( 'foo' ) );
+		$this->assertEquals( $value, $request->getInputArray( 'foo' ) );
 	}
 
 	/**
@@ -729,10 +729,10 @@ final class ServerRequestTest extends TestCase
 	 */
 	public function testItReturnsInputArrayIfDefaultParameterProvided() : void
 	{
-		$defaultValue  = ['unit' => 'test'];
-		$serverRequest = ServerRequest::fromGlobals();
+		$defaultValue = ['unit' => 'test'];
+		$request      = Request::fromGlobals();
 
-		$this->assertEquals( $defaultValue, $serverRequest->getInputArray( 'unit', $defaultValue ) );
+		$this->assertEquals( $defaultValue, $request->getInputArray( 'unit', $defaultValue ) );
 	}
 
 	/**
@@ -746,12 +746,12 @@ final class ServerRequestTest extends TestCase
 	public function testGetInputIntThrowsExceptionIfValueIsNotCastableToInt( $value ) : void
 	{
 		$_REQUEST['foo'] = $value;
-		$serverRequest   = ServerRequest::fromGlobals();
+		$request         = Request::fromGlobals();
 
 		$this->expectException( UnexpectedValueException::class );
 		$this->expectExceptionMessage( 'Input for key "foo" is not castable as integer' );
 
-		$serverRequest->getInputInt( 'foo' );
+		$request->getInputInt( 'foo' );
 	}
 
 	public function invalidGetInputIntProvider() : Generator
@@ -777,7 +777,7 @@ final class ServerRequestTest extends TestCase
 		$this->expectException( UnexpectedValueException::class );
 		$this->expectExceptionMessage( 'Input for key "foo" is not castable as integer' );
 
-		ServerRequest::fromGlobals()->getInputInt( 'foo', null );
+		Request::fromGlobals()->getInputInt( 'foo', null );
 	}
 
 	/**
@@ -789,7 +789,7 @@ final class ServerRequestTest extends TestCase
 	{
 		unset( $_REQUEST['foo'] );
 
-		$this->assertSame( 123, ServerRequest::fromGlobals()->getInputInt( 'foo', 123 ) );
+		$this->assertSame( 123, Request::fromGlobals()->getInputInt( 'foo', 123 ) );
 	}
 
 	/**
@@ -806,10 +806,10 @@ final class ServerRequestTest extends TestCase
 		$this->expectExceptionMessage( 'Input for key "foo" is not castable as float' );
 
 		$_REQUEST['foo'] = $value;
-		$serverRequest   = ServerRequest::fromGlobals();
+		$request         = Request::fromGlobals();
 
 		/** @noinspection UnusedFunctionResultInspection */
-		$serverRequest->getInputFloat( 'foo' );
+		$request->getInputFloat( 'foo' );
 	}
 
 	public function invalidGetInputFloatProvider() : Generator
@@ -836,7 +836,7 @@ final class ServerRequestTest extends TestCase
 		$this->expectExceptionMessage( 'Input for key "foo" is not castable as float' );
 
 		/** @noinspection UnusedFunctionResultInspection */
-		ServerRequest::fromGlobals()->getInputFloat( 'foo', null );
+		Request::fromGlobals()->getInputFloat( 'foo', null );
 	}
 
 	/**
@@ -848,7 +848,7 @@ final class ServerRequestTest extends TestCase
 	{
 		unset( $_REQUEST['foo'] );
 
-		$this->assertSame( 12.3, ServerRequest::fromGlobals()->getInputFloat( 'foo', 12.3 ) );
+		$this->assertSame( 12.3, Request::fromGlobals()->getInputFloat( 'foo', 12.3 ) );
 	}
 
 	/**
@@ -861,13 +861,13 @@ final class ServerRequestTest extends TestCase
 		$_REQUEST['bar'] = 'string';
 		$_REQUEST['baz'] = ['array'];
 
-		$serverRequest = ServerRequest::fromGlobals();
+		$request = Request::fromGlobals();
 
-		$this->assertTrue( $serverRequest->hasInputKey( 'foo' ) );
-		$this->assertTrue( $serverRequest->hasInputKey( 'bar' ) );
-		$this->assertTrue( $serverRequest->hasInputKey( 'baz' ) );
+		$this->assertTrue( $request->hasInputKey( 'foo' ) );
+		$this->assertTrue( $request->hasInputKey( 'bar' ) );
+		$this->assertTrue( $request->hasInputKey( 'baz' ) );
 
-		$this->assertFalse( $serverRequest->hasInputKey( 'foo-bar-baz' ) );
+		$this->assertFalse( $request->hasInputKey( 'foo-bar-baz' ) );
 	}
 
 	/**
@@ -878,9 +878,9 @@ final class ServerRequestTest extends TestCase
 	{
 		$_REQUEST['foo'] = null;
 
-		$serverRequest = ServerRequest::fromGlobals();
+		$request = Request::fromGlobals();
 
-		$this->assertTrue( $serverRequest->isInputNull( 'foo' ) );
-		$this->assertFalse( $serverRequest->isInputNull( 'bar' ) );
+		$this->assertTrue( $request->isInputNull( 'foo' ) );
+		$this->assertFalse( $request->isInputNull( 'bar' ) );
 	}
 }

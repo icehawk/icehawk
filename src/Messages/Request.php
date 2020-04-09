@@ -17,7 +17,7 @@ use function sprintf;
 use const PHP_URL_PATH;
 use const PHP_URL_QUERY;
 
-final class ServerRequest implements ProvidesRequestData
+final class Request implements ProvidesRequestData
 {
 	/** @var array<string,mixed> */
 	private array $serverParams;
@@ -98,7 +98,7 @@ final class ServerRequest implements ProvidesRequestData
 	}
 
 	/**
-	 * @return ServerRequest
+	 * @return Request
 	 * @throws InvalidArgumentException
 	 */
 	public static function fromGlobals() : self
@@ -123,7 +123,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param string $version
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withProtocolVersion( $version ) : self
 	{
@@ -180,7 +180,7 @@ final class ServerRequest implements ProvidesRequestData
 	 * @param string               $name
 	 * @param string|array<string> $value
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withHeader( $name, $value ) : self
 	{
@@ -194,7 +194,7 @@ final class ServerRequest implements ProvidesRequestData
 	 * @param string               $name
 	 * @param string|array<string> $value
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withAddedHeader( $name, $value ) : self
 	{
@@ -214,7 +214,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param string $name
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withoutHeader( $name ) : self
 	{
@@ -232,7 +232,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param StreamInterface $body
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withBody( StreamInterface $body ) : self
 	{
@@ -255,7 +255,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param mixed $requestTarget
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withRequestTarget( $requestTarget ) : self
 	{
@@ -278,7 +278,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param string $method
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withMethod( $method ) : self
 	{
@@ -313,7 +313,7 @@ final class ServerRequest implements ProvidesRequestData
 	 * @param UriInterface $uri
 	 * @param bool         $preserveHost
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withUri( UriInterface $uri, $preserveHost = false ) : self
 	{
@@ -357,7 +357,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param array<string, mixed> $cookies
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withCookieParams( array $cookies ) : self
 	{
@@ -378,7 +378,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param array<string, mixed> $query
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withQueryParams( array $query ) : self
 	{
@@ -399,7 +399,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param array<string, array<int,UploadedFileInterface>> $uploadedFiles
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withUploadedFiles( array $uploadedFiles ) : self
 	{
@@ -420,7 +420,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param array<mixed>|object|null $data
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withParsedBody( $data ) : self
 	{
@@ -453,7 +453,7 @@ final class ServerRequest implements ProvidesRequestData
 	 * @param string $name
 	 * @param mixed  $value
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withAttribute( $name, $value ) : self
 	{
@@ -466,7 +466,7 @@ final class ServerRequest implements ProvidesRequestData
 	/**
 	 * @param string $name
 	 *
-	 * @return ServerRequest
+	 * @return Request
 	 */
 	public function withoutAttribute( $name ) : self
 	{

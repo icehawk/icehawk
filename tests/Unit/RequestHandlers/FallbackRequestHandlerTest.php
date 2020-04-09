@@ -2,7 +2,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
 
-use IceHawk\IceHawk\Messages\ServerRequest;
+use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -23,7 +23,7 @@ final class FallbackRequestHandlerTest extends TestCase
 		$_SERVER['HTTP_HOST'] = 'example.com';
 		$_SERVER['PATH_INFO'] = '/unit/test/fallback';
 
-		$response = FallbackRequestHandler::newWithMessage( 'Unit-Test' )->handle( ServerRequest::fromGlobals() );
+		$response = FallbackRequestHandler::newWithMessage( 'Unit-Test' )->handle( Request::fromGlobals() );
 
 		$expectedBody = "Unit-Test\nTried to handle request for URI: https://example.com/unit/test/fallback";
 

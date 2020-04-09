@@ -2,8 +2,8 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
 
+use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Response;
-use IceHawk\IceHawk\Messages\ServerRequest;
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
@@ -64,7 +64,7 @@ final class QueueRequestHandlerTest extends TestCase
 			}
 		);
 
-		$response = $requestHandler->handle( ServerRequest::fromGlobals() );
+		$response = $requestHandler->handle( Request::fromGlobals() );
 
 		$expectedBody = 'first => middleware, second => middleware';
 
@@ -88,7 +88,7 @@ final class QueueRequestHandlerTest extends TestCase
 		$_SERVER['HTTP_HOST'] = 'example.com';
 		$_SERVER['PATH_INFO'] = '/unit/test/fallback';
 
-		$response = $requestHandler->handle( ServerRequest::fromGlobals() );
+		$response = $requestHandler->handle( Request::fromGlobals() );
 
 		$expectedHeaders = [
 			'Status'       => [

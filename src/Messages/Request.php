@@ -318,14 +318,15 @@ final class Request implements ProvidesRequestData
 	 */
 	public function withUri( UriInterface $uri, $preserveHost = false ) : self
 	{
-		$request                        = clone $this;
+		$request = clone $this;
+
 		$request->serverParams['HTTPS'] = 'https' === $uri->getScheme();
 		[
 			$request->serverParams['HTTP_AUTH_USER'],
 			$request->serverParams['HTTP_AUTH_PW'],
 		] = explode( ':', $uri->getUserInfo() );
 
-		if ( $preserveHost && $uri->getHost() )
+		if ( $preserveHost && empty( $request->serverParams['HTTP_HOST'] ?? '' ) && $uri->getHost() )
 		{
 			$request->serverParams['HTTP_HOST'] = $uri->getHost();
 		}

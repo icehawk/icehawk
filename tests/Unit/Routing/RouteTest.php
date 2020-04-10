@@ -28,7 +28,10 @@ final class RouteTest extends TestCase
 		);
 
 		$this->assertEquals(
-			array_map( fn( string $item ) => MiddlewareClassName::newFromString( $item ), $middlewareClassNames ),
+			array_map(
+				fn( string $item ) : MiddlewareClassName => MiddlewareClassName::newFromString( $item ),
+				$middlewareClassNames
+			),
 			$route->getMiddlewareClassNames()
 		);
 		$this->assertSame( RequestHandlerImplementation::class, $route->getRequestHandlerClassName()->toString() );

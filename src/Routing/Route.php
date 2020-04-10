@@ -62,7 +62,11 @@ final class Route
 			HttpMethod::newFromString( $httpMethod ),
 			RoutePattern::newFromString( $regexPattern ),
 			RequestHandlerClassName::newFromString( $requestHandlerClassName ),
-			...array_map( fn( string $item ) => MiddlewareClassName::newFromString( $item ), $middlewareClassNames )
+			...
+			array_map(
+				fn( string $item ) : MiddlewareClassName => MiddlewareClassName::newFromString( $item ),
+				$middlewareClassNames
+			)
 		);
 	}
 

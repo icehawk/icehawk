@@ -408,7 +408,7 @@ final class RequestTest extends TestCase
 
 		$request = Request::fromGlobals()->withUri( $uri, true );
 
-		$this->assertEquals( $expected, (string)$request->getUri() );
+		$this->assertSame( $expected, (string)$request->getUri() );
 	}
 
 	public function withUriDataProvider() : Generator

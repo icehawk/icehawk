@@ -23,10 +23,10 @@ final class RouteCollectionTest extends TestCase
 	{
 		$route = Route::newFromStrings(
 			'GET',
+			'/unit/test',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/unit/test'
-		);
+			MiddlewareImplementation::class,
+			);
 
 		$collection = RouteCollection::new( $route );
 
@@ -42,9 +42,9 @@ final class RouteCollectionTest extends TestCase
 	{
 		$route = Route::newFromStrings(
 			'GET',
+			'/unit/test',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/unit/test'
+			MiddlewareImplementation::class
 		);
 
 		$collection = RouteCollection::new();
@@ -69,16 +69,16 @@ final class RouteCollectionTest extends TestCase
 	{
 		$route1 = Route::newFromStrings(
 			'GET',
+			'/unit/test',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/unit/test'
+			MiddlewareImplementation::class
 		);
 
 		$route2 = Route::newFromStrings(
 			'POST',
+			'/unit/test',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/unit/test'
+			MiddlewareImplementation::class
 		);
 
 		$collection = RouteCollection::new();
@@ -107,9 +107,9 @@ final class RouteCollectionTest extends TestCase
 	{
 		$route = Route::newFromStrings(
 			'GET',
+			'/unit/test',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/unit/test'
+			MiddlewareImplementation::class
 		);
 
 		$collection = RouteCollection::new( $route );

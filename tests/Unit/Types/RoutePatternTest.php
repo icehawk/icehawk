@@ -16,9 +16,9 @@ final class RoutePatternTest extends TestCase
 	 */
 	public function testNewFromString() : void
 	{
-		$this->assertSame( '!^/unit/test$!', RoutePattern::newFromString( '^/unit/test$' )->toString() );
-		$this->assertSame( '!^/unit/test$!', RoutePattern::newFromString( '!^/unit/test$!' )->toString() );
-		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$!', 'i' )->toString() );
+		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$' )->toString() );
+		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$!' )->toString() );
+		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$!i' )->toString() );
 	}
 
 	/**
@@ -65,8 +65,8 @@ final class RoutePatternTest extends TestCase
 	 */
 	public function testToString() : void
 	{
-		$this->assertSame( '!^/unit/test$!', RoutePattern::newFromString( '^/unit/test$' )->toString() );
-		$this->assertSame( '!^/unit/test$!', RoutePattern::newFromString( '!^/unit/test$' )->toString() );
-		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$!', 'i' )->toString() );
+		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$' )->toString() );
+		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$' )->toString() );
+		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$!i' )->toString() );
 	}
 }

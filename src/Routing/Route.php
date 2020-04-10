@@ -25,15 +25,15 @@ final class Route
 
 	/**
 	 * @param HttpMethod                      $httpMethod
+	 * @param RoutePattern                    $routePattern
 	 * @param RequestHandlerClassName         $requestHandlerClassName
 	 * @param array<int, MiddlewareClassName> $middlewareClassNames
-	 * @param RoutePattern                    $routePattern
 	 */
 	private function __construct(
 		HttpMethod $httpMethod,
+		RoutePattern $routePattern,
 		RequestHandlerClassName $requestHandlerClassName,
-		array $middlewareClassNames,
-		RoutePattern $routePattern
+		MiddlewareClassName  ...$middlewareClassNames
 	)
 	{
 		$this->httpMethod              = $httpMethod;
@@ -43,28 +43,26 @@ final class Route
 	}
 
 	/**
-	 * @param string                          $httpMethod
-	 * @param string                          $requestHandlerClassName
-	 * @param array<int, MiddlewareClassName> $middlewareClassNames
-	 * @param string                          $regexPattern
-	 * @param string                          $flags
+	 * @param string        $httpMethod
+	 * @param string        $regexPattern
+	 * @param string        $requestHandlerClassName
+	 * @param array<string> $middlewareClassNames
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException
 	 */
 	public static function newFromStrings(
 		string $httpMethod,
-		string $requestHandlerClassName,
-		array $middlewareClassNames,
 		string $regexPattern,
-		string $flags = ''
+		string $requestHandlerClassName,
+		string ...$middlewareClassNames
 	) : self
 	{
 		return new self(
 			HttpMethod::newFromString( $httpMethod ),
+			RoutePattern::newFromString( $regexPattern ),
 			RequestHandlerClassName::newFromString( $requestHandlerClassName ),
-			array_map( fn( string $item ) => MiddlewareClassName::newFromString( $item ), $middlewareClassNames ),
-			RoutePattern::newFromString( $regexPattern, $flags )
+			...array_map( fn( string $item ) => MiddlewareClassName::newFromString( $item ), $middlewareClassNames )
 		);
 	}
 

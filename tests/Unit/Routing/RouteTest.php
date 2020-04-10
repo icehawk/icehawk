@@ -22,9 +22,9 @@ final class RouteTest extends TestCase
 		$middlewareClassNames = [MiddlewareImplementation::class];
 		$route                = Route::newFromStrings(
 			'GET',
+			'/unit/test',
 			RequestHandlerImplementation::class,
-			$middlewareClassNames,
-			'/unit/test'
+			...$middlewareClassNames
 		);
 
 		$this->assertEquals(
@@ -51,9 +51,9 @@ final class RouteTest extends TestCase
 
 		$route = Route::newFromStrings(
 			'GET',
+			'/unit/test',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/unit/test'
+			MiddlewareImplementation::class
 		);
 
 		$this->assertTrue( $route->matchesRequest( $request ) );
@@ -75,9 +75,9 @@ final class RouteTest extends TestCase
 
 		$route = Route::newFromStrings(
 			'GET',
+			'/unit/test',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/unit/test'
+			MiddlewareImplementation::class
 		);
 
 		$this->assertFalse( $route->matchesRequest( $request ) );
@@ -99,10 +99,10 @@ final class RouteTest extends TestCase
 
 		$route = Route::newFromStrings(
 			'GET',
+			'/not-matching',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/not-matching'
-		);
+			MiddlewareImplementation::class,
+			);
 
 		$this->assertFalse( $route->matchesRequest( $request ) );
 	}
@@ -122,10 +122,10 @@ final class RouteTest extends TestCase
 		$request = Request::fromGlobals();
 		$route   = Route::newFromStrings(
 			'GET',
+			'/unit/(?<testKey>.*)',
 			RequestHandlerImplementation::class,
-			[MiddlewareImplementation::class],
-			'/unit/(?<testKey>.*)'
-		);
+			MiddlewareImplementation::class,
+			);
 
 		$this->assertTrue( $route->matchesRequest( $request ) );
 

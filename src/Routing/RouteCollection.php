@@ -3,6 +3,7 @@
 namespace IceHawk\IceHawk\Routing;
 
 use Countable;
+use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
@@ -15,6 +16,8 @@ use function count;
  */
 final class RouteCollection implements Countable, IteratorAggregate
 {
+	private const DEFAULT_REQUEST_HANDLER_CLASS_NAME = QueueRequestHandler::class;
+
 	/** @var array<int, Route> */
 	private array $items;
 
@@ -26,6 +29,30 @@ final class RouteCollection implements Countable, IteratorAggregate
 	public static function new( Route ...$routes ) : self
 	{
 		return new self( ...$routes );
+	}
+
+	/**
+	 * @param array $configArray
+	 *
+	 * @return RouteCollection
+	 * @throws InvalidArgumentException
+	 */
+	public static function fromConfigArray( array $configArray ) : self
+	{
+		$collection = new self();
+		foreach ( $configArray as $routePattern => $routeInfo )
+		{
+			$collection->add(
+				Route::newFromStrings(
+					$routeInfo['method'] ?? 'GET',
+					(string)$routePattern,
+					$routeInfo['handler'] ?? self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
+					...$routeInfo['middlewares'] ?? []
+				)
+			);
+		}
+
+		return $collection;
 	}
 
 	public function add( Route $route, Route ...$routes ) : void

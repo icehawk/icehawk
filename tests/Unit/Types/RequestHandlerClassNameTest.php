@@ -2,6 +2,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Types;
 
+use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use IceHawk\IceHawk\Tests\Unit\Types\Stubs\RequestHandlerImplementation;
 use IceHawk\IceHawk\Types\RequestHandlerClassName;
 use InvalidArgumentException;
@@ -45,5 +46,33 @@ final class RequestHandlerClassNameTest extends TestCase
 		);
 
 		RequestHandlerClassName::newFromString( self::class );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testEquals() : void
+	{
+		$className1 = RequestHandlerClassName::newFromString( RequestHandlerImplementation::class );
+		$className2 = RequestHandlerClassName::newFromString( RequestHandlerImplementation::class );
+		$className3 = RequestHandlerClassName::newFromString( FallbackRequestHandler::class );
+
+		$this->assertTrue( $className1->equals( $className2 ) );
+		$this->assertTrue( $className2->equals( $className1 ) );
+		$this->assertFalse( $className1->equals( $className3 ) );
+		$this->assertFalse( $className2->equals( $className3 ) );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testEqualsString() : void
+	{
+		$className1 = RequestHandlerClassName::newFromString( RequestHandlerImplementation::class );
+
+		$this->assertTrue( $className1->equalsString( RequestHandlerImplementation::class ) );
+		$this->assertFalse( $className1->equalsString( FallbackRequestHandler::class ) );
 	}
 }

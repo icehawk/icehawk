@@ -64,4 +64,14 @@ final class RequestHandlerClassName
 	{
 		return $this->requestHandlerClassName;
 	}
+
+	public function equals( RequestHandlerClassName $other ) : bool
+	{
+		return $other->requestHandlerClassName === $this->requestHandlerClassName;
+	}
+
+	public function equalsString( string $otherClassName ) : bool
+	{
+		return $otherClassName === $this->requestHandlerClassName;
+	}
 }

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace IceHawk\IceHawk\Tests\Unit\Routers;
+namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Messages\Request;
-use IceHawk\IceHawk\Routers\Route;
-use IceHawk\IceHawk\Routers\RouteCollection;
+use IceHawk\IceHawk\Routing\Route;
+use IceHawk\IceHawk\Routing\RouteCollection;
 use IceHawk\IceHawk\Tests\Unit\Types\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Tests\Unit\Types\Stubs\RequestHandlerImplementation;
 use InvalidArgumentException;

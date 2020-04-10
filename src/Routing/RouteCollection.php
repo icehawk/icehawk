@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace IceHawk\IceHawk\Routers;
+namespace IceHawk\IceHawk\Routing;
 
 use Countable;
 use InvalidArgumentException;

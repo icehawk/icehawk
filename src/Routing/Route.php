@@ -43,10 +43,10 @@ final class Route
 	}
 
 	/**
-	 * @param string        $httpMethod
-	 * @param string        $regexPattern
-	 * @param string        $requestHandlerClassName
-	 * @param array<string> $middlewareClassNames
+	 * @param string             $httpMethod
+	 * @param string             $regexPattern
+	 * @param string             $requestHandlerClassName
+	 * @param array<int, string> $middlewareClassNames
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException

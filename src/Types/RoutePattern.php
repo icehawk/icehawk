@@ -21,7 +21,7 @@ final class RoutePattern
 	 */
 	private function __construct( string $regexPattern )
 	{
-		$cleanPattern = preg_replace( ['#^!#', '#!i?#'], '', $regexPattern );
+		$cleanPattern = (string)preg_replace( ['#^!#', '#!i?#'], '', $regexPattern );
 		$this->guardRoutePatternIsValid( $cleanPattern );
 
 		$this->regexPattern = '!' . $cleanPattern . '!i';

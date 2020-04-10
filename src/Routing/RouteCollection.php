@@ -32,7 +32,7 @@ final class RouteCollection implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * @param array $configArray
+	 * @param array<string, array<string, mixed>> $configArray
 	 *
 	 * @return RouteCollection
 	 * @throws InvalidArgumentException
@@ -44,10 +44,10 @@ final class RouteCollection implements Countable, IteratorAggregate
 		{
 			$collection->add(
 				Route::newFromStrings(
-					$routeInfo['method'] ?? 'GET',
+					(string)($routeInfo['method'] ?? 'GET'),
 					(string)$routePattern,
-					$routeInfo['handler'] ?? self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
-					...$routeInfo['middlewares'] ?? []
+					(string)($routeInfo['handler'] ?? self::DEFAULT_REQUEST_HANDLER_CLASS_NAME),
+					...(array)($routeInfo['middlewares'] ?? [])
 				)
 			);
 		}

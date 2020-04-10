@@ -20,24 +20,24 @@ use const PHP_URL_QUERY;
 
 final class Request implements ProvidesRequestData
 {
-	/** @var array<string,mixed> */
+	/** @var array<string, mixed> */
 	private array $serverParams;
 
-	/** @var array<string,array> */
+	/** @var array<string, array> */
 	private array $headers;
 
-	/** @var array<string,mixed> */
+	/** @var array<int|string, mixed> */
 	private array $queryParams;
 
 	private StreamInterface $body;
 
-	/** @var null|array<mixed>|object */
+	/** @var null|array<int|string, mixed>|object */
 	private $parsedBody;
 
-	/** @var array<string,mixed> */
+	/** @var array<string, mixed> */
 	private array $cookieParams;
 
-	/** @var array<string,mixed> */
+	/** @var array<int|string, mixed> */
 	private array $mergedParams;
 
 	private UploadedFilesCollection $uploadedFiles;
@@ -369,7 +369,7 @@ final class Request implements ProvidesRequestData
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array<int|string, mixed>
 	 */
 	public function getQueryParams() : array
 	{
@@ -420,7 +420,7 @@ final class Request implements ProvidesRequestData
 	}
 
 	/**
-	 * @param array<mixed>|object|null $data
+	 * @param array<string|int, mixed>|object|null $data
 	 *
 	 * @return Request
 	 */

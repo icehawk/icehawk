@@ -119,6 +119,16 @@ final class HttpMethodTest extends TestCase
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 */
+	public function testEqualsOneOfMultiple() : void
+	{
+		$this->assertTrue( HttpMethod::delete()->equals( HttpMethod::get(), HttpMethod::delete() ) );
+		$this->assertFalse( HttpMethod::delete()->equals( HttpMethod::post(), HttpMethod::get() ) );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
 	public function testGet() : void
 	{
 		$this->assertSame( 'GET', HttpMethod::get()->toString() );

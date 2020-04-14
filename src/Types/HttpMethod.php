@@ -161,8 +161,21 @@ final class HttpMethod
 		return $this->httpMethod;
 	}
 
-	public function equals( HttpMethod $other ) : bool
+	public function equals( HttpMethod $other, HttpMethod ...$others ) : bool
 	{
-		return $other->httpMethod === $this->httpMethod;
+		if ( $other->httpMethod === $this->httpMethod )
+		{
+			return true;
+		}
+
+		foreach ( $others as $otherLoop )
+		{
+			if ( $otherLoop->httpMethod === $this->httpMethod )
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

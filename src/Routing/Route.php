@@ -2,6 +2,7 @@
 
 namespace IceHawk\IceHawk\Routing;
 
+use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use IceHawk\IceHawk\Types\HttpMethod;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
 use IceHawk\IceHawk\Types\RequestHandlerClassName;
@@ -12,6 +13,8 @@ use function array_map;
 
 final class Route
 {
+	private const DEFAULT_REQUEST_HANDLER_CLASS_NAME = QueueRequestHandler::class;
+
 	private HttpMethod $httpMethod;
 
 	private RequestHandlerClassName $requestHandlerClassName;
@@ -71,6 +74,105 @@ final class Route
 	}
 
 	/**
+	 * @param string             $regexPattern
+	 * @param array<int, string> $middlewareClassNames
+	 *
+	 * @return Route
+	 * @throws InvalidArgumentException
+	 */
+	public static function get( string $regexPattern, string ...$middlewareClassNames ) : self
+	{
+		return self::newFromStrings(
+			'GET',
+			$regexPattern,
+			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
+			...$middlewareClassNames
+		);
+	}
+
+	/**
+	 * @param string             $regexPattern
+	 * @param array<int, string> $middlewareClassNames
+	 *
+	 * @return Route
+	 * @throws InvalidArgumentException
+	 */
+	public static function post( string $regexPattern, string ...$middlewareClassNames ) : self
+	{
+		return self::newFromStrings(
+			'POST',
+			$regexPattern,
+			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
+			...$middlewareClassNames
+		);
+	}
+
+	/**
+	 * @param string             $regexPattern
+	 * @param array<int, string> $middlewareClassNames
+	 *
+	 * @return Route
+	 * @throws InvalidArgumentException
+	 */
+	public static function put( string $regexPattern, string ...$middlewareClassNames ) : self
+	{
+		return self::newFromStrings(
+			'PUT',
+			$regexPattern,
+			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
+			...$middlewareClassNames
+		);
+	}
+
+	/**
+	 * @param string             $regexPattern
+	 * @param array<int, string> $middlewareClassNames
+	 *
+	 * @return Route
+	 * @throws InvalidArgumentException
+	 */
+	public static function patch( string $regexPattern, string ...$middlewareClassNames ) : self
+	{
+		return self::newFromStrings(
+			'PATCH',
+			$regexPattern,
+			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
+			...$middlewareClassNames
+		);
+	}
+
+	/**
+	 * @param string             $regexPattern
+	 * @param array<int, string> $middlewareClassNames
+	 *
+	 * @return Route
+	 * @throws InvalidArgumentException
+	 */
+	public static function delete( string $regexPattern, string ...$middlewareClassNames ) : self
+	{
+		return self::newFromStrings(
+			'DELETE',
+			$regexPattern,
+			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
+			...$middlewareClassNames
+		);
+	}
+
+	/**
+	 * @param string $requestHandlerClassName
+	 *
+	 * @return Route
+	 * @throws InvalidArgumentException
+	 */
+	public function withRequestHandlerClassName( string $requestHandlerClassName ) : self
+	{
+		$route                          = clone $this;
+		$route->requestHandlerClassName = RequestHandlerClassName::newFromString( $requestHandlerClassName );
+
+		return $route;
+	}
+
+	/**
 	 * @param ServerRequestInterface $request
 	 *
 	 * @return bool
@@ -78,9 +180,7 @@ final class Route
 	 */
 	public function matchesRequest( ServerRequestInterface $request ) : bool
 	{
-		$requestMethod = HttpMethod::newFromString( $request->getMethod() );
-
-		if ( !$this->httpMethod->equals( $requestMethod ) )
+		if ( !$this->acceptsRequestMethod( HttpMethod::newFromString( $request->getMethod() ) ) )
 		{
 			return false;
 		}
@@ -95,6 +195,38 @@ final class Route
 		);
 
 		return true;
+	}
+
+	/**
+	 * @param HttpMethod $requestMethod
+	 *
+	 * @return bool
+	 * @throws InvalidArgumentException
+	 */
+	private function acceptsRequestMethod( HttpMethod $requestMethod ) : bool
+	{
+		# Methods are equal => allowed
+		if ( $this->httpMethod->equals( $requestMethod ) )
+		{
+			return true;
+		}
+
+		# CONNECT, OPTIONS & TRACE are always allowed
+		if ( $requestMethod->equals( HttpMethod::options(), HttpMethod::trace(), HttpMethod::connect() ) )
+		{
+			return true;
+		}
+
+		# HEAD requests are allowed for GET routes
+		if (
+			$requestMethod->equals( HttpMethod::head() )
+			&& $this->httpMethod->equals( HttpMethod::get(), HttpMethod::head() )
+		)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	public function getRequestHandlerClassName() : RequestHandlerClassName

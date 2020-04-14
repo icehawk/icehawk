@@ -3,7 +3,7 @@
 namespace IceHawk\IceHawk\Tests\Unit\Types;
 
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
-use IceHawk\IceHawk\Tests\Unit\Types\Stubs\RequestHandlerImplementation;
+use IceHawk\IceHawk\Tests\Unit\Stubs\RequestHandlerImplementation;
 use IceHawk\IceHawk\Types\RequestHandlerClassName;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;

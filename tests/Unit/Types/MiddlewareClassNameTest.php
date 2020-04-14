@@ -2,7 +2,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Types;
 
-use IceHawk\IceHawk\Tests\Unit\Types\Stubs\MiddlewareImplementation;
+use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;

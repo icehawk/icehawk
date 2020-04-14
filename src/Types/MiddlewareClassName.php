@@ -64,4 +64,14 @@ final class MiddlewareClassName
 	{
 		return $this->middlewareClassName;
 	}
+
+	public function equals( MiddlewareClassName $other ) : bool
+	{
+		return $other->middlewareClassName === $this->middlewareClassName;
+	}
+
+	public function equalsString( string $otherClassName ) : bool
+	{
+		return $otherClassName === $this->middlewareClassName;
+	}
 }

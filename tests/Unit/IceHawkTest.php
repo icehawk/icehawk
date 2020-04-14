@@ -7,8 +7,10 @@ use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
+use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Routing\RouteCollection;
-use IceHawk\IceHawk\Tests\Unit\Types\Stubs\MiddlewareImplementation;
+use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
+use IceHawk\IceHawk\Tests\Unit\Stubs\RequestHandlerImplementation;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
 use IceHawk\IceHawk\Types\RequestHandlerClassName;
 use InvalidArgumentException;
@@ -91,19 +93,19 @@ final class IceHawkTest extends TestCase
 	 * @throws RuntimeException
 	 * @runInSeparateProcess
 	 */
-	public function testCanHandleRequestBasedOnRouteDefaults() : void
+	public function testCanHandleGetRequestWithRouteDefaults() : void
 	{
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
 		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test/defaults';
+		$_SERVER['PATH_INFO'] = '/get/unit/test/defaults';
 
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
 
 		$this->expectOutputString(
 			"Queue handler with fallback active.\n"
-			. 'Tried to handle request for URI: https://example.com/unit/test/defaults'
+			. 'Tried to handle request for URI: https://example.com/get/unit/test/defaults'
 		);
 
 		$iceHawk->handleRequest( Request::fromGlobals() );
@@ -121,10 +123,12 @@ final class IceHawkTest extends TestCase
 		return new class implements ResolvesDependencies {
 			public function getRoutes() : RouteCollection
 			{
-				return RouteCollection::fromConfigArray(
-					[
-						'/unit/test/defaults' => [],
-					]
+				return RouteCollection::new(
+					Route::get( '/get/unit/test/defaults' ),
+					Route::post( '/post/unit/test/defaults' ),
+					Route::post( '/post/unit/test/custom-handler' )
+					     ->withRequestHandlerClassName( RequestHandlerImplementation::class ),
+					Route::post( '/post/unit/test/one-middleware', MiddlewareImplementation::class )
 				);
 			}
 
@@ -147,6 +151,9 @@ final class IceHawkTest extends TestCase
 
 						return $handler;
 
+					case $handlerClassName->equalsString( RequestHandlerImplementation::class ):
+						return new RequestHandlerImplementation();
+
 					default:
 						return FallbackRequestHandler::newWithMessage( 'Fallback active.' );
 				}
@@ -157,5 +164,92 @@ final class IceHawkTest extends TestCase
 				return new MiddlewareImplementation();
 			}
 		};
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 * @runInSeparateProcess
+	 */
+	public function testCanHandlePostRequestWithRouteDefaults() : void
+	{
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['PATH_INFO'] = '/post/unit/test/defaults';
+
+		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
+
+		$this->expectOutputString(
+			"Queue handler with fallback active.\n"
+			. 'Tried to handle request for URI: https://example.com/post/unit/test/defaults'
+		);
+
+		$iceHawk->handleRequest( Request::fromGlobals() );
+
+		$expectedHeaders = [
+			'Status: HTTP/1.1 404 Not Found',
+			'Content-Type: text/plain; charset=utf-8',
+		];
+
+		$this->assertHeaders( $expectedHeaders );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 * @runInSeparateProcess
+	 */
+	public function testCanHandlePostRequestWithCustomHandlerWithoutMiddlewares() : void
+	{
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['PATH_INFO'] = '/post/unit/test/custom-handler';
+
+		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
+
+		$this->expectOutputString( '' );
+
+		$iceHawk->handleRequest( Request::fromGlobals() );
+
+		$expectedHeaders = [
+			'Status: HTTP/1.1 200 OK',
+			'X-ID: ' . RequestHandlerImplementation::class,
+		];
+
+		$this->assertHeaders( $expectedHeaders );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 * @runInSeparateProcess
+	 */
+	public function testCanHandlePostRequestWithDefaultHandlerAndOneMiddlewares() : void
+	{
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['PATH_INFO'] = '/post/unit/test/one-middleware';
+
+		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
+
+		$this->expectOutputString( '' );
+
+		$iceHawk->handleRequest( Request::fromGlobals() );
+
+		$expectedHeaders = [
+			'Status: HTTP/1.1 200 OK',
+			'X-ID: ' . MiddlewareImplementation::class,
+		];
+
+		$this->assertHeaders( $expectedHeaders );
 	}
 }

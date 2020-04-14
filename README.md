@@ -9,7 +9,7 @@ Lightweight PHP routing framework, respecting CQRS.
 
 ## Requirements
 
- * PHP >= 7.2
+ * PHP >= 7.4
  * [fileinfo extension](https://pecl.php.net/package/Fileinfo) for handling uploaded files correctly
 
 **For development only:**
@@ -36,26 +36,14 @@ or add to your `composer.json`:
 
 **A full documentation can be found on our website: [icehawk.github.io](https://icehawk.github.io/docs/icehawk.html)**
  
-## Quickstart (installer)
- 
-We provide an installer package that creates a new IceHawk project for you. Simply run:
-
-```bash
-composer create-project -n icehawk/installer /path/to/new-project
-```
- 
-Answer the questions of the interactive installer and you're good to go.
-
-[**&raquo; Watch our short video and see how it works:** Install IceHawk framework in less than 2 minutes](https://youtu.be/ns62lw52AOU)
- 
-## Quickstart (manual)
+## Quickstart
 
 ### Step 0 - Create a basic composer.json
 
 ```json
 {
     "require": {
-        "icehawk/icehawk": "^2.1"
+        "icehawk/icehawk": "~3.0"
     },
     "autoload": {
         "psr-4": {
@@ -71,49 +59,85 @@ Then run:
 composer update
 ```
 
-### Step 1 - Create a request handler
+### Step 1 - Create a PSR-15 middleware
 
 ```php
 <?php declare(strict_types = 1);
 
 namespace YourVendor\YourProject;
 
-use IceHawk\IceHawk\Interfaces\HandlesGetRequest;
-use IceHawk\IceHawk\Interfaces\ProvidesReadRequestData;
+use IceHawk\IceHawk\Messages\Response;
+use IceHawk\IceHawk\Messages\Stream;use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-final class SayHelloRequestHandler implements HandlesGetRequest
+final class SayHelloMiddleware implements MiddlewareInterface
 {
-	public function handle( ProvidesReadRequestData $request ) 
-	{
-		echo "Hello World!";   
-	}	
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    {
+        return Response::new()->withBody( Stream::newWithContent('Hello world!') );
+    }	
 }
 ```
-**`— SayHelloRequestHandler.php`**
+**`— SayHelloMiddleware.php`**
 
-### Step 2 - Create a basic config
- 
-All you need is at least one read or write route.
+### Step 2 - Create a dependency injection container
  
 ```php
 <?php declare(strict_types = 1);
 
 namespace YourVendor\YourProject;
 
-use IceHawk\IceHawk\Routing\ReadRoute;
-use IceHawk\IceHawk\Routing\Patterns\Literal;
+use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
+use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
+use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
+use IceHawk\IceHawk\Routing\Route;
+use IceHawk\IceHawk\Routing\RouteCollection;
+use IceHawk\IceHawk\Types\MiddlewareClassName;
+use IceHawk\IceHawk\Types\RequestHandlerClassName;
+use LogicException;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use YourVendor\YourProject\SayHelloMiddleware;
 
-final class IceHawkConfig extends \IceHawk\IceHawk\Defaults\IceHawkConfig
+final class Dependencies implements ResolvesDependencies
 {
-	public function getReadRoutes() 
-	{
-		return [
-			new ReadRoute( new Literal('/'), new SayHelloRequestHandler() ),	
-		];
-	}
+    public function getRoutes() : RouteCollection
+    {
+        return RouteCollection::new(
+            Route::get('/say/hello', SayHelloMiddleware::class)
+        );
+    }
+
+    public function resolveRequestHandler(RequestHandlerClassName $handlerClassName, MiddlewareClassName ...$middlewareClassNames) : RequestHandlerInterface
+    {
+        $requestHandler = QueueRequestHandler::newWithFallbackHandler(
+            FallbackRequestHandler::newWithMessage( 'Could not find any middleware.' )
+        );
+        
+        foreach ( $middlewareClassNames as $middlewareClassName )
+        {   
+            $requestHandler->add( $this->resolveMiddleware( $middlewareClassName ) );
+        }
+    
+        return $requestHandler;
+    }
+
+    private function resolveMiddleware(MiddlewareClassName $middlewareClassName) : MiddlewareInterface
+    {
+        switch (true)
+        {
+            case $middlewareClassName->equalsString(SayHelloMiddleware::class):
+                return new SayHelloMiddleware();
+
+            default:
+                throw new LogicException('Missing implementation for middleware: ' . $middlewareClassName->toString());
+        }
+    }
 }
 ```
-**`— IceHawkConfig.php`**
+**`— Dependencies.php`**
  
 ### Step 3 - Create a bootstrap script
 
@@ -123,14 +147,12 @@ final class IceHawkConfig extends \IceHawk\IceHawk\Defaults\IceHawkConfig
 namespace YourVendor\YourProject;
 
 use IceHawk\IceHawk\IceHawk;
-use IceHawk\IceHawk\Defaults\IceHawkDelegate;
+use IceHawk\IceHawk\Messages\Request;
 
 require('vendor/autoload.php');
 
-$iceHawk = new IceHawk(new IceHawkConfig(), new IceHawkDelegate());
-$iceHawk->init();
-
-$iceHawk->handleRequest();
+$iceHawk = IceHawk::newWithDependencies(new Dependencies());
+$iceHawk->handleRequest(Request::fromGlobals());
 ```
 **`— index.php`**
  
@@ -142,7 +164,7 @@ Go to your project folder an run:
 php -S 127.0.0.1:8088
 ```
 
-Go to your browser an visit: [http://127.0.0.1:8088/](http://127.0.0.1:8088/)
+Go to your browser and visit: [http://127.0.0.1:8088/](http://127.0.0.1:8088/)
 
 > _Hello World!_
 
@@ -151,4 +173,4 @@ Go to your browser an visit: [http://127.0.0.1:8088/](http://127.0.0.1:8088/)
 
 ## Contributing
 
-Contributions are welcome! Please see our [contribution guide](./CONTRIBUTING.md).
+Contributions are welcome! Please see our [contribution guide](./.github/CONTRIBUTING.md).

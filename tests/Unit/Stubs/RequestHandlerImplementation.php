@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace IceHawk\IceHawk\Tests\Unit\Types\Stubs;
+namespace IceHawk\IceHawk\Tests\Unit\Stubs;
 
 use IceHawk\IceHawk\Messages\Response;
 use InvalidArgumentException;
@@ -20,6 +20,6 @@ final class RequestHandlerImplementation implements RequestHandlerInterface
 	 */
 	public function handle( ServerRequestInterface $request ) : ResponseInterface
 	{
-		return Response::new();
+		return Response::new()->withHeader( 'X-ID', self::class );
 	}
 }

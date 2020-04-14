@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace IceHawk\IceHawk\Tests\Unit\Types\Stubs;
+namespace IceHawk\IceHawk\Tests\Unit\Stubs;
 
 use IceHawk\IceHawk\Messages\Response;
 use InvalidArgumentException;
@@ -22,6 +22,6 @@ final class MiddlewareImplementation implements MiddlewareInterface
 	 */
 	public function process( ServerRequestInterface $request, RequestHandlerInterface $handler ) : ResponseInterface
 	{
-		return Response::new();
+		return Response::new()->withHeader( 'X-ID', self::class );
 	}
 }

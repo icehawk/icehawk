@@ -13,7 +13,7 @@ services:
     container_name: icehawk_composer
     volumes:
       - ./:/app
-    command: update -o -v
+    command: update -o -v --ignore-platform-reqs
 
   phpstan:
     image: phpstan/phpstan

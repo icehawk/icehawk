@@ -3,10 +3,12 @@
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Messages\Request;
+use IceHawk\IceHawk\Messages\Uri;
 use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Tests\Unit\Stubs\RequestHandlerImplementation;
+use IceHawk\IceHawk\Types\HttpMethod;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -107,7 +109,7 @@ final class RouteTest extends TestCase
 			'/not-matching',
 			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class,
-			);
+		);
 
 		$this->assertFalse( $route->matchesRequest( $request ) );
 	}
@@ -130,7 +132,7 @@ final class RouteTest extends TestCase
 			'/unit/(?<testKey>.*)',
 			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class,
-			);
+		);
 
 		$this->assertTrue( $route->matchesRequest( $request ) );
 
@@ -306,5 +308,93 @@ final class RouteTest extends TestCase
 
 		$this->assertNotSame( $route, $newRoute );
 		$this->assertSame( RequestHandlerImplementation::class, $newRoute->getRequestHandlerClassName()->toString() );
+	}
+
+	/**
+	 * @param Route                  $route
+	 * @param array<int, HttpMethod> $acceptedMethods
+	 *
+	 * @dataProvider acceptedHttpMethodsRouteProvider
+	 * @throws ExpectationFailedException
+	 */
+	public function testGetAcceptedHttpMethods( Route $route, array $acceptedMethods ) : void
+	{
+		$routeMethods = $route->getAcceptedHttpMethods();
+		sort( $routeMethods );
+		sort( $acceptedMethods );
+
+		$this->assertEquals( $acceptedMethods, $routeMethods );
+	}
+
+	/**
+	 * @return array|array[]
+	 * @throws InvalidArgumentException
+	 */
+	public function acceptedHttpMethodsRouteProvider() : array
+	{
+		return [
+			'GET route'    => [
+				'route'           => Route::get( '/unit/test' ),
+				'acceptedMethods' => [
+					HttpMethod::get(),
+					HttpMethod::head(),
+					HttpMethod::trace(),
+					HttpMethod::options(),
+					HttpMethod::connect(),
+				],
+			],
+			'POST route'   => [
+				'route'           => Route::post( '/unit/test' ),
+				'acceptedMethods' => [
+					HttpMethod::post(),
+					HttpMethod::trace(),
+					HttpMethod::options(),
+					HttpMethod::connect(),
+				],
+			],
+			'PUT route'    => [
+				'route'           => Route::put( '/unit/test' ),
+				'acceptedMethods' => [
+					HttpMethod::put(),
+					HttpMethod::trace(),
+					HttpMethod::options(),
+					HttpMethod::connect(),
+				],
+			],
+			'PATCH route'  => [
+				'route'           => Route::patch( '/unit/test' ),
+				'acceptedMethods' => [
+					HttpMethod::patch(),
+					HttpMethod::trace(),
+					HttpMethod::options(),
+					HttpMethod::connect(),
+				],
+			],
+			'DELETE route' => [
+				'route'           => Route::delete( '/unit/test' ),
+				'acceptedMethods' => [
+					HttpMethod::delete(),
+					HttpMethod::trace(),
+					HttpMethod::options(),
+					HttpMethod::connect(),
+				],
+			],
+		];
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testMatchesUri() : void
+	{
+		$uri   = Uri::fromString( 'https://example.com/unit/test?uri=match' );
+		$route = Route::get( '/unit/test\?uri=(?<uri>.+)$' );
+
+		$this->assertTrue( $route->matchesUri( $uri ) );
+
+		$route = Route::get( '/unit/test\?match=(?<match>.+)$' );
+
+		$this->assertFalse( $route->matchesUri( $uri ) );
 	}
 }

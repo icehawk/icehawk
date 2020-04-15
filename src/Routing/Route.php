@@ -9,6 +9,7 @@ use IceHawk\IceHawk\Types\RequestHandlerClassName;
 use IceHawk\IceHawk\Types\RoutePattern;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use function array_map;
 
 final class Route
@@ -16,6 +17,9 @@ final class Route
 	private const DEFAULT_REQUEST_HANDLER_CLASS_NAME = QueueRequestHandler::class;
 
 	private HttpMethod $httpMethod;
+
+	/** @var array<int, HttpMethod> */
+	private array $acceptedHttpMethods;
 
 	private RequestHandlerClassName $requestHandlerClassName;
 
@@ -43,6 +47,23 @@ final class Route
 		$this->requestHandlerClassName = $requestHandlerClassName;
 		$this->middlewareClassNames    = $middlewareClassNames;
 		$this->routePattern            = $routePattern;
+
+		$this->setAcceptedHttpMethods();
+	}
+
+	private function setAcceptedHttpMethods() : void
+	{
+		$this->acceptedHttpMethods = [
+			$this->httpMethod,
+			HttpMethod::connect(),
+			HttpMethod::options(),
+			HttpMethod::trace(),
+		];
+
+		if ( $this->httpMethod->equals( HttpMethod::get() ) )
+		{
+			$this->acceptedHttpMethods[] = HttpMethod::head();
+		}
 	}
 
 	/**
@@ -180,12 +201,12 @@ final class Route
 	 */
 	public function matchesRequest( ServerRequestInterface $request ) : bool
 	{
-		if ( !$this->acceptsRequestMethod( HttpMethod::newFromString( $request->getMethod() ) ) )
+		if ( !$this->acceptsHttpMethod( HttpMethod::newFromString( $request->getMethod() ) ) )
 		{
 			return false;
 		}
 
-		if ( !$this->routePattern->matchesUri( $request->getUri() ) )
+		if ( !$this->matchesUri( $request->getUri() ) )
 		{
 			return false;
 		}
@@ -197,35 +218,14 @@ final class Route
 		return true;
 	}
 
-	/**
-	 * @param HttpMethod $requestMethod
-	 *
-	 * @return bool
-	 */
-	private function acceptsRequestMethod( HttpMethod $requestMethod ) : bool
+	private function acceptsHttpMethod( HttpMethod $requestMethod ) : bool
 	{
-		# Methods are equal => allowed
-		if ( $this->httpMethod->equals( $requestMethod ) )
-		{
-			return true;
-		}
+		return $requestMethod->equals( ...$this->acceptedHttpMethods );
+	}
 
-		# CONNECT, OPTIONS & TRACE are always allowed
-		if ( $requestMethod->equals( HttpMethod::options(), HttpMethod::trace(), HttpMethod::connect() ) )
-		{
-			return true;
-		}
-
-		# HEAD requests are allowed for GET routes
-		if (
-			$requestMethod->equals( HttpMethod::head() )
-			&& $this->httpMethod->equals( HttpMethod::get(), HttpMethod::head() )
-		)
-		{
-			return true;
-		}
-
-		return false;
+	public function matchesUri( UriInterface $uri ) : bool
+	{
+		return $this->routePattern->matchesUri( $uri );
 	}
 
 	public function getRequestHandlerClassName() : RequestHandlerClassName
@@ -244,5 +244,13 @@ final class Route
 	public function getModifiedRequest() : ?ServerRequestInterface
 	{
 		return $this->modifiedRequest ?? null;
+	}
+
+	/**
+	 * @return array<int, HttpMethod>
+	 */
+	public function getAcceptedHttpMethods() : array
+	{
+		return $this->acceptedHttpMethods;
 	}
 }

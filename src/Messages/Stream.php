@@ -73,7 +73,6 @@ final class Stream implements StreamInterface
 	 *
 	 * @return Stream
 	 * @throws RuntimeException
-	 * @throws InvalidArgumentException
 	 */
 	public static function newWithContent( string $content ) : self
 	{

@@ -201,7 +201,6 @@ final class Route
 	 * @param HttpMethod $requestMethod
 	 *
 	 * @return bool
-	 * @throws InvalidArgumentException
 	 */
 	private function acceptsRequestMethod( HttpMethod $requestMethod ) : bool
 	{

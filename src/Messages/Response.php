@@ -2,14 +2,12 @@
 
 namespace IceHawk\IceHawk\Messages;
 
-use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use function array_merge;
 use function implode;
 use function is_array;
-use function sprintf;
 
 class Response implements ResponseInterface
 {
@@ -31,7 +29,6 @@ class Response implements ResponseInterface
 	private StreamInterface $body;
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	final private function __construct()
@@ -41,14 +38,10 @@ class Response implements ResponseInterface
 		$this->protocolVersion = self::DEFAULT_PROTOCOL_VERSION;
 		$this->headers         = [];
 		$this->body            = Stream::newWithContent( '' );
-
-		$this->updateStatusHeader();
 	}
 
 	/**
 	 * @return static
-	 * @throws RuntimeException
-	 * @throws InvalidArgumentException
 	 */
 	public static function new() : ResponseInterface
 	{
@@ -70,7 +63,6 @@ class Response implements ResponseInterface
 		$response = clone $this;
 
 		$response->protocolVersion = (string)$version;
-		$response->updateStatusHeader();
 
 		return $response;
 	}
@@ -215,21 +207,7 @@ class Response implements ResponseInterface
 		$response->statusCode   = (int)$code;
 		$response->reasonPhrase = (string)$reasonPhrase;
 
-		$response->updateStatusHeader();
-
 		return $response;
-	}
-
-	private function updateStatusHeader() : void
-	{
-		$this->headers['Status'] = [
-			sprintf(
-				'%s %d %s',
-				$this->protocolVersion,
-				$this->statusCode,
-				$this->reasonPhrase
-			),
-		];
 	}
 
 	/**

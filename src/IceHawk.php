@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Throwable;
 use function array_keys;
+use function http_response_code;
 
 final class IceHawk
 {
@@ -49,9 +50,11 @@ final class IceHawk
 			$response = FallbackRequestHandler::newWithMessage( $message )->handle( $request );
 		}
 
+		http_response_code( $response->getStatusCode() );
+		
 		foreach ( array_keys( $response->getHeaders() ) as $headerName )
 		{
-			header( "{$headerName}: {$response->getHeaderLine($headerName)}" );
+			header( "{$headerName}: {$response->getHeaderLine($headerName)}", true );
 		}
 
 		echo $response->getBody();

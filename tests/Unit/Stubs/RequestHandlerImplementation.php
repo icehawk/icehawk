@@ -7,7 +7,6 @@ use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use RuntimeException;
 
 final class RequestHandlerImplementation implements RequestHandlerInterface
 {
@@ -15,7 +14,6 @@ final class RequestHandlerImplementation implements RequestHandlerInterface
 	 * @param ServerRequestInterface $request
 	 *
 	 * @return ResponseInterface
-	 * @throws RuntimeException
 	 * @throws InvalidArgumentException
 	 */
 	public function handle( ServerRequestInterface $request ) : ResponseInterface

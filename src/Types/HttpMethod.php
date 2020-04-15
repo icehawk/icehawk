@@ -77,7 +77,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function get() : self
 	{
@@ -86,7 +85,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function head() : self
 	{
@@ -95,7 +93,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function post() : self
 	{
@@ -104,7 +101,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function put() : self
 	{
@@ -113,7 +109,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function patch() : self
 	{
@@ -122,7 +117,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function delete() : self
 	{
@@ -131,7 +125,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function options() : self
 	{
@@ -140,7 +133,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function connect() : self
 	{
@@ -149,7 +141,6 @@ final class HttpMethod
 
 	/**
 	 * @return HttpMethod
-	 * @throws InvalidArgumentException
 	 */
 	public static function trace() : self
 	{

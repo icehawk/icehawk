@@ -91,9 +91,6 @@ final class QueueRequestHandlerTest extends TestCase
 		$response = $requestHandler->handle( Request::fromGlobals() );
 
 		$expectedHeaders = [
-			'Status'       => [
-				'HTTP/1.1 404 Not Found',
-			],
 			'Content-Type' => [
 				'text/plain; charset=utf-8',
 			],

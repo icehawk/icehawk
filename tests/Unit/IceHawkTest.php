@@ -20,6 +20,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
 use function function_exists;
+use function http_response_code;
 use function xdebug_get_headers;
 
 final class IceHawkTest extends TestCase
@@ -48,7 +49,6 @@ final class IceHawkTest extends TestCase
 		$iceHawk->handleRequest( Request::fromGlobals() );
 
 		$expectedHeaders = [
-			'Status: HTTP/1.1 404 Not Found',
 			'Content-Type: text/plain; charset=utf-8',
 		];
 
@@ -111,11 +111,11 @@ final class IceHawkTest extends TestCase
 		$iceHawk->handleRequest( Request::fromGlobals() );
 
 		$expectedHeaders = [
-			'Status: HTTP/1.1 404 Not Found',
 			'Content-Type: text/plain; charset=utf-8',
 		];
 
 		$this->assertHeaders( $expectedHeaders );
+		$this->assertSame( 404, http_response_code() );
 	}
 
 	private function getDepsWithRoutesFromConfigArray() : ResolvesDependencies
@@ -190,11 +190,11 @@ final class IceHawkTest extends TestCase
 		$iceHawk->handleRequest( Request::fromGlobals() );
 
 		$expectedHeaders = [
-			'Status: HTTP/1.1 404 Not Found',
 			'Content-Type: text/plain; charset=utf-8',
 		];
 
 		$this->assertHeaders( $expectedHeaders );
+		$this->assertSame( 404, http_response_code() );
 	}
 
 	/**
@@ -218,11 +218,11 @@ final class IceHawkTest extends TestCase
 		$iceHawk->handleRequest( Request::fromGlobals() );
 
 		$expectedHeaders = [
-			'Status: HTTP/1.1 200 OK',
 			'X-ID: ' . RequestHandlerImplementation::class,
 		];
 
 		$this->assertHeaders( $expectedHeaders );
+		$this->assertSame( 200, http_response_code() );
 	}
 
 	/**
@@ -246,10 +246,10 @@ final class IceHawkTest extends TestCase
 		$iceHawk->handleRequest( Request::fromGlobals() );
 
 		$expectedHeaders = [
-			'Status: HTTP/1.1 200 OK',
 			'X-ID: ' . MiddlewareImplementation::class,
 		];
 
 		$this->assertHeaders( $expectedHeaders );
+		$this->assertSame( 200, http_response_code() );
 	}
 }

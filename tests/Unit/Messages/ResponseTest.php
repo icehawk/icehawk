@@ -23,9 +23,6 @@ final class ResponseTest extends TestCase
 		                    ->withHeader( 'X-Multiple', ['Unit-Test', 'Test-Unit'] );
 
 		$expectedHeaders = [
-			'Status'     => [
-				'HTTP/1.1 200 OK',
-			],
 			'X-Test'     => [
 				'Unit-Test',
 			],
@@ -58,9 +55,6 @@ final class ResponseTest extends TestCase
 		                    ->withAddedHeader( 'X-Custom', 'Value' );
 
 		$expectedHeaders = [
-			'Status'   => [
-				'HTTP/1.1 200 OK',
-			],
 			'X-Test'   => [
 				'Unit-Test',
 				'Test-Unit',
@@ -79,7 +73,6 @@ final class ResponseTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testWithoutHeader() : void
@@ -106,31 +99,18 @@ final class ResponseTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testWithProtocolVersion() : void
 	{
 		$response = Response::new()->withProtocolVersion( 'HTTP/2' );
 
-		$expectedHeaders = [
-			'Status' => [
-				'HTTP/2 200 OK',
-			],
-		];
-
-		$expectedHeaderLine = 'HTTP/2 200 OK';
-
 		$this->assertSame( 'HTTP/2', $response->getProtocolVersion() );
 		$this->assertSame( 200, $response->getStatusCode() );
 		$this->assertSame( 'OK', $response->getReasonPhrase() );
-		$this->assertSame( $expectedHeaders, $response->getHeaders() );
-		$this->assertSame( $expectedHeaders['Status'], $response->getHeader( 'Status' ) );
-		$this->assertSame( $expectedHeaderLine, $response->getHeaderLine( 'Status' ) );
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -138,21 +118,10 @@ final class ResponseTest extends TestCase
 	{
 		$response = Response::new();
 
-		$expectedHeaders = [
-			'Status' => [
-				'HTTP/1.1 200 OK',
-			],
-		];
-
-		$expectedHeaderLine = 'HTTP/1.1 200 OK';
-
 		# Check for default values after instantiation
 		$this->assertSame( 'HTTP/1.1', $response->getProtocolVersion() );
 		$this->assertSame( 200, $response->getStatusCode() );
 		$this->assertSame( 'OK', $response->getReasonPhrase() );
-		$this->assertSame( $expectedHeaders, $response->getHeaders() );
-		$this->assertSame( $expectedHeaders['Status'], $response->getHeader( 'Status' ) );
-		$this->assertSame( $expectedHeaderLine, $response->getHeaderLine( 'Status' ) );
 		$this->assertSame( '', $response->getHeaderLine( 'UnknownHeaderKey' ) );
 		$this->assertSame( '', (string)$response->getBody() );
 	}
@@ -166,19 +135,8 @@ final class ResponseTest extends TestCase
 	{
 		$response = Response::new()->withStatus( 404, 'Not Found' );
 
-		$expectedHeaders = [
-			'Status' => [
-				'HTTP/1.1 404 Not Found',
-			],
-		];
-
-		$expectedHeaderLine = 'HTTP/1.1 404 Not Found';
-
 		$this->assertSame( 'HTTP/1.1', $response->getProtocolVersion() );
 		$this->assertSame( 404, $response->getStatusCode() );
 		$this->assertSame( 'Not Found', $response->getReasonPhrase() );
-		$this->assertSame( $expectedHeaders, $response->getHeaders() );
-		$this->assertSame( $expectedHeaders['Status'], $response->getHeader( 'Status' ) );
-		$this->assertSame( $expectedHeaderLine, $response->getHeaderLine( 'Status' ) );
 	}
 }

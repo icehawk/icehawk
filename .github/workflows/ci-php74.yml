@@ -27,7 +27,7 @@ jobs:
         run: docker run --rm -v $(pwd):/app composer validate
 
       - name: Composer update
-        run: docker run --rm -v $(pwd):/app composer update -o -v
+        run: docker run --rm -v $(pwd):/app composer update -o -v --ignore-platform-reqs
 
       - name: Run PHPStan
         run: docker run --rm -v $(pwd):/app phpstan/phpstan analyze --level=max /app/src
@@ -42,7 +42,7 @@ jobs:
         run: docker build --pull -t icehawk_php -f .docker/php/7.4/Dockerfile .docker/php/7.4
 
       - name: Composer update
-        run: docker run --rm -v $(pwd):/app composer update -o -v
+        run: docker run --rm -v $(pwd):/app composer update -o -v --ignore-platform-reqs
 
       - name: Run unit tests
         run: docker run --rm -v $(pwd):/app icehawk_php /app/vendor/bin/phpunit.phar -c /app/build/phpunit.xml --coverage-clover=/app/coverage.xml

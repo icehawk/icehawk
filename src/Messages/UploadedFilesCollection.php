@@ -31,7 +31,6 @@ final class UploadedFilesCollection implements Countable, IteratorAggregate
 	{
 		$collection = new self();
 
-		/** @var array<string, array<int, array<string, int|string>>> $flatArray */
 		$flatArray = [];
 
 		foreach ( $filesArray as $field => $files )

@@ -100,7 +100,6 @@ final class Request implements ProvidesRequestData
 
 	/**
 	 * @return Request
-	 * @throws InvalidArgumentException
 	 */
 	public static function fromGlobals() : self
 	{

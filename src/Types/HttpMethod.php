@@ -169,4 +169,9 @@ final class HttpMethod
 
 		return false;
 	}
+
+	public function __toString() : string
+	{
+		return $this->toString();
+	}
 }

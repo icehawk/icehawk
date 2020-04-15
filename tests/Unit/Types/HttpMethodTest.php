@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 final class HttpMethodTest extends TestCase
 {
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 */
 	public function testHead() : void
@@ -19,7 +18,6 @@ final class HttpMethodTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 */
 	public function testPut() : void
@@ -29,7 +27,6 @@ final class HttpMethodTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testTrace() : void
 	{
@@ -49,7 +46,6 @@ final class HttpMethodTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testOptions() : void
 	{
@@ -58,7 +54,6 @@ final class HttpMethodTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testPatch() : void
 	{
@@ -67,7 +62,6 @@ final class HttpMethodTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testConnect() : void
 	{
@@ -98,7 +92,6 @@ final class HttpMethodTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testDelete() : void
 	{
@@ -117,7 +110,6 @@ final class HttpMethodTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testEqualsOneOfMultiple() : void
 	{
@@ -127,7 +119,6 @@ final class HttpMethodTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testGet() : void
 	{
@@ -136,10 +127,20 @@ final class HttpMethodTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testPost() : void
 	{
 		$this->assertSame( 'POST', HttpMethod::post()->toString() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testCanCastInstanceToString() : void
+	{
+		$this->assertSame( 'HEAD', (string)HttpMethod::newFromString( 'head' ) );
+		$this->assertSame( 'GET', (string)HttpMethod::newFromString( 'Get' ) );
+		$this->assertSame( 'POST', (string)HttpMethod::newFromString( 'poST' ) );
 	}
 }

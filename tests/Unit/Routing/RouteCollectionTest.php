@@ -3,10 +3,12 @@
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Messages\Request;
+use IceHawk\IceHawk\Messages\Uri;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Routing\RouteCollection;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Tests\Unit\Stubs\RequestHandlerImplementation;
+use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -26,7 +28,7 @@ final class RouteCollectionTest extends TestCase
 			'/unit/test',
 			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class,
-			);
+		);
 
 		$collection = RouteCollection::new( $route );
 
@@ -157,5 +159,37 @@ final class RouteCollectionTest extends TestCase
 		$collection = RouteCollection::new();
 		$this->assertCount( 0, $collection );
 		$this->assertCount( 0, $collection->getIterator() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testFindAcceptedHttpMethodsForUri() : void
+	{
+		$uri        = Uri::fromString( 'https://example.com/unit/test' );
+		$collection = RouteCollection::new(
+		# matching routes
+			Route::get( '/unit/test' ),
+			Route::post( '/unit/test' ),
+			# not-matching route
+			Route::put( '/test/unit' ),
+		);
+
+		$expectedHttpMethods = [
+			HttpMethod::get(),
+			HttpMethod::head(),
+			HttpMethod::post(),
+			HttpMethod::connect(),
+			HttpMethod::options(),
+			HttpMethod::trace(),
+		];
+
+		$acceptedMethods = $collection->findAcceptedHttpMethodsForUri( $uri );
+
+		sort( $expectedHttpMethods );
+		sort( $acceptedMethods );
+
+		$this->assertEquals( $expectedHttpMethods, $acceptedMethods );
 	}
 }

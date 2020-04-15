@@ -3,11 +3,14 @@
 namespace IceHawk\IceHawk\Routing;
 
 use Countable;
+use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use RuntimeException;
+use function array_unique;
 use function count;
 
 /**
@@ -68,5 +71,30 @@ final class RouteCollection implements Countable, IteratorAggregate
 		}
 
 		throw new RuntimeException( 'Could not find route for request: ' . $request->getUri() );
+	}
+
+	/**
+	 * @param UriInterface $uri
+	 *
+	 * @return array<int, HttpMethod>
+	 */
+	public function findAcceptedHttpMethodsForUri( UriInterface $uri ) : array
+	{
+		$acceptedMethods = [];
+
+		foreach ( $this->items as $route )
+		{
+			if ( !$route->matchesUri( $uri ) )
+			{
+				continue;
+			}
+
+			foreach ( $route->getAcceptedHttpMethods() as $acceptedHttpMethod )
+			{
+				$acceptedMethods[] = $acceptedHttpMethod;
+			}
+		}
+
+		return array_unique( $acceptedMethods );
 	}
 }

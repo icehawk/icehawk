@@ -170,6 +170,11 @@ final class HttpMethod
 		return false;
 	}
 
+	public function equalsString( string $otherMethod ) : bool
+	{
+		return strtoupper( $otherMethod ) === $this->httpMethod;
+	}
+
 	public function __toString() : string
 	{
 		return $this->toString();

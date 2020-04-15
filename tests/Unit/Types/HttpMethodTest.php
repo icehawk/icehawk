@@ -143,4 +143,15 @@ final class HttpMethodTest extends TestCase
 		$this->assertSame( 'GET', (string)HttpMethod::newFromString( 'Get' ) );
 		$this->assertSame( 'POST', (string)HttpMethod::newFromString( 'poST' ) );
 	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testEqualsString() : void
+	{
+		$this->assertTrue( HttpMethod::newFromString( 'head' )->equalsString( 'HEAD' ) );
+		$this->assertTrue( HttpMethod::newFromString( 'Get' )->equalsString( 'get' ) );
+		$this->assertTrue( HttpMethod::post()->equalsString( 'POsT' ) );
+	}
 }

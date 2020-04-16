@@ -42,7 +42,7 @@ final class IceHawkTest extends TestCase
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithNoRoutes() );
 
 		$this->expectOutputString(
-			"Exception occurred: Could not find route for request: https://example.com/unit/test\n"
+			"Exception occurred: Could not find route for requested method (GET) and URI: https://example.com/unit/test\n"
 			. 'Tried to handle request for URI: https://example.com/unit/test'
 		);
 
@@ -251,5 +251,33 @@ final class IceHawkTest extends TestCase
 
 		$this->assertHeaders( $expectedHeaders );
 		$this->assertSame( 200, http_response_code() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 * @runInSeparateProcess
+	 */
+	public function testCanHandleOptionsRequestAndReceiveAcceptedMethods() : void
+	{
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'OPTIONS';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['PATH_INFO'] = '/get/unit/test/defaults';
+
+		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
+
+		$this->expectOutputString( '' );
+
+		$iceHawk->handleRequest( Request::fromGlobals() );
+
+		$expectedHeaders = [
+			'Allow: GET,CONNECT,OPTIONS,TRACE,HEAD',
+		];
+
+		$this->assertHeaders( $expectedHeaders );
+		$this->assertSame( 204, http_response_code() );
 	}
 }

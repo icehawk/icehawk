@@ -2,14 +2,18 @@
 
 namespace IceHawk\IceHawk;
 
+use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
 use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
+use IceHawk\IceHawk\RequestHandlers\OptionsRequestHandler;
+use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use Throwable;
 use function array_keys;
 use function http_response_code;
+use function sprintf;
 
 final class IceHawk
 {
@@ -33,31 +37,51 @@ final class IceHawk
 	 */
 	public function handleRequest( ServerRequestInterface $request ) : void
 	{
+		$response = $this->getResponseForRequest( $request );
+
+		http_response_code( $response->getStatusCode() );
+
+		foreach ( array_keys( $response->getHeaders() ) as $headerName )
+		{
+			header( "{$headerName}: {$response->getHeaderLine($headerName)}", true );
+		}
+
+		if ( !HttpMethod::head()->equalsString( $request->getMethod() ) )
+		{
+			echo $response->getBody();
+			flush();
+		}
+	}
+
+	/**
+	 * @param ServerRequestInterface $request
+	 *
+	 * @return ResponseInterface
+	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
+	 */
+	private function getResponseForRequest( ServerRequestInterface $request ) : ResponseInterface
+	{
+		$routes = $this->dependencies->getRoutes();
+
 		try
 		{
-			$route = $this->dependencies->getRoutes()->findMatchingRouteForRequest( $request );
+			$route = $routes->findMatchingRouteForRequest( $request );
 
 			$requestHandler = $this->dependencies->resolveRequestHandler(
 				$route->getRequestHandlerClassName(),
 				...$route->getMiddlewareClassNames()
 			);
 
-			$response = $requestHandler->handle( $route->getModifiedRequest() ?? $request );
+			$response = OptionsRequestHandler::new( $routes, $requestHandler )
+			                                 ->handle( $route->getModifiedRequest() ?? $request );
 		}
-		catch ( Throwable $e )
+		catch ( RouteNotFoundException $e )
 		{
 			$message  = sprintf( 'Exception occurred: %s', $e->getMessage() );
 			$response = FallbackRequestHandler::newWithMessage( $message )->handle( $request );
 		}
 
-		http_response_code( $response->getStatusCode() );
-		
-		foreach ( array_keys( $response->getHeaders() ) as $headerName )
-		{
-			header( "{$headerName}: {$response->getHeaderLine($headerName)}", true );
-		}
-
-		echo $response->getBody();
-		flush();
+		return $response;
 	}
 }

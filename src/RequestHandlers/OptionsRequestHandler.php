@@ -15,19 +15,23 @@ final class OptionsRequestHandler implements RequestHandlerInterface
 {
 	private RouteCollection $routes;
 
-	private function __construct( RouteCollection $routes )
+	private RequestHandlerInterface $requestHandler;
+
+	private function __construct( RouteCollection $routes, RequestHandlerInterface $requestHandler )
 	{
-		$this->routes = $routes;
+		$this->routes         = $routes;
+		$this->requestHandler = $requestHandler;
 	}
 
 	/**
-	 * @param RouteCollection $routes
+	 * @param RouteCollection         $routes
+	 * @param RequestHandlerInterface $requestHandler
 	 *
 	 * @return OptionsRequestHandler
 	 */
-	public static function newWithRoutes( RouteCollection $routes ) : self
+	public static function new( RouteCollection $routes, RequestHandlerInterface $requestHandler ) : self
 	{
-		return new self( $routes );
+		return new self( $routes, $requestHandler );
 	}
 
 	/**
@@ -38,11 +42,18 @@ final class OptionsRequestHandler implements RequestHandlerInterface
 	 */
 	public function handle( ServerRequestInterface $request ) : ResponseInterface
 	{
+		if ( !HttpMethod::options()->equalsString( $request->getMethod() ) )
+		{
+			return $this->requestHandler->handle( $request );
+		}
+
 		$acceptedMethods = $this->routes->findAcceptedHttpMethodsForUri( $request->getUri() );
 
-		return Response::new()->withHeader(
-			'Accept',
-			array_map( fn( HttpMethod $method ) : string => (string)$method, $acceptedMethods )
-		);
+		return Response::new()
+		               ->withStatus( 204, 'No Content' )
+		               ->withHeader(
+			               'Allow',
+			               array_map( fn( HttpMethod $method ) : string => (string)$method, $acceptedMethods )
+		               );
 	}
 }

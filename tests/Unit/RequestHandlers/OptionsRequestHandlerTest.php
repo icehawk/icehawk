@@ -6,6 +6,7 @@ use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\RequestHandlers\OptionsRequestHandler;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Routing\RouteCollection;
+use IceHawk\IceHawk\Tests\Unit\Stubs\RequestHandlerImplementation;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +17,7 @@ final class OptionsRequestHandlerTest extends TestCase
 	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 */
-	public function testHandle() : void
+	public function testHandleReturnsResponseForOptionsRequest() : void
 	{
 		$_SERVER['HTTPS']          = true;
 		$_SERVER['REQUEST_METHOD'] = 'OPTIONS';
@@ -30,9 +31,10 @@ final class OptionsRequestHandlerTest extends TestCase
 			Route::put( '/test/unit' )
 		);
 
-		$response = OptionsRequestHandler::newWithRoutes( $routes )->handle( Request::fromGlobals() );
+		$response = OptionsRequestHandler::new( $routes, new RequestHandlerImplementation() )
+		                                 ->handle( Request::fromGlobals() );
 
-		$acceptHeader   = $response->getHeader( 'Accept' );
+		$allowHeader    = $response->getHeader( 'Allow' );
 		$expectedHeader = [
 			'GET',
 			'HEAD',
@@ -42,9 +44,35 @@ final class OptionsRequestHandlerTest extends TestCase
 			'CONNECT',
 		];
 
-		sort( $acceptHeader );
+		sort( $allowHeader );
 		sort( $expectedHeader );
 
-		$this->assertSame( $expectedHeader, $acceptHeader );
+		$this->assertSame( $expectedHeader, $allowHeader );
+		$this->assertSame( 204, $response->getStatusCode() );
+		$this->assertSame( 'No Content', $response->getReasonPhrase() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testHandleReturnsResponseFromRequestHandlerForNonOptionsRequest() : void
+	{
+		$_SERVER['HTTPS']          = true;
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['PATH_INFO'] = '/unit/test';
+
+		$routes = RouteCollection::new(
+			Route::get( '/unit/test' ),
+		);
+
+		$response = OptionsRequestHandler::new( $routes, new RequestHandlerImplementation() )
+		                                 ->handle( Request::fromGlobals() );
+
+		$this->assertSame( [RequestHandlerImplementation::class], $response->getHeader( 'X-ID' ) );
+		$this->assertSame( 200, $response->getStatusCode() );
+		$this->assertSame( 'OK', $response->getReasonPhrase() );
 	}
 }

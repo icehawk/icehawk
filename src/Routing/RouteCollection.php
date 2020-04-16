@@ -3,13 +3,13 @@
 namespace IceHawk\IceHawk\Routing;
 
 use Countable;
+use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
 use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use RuntimeException;
 use function array_unique;
 use function count;
 
@@ -58,7 +58,7 @@ final class RouteCollection implements Countable, IteratorAggregate
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException
-	 * @throws RuntimeException
+	 * @throws RouteNotFoundException
 	 */
 	public function findMatchingRouteForRequest( ServerRequestInterface $request ) : Route
 	{
@@ -70,7 +70,7 @@ final class RouteCollection implements Countable, IteratorAggregate
 			}
 		}
 
-		throw new RuntimeException( 'Could not find route for request: ' . $request->getUri() );
+		throw RouteNotFoundException::newFromRequest( $request );
 	}
 
 	/**

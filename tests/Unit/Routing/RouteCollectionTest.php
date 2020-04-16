@@ -2,6 +2,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
+use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Uri;
 use IceHawk\IceHawk\Routing\Route;
@@ -143,8 +144,10 @@ final class RouteCollectionTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->expectException( RuntimeException::class );
-		$this->expectExceptionMessage( 'Could not find route for request: ' . $request->getUri() );
+		$this->expectException( RouteNotFoundException::class );
+		$this->expectExceptionMessage(
+			'Could not find route for requested method (GET) and URI: https://example.com/unit/test'
+		);
 
 		/** @noinspection UnusedFunctionResultInspection */
 		$collection->findMatchingRouteForRequest( $request );

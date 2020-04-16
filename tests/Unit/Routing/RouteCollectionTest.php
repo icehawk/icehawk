@@ -120,8 +120,8 @@ final class RouteCollectionTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$request = Request::fromGlobals();
 
@@ -139,8 +139,8 @@ final class RouteCollectionTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$request = Request::fromGlobals();
 

@@ -302,7 +302,7 @@ final class Request implements ProvidesRequestData
 				'pass'     => $this->serverParams['HTTP_AUTH_PW'] ?? '',
 				'host'     => $this->serverParams['HTTP_HOST'] ?? '',
 				'port'     => $this->serverParams['SERVER_PORT'] ?? null,
-				'path'     => $this->serverParams['PATH_INFO'] ?? '',
+				'path'     => $this->serverParams['REQUEST_URI'] ?? '',
 				'query'    => $this->serverParams['QUERY_STRING'] ?? '',
 				'fragment' => $this->serverParams['FRAGMENT'] ?? '',
 			]
@@ -330,7 +330,7 @@ final class Request implements ProvidesRequestData
 			$request->serverParams['HTTP_HOST'] = $uri->getHost();
 		}
 
-		$request->serverParams['PATH_INFO']    = $uri->getPath();
+		$request->serverParams['REQUEST_URI']  = $uri->getPath();
 		$request->serverParams['QUERY_STRING'] = $uri->getQuery();
 		$request->serverParams['FRAGMENT']     = $uri->getFragment();
 

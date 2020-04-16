@@ -207,7 +207,7 @@ final class Uri implements UriInterface
 
 	public function __toString() : string
 	{
-		return sprintf(
+		$string = sprintf(
 			'%s%s%s%s%s',
 			$this->getScheme() ? "{$this->getScheme()}://" : '//',
 			$this->getAuthority(),
@@ -215,5 +215,7 @@ final class Uri implements UriInterface
 			$this->getQuery() ? "?{$this->getQuery()}" : '',
 			$this->getFragment() ? "#{$this->getFragment()}" : ''
 		);
+
+		return $string;
 	}
 }

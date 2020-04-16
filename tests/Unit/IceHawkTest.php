@@ -36,8 +36,8 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithNoRoutes() );
 
@@ -98,8 +98,8 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/get/unit/test/defaults';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
 
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
 
@@ -177,8 +177,8 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/post/unit/test/defaults';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/post/unit/test/defaults';
 
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
 
@@ -208,8 +208,8 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/post/unit/test/custom-handler';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/post/unit/test/custom-handler';
 
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
 
@@ -236,8 +236,8 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/post/unit/test/one-middleware';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/post/unit/test/one-middleware';
 
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
 
@@ -264,8 +264,8 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'OPTIONS';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/get/unit/test/defaults';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
 
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
 

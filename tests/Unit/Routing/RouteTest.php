@@ -51,8 +51,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$request = Request::fromGlobals();
 
@@ -75,8 +75,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$request = Request::fromGlobals();
 
@@ -99,8 +99,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$request = Request::fromGlobals();
 
@@ -123,8 +123,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$request = Request::fromGlobals();
 		$route   = Route::newFromStrings(
@@ -149,8 +149,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$route = Route::get( '/unit/test' );
 
@@ -179,8 +179,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$route = Route::post( '/unit/test' );
 
@@ -210,8 +210,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'PUT';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$route = Route::put( '/unit/test' );
 
@@ -241,8 +241,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'PATCH';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$route = Route::patch( '/unit/test' );
 
@@ -272,8 +272,8 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'DELETE';
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
 
 		$route = Route::delete( '/unit/test' );
 

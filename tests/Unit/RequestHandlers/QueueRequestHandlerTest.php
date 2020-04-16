@@ -85,8 +85,8 @@ final class QueueRequestHandlerTest extends TestCase
 
 		$_SERVER['HTTPS'] = true;
 		/** @noinspection HostnameSubstitutionInspection */
-		$_SERVER['HTTP_HOST'] = 'example.com';
-		$_SERVER['PATH_INFO'] = '/unit/test/fallback';
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test/fallback';
 
 		$response = $requestHandler->handle( Request::fromGlobals() );
 

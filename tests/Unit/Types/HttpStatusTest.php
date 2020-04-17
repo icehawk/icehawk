@@ -34,4 +34,12 @@ final class HttpStatusTest extends TestCase
 
 		fclose( $handle );
 	}
+
+	public function testFromCodeThrowsExceptionForInvalidCode() : void
+	{
+		$this->expectException( InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'Invalid code for HttpStatus: 299' );
+
+		HttpStatus::fromCode( 299 );
+	}
 }

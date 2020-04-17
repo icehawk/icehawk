@@ -2,6 +2,8 @@
 
 namespace IceHawk\IceHawk\Messages;
 
+use IceHawk\IceHawk\Types\HttpStatus;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
@@ -13,13 +15,9 @@ class Response implements ResponseInterface
 {
 	private const DEFAULT_STATUS_CODE      = 200;
 
-	private const DEFAULT_REASON_PHRASE    = 'OK';
-
 	private const DEFAULT_PROTOCOL_VERSION = 'HTTP/1.1';
 
-	private int $statusCode;
-
-	private string $reasonPhrase;
+	private HttpStatus $status;
 
 	private string $protocolVersion;
 
@@ -30,11 +28,11 @@ class Response implements ResponseInterface
 
 	/**
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	final private function __construct()
 	{
-		$this->statusCode      = self::DEFAULT_STATUS_CODE;
-		$this->reasonPhrase    = self::DEFAULT_REASON_PHRASE;
+		$this->status          = HttpStatus::fromCode( self::DEFAULT_STATUS_CODE );
 		$this->protocolVersion = self::DEFAULT_PROTOCOL_VERSION;
 		$this->headers         = [];
 		$this->body            = Stream::newWithContent( '' );
@@ -46,6 +44,32 @@ class Response implements ResponseInterface
 	public static function new() : ResponseInterface
 	{
 		return new static();
+	}
+
+	/**
+	 * @param string $content
+	 *
+	 * @return static
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 */
+	public static function newWithContent( string $content ) : ResponseInterface
+	{
+		return static::new()->withBody( Stream::newWithContent( $content ) );
+	}
+
+	/**
+	 * @param string $redirectUri
+	 * @param int    $statusCode
+	 *
+	 * @return static
+	 * @throws InvalidArgumentException
+	 */
+	public static function redirect( string $redirectUri, int $statusCode = 301 ) : self
+	{
+		return static::new()
+		             ->withStatus( $statusCode )
+		             ->withHeader( 'Location', $redirectUri );
 	}
 
 	public function getProtocolVersion() : string
@@ -192,7 +216,7 @@ class Response implements ResponseInterface
 	 */
 	public function getStatusCode() : int
 	{
-		return $this->statusCode;
+		return $this->status->getCode();
 	}
 
 	/**
@@ -200,12 +224,12 @@ class Response implements ResponseInterface
 	 * @param string $reasonPhrase
 	 *
 	 * @return $this
+	 * @throws InvalidArgumentException
 	 */
 	public function withStatus( $code, $reasonPhrase = '' ) : ResponseInterface
 	{
-		$response               = clone $this;
-		$response->statusCode   = (int)$code;
-		$response->reasonPhrase = (string)$reasonPhrase;
+		$response         = clone $this;
+		$response->status = HttpStatus::fromCode( (int)$code );
 
 		return $response;
 	}
@@ -215,6 +239,6 @@ class Response implements ResponseInterface
 	 */
 	public function getReasonPhrase() : string
 	{
-		return $this->reasonPhrase;
+		return $this->status->getPhrase();
 	}
 }

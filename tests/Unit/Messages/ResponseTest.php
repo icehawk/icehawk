@@ -139,4 +139,31 @@ final class ResponseTest extends TestCase
 		$this->assertSame( 404, $response->getStatusCode() );
 		$this->assertSame( 'Not Found', $response->getReasonPhrase() );
 	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 */
+	public function testNewWithContent() : void
+	{
+		$response = Response::newWithContent( 'Unit-Test' );
+
+		$this->assertSame( 200, $response->getStatusCode() );
+		$this->assertSame( 'OK', $response->getReasonPhrase() );
+		$this->assertSame( 'Unit-Test', (string)$response->getBody() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testRedirect() : void
+	{
+		$response = Response::redirect( 'https://example.com/unit/test', 302 );
+
+		$this->assertSame( 302, $response->getStatusCode() );
+		$this->assertSame( 'Found', $response->getReasonPhrase() );
+		$this->assertSame( 'https://example.com/unit/test', $response->getHeaderLine( 'Location' ) );
+	}
 }

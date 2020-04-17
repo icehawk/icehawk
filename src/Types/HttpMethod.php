@@ -152,7 +152,7 @@ final class HttpMethod
 		return $this->httpMethod;
 	}
 
-	public function equals( HttpMethod $other, HttpMethod ...$others ) : bool
+	public function equalsOneOf( HttpMethod $other, HttpMethod ...$others ) : bool
 	{
 		if ( $other->httpMethod === $this->httpMethod )
 		{

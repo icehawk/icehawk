@@ -60,7 +60,7 @@ final class Route
 			HttpMethod::trace(),
 		];
 
-		if ( $this->httpMethod->equals( HttpMethod::get() ) )
+		if ( $this->httpMethod->equalsOneOf( HttpMethod::get() ) )
 		{
 			$this->acceptedHttpMethods[] = HttpMethod::head();
 		}
@@ -220,7 +220,7 @@ final class Route
 
 	private function acceptsHttpMethod( HttpMethod $requestMethod ) : bool
 	{
-		return $requestMethod->equals( ...$this->acceptedHttpMethods );
+		return $requestMethod->equalsOneOf( ...$this->acceptedHttpMethods );
 	}
 
 	public function matchesUri( UriInterface $uri ) : bool

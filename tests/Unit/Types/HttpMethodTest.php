@@ -104,8 +104,8 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testEquals() : void
 	{
-		$this->assertTrue( HttpMethod::delete()->equals( HttpMethod::newFromString( 'delete' ) ) );
-		$this->assertFalse( HttpMethod::delete()->equals( HttpMethod::newFromString( 'post' ) ) );
+		$this->assertTrue( HttpMethod::delete()->equalsOneOf( HttpMethod::newFromString( 'delete' ) ) );
+		$this->assertFalse( HttpMethod::delete()->equalsOneOf( HttpMethod::newFromString( 'post' ) ) );
 	}
 
 	/**
@@ -113,8 +113,8 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testEqualsOneOfMultiple() : void
 	{
-		$this->assertTrue( HttpMethod::delete()->equals( HttpMethod::get(), HttpMethod::delete() ) );
-		$this->assertFalse( HttpMethod::delete()->equals( HttpMethod::post(), HttpMethod::get() ) );
+		$this->assertTrue( HttpMethod::delete()->equalsOneOf( HttpMethod::get(), HttpMethod::delete() ) );
+		$this->assertFalse( HttpMethod::delete()->equalsOneOf( HttpMethod::post(), HttpMethod::get() ) );
 	}
 
 	/**

@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use function array_keys;
 use function http_response_code;
+use function session_write_close;
 use function sprintf;
 
 final class IceHawk
@@ -38,6 +39,8 @@ final class IceHawk
 	public function handleRequest( ServerRequestInterface $request ) : void
 	{
 		$response = $this->getResponseForRequest( $request );
+
+		session_write_close();
 
 		http_response_code( $response->getStatusCode() );
 

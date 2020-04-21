@@ -13,8 +13,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use function array_keys;
 use function http_response_code;
+use function session_status;
 use function session_write_close;
 use function sprintf;
+use const PHP_SESSION_ACTIVE;
 
 final class IceHawk
 {
@@ -40,7 +42,10 @@ final class IceHawk
 	{
 		$response = $this->getResponseForRequest( $request );
 
-		session_write_close();
+		if ( PHP_SESSION_ACTIVE === session_status() )
+		{
+			session_write_close();
+		}
 
 		http_response_code( $response->getStatusCode() );
 

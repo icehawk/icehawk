@@ -3,13 +3,13 @@
 namespace IceHawk\IceHawk\Tests\Unit\Dependencies;
 
 use IceHawk\IceHawk\Dependencies\AbstractDependencies;
-use IceHawk\IceHawk\Routing\RouteCollection;
-use IceHawk\IceHawk\Tests\Unit\Stubs\RequestHandlerImplementation;
+use IceHawk\IceHawk\Routing\Routes;
+use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
-use IceHawk\IceHawk\Types\RequestHandlerClassName;
+use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use stdClass;
 
 final class AbstractDependenciesTest extends TestCase
@@ -20,17 +20,19 @@ final class AbstractDependenciesTest extends TestCase
 	public function testCanGetSameInstanceFromPool() : void
 	{
 		$deps = new class extends AbstractDependencies {
-			public function getRoutes() : RouteCollection
+			public function getRoutes() : Routes
 			{
-				return RouteCollection::new();
+				return Routes::new();
 			}
 
-			public function resolveRequestHandler(
-				RequestHandlerClassName $handlerClassName,
-				MiddlewareClassName ...$middlewareClassNames
-			) : RequestHandlerInterface
+			public function getAppMiddlewares() : MiddlewareClassNames
 			{
-				return new RequestHandlerImplementation();
+				return MiddlewareClassNames::new();
+			}
+
+			public function resolveMiddleware( MiddlewareClassName $middlewareClassName ) : MiddlewareInterface
+			{
+				return new MiddlewareImplementation();
 			}
 
 			public function getAnObject() : stdClass

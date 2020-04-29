@@ -2,74 +2,62 @@
 
 namespace IceHawk\IceHawk\Routing;
 
-use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use IceHawk\IceHawk\Types\HttpMethod;
-use IceHawk\IceHawk\Types\MiddlewareClassName;
-use IceHawk\IceHawk\Types\RequestHandlerClassName;
-use IceHawk\IceHawk\Types\RoutePattern;
+use IceHawk\IceHawk\Types\HttpMethods;
+use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use function array_map;
+use function array_merge;
 
 final class Route
 {
-	private const DEFAULT_REQUEST_HANDLER_CLASS_NAME = QueueRequestHandler::class;
-
 	private HttpMethod $httpMethod;
 
-	/** @var array<int, HttpMethod> */
-	private array $acceptedHttpMethods;
+	private HttpMethods $acceptedHttpMethods;
 
-	private RequestHandlerClassName $requestHandlerClassName;
-
-	/** @var array<int, MiddlewareClassName> */
-	private array $middlewareClassNames;
+	private MiddlewareClassNames $middlewareClassNames;
 
 	private RoutePattern $routePattern;
 
 	private ?ServerRequestInterface $modifiedRequest;
 
 	/**
-	 * @param HttpMethod                      $httpMethod
-	 * @param RoutePattern                    $routePattern
-	 * @param RequestHandlerClassName         $requestHandlerClassName
-	 * @param array<int, MiddlewareClassName> $middlewareClassNames
+	 * @param HttpMethod           $httpMethod
+	 * @param RoutePattern         $routePattern
+	 * @param MiddlewareClassNames $middlewareClassNames
 	 */
 	private function __construct(
 		HttpMethod $httpMethod,
 		RoutePattern $routePattern,
-		RequestHandlerClassName $requestHandlerClassName,
-		MiddlewareClassName  ...$middlewareClassNames
+		MiddlewareClassNames $middlewareClassNames
 	)
 	{
-		$this->httpMethod              = $httpMethod;
-		$this->requestHandlerClassName = $requestHandlerClassName;
-		$this->middlewareClassNames    = $middlewareClassNames;
-		$this->routePattern            = $routePattern;
+		$this->httpMethod           = $httpMethod;
+		$this->middlewareClassNames = $middlewareClassNames;
+		$this->routePattern         = $routePattern;
 
 		$this->setAcceptedHttpMethods();
 	}
 
 	private function setAcceptedHttpMethods() : void
 	{
-		$this->acceptedHttpMethods = [
+		$this->acceptedHttpMethods = HttpMethods::new(
 			$this->httpMethod,
 			HttpMethod::connect(),
 			HttpMethod::options(),
-			HttpMethod::trace(),
-		];
+			HttpMethod::trace()
+		);
 
 		if ( $this->httpMethod->equalsOneOf( HttpMethod::get() ) )
 		{
-			$this->acceptedHttpMethods[] = HttpMethod::head();
+			$this->acceptedHttpMethods->add( HttpMethod::head() );
 		}
 	}
 
 	/**
 	 * @param string             $httpMethod
 	 * @param string             $regexPattern
-	 * @param string             $requestHandlerClassName
 	 * @param array<int, string> $middlewareClassNames
 	 *
 	 * @return Route
@@ -78,19 +66,13 @@ final class Route
 	public static function newFromStrings(
 		string $httpMethod,
 		string $regexPattern,
-		string $requestHandlerClassName,
 		string ...$middlewareClassNames
 	) : self
 	{
 		return new self(
 			HttpMethod::newFromString( $httpMethod ),
 			RoutePattern::newFromString( $regexPattern ),
-			RequestHandlerClassName::newFromString( $requestHandlerClassName ),
-			...
-			array_map(
-				fn( string $item ) : MiddlewareClassName => MiddlewareClassName::newFromString( $item ),
-				$middlewareClassNames
-			)
+			MiddlewareClassNames::newFromStrings( ...$middlewareClassNames )
 		);
 	}
 
@@ -106,7 +88,6 @@ final class Route
 		return self::newFromStrings(
 			'GET',
 			$regexPattern,
-			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
 			...$middlewareClassNames
 		);
 	}
@@ -123,7 +104,6 @@ final class Route
 		return self::newFromStrings(
 			'POST',
 			$regexPattern,
-			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
 			...$middlewareClassNames
 		);
 	}
@@ -140,7 +120,6 @@ final class Route
 		return self::newFromStrings(
 			'PUT',
 			$regexPattern,
-			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
 			...$middlewareClassNames
 		);
 	}
@@ -157,7 +136,6 @@ final class Route
 		return self::newFromStrings(
 			'PATCH',
 			$regexPattern,
-			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
 			...$middlewareClassNames
 		);
 	}
@@ -174,23 +152,8 @@ final class Route
 		return self::newFromStrings(
 			'DELETE',
 			$regexPattern,
-			self::DEFAULT_REQUEST_HANDLER_CLASS_NAME,
 			...$middlewareClassNames
 		);
-	}
-
-	/**
-	 * @param string $requestHandlerClassName
-	 *
-	 * @return Route
-	 * @throws InvalidArgumentException
-	 */
-	public function withRequestHandlerClassName( string $requestHandlerClassName ) : self
-	{
-		$route                          = clone $this;
-		$route->requestHandlerClassName = RequestHandlerClassName::newFromString( $requestHandlerClassName );
-
-		return $route;
 	}
 
 	/**
@@ -228,15 +191,7 @@ final class Route
 		return $this->routePattern->matchesUri( $uri );
 	}
 
-	public function getRequestHandlerClassName() : RequestHandlerClassName
-	{
-		return $this->requestHandlerClassName;
-	}
-
-	/**
-	 * @return array<int, MiddlewareClassName>
-	 */
-	public function getMiddlewareClassNames() : array
+	public function getMiddlewareClassNames() : MiddlewareClassNames
 	{
 		return $this->middlewareClassNames;
 	}
@@ -246,10 +201,7 @@ final class Route
 		return $this->modifiedRequest ?? null;
 	}
 
-	/**
-	 * @return array<int, HttpMethod>
-	 */
-	public function getAcceptedHttpMethods() : array
+	public function getAcceptedHttpMethods() : HttpMethods
 	{
 		return $this->acceptedHttpMethods;
 	}

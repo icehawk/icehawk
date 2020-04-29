@@ -4,16 +4,14 @@ namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Uri;
-use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
-use IceHawk\IceHawk\Tests\Unit\Stubs\RequestHandlerImplementation;
 use IceHawk\IceHawk\Types\HttpMethod;
-use IceHawk\IceHawk\Types\MiddlewareClassName;
+use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use function array_map;
+use function iterator_to_array;
 
 final class RouteTest extends TestCase
 {
@@ -27,18 +25,13 @@ final class RouteTest extends TestCase
 		$route                = Route::newFromStrings(
 			'GET',
 			'/unit/test',
-			RequestHandlerImplementation::class,
 			...$middlewareClassNames
 		);
 
 		$this->assertEquals(
-			array_map(
-				fn( string $item ) : MiddlewareClassName => MiddlewareClassName::newFromString( $item ),
-				$middlewareClassNames
-			),
+			MiddlewareClassNames::newFromStrings( ...$middlewareClassNames ),
 			$route->getMiddlewareClassNames()
 		);
-		$this->assertSame( RequestHandlerImplementation::class, $route->getRequestHandlerClassName()->toString() );
 		$this->assertNull( $route->getModifiedRequest() );
 	}
 
@@ -59,7 +52,6 @@ final class RouteTest extends TestCase
 		$route = Route::newFromStrings(
 			'GET',
 			'/unit/test',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class
 		);
 
@@ -83,7 +75,6 @@ final class RouteTest extends TestCase
 		$route = Route::newFromStrings(
 			'GET',
 			'/unit/test',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class
 		);
 
@@ -107,7 +98,6 @@ final class RouteTest extends TestCase
 		$route = Route::newFromStrings(
 			'GET',
 			'/not-matching',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class,
 		);
 
@@ -130,7 +120,6 @@ final class RouteTest extends TestCase
 		$route   = Route::newFromStrings(
 			'GET',
 			'/unit/(?<testKey>.*)',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class,
 		);
 
@@ -295,22 +284,6 @@ final class RouteTest extends TestCase
 	}
 
 	/**
-	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
-	 */
-	public function testWithRequestHandlerClassName() : void
-	{
-		$route = Route::delete( '/unit/test' );
-
-		$this->assertSame( QueueRequestHandler::class, $route->getRequestHandlerClassName()->toString() );
-
-		$newRoute = $route->withRequestHandlerClassName( RequestHandlerImplementation::class );
-
-		$this->assertNotSame( $route, $newRoute );
-		$this->assertSame( RequestHandlerImplementation::class, $newRoute->getRequestHandlerClassName()->toString() );
-	}
-
-	/**
 	 * @param Route                  $route
 	 * @param array<int, HttpMethod> $acceptedMethods
 	 *
@@ -319,7 +292,7 @@ final class RouteTest extends TestCase
 	 */
 	public function testGetAcceptedHttpMethods( Route $route, array $acceptedMethods ) : void
 	{
-		$routeMethods = $route->getAcceptedHttpMethods();
+		$routeMethods = iterator_to_array( $route->getAcceptedHttpMethods()->getIterator(), false );
 		sort( $routeMethods );
 		sort( $acceptedMethods );
 

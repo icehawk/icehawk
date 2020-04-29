@@ -114,7 +114,7 @@ final class IceHawk
 	{
 		if ( HttpMethod::head()->equalsString( $request->getMethod() ) )
 		{
-			return $response->withHeader( 'Content-Length', $response->getBody()->getSize() )
+			return $response->withHeader( 'Content-Length', (string)$response->getBody()->getSize() )
 			                ->withBody( Stream::newWithContent( '' ) );
 		}
 

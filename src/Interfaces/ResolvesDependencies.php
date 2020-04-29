@@ -2,17 +2,16 @@
 
 namespace IceHawk\IceHawk\Interfaces;
 
-use IceHawk\IceHawk\Routing\RouteCollection;
+use IceHawk\IceHawk\Routing\Routes;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
-use IceHawk\IceHawk\Types\RequestHandlerClassName;
-use Psr\Http\Server\RequestHandlerInterface;
+use IceHawk\IceHawk\Types\MiddlewareClassNames;
+use Psr\Http\Server\MiddlewareInterface;
 
 interface ResolvesDependencies
 {
-	public function getRoutes() : RouteCollection;
+	public function getAppMiddlewares() : MiddlewareClassNames;
 
-	public function resolveRequestHandler(
-		RequestHandlerClassName $handlerClassName,
-		MiddlewareClassName ...$middlewareClassNames
-	) : RequestHandlerInterface;
+	public function getRoutes() : Routes;
+
+	public function resolveMiddleware( MiddlewareClassName $middlewareClassName ) : MiddlewareInterface;
 }

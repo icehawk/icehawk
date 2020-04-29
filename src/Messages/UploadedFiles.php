@@ -12,7 +12,7 @@ use function is_array;
 /**
  * @implements IteratorAggregate<int, UploadedFileInterface>
  */
-final class UploadedFilesCollection implements Countable, IteratorAggregate
+final class UploadedFiles implements Countable, IteratorAggregate
 {
 	/** @var array<int|string, array<int, UploadedFileInterface>> */
 	private array $uploadedFiles;
@@ -25,7 +25,7 @@ final class UploadedFilesCollection implements Countable, IteratorAggregate
 	/**
 	 * @param array<string, string|array<string, array<int,string|int>>> $filesArray
 	 *
-	 * @return UploadedFilesCollection
+	 * @return UploadedFiles
 	 */
 	public static function fromFilesArray( array $filesArray ) : self
 	{
@@ -76,7 +76,7 @@ final class UploadedFilesCollection implements Countable, IteratorAggregate
 	/**
 	 * @param array<string, array<int, UploadedFileInterface>> $uploadedFiles
 	 *
-	 * @return UploadedFilesCollection
+	 * @return UploadedFiles
 	 */
 	public static function fromUploadedFilesArray( array $uploadedFiles ) : self
 	{

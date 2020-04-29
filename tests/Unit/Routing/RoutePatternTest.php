@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace IceHawk\IceHawk\Tests\Unit\Types;
+namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Messages\Uri;
-use IceHawk\IceHawk\Types\RoutePattern;
+use IceHawk\IceHawk\Routing\RoutePattern;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;

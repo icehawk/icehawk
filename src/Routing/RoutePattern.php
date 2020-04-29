@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace IceHawk\IceHawk\Types;
+namespace IceHawk\IceHawk\Routing;
 
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;

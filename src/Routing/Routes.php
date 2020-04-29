@@ -16,7 +16,7 @@ use function count;
 /**
  * @implements IteratorAggregate<int, Route>
  */
-final class RouteCollection implements Countable, IteratorAggregate
+final class Routes implements Countable, IteratorAggregate
 {
 	/** @var array<int, Route> */
 	private array $items;

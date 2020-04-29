@@ -6,9 +6,8 @@ use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Uri;
 use IceHawk\IceHawk\Routing\Route;
-use IceHawk\IceHawk\Routing\RouteCollection;
+use IceHawk\IceHawk\Routing\Routes;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
-use IceHawk\IceHawk\Tests\Unit\Stubs\RequestHandlerImplementation;
 use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
 use PHPUnit\Framework\Exception;
@@ -16,7 +15,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-final class RouteCollectionTest extends TestCase
+final class RoutesTest extends TestCase
 {
 	/**
 	 * @throws ExpectationFailedException
@@ -27,13 +26,12 @@ final class RouteCollectionTest extends TestCase
 		$route = Route::newFromStrings(
 			'GET',
 			'/unit/test',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class,
 		);
 
-		$collection = RouteCollection::new( $route );
+		$routes = Routes::new( $route );
 
-		$this->assertSame( $route, $collection->getIterator()->current() );
+		$this->assertSame( $route, $routes->getIterator()->current() );
 	}
 
 	/**
@@ -46,21 +44,20 @@ final class RouteCollectionTest extends TestCase
 		$route = Route::newFromStrings(
 			'GET',
 			'/unit/test',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class
 		);
 
-		$collection = RouteCollection::new();
+		$routes = Routes::new();
 
-		$this->assertCount( 0, $collection );
-		$this->assertCount( 0, $collection->getIterator() );
+		$this->assertCount( 0, $routes );
+		$this->assertCount( 0, $routes->getIterator() );
 
-		$collection->add( $route );
+		$routes->add( $route );
 
-		$this->assertCount( 1, $collection );
-		$this->assertCount( 1, $collection->getIterator() );
+		$this->assertCount( 1, $routes );
+		$this->assertCount( 1, $routes->getIterator() );
 
-		$this->assertSame( $route, $collection->getIterator()->current() );
+		$this->assertSame( $route, $routes->getIterator()->current() );
 	}
 
 	/**
@@ -73,22 +70,20 @@ final class RouteCollectionTest extends TestCase
 		$route1 = Route::newFromStrings(
 			'GET',
 			'/unit/test',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class
 		);
 
 		$route2 = Route::newFromStrings(
 			'POST',
 			'/unit/test',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class
 		);
 
-		$collection = RouteCollection::new();
-		$collection->add( $route1, $route2 );
+		$routes = Routes::new();
+		$routes->add( $route1, $route2 );
 
-		$this->assertCount( 2, $collection );
-		$this->assertCount( 2, $collection->getIterator() );
+		$this->assertCount( 2, $routes );
+		$this->assertCount( 2, $routes->getIterator() );
 	}
 
 	/**
@@ -97,8 +92,8 @@ final class RouteCollectionTest extends TestCase
 	 */
 	public function testCount() : void
 	{
-		$this->assertCount( 0, RouteCollection::new() );
-		$this->assertSame( 0, RouteCollection::new()->count() );
+		$this->assertCount( 0, Routes::new() );
+		$this->assertSame( 0, Routes::new()->count() );
 	}
 
 	/**
@@ -111,11 +106,10 @@ final class RouteCollectionTest extends TestCase
 		$route = Route::newFromStrings(
 			'GET',
 			'/unit/test',
-			RequestHandlerImplementation::class,
 			MiddlewareImplementation::class
 		);
 
-		$collection = RouteCollection::new( $route );
+		$routes = Routes::new( $route );
 
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
@@ -125,7 +119,7 @@ final class RouteCollectionTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->assertSame( $route, $collection->findMatchingRouteForRequest( $request ) );
+		$this->assertSame( $route, $routes->findMatchingRouteForRequest( $request ) );
 	}
 
 	/**
@@ -134,7 +128,7 @@ final class RouteCollectionTest extends TestCase
 	 */
 	public function testFindMatchingRouteForRequestThrowsExceptionIfNoRouteWasFound() : void
 	{
-		$collection = RouteCollection::new();
+		$routes = Routes::new();
 
 		$_SERVER['HTTPS']          = 'On';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
@@ -150,7 +144,7 @@ final class RouteCollectionTest extends TestCase
 		);
 
 		/** @noinspection UnusedFunctionResultInspection */
-		$collection->findMatchingRouteForRequest( $request );
+		$routes->findMatchingRouteForRequest( $request );
 	}
 
 	/**
@@ -159,9 +153,9 @@ final class RouteCollectionTest extends TestCase
 	 */
 	public function testNew() : void
 	{
-		$collection = RouteCollection::new();
-		$this->assertCount( 0, $collection );
-		$this->assertCount( 0, $collection->getIterator() );
+		$routes = Routes::new();
+		$this->assertCount( 0, $routes );
+		$this->assertCount( 0, $routes->getIterator() );
 	}
 
 	/**
@@ -170,8 +164,8 @@ final class RouteCollectionTest extends TestCase
 	 */
 	public function testFindAcceptedHttpMethodsForUri() : void
 	{
-		$uri        = Uri::fromString( 'https://example.com/unit/test' );
-		$collection = RouteCollection::new(
+		$uri    = Uri::fromString( 'https://example.com/unit/test' );
+		$routes = Routes::new(
 		# matching routes
 			Route::get( '/unit/test' ),
 			Route::post( '/unit/test' ),
@@ -188,7 +182,7 @@ final class RouteCollectionTest extends TestCase
 			HttpMethod::trace(),
 		];
 
-		$acceptedMethods = $collection->findAcceptedHttpMethodsForUri( $uri );
+		$acceptedMethods = $routes->findAcceptedHttpMethodsForUri( $uri );
 
 		sort( $expectedHttpMethods );
 		sort( $acceptedMethods );

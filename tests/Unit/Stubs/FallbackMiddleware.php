@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use RuntimeException;
 
 final class FallbackMiddleware implements MiddlewareInterface
 {
@@ -17,11 +16,10 @@ final class FallbackMiddleware implements MiddlewareInterface
 	 * @param RequestHandlerInterface $handler
 	 *
 	 * @return ResponseInterface
-	 * @throws RuntimeException
 	 * @throws InvalidArgumentException
 	 */
 	public function process( ServerRequestInterface $request, RequestHandlerInterface $handler ) : ResponseInterface
 	{
-		return Response::new()->withHeader( 'X-ID', self::class );
+		return Response::new()->withAddedHeader( 'X-ID', self::class );
 	}
 }

@@ -5,6 +5,8 @@ namespace IceHawk\IceHawk\Tests\Unit;
 use IceHawk\IceHawk\IceHawk;
 use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
 use IceHawk\IceHawk\Messages\Request;
+use IceHawk\IceHawk\Messages\Stream;
+use IceHawk\IceHawk\Middlewares\OptionsMiddleware;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Routing\Routes;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
@@ -349,5 +351,62 @@ final class IceHawkTest extends TestCase
 			]
 		);
 		$this->assertSame( 404, http_response_code() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 * @runInSeparateProcess
+	 */
+	public function testTraceRequestRespondsWithRequestBody() : void
+	{
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'TRACE';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
+
+		$this->expectOutputString( 'Unit-Test' );
+
+		IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() )
+		       ->handleRequest( Request::fromGlobals()->withBody( Stream::newWithContent( 'Unit-Test' ) ) );
+
+		$this->assertHeaders(
+			[
+				'Content-Type: message/http',
+				'X-IceHawk-Trace: ' . OptionsMiddleware::class,
+			]
+		);
+		$this->assertSame( 200, http_response_code() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 * @runInSeparateProcess
+	 */
+	public function testTraceRequestListsAllProcessedMiddlewaresInHeader() : void
+	{
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'TRACE';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/post/unit/test/one-middleware';
+
+		$this->expectOutputString( 'Unit-Test' );
+
+		IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() )
+		       ->handleRequest( Request::fromGlobals()->withBody( Stream::newWithContent( 'Unit-Test' ) ) );
+
+		$this->assertHeaders(
+			[
+				'X-ID: ' . MiddlewareImplementation::class,
+				'X-IceHawk-Trace: ' . MiddlewareImplementation::class . ',' . OptionsMiddleware::class,
+				'Content-Type: message/http',
+			]
+		);
+		$this->assertSame( 200, http_response_code() );
 	}
 }

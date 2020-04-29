@@ -2,12 +2,15 @@
 
 namespace IceHawk\IceHawk\RequestHandlers;
 
+use IceHawk\IceHawk\Types\HttpMethod;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use function array_merge;
 use function array_shift;
+use function get_class;
 
 final class QueueRequestHandler implements RequestHandlerInterface
 {
@@ -32,6 +35,12 @@ final class QueueRequestHandler implements RequestHandlerInterface
 		$this->middlewares = array_merge( $this->middlewares, $middlewares );
 	}
 
+	/**
+	 * @param ServerRequestInterface $request
+	 *
+	 * @return ResponseInterface
+	 * @throws InvalidArgumentException
+	 */
 	public function handle( ServerRequestInterface $request ) : ResponseInterface
 	{
 		if ( [] === $this->middlewares )
@@ -42,6 +51,13 @@ final class QueueRequestHandler implements RequestHandlerInterface
 		/** @var MiddlewareInterface $middleware */
 		$middleware = array_shift( $this->middlewares );
 
-		return $middleware->process( $request, $this );
+		$response = $middleware->process( $request, $this );
+
+		if ( HttpMethod::trace()->equalsString( $request->getMethod() ) )
+		{
+			return $response->withAddedHeader( 'X-IceHawk-Trace', get_class( $middleware ) );
+		}
+
+		return $response;
 	}
 }

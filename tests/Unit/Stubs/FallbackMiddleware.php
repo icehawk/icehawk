@@ -2,23 +2,23 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Stubs;
 
+use IceHawk\IceHawk\Messages\Interfaces\ProvidesRequestData;
 use IceHawk\IceHawk\Messages\Response;
+use IceHawk\IceHawk\Middlewares\AbstractMiddleware;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-final class FallbackMiddleware implements MiddlewareInterface
+final class FallbackMiddleware extends AbstractMiddleware
 {
 	/**
-	 * @param ServerRequestInterface  $request
-	 * @param RequestHandlerInterface $handler
+	 * @param ProvidesRequestData     $request
+	 * @param RequestHandlerInterface $next
 	 *
 	 * @return ResponseInterface
 	 * @throws InvalidArgumentException
 	 */
-	public function process( ServerRequestInterface $request, RequestHandlerInterface $handler ) : ResponseInterface
+	protected function processRequest( ProvidesRequestData $request, RequestHandlerInterface $next ) : ResponseInterface
 	{
 		return Response::new()->withAddedHeader( 'X-ID', self::class );
 	}

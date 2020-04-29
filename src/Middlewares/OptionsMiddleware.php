@@ -2,17 +2,16 @@
 
 namespace IceHawk\IceHawk\Middlewares;
 
+use IceHawk\IceHawk\Messages\Interfaces\ProvidesRequestData;
 use IceHawk\IceHawk\Messages\Response;
 use IceHawk\IceHawk\Routing\Routes;
 use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use function array_map;
 
-final class OptionsMiddleware implements MiddlewareInterface
+final class OptionsMiddleware extends AbstractMiddleware
 {
 	private Routes $routes;
 
@@ -32,13 +31,13 @@ final class OptionsMiddleware implements MiddlewareInterface
 	}
 
 	/**
-	 * @param ServerRequestInterface  $request
-	 * @param RequestHandlerInterface $handler
+	 * @param ProvidesRequestData     $request
+	 * @param RequestHandlerInterface $next
 	 *
 	 * @return ResponseInterface
 	 * @throws InvalidArgumentException
 	 */
-	public function process( ServerRequestInterface $request, RequestHandlerInterface $handler ) : ResponseInterface
+	protected function processRequest( ProvidesRequestData $request, RequestHandlerInterface $next ) : ResponseInterface
 	{
 		if ( HttpMethod::options()->equalsString( $request->getMethod() ) )
 		{
@@ -51,6 +50,6 @@ final class OptionsMiddleware implements MiddlewareInterface
 			);
 		}
 
-		return $handler->handle( $request );
+		return $next->handle( $request );
 	}
 }

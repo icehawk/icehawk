@@ -93,7 +93,7 @@ use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use IceHawk\IceHawk\Routing\Route;
-use IceHawk\IceHawk\Routing\RouteCollection;
+use IceHawk\IceHawk\Routing\Routes;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
 use IceHawk\IceHawk\Types\RequestHandlerClassName;
 use LogicException;
@@ -103,9 +103,9 @@ use YourVendor\YourProject\SayHelloMiddleware;
 
 final class Dependencies implements ResolvesDependencies
 {
-    public function getRoutes() : RouteCollection
+    public function getRoutes() : Routes
     {
-        return RouteCollection::new(
+        return Routes::new(
             Route::get('/say/hello', SayHelloMiddleware::class)
         );
     }

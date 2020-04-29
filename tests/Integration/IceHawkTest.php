@@ -4,14 +4,14 @@ namespace IceHawk\IceHawk\Tests\Integration;
 
 use IceHawk\IceHawk\IceHawk;
 use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
-use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
-use IceHawk\IceHawk\Routing\RouteCollection;
+use IceHawk\IceHawk\Routing\Routes;
+use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
-use IceHawk\IceHawk\Types\RequestHandlerClassName;
+use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 final class IceHawkTest extends TestCase
 {
@@ -27,17 +27,19 @@ final class IceHawkTest extends TestCase
 	private function getDeps() : ResolvesDependencies
 	{
 		return new class implements ResolvesDependencies {
-			public function getRoutes() : RouteCollection
+			public function getRoutes() : Routes
 			{
-				return RouteCollection::new();
+				return Routes::new();
 			}
 
-			public function resolveRequestHandler(
-				RequestHandlerClassName $handlerClassName,
-				MiddlewareClassName ...$middlewareClassNames
-			) : RequestHandlerInterface
+			public function getAppMiddlewares() : MiddlewareClassNames
 			{
-				return FallbackRequestHandler::newWithMessage( 'Fallback active.' );
+				return MiddlewareClassNames::new();
+			}
+
+			public function resolveMiddleware( MiddlewareClassName $middlewareClassName ) : MiddlewareInterface
+			{
+				return new MiddlewareImplementation();
 			}
 		};
 	}

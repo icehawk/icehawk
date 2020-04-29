@@ -10,6 +10,7 @@ use Psr\Http\Message\UriInterface;
 use UnexpectedValueException;
 use function array_key_exists;
 use function array_merge;
+use function array_unique;
 use function implode;
 use function is_array;
 use function is_string;
@@ -40,7 +41,7 @@ final class Request implements ProvidesRequestData
 	/** @var array<int|string, mixed> */
 	private array $mergedParams;
 
-	private UploadedFilesCollection $uploadedFiles;
+	private UploadedFiles $uploadedFiles;
 
 	/** @var array<string,mixed> */
 	private array $attributes;
@@ -52,7 +53,7 @@ final class Request implements ProvidesRequestData
 	 * @param null|array<mixed>|object $parsedBody
 	 * @param array<string,mixed>      $cookieParams
 	 * @param array<string,mixed>      $mergedParams
-	 * @param UploadedFilesCollection  $uploadedFiles
+	 * @param UploadedFiles            $uploadedFiles
 	 * @param array<string,mixed>      $attributes
 	 */
 	private function __construct(
@@ -62,7 +63,7 @@ final class Request implements ProvidesRequestData
 		$parsedBody,
 		array $cookieParams,
 		array $mergedParams,
-		UploadedFilesCollection $uploadedFiles,
+		UploadedFiles $uploadedFiles,
 		array $attributes
 	)
 	{
@@ -110,7 +111,7 @@ final class Request implements ProvidesRequestData
 			$_POST ?? [],
 			$_COOKIE ?? [],
 			$_REQUEST ?? [],
-			UploadedFilesCollection::fromGlobals(),
+			UploadedFiles::fromGlobals(),
 			[]
 		);
 	}
@@ -198,15 +199,13 @@ final class Request implements ProvidesRequestData
 	 */
 	public function withAddedHeader( $name, $value ) : self
 	{
-		$request = clone $this;
+		$request     = clone $this;
+		$headerName  = (string)$name;
+		$headerValue = !is_array( $value ) ? [$value] : $value;
 
-		if ( $request->hasHeader( $name ) )
-		{
-			$request->headers[ (string)$name ] = array_merge(
-				$request->headers[ (string)$name ],
-				!is_array( $value ) ? [$value] : $value
-			);
-		}
+		$request->headers[ $headerName ] = array_unique(
+			array_merge( $request->headers[ $headerName ] ?? [], $headerValue )
+		);
 
 		return $request;
 	}
@@ -406,7 +405,7 @@ final class Request implements ProvidesRequestData
 	public function withUploadedFiles( array $uploadedFiles ) : self
 	{
 		$request                = clone $this;
-		$request->uploadedFiles = UploadedFilesCollection::fromUploadedFilesArray( $uploadedFiles );
+		$request->uploadedFiles = UploadedFiles::fromUploadedFilesArray( $uploadedFiles );
 
 		return $request;
 	}

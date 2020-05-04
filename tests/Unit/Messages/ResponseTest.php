@@ -4,6 +4,7 @@ namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
 use IceHawk\IceHawk\Messages\Response;
 use IceHawk\IceHawk\Messages\Stream;
+use IceHawk\IceHawk\Messages\Uri;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
@@ -156,14 +157,31 @@ final class ResponseTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
+	 * @throws InvalidArgumentException|RuntimeException
 	 */
 	public function testRedirect() : void
 	{
-		$response = Response::redirect( 'https://example.com/unit/test', 302 );
+		$response = Response::redirect( Uri::fromString( 'https://example.com:443/unit/test' ), 302 );
+
+		$expectedBody = <<<EOF
+						<!DOCTYPE html>
+						<html lang="en">
+						<head>
+						   <title>Redirect 302</title>
+						   <meta http-equiv="refresh" content="0; 
+						   url=https://example.com/unit/test">
+						</head>
+						<body>
+						   <p>Redirecting to:
+						   <a href="https://example.com/unit/test">https://example.com/unit/test</a></p>
+						</body>
+						</html>
+						EOF;
 
 		$this->assertSame( 302, $response->getStatusCode() );
 		$this->assertSame( 'Found', $response->getReasonPhrase() );
 		$this->assertSame( 'https://example.com/unit/test', $response->getHeaderLine( 'Location' ) );
+		$this->assertSame( 'text/html; charset=utf-8', $response->getHeaderLine( 'Content-Type' ) );
+		$this->assertSame( $expectedBody, (string)$response->getBody() );
 	}
 }

@@ -6,6 +6,7 @@ use IceHawk\IceHawk\Types\HttpStatus;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use RuntimeException;
 use function array_merge;
 use function implode;
@@ -59,17 +60,36 @@ class Response implements ResponseInterface
 	}
 
 	/**
-	 * @param string $redirectUri
-	 * @param int    $statusCode
+	 * @param UriInterface $redirectUri
+	 * @param int          $statusCode
 	 *
 	 * @return static
-	 * @throws InvalidArgumentException
+	 * @throws InvalidArgumentException|RuntimeException
 	 */
-	public static function redirect( string $redirectUri, int $statusCode = 301 ) : self
+	public static function redirect( UriInterface $redirectUri, int $statusCode = 301 ) : self
 	{
 		return static::new()
 		             ->withStatus( $statusCode )
-		             ->withHeader( 'Location', $redirectUri );
+		             ->withHeader( 'Location', (string)$redirectUri )
+		             ->withHeader( 'Content-Type', 'text/html; charset=utf-8' )
+		             ->withBody(
+			             Stream::newWithContent(
+				             <<<EOF
+							<!DOCTYPE html>
+							<html lang="en">
+							<head>
+							   <title>Redirect {$statusCode}</title>
+							   <meta http-equiv="refresh" content="0; 
+							   url={$redirectUri}">
+							</head>
+							<body>
+							   <p>Redirecting to:
+							   <a href="{$redirectUri}">{$redirectUri}</a></p>
+							</body>
+							</html>
+							EOF
+			             )
+		             );
 	}
 
 	public function getProtocolVersion() : string

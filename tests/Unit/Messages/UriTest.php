@@ -44,6 +44,15 @@ final class UriTest extends TestCase
 				'url'               => 'https://user:pass@example.com:8080',
 				'expectedAuthority' => 'user:pass@example.com:8080',
 			],
+			# Do not output port, if scheme and port match defaults (http => 80, https => 443)
+			[
+				'url'               => 'https://user:pass@example.com:443',
+				'expectedAuthority' => 'user:pass@example.com',
+			],
+			[
+				'url'               => 'http://user:pass@example.com:80',
+				'expectedAuthority' => 'user:pass@example.com',
+			],
 		];
 	}
 
@@ -403,6 +412,33 @@ final class UriTest extends TestCase
 					'fragment' => '',
 				],
 				'expectedUrl' => '//example.com',
+			],
+			# Do not output port, if scheme and port match defaults (http => 80, https => 443)
+			[
+				'components'  => [
+					'scheme'   => 'http',
+					'user'     => '',
+					'pass'     => '',
+					'host'     => 'example.com',
+					'port'     => 80,
+					'path'     => '/some/path',
+					'query'    => '',
+					'fragment' => '',
+				],
+				'expectedUrl' => 'http://example.com/some/path',
+			],
+			[
+				'components'  => [
+					'scheme'   => 'https',
+					'user'     => '',
+					'pass'     => '',
+					'host'     => 'example.com',
+					'port'     => 443,
+					'path'     => '/some/path',
+					'query'    => '',
+					'fragment' => '',
+				],
+				'expectedUrl' => 'https://example.com/some/path',
 			],
 		];
 	}

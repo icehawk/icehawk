@@ -55,11 +55,23 @@ final class Uri implements UriInterface
 
 	public function getAuthority() : string
 	{
+		$outputPort = true;
+
+		if ( 80 === $this->getPort() && 'http' === $this->getScheme() )
+		{
+			$outputPort = false;
+		}
+
+		if ( 443 === $this->getPort() && 'https' === $this->getScheme() )
+		{
+			$outputPort = false;
+		}
+
 		return sprintf(
 			'%s%s%s',
 			$this->getUserInfo() ? "{$this->getUserInfo()}@" : '',
 			$this->getHost(),
-			$this->getPort() ? ":{$this->getPort()}" : ''
+			($outputPort && $this->getPort()) ? ":{$this->getPort()}" : ''
 		);
 	}
 

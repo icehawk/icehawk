@@ -9,10 +9,16 @@ use function preg_match;
 
 final class RoutePattern
 {
+	private const MATCH_AGAINST_PATH     = 1;
+
+	private const MATCH_AGAINST_FULL_URI = 2;
+
 	private string $regexPattern;
 
 	/** @var array<string, string> */
 	private array $matches;
+
+	private int $matchMode;
 
 	/**
 	 * @param string $regexPattern
@@ -24,6 +30,7 @@ final class RoutePattern
 		$cleanPattern = (string)preg_replace( ['#^!#', '#!i?#'], '', $regexPattern );
 		$this->guardRoutePatternIsValid( $cleanPattern );
 
+		$this->matchMode    = self::MATCH_AGAINST_PATH;
 		$this->regexPattern = '!' . $cleanPattern . '!i';
 		$this->matches      = [];
 	}
@@ -54,8 +61,9 @@ final class RoutePattern
 
 	public function matchesUri( UriInterface $uri ) : bool
 	{
-		$matches = [];
-		$result  = (bool)preg_match( $this->regexPattern, (string)$uri, $matches );
+		$matches     = [];
+		$matchString = $this->matchMode === self::MATCH_AGAINST_FULL_URI ? (string)$uri : $uri->getPath();
+		$result      = (bool)preg_match( $this->regexPattern, $matchString, $matches );
 
 		if ( !$result )
 		{
@@ -84,5 +92,10 @@ final class RoutePattern
 	public function toString() : string
 	{
 		return $this->regexPattern;
+	}
+
+	public function matchAgainstFullUri() : void
+	{
+		$this->matchMode = self::MATCH_AGAINST_FULL_URI;
 	}
 }

@@ -24,7 +24,7 @@ final class RouteTest extends TestCase
 		$middlewareClassNames = [MiddlewareImplementation::class];
 		$route                = Route::newFromStrings(
 			'GET',
-			'/unit/test',
+			'^/unit/test$',
 			...$middlewareClassNames
 		);
 
@@ -51,7 +51,7 @@ final class RouteTest extends TestCase
 
 		$route = Route::newFromStrings(
 			'GET',
-			'/unit/test',
+			'^/unit/test$',
 			MiddlewareImplementation::class
 		);
 
@@ -74,7 +74,7 @@ final class RouteTest extends TestCase
 
 		$route = Route::newFromStrings(
 			'GET',
-			'/unit/test',
+			'^/unit/test$',
 			MiddlewareImplementation::class
 		);
 
@@ -97,7 +97,7 @@ final class RouteTest extends TestCase
 
 		$route = Route::newFromStrings(
 			'GET',
-			'/not-matching',
+			'^/not-matching$',
 			MiddlewareImplementation::class,
 		);
 
@@ -119,7 +119,7 @@ final class RouteTest extends TestCase
 		$request = Request::fromGlobals();
 		$route   = Route::newFromStrings(
 			'GET',
-			'/unit/(?<testKey>.*)',
+			'^/unit/(?<testKey>.*)$',
 			MiddlewareImplementation::class,
 		);
 
@@ -141,7 +141,7 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/unit/test';
 
-		$route = Route::get( '/unit/test' );
+		$route = Route::get( '^/unit/test$' );
 
 		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
@@ -171,7 +171,7 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/unit/test';
 
-		$route = Route::post( '/unit/test' );
+		$route = Route::post( '^/unit/test$' );
 
 		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
@@ -202,7 +202,7 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/unit/test';
 
-		$route = Route::put( '/unit/test' );
+		$route = Route::put( '^/unit/test$' );
 
 		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
@@ -233,7 +233,7 @@ final class RouteTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/unit/test';
 
-		$route = Route::patch( '/unit/test' );
+		$route = Route::patch( '^/unit/test$' );
 
 		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
@@ -359,14 +359,14 @@ final class RouteTest extends TestCase
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 */
-	public function testMatchesUri() : void
+	public function testMatchesAgainstFullUri() : void
 	{
 		$uri   = Uri::fromString( 'https://example.com/unit/test?uri=match' );
-		$route = Route::get( '/unit/test\?uri=(?<uri>.+)$' );
+		$route = Route::get( '/unit/test\?uri=(?<uri>.+)$' )->matchAgainstFullUri();
 
 		$this->assertTrue( $route->matchesUri( $uri ) );
 
-		$route = Route::get( '/unit/test\?match=(?<match>.+)$' );
+		$route = Route::get( '/unit/test\?match=(?<match>.+)$' )->matchAgainstFullUri();
 
 		$this->assertFalse( $route->matchesUri( $uri ) );
 	}

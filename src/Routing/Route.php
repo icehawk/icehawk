@@ -205,4 +205,11 @@ final class Route
 	{
 		return $this->acceptedHttpMethods;
 	}
+
+	public function matchAgainstFullUri() : self
+	{
+		$this->routePattern->matchAgainstFullUri();
+
+		return $this;
+	}
 }

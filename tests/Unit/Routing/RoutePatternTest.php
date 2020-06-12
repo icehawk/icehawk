@@ -52,11 +52,31 @@ final class RoutePatternTest extends TestCase
 	public function testMatchesUri() : void
 	{
 		$uri            = Uri::fromString( 'https://example.com/unit/test' );
-		$validPattern   = RoutePattern::newFromString( '/unit/(?<testKey>[^/]+)' );
-		$invalidPattern = RoutePattern::newFromString( '/unit/(?<testKey>\d+)' );
+		$validPattern   = RoutePattern::newFromString( '^/unit/(?<testKey>[^/]+)$' );
+		$invalidPattern = RoutePattern::newFromString( '^/unit/(?<testKey>\d+)$' );
 
 		$this->assertTrue( $validPattern->matchesUri( $uri ) );
 		$this->assertFalse( $invalidPattern->matchesUri( $uri ) );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testMatchesAgainstFullUri() : void
+	{
+		$uri          = Uri::fromString( 'https://example.com/unit/test?unit=test' );
+		$validPattern = RoutePattern::newFromString( 'example.com/unit/(?<testKey>[^/]+)\?unit=(?<unitKey>.+)$' );
+		$validPattern->matchAgainstFullUri();
+
+		$invalidPattern = RoutePattern::newFromString( 'example.de/unit/(?<testKey>\d+)\?unit=(?<unitKey>.+)$' );
+		$invalidPattern->matchAgainstFullUri();
+
+		$this->assertTrue( $validPattern->matchesUri( $uri ) );
+		$this->assertSame( ['testKey' => 'test', 'unitKey' => 'test'], $validPattern->getMatches() );
+
+		$this->assertFalse( $invalidPattern->matchesUri( $uri ) );
+		$this->assertSame( [], $invalidPattern->getMatches() );
 	}
 
 	/**

@@ -346,6 +346,17 @@ final class RequestTest extends TestCase
 			'',
 			'',
 			'example.com',
+			null,
+			'/some/path?key=should-be-removed',
+			'var=value',
+			'anchor',
+			'http://example.com/some/path?var=value#anchor',
+		];
+		yield [
+			'',
+			'',
+			'',
+			'example.com',
 			8080,
 			'/some/path',
 			'var=value',

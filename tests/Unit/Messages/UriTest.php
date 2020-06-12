@@ -57,7 +57,7 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 */
 	public function testWithHost() : void
@@ -117,7 +117,7 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 */
@@ -440,6 +440,20 @@ final class UriTest extends TestCase
 				],
 				'expectedUrl' => 'https://example.com/some/path',
 			],
+			# Remove query string from path if present
+			[
+				'components'  => [
+					'scheme'   => 'https',
+					'user'     => '',
+					'pass'     => '',
+					'host'     => 'example.com',
+					'port'     => 443,
+					'path'     => '/some/path?testkey=should-be-removed',
+					'query'    => 'key=value',
+					'fragment' => '',
+				],
+				'expectedUrl' => 'https://example.com/some/path?key=value',
+			],
 		];
 	}
 
@@ -553,7 +567,7 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 */
@@ -571,7 +585,7 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 */
@@ -607,7 +621,7 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 */

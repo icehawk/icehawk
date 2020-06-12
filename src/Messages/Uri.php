@@ -5,6 +5,7 @@ namespace IceHawk\IceHawk\Messages;
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 use function parse_url;
+use function strtok;
 
 final class Uri implements UriInterface
 {
@@ -16,6 +17,8 @@ final class Uri implements UriInterface
 	 */
 	private function __construct( array $components )
 	{
+		$components['path'] = strtok( (string)$components['path'], '?' );
+
 		$this->components = $components;
 	}
 

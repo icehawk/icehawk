@@ -56,9 +56,9 @@ final class Route
 	}
 
 	/**
-	 * @param string             $httpMethod
-	 * @param string             $regexPattern
-	 * @param array<int, string> $middlewareClassNames
+	 * @param string $httpMethod
+	 * @param string $regexPattern
+	 * @param string ...$middlewareClassNames
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException
@@ -77,8 +77,8 @@ final class Route
 	}
 
 	/**
-	 * @param string             $regexPattern
-	 * @param array<int, string> $middlewareClassNames
+	 * @param string $regexPattern
+	 * @param string ...$middlewareClassNames
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException
@@ -93,8 +93,8 @@ final class Route
 	}
 
 	/**
-	 * @param string             $regexPattern
-	 * @param array<int, string> $middlewareClassNames
+	 * @param string $regexPattern
+	 * @param string ...$middlewareClassNames
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException
@@ -109,8 +109,8 @@ final class Route
 	}
 
 	/**
-	 * @param string             $regexPattern
-	 * @param array<int, string> $middlewareClassNames
+	 * @param string $regexPattern
+	 * @param string ...$middlewareClassNames
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException
@@ -125,8 +125,8 @@ final class Route
 	}
 
 	/**
-	 * @param string             $regexPattern
-	 * @param array<int, string> $middlewareClassNames
+	 * @param string $regexPattern
+	 * @param string ...$middlewareClassNames
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException
@@ -141,8 +141,8 @@ final class Route
 	}
 
 	/**
-	 * @param string             $regexPattern
-	 * @param array<int, string> $middlewareClassNames
+	 * @param string $regexPattern
+	 * @param string ...$middlewareClassNames
 	 *
 	 * @return Route
 	 * @throws InvalidArgumentException

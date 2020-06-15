@@ -25,6 +25,21 @@ final class HttpMethods implements Countable, IteratorAggregate
 		return new self( ...$httpMethods );
 	}
 
+	public static function all() : self
+	{
+		return new self(
+			HttpMethod::get(),
+			HttpMethod::head(),
+			HttpMethod::post(),
+			HttpMethod::put(),
+			HttpMethod::patch(),
+			HttpMethod::delete(),
+			HttpMethod::options(),
+			HttpMethod::connect(),
+			HttpMethod::trace(),
+		);
+	}
+
 	public function add( HttpMethod $httpMethod, HttpMethod ...$httpMethods ) : void
 	{
 		$this->items[] = $httpMethod;

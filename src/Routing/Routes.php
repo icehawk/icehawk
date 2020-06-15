@@ -15,16 +15,16 @@ use function array_unique;
 use function count;
 
 /**
- * @implements IteratorAggregate<int, Route>
+ * @implements IteratorAggregate<int, ResolvesRouteToMiddlewares>
  */
 final class Routes implements Countable, IteratorAggregate
 {
-	/** @var array<int, Route> */
-	private array $items;
+	/** @var array<int, ResolvesRouteToMiddlewares> */
+	private array $routes;
 
 	private function __construct( ResolvesRouteToMiddlewares ...$routes )
 	{
-		$this->items = $routes;
+		$this->routes = $routes;
 	}
 
 	public static function new( ResolvesRouteToMiddlewares ...$routes ) : self
@@ -34,10 +34,10 @@ final class Routes implements Countable, IteratorAggregate
 
 	public function add( ResolvesRouteToMiddlewares $route, ResolvesRouteToMiddlewares ...$routes ) : void
 	{
-		$this->items[] = $route;
+		$this->routes[] = $route;
 		foreach ( $routes as $routeLoop )
 		{
-			$this->items[] = $routeLoop;
+			$this->routes[] = $routeLoop;
 		}
 	}
 
@@ -46,12 +46,12 @@ final class Routes implements Countable, IteratorAggregate
 	 */
 	public function getIterator() : Iterator
 	{
-		yield from $this->items;
+		yield from $this->routes;
 	}
 
 	public function count() : int
 	{
-		return count( $this->items );
+		return count( $this->routes );
 	}
 
 	/**
@@ -63,7 +63,7 @@ final class Routes implements Countable, IteratorAggregate
 	 */
 	public function findMatchingRouteForRequest( ServerRequestInterface $request ) : ResolvesRouteToMiddlewares
 	{
-		foreach ( $this->items as $route )
+		foreach ( $this->routes as $route )
 		{
 			if ( $route->matchesRequest( $request ) )
 			{
@@ -83,7 +83,7 @@ final class Routes implements Countable, IteratorAggregate
 	{
 		$acceptedMethods = [];
 
-		foreach ( $this->items as $route )
+		foreach ( $this->routes as $route )
 		{
 			if ( !$route->matchesUri( $uri ) )
 			{

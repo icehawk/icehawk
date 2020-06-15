@@ -23,7 +23,7 @@ final class UploadedFiles implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * @param array<string, string|array<string, array<int,string|int>>> $filesArray
+	 * @param array<string, string|int|array<mixed>> $filesArray
 	 *
 	 * @return UploadedFiles
 	 */
@@ -74,7 +74,7 @@ final class UploadedFiles implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * @param array<string, array<int, UploadedFileInterface>> $uploadedFiles
+	 * @param array<string, array<int|string, UploadedFileInterface>> $uploadedFiles
 	 *
 	 * @return UploadedFiles
 	 */
@@ -91,8 +91,8 @@ final class UploadedFiles implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * @param string                            $field
-	 * @param array<int, UploadedFileInterface> $files
+	 * @param string                                   $field
+	 * @param array<int|string, UploadedFileInterface> $files
 	 */
 	private function addFiles( string $field, array $files ) : void
 	{

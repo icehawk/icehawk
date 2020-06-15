@@ -12,6 +12,7 @@ use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 use function iterator_to_array;
 
 final class RouteTest extends TestCase
@@ -126,8 +127,15 @@ final class RouteTest extends TestCase
 
 		$this->assertTrue( $route->matchesRequest( $request ) );
 
-		$this->assertSame( 'test', $route->getModifiedRequest()->getQueryParams()['testKey'] );
-		$this->assertNull( $route->getModifiedRequest()->getParsedBody()['testKey'] );
+		/** @var ServerRequestInterface $modifiedRequest */
+		$modifiedRequest = $route->getModifiedRequest();
+
+		$this->assertSame( 'test', $modifiedRequest->getQueryParams()['testKey'] );
+
+		/** @var array<string, mixed> $parsedBody */
+		$parsedBody = $modifiedRequest->getParsedBody();
+
+		$this->assertNull( $parsedBody['testKey'] );
 	}
 
 	/**

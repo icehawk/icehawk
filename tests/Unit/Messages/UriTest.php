@@ -25,6 +25,9 @@ final class UriTest extends TestCase
 		$this->assertSame( $expectedAuthority, $uri->getAuthority() );
 	}
 
+	/**
+	 * @return array<array<string, string>>
+	 */
 	public function authorityProvider() : array
 	{
 		return [
@@ -90,6 +93,9 @@ final class UriTest extends TestCase
 		$this->assertSame( $expectedPath, $uri->getPath() );
 	}
 
+	/**
+	 * @return array<array<string, string>>
+	 */
 	public function pathProvider() : array
 	{
 		return [
@@ -151,6 +157,9 @@ final class UriTest extends TestCase
 		$this->assertSame( $expectedPort, $uri->getPort() );
 	}
 
+	/**
+	 * @return array<array<string, null|int|string>>
+	 */
 	public function portProvider() : array
 	{
 		return [
@@ -209,6 +218,9 @@ final class UriTest extends TestCase
 		$this->assertSame( $expectedFragment, $uri->getFragment() );
 	}
 
+	/**
+	 * @return array<array<string, string>>
+	 */
 	public function fragmentProvider() : array
 	{
 		return [
@@ -247,6 +259,9 @@ final class UriTest extends TestCase
 		$this->assertSame( $expectedUserInfo, $uri->getUserInfo() );
 	}
 
+	/**
+	 * @return array<array<string, string>>
+	 */
 	public function userInfoProvider() : array
 	{
 		return [
@@ -285,6 +300,9 @@ final class UriTest extends TestCase
 		$this->assertSame( $expectedScheme, $uri->getScheme() );
 	}
 
+	/**
+	 * @return array<array<string, string>>
+	 */
 	public function schemeProvider() : array
 	{
 		return [
@@ -304,8 +322,8 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @param array  $components
-	 * @param string $expectedUrl
+	 * @param array<string, string|int|null> $components
+	 * @param string                         $expectedUrl
 	 *
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
@@ -319,6 +337,9 @@ final class UriTest extends TestCase
 		$this->assertSame( $expectedUrl, (string)$uri );
 	}
 
+	/**
+	 * @return array<array<string, string|array<string, string|int|null>>>
+	 */
 	public function toStringProvider() : array
 	{
 		return [
@@ -458,7 +479,7 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @param array $components
+	 * @param array<string, string|int|null> $components
 	 *
 	 * @throws InvalidArgumentException
 	 * @dataProvider invalidComponentsProvider
@@ -472,6 +493,9 @@ final class UriTest extends TestCase
 		Uri::fromComponents( $components );
 	}
 
+	/**
+	 * @return array<array<string, array<string, string|null>>>
+	 */
 	public function invalidComponentsProvider() : array
 	{
 		return [
@@ -536,6 +560,9 @@ final class UriTest extends TestCase
 		$this->assertSame( $expectedQuery, $uri->getQuery() );
 	}
 
+	/**
+	 * @return array<array<string, string>>
+	 */
 	public function queryProvider() : array
 	{
 		return [
@@ -551,8 +578,8 @@ final class UriTest extends TestCase
 	}
 
 	/**
-	 * @param array  $components
-	 * @param string $expectedUrl
+	 * @param array<string, string|int|null> $components
+	 * @param string                         $expectedUrl
 	 *
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException

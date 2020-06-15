@@ -19,6 +19,7 @@ final class UploadedFileTest extends TestCase
 
 	private string $tempName;
 
+	/** @var array<string> */
 	private array $files;
 
 	public function setUp() : void
@@ -40,7 +41,7 @@ final class UploadedFileTest extends TestCase
 	{
 		foreach ( $this->files as $file )
 		{
-			if ( is_scalar( $file ) && file_exists( $file ) )
+			if ( is_string( $file ) && file_exists( $file ) )
 			{
 				unlink( $file );
 			}
@@ -76,6 +77,9 @@ final class UploadedFileTest extends TestCase
 		$this->uploadedFile->moveTo( $path );
 	}
 
+	/**
+	 * @return array<string, array<mixed>>
+	 */
 	public function invalidPathsDataProvider() : array
 	{
 		return [

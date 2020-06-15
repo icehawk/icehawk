@@ -12,6 +12,7 @@ use IceHawk\IceHawk\Types\MiddlewareClassName;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class RouteGroupTest extends TestCase
 {
@@ -34,6 +35,7 @@ final class RouteGroupTest extends TestCase
 
 		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
 
+		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $routeGroup->getModifiedRequest();
 
 		$this->assertSame( 'v1', $modifiedRequest->getQueryParams()['version'] );
@@ -59,6 +61,7 @@ final class RouteGroupTest extends TestCase
 
 		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
 
+		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $routeGroup->getModifiedRequest();
 
 		$this->assertSame( 'v2', $modifiedRequest->getQueryParams()['version'] );
@@ -135,6 +138,7 @@ final class RouteGroupTest extends TestCase
 
 		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
 
+		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $routeGroup->getModifiedRequest();
 
 		$this->assertSame( 'v1', $modifiedRequest->getQueryParams()['version'] );
@@ -160,6 +164,7 @@ final class RouteGroupTest extends TestCase
 
 		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
 
+		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $routeGroup->getModifiedRequest();
 
 		$this->assertSame( 'v2', $modifiedRequest->getQueryParams()['version'] );
@@ -207,6 +212,26 @@ final class RouteGroupTest extends TestCase
 		$uri        = Uri::fromString( 'https://example.com/api/v2/post-request' );
 
 		$this->assertTrue( $routeGroup->matchesUri( $uri ) );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testMatchesUriNot() : void
+	{
+		# Group does not match, wrong scheme
+
+		$routeGroup = $this->getFullUriRouteGroup();
+		$uri        = Uri::fromString( 'http://example.com/api/v2/post-request' );
+
+		$this->assertFalse( $routeGroup->matchesUri( $uri ) );
+
+		# Route does not match, wrong API version
+
+		$uri = Uri::fromString( 'https://example.com/api/v1/post-request' );
+
+		$this->assertFalse( $routeGroup->matchesUri( $uri ) );
 	}
 
 	/**

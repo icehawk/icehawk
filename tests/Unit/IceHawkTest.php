@@ -60,7 +60,7 @@ final class IceHawkTest extends TestCase
 	}
 
 	/**
-	 * @param array $expectedHeaders
+	 * @param array<string> $expectedHeaders
 	 *
 	 * @throws ExpectationFailedException
 	 */

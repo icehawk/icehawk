@@ -2,18 +2,19 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
-use InvalidArgumentException;
-use RuntimeException;
 use IceHawk\IceHawk\Messages\Stream;
+use InvalidArgumentException;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use function is_resource;
 use function sys_get_temp_dir;
 use function tempnam;
 
 final class StreamTest extends TestCase
 {
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -29,7 +30,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testReadThrowsExceptionWhenNoResourceIsAvailable() : void
@@ -45,7 +45,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testReadThrowsExceptionForNonReadableStreams() : void
@@ -60,9 +59,8 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws RuntimeException
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
+	 * @throws RuntimeException
 	 */
 	public function testSeek() : void
 	{
@@ -74,7 +72,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testSeekThrowsExceptionIfNoResourceIsAvailable() : void
@@ -89,7 +86,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testSeekThrowsExceptionOnErrorSeekingWithinStream() : void
@@ -103,7 +99,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testSeekThrowsExceptionForNonSeekableStreams() : void
@@ -117,7 +112,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -134,7 +128,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 */
 	public function testGetMetadata() : void
@@ -163,7 +156,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -183,7 +175,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -214,7 +205,7 @@ final class StreamTest extends TestCase
 	 */
 	public function testIsWritable() : void
 	{
-		$tempFile       = tempnam( sys_get_temp_dir(), 'Unit-Test-OutputStream-' );
+		$tempFile       = (string)tempnam( sys_get_temp_dir(), 'Unit-Test-OutputStream-' );
 		$writableStream = new Stream( $tempFile, 'w+b' );
 
 		$this->assertTrue( $writableStream->isWritable() );
@@ -231,7 +222,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -248,7 +238,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 */
 	public function testClose() : void
@@ -264,7 +253,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -281,7 +269,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testTellThrowsExceptionIfNoResourceIsAvailable() : void
@@ -296,7 +283,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -313,7 +299,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -336,7 +321,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 */
 	public function testIsReadable() : void
@@ -355,7 +339,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
 	 */
@@ -367,7 +350,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
 	public function testWriteThrowsExceptionIfNoResourceIsAvailable() : void
@@ -382,7 +364,6 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
 	 */
 	public function testIsSeekable() : void
@@ -397,20 +378,26 @@ final class StreamTest extends TestCase
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws AssertionFailedError
 	 */
 	public function testCanConstructStreamFromResource() : void
 	{
 		$resource = fopen( 'php://memory', 'w+b' );
-		$stream   = new Stream( $resource );
+
+		if ( !is_resource( $resource ) )
+		{
+			$this->fail( 'Could not open memory stream' );
+
+			return;
+		}
+
+		$stream = new Stream( $resource );
 
 		$this->assertSame( $resource, $stream->detach() );
 	}
 
-	/**
-	 * @throws InvalidArgumentException
-	 */
 	public function testThrowsExceptionForInvalidStream() : void
 	{
 		$this->expectException( InvalidArgumentException::class );

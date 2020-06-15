@@ -398,7 +398,7 @@ final class Request implements ProvidesRequestData
 	}
 
 	/**
-	 * @param array<string, array<int,UploadedFileInterface>> $uploadedFiles
+	 * @param array<string, array<int|string, UploadedFileInterface>> $uploadedFiles
 	 *
 	 * @return Request
 	 */

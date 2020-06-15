@@ -3,11 +3,15 @@
 namespace IceHawk\IceHawk\Tests\Fixtures\Traits;
 
 use IceHawk\IceHawk\Messages\UploadedFile;
+use Psr\Http\Message\UploadedFileInterface;
 use const UPLOAD_ERR_NO_FILE;
 use const UPLOAD_ERR_OK;
 
 trait UploadedFilesProviding
 {
+	/**
+	 * @return array<string, array<string, string|int>>
+	 */
 	private function filesArray() : array
 	{
 		return [
@@ -28,6 +32,9 @@ trait UploadedFilesProviding
 		];
 	}
 
+	/**
+	 * @return array<string, array<string, array<string|int>>>
+	 */
 	private function nestedFilesArray() : array
 	{
 		return [
@@ -41,6 +48,9 @@ trait UploadedFilesProviding
 		];
 	}
 
+	/**
+	 * @return array<string, array<string, UploadedFileInterface>>
+	 */
 	private function uploadedFilesArray() : array
 	{
 		return [

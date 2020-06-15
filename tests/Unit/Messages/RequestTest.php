@@ -226,6 +226,9 @@ final class RequestTest extends TestCase
 		$this->assertEquals( $expected, $request->getRequestTarget() );
 	}
 
+	/**
+	 * @return Generator<array<null|string>>
+	 */
 	public function requestTargetDataProvider() : Generator
 	{
 		yield [null, null, DIRECTORY_SEPARATOR];
@@ -325,6 +328,9 @@ final class RequestTest extends TestCase
 		$this->assertEquals( $expected, (string)$uri );
 	}
 
+	/**
+	 * @return Generator<array<null|string|int>>
+	 */
 	public function getUriDataProvider() : Generator
 	{
 		yield ['', '', '', 'example.com', null, '', '', '', 'http://example.com'];
@@ -444,6 +450,9 @@ final class RequestTest extends TestCase
 		$this->assertSame( $expected, (string)$request->getUri() );
 	}
 
+	/**
+	 * @return Generator<array<null|string|int>>
+	 */
 	public function withUriDataProvider() : Generator
 	{
 		yield ['', '', '', 'example.com', null, '', '', '', 'http://example.com'];
@@ -664,6 +673,9 @@ final class RequestTest extends TestCase
 		$request->getInputString( 'foo' );
 	}
 
+	/**
+	 * @return Generator<array<mixed>>
+	 */
 	public function invalidInputStringDataProvider() : Generator
 	{
 		yield [['foo' => 'bar']];
@@ -716,6 +728,9 @@ final class RequestTest extends TestCase
 		$request->getInputArray( 'foo' );
 	}
 
+	/**
+	 * @return Generator<array<mixed>>
+	 */
 	public function invalidInputArrayDataProvider() : Generator
 	{
 		yield ['test'];
@@ -769,6 +784,9 @@ final class RequestTest extends TestCase
 		$request->getInputInt( 'foo' );
 	}
 
+	/**
+	 * @return Generator<array<mixed>>
+	 */
 	public function invalidGetInputIntProvider() : Generator
 	{
 		yield [null];
@@ -824,6 +842,9 @@ final class RequestTest extends TestCase
 		$request->getInputFloat( 'foo' );
 	}
 
+	/**
+	 * @return Generator<array<mixed>>
+	 */
 	public function invalidGetInputFloatProvider() : Generator
 	{
 		yield [null];

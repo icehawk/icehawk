@@ -42,7 +42,7 @@ final class Routes implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * @return Iterator<int, Route>
+	 * @return Iterator<int, ResolvesRouteToMiddlewares>
 	 */
 	public function getIterator() : Iterator
 	{

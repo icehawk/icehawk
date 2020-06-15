@@ -34,7 +34,7 @@ final class RouteGroup implements ResolvesRouteToMiddlewares
 	 * @param ResolvesRouteToMiddlewares $route
 	 * @param ResolvesRouteToMiddlewares ...$routes
 	 *
-	 * @return static
+	 * @return RouteGroup
 	 * @throws InvalidArgumentException
 	 */
 	public static function new(
@@ -106,6 +106,11 @@ final class RouteGroup implements ResolvesRouteToMiddlewares
 
 	public function getMiddlewareClassNames() : MiddlewareClassNames
 	{
+		if ( null === $this->foundRoute )
+		{
+			return MiddlewareClassNames::new();
+		}
+
 		return $this->foundRoute->getMiddlewareClassNames();
 	}
 

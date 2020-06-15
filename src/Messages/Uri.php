@@ -135,8 +135,8 @@ final class Uri implements UriInterface
 	}
 
 	/**
-	 * @param string $user
-	 * @param null   $password
+	 * @param string      $user
+	 * @param null|string $password
 	 *
 	 * @return Uri
 	 * @throws InvalidArgumentException

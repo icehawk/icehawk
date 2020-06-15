@@ -2,6 +2,7 @@
 
 namespace IceHawk\IceHawk\Routing;
 
+use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
 use IceHawk\IceHawk\Types\HttpMethod;
 use IceHawk\IceHawk\Types\HttpMethods;
 use IceHawk\IceHawk\Types\MiddlewareClassNames;
@@ -10,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use function array_merge;
 
-final class Route
+final class Route implements ResolvesRouteToMiddlewares
 {
 	private HttpMethod $httpMethod;
 
@@ -60,14 +61,14 @@ final class Route
 	 * @param string $regexPattern
 	 * @param string ...$middlewareClassNames
 	 *
-	 * @return Route
+	 * @return ResolvesRouteToMiddlewares
 	 * @throws InvalidArgumentException
 	 */
 	public static function newFromStrings(
 		string $httpMethod,
 		string $regexPattern,
 		string ...$middlewareClassNames
-	) : self
+	) : ResolvesRouteToMiddlewares
 	{
 		return new self(
 			HttpMethod::newFromString( $httpMethod ),
@@ -80,10 +81,10 @@ final class Route
 	 * @param string $regexPattern
 	 * @param string ...$middlewareClassNames
 	 *
-	 * @return Route
+	 * @return ResolvesRouteToMiddlewares
 	 * @throws InvalidArgumentException
 	 */
-	public static function get( string $regexPattern, string ...$middlewareClassNames ) : self
+	public static function get( string $regexPattern, string ...$middlewareClassNames ) : ResolvesRouteToMiddlewares
 	{
 		return self::newFromStrings(
 			'GET',
@@ -96,10 +97,10 @@ final class Route
 	 * @param string $regexPattern
 	 * @param string ...$middlewareClassNames
 	 *
-	 * @return Route
+	 * @return ResolvesRouteToMiddlewares
 	 * @throws InvalidArgumentException
 	 */
-	public static function post( string $regexPattern, string ...$middlewareClassNames ) : self
+	public static function post( string $regexPattern, string ...$middlewareClassNames ) : ResolvesRouteToMiddlewares
 	{
 		return self::newFromStrings(
 			'POST',
@@ -112,10 +113,10 @@ final class Route
 	 * @param string $regexPattern
 	 * @param string ...$middlewareClassNames
 	 *
-	 * @return Route
+	 * @return ResolvesRouteToMiddlewares
 	 * @throws InvalidArgumentException
 	 */
-	public static function put( string $regexPattern, string ...$middlewareClassNames ) : self
+	public static function put( string $regexPattern, string ...$middlewareClassNames ) : ResolvesRouteToMiddlewares
 	{
 		return self::newFromStrings(
 			'PUT',
@@ -128,10 +129,10 @@ final class Route
 	 * @param string $regexPattern
 	 * @param string ...$middlewareClassNames
 	 *
-	 * @return Route
+	 * @return ResolvesRouteToMiddlewares
 	 * @throws InvalidArgumentException
 	 */
-	public static function patch( string $regexPattern, string ...$middlewareClassNames ) : self
+	public static function patch( string $regexPattern, string ...$middlewareClassNames ) : ResolvesRouteToMiddlewares
 	{
 		return self::newFromStrings(
 			'PATCH',
@@ -144,10 +145,10 @@ final class Route
 	 * @param string $regexPattern
 	 * @param string ...$middlewareClassNames
 	 *
-	 * @return Route
+	 * @return ResolvesRouteToMiddlewares
 	 * @throws InvalidArgumentException
 	 */
-	public static function delete( string $regexPattern, string ...$middlewareClassNames ) : self
+	public static function delete( string $regexPattern, string ...$middlewareClassNames ) : ResolvesRouteToMiddlewares
 	{
 		return self::newFromStrings(
 			'DELETE',
@@ -206,7 +207,7 @@ final class Route
 		return $this->acceptedHttpMethods;
 	}
 
-	public function matchAgainstFullUri() : self
+	public function matchAgainstFullUri() : ResolvesRouteToMiddlewares
 	{
 		$this->routePattern->matchAgainstFullUri();
 

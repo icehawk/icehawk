@@ -4,6 +4,7 @@ namespace IceHawk\IceHawk\Routing;
 
 use Countable;
 use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
+use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
 use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
 use Iterator;
@@ -21,17 +22,17 @@ final class Routes implements Countable, IteratorAggregate
 	/** @var array<int, Route> */
 	private array $items;
 
-	private function __construct( Route ...$routes )
+	private function __construct( ResolvesRouteToMiddlewares ...$routes )
 	{
 		$this->items = $routes;
 	}
 
-	public static function new( Route ...$routes ) : self
+	public static function new( ResolvesRouteToMiddlewares ...$routes ) : self
 	{
 		return new self( ...$routes );
 	}
 
-	public function add( Route $route, Route ...$routes ) : void
+	public function add( ResolvesRouteToMiddlewares $route, ResolvesRouteToMiddlewares ...$routes ) : void
 	{
 		$this->items[] = $route;
 		foreach ( $routes as $routeLoop )
@@ -56,11 +57,11 @@ final class Routes implements Countable, IteratorAggregate
 	/**
 	 * @param ServerRequestInterface $request
 	 *
-	 * @return Route
+	 * @return ResolvesRouteToMiddlewares
 	 * @throws InvalidArgumentException
 	 * @throws RouteNotFoundException
 	 */
-	public function findMatchingRouteForRequest( ServerRequestInterface $request ) : Route
+	public function findMatchingRouteForRequest( ServerRequestInterface $request ) : ResolvesRouteToMiddlewares
 	{
 		foreach ( $this->items as $route )
 		{

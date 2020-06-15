@@ -4,6 +4,7 @@ namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Uri;
+use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Types\HttpMethod;
@@ -284,13 +285,13 @@ final class RouteTest extends TestCase
 	}
 
 	/**
-	 * @param Route                  $route
-	 * @param array<int, HttpMethod> $acceptedMethods
+	 * @param ResolvesRouteToMiddlewares $route
+	 * @param array<int, HttpMethod>     $acceptedMethods
 	 *
 	 * @dataProvider acceptedHttpMethodsRouteProvider
 	 * @throws ExpectationFailedException
 	 */
-	public function testGetAcceptedHttpMethods( Route $route, array $acceptedMethods ) : void
+	public function testGetAcceptedHttpMethods( ResolvesRouteToMiddlewares $route, array $acceptedMethods ) : void
 	{
 		$routeMethods = iterator_to_array( $route->getAcceptedHttpMethods()->getIterator(), false );
 		sort( $routeMethods );

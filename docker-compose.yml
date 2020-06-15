@@ -20,4 +20,4 @@ services:
     container_name: icehawk_phpstan
     volumes:
       - ./:/app
-    command: analyze --level=max /app/src
+    command: analyze

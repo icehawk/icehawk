@@ -838,6 +838,9 @@ final class RequestTest extends TestCase
 		$this->assertSame( $expectedFloat, Request::fromGlobals()->getInputFloat( 'foo' ) );
 	}
 
+	/**
+	 * @return array<array<string, mixed>>
+	 */
 	public function validFloatInputProvider() : array
 	{
 		return [

@@ -11,11 +11,15 @@ use UnexpectedValueException;
 use function array_key_exists;
 use function array_merge;
 use function array_unique;
+use function filter_var;
 use function implode;
 use function is_array;
+use function is_bool;
 use function is_string;
 use function parse_url;
 use function sprintf;
+use const FILTER_VALIDATE_FLOAT;
+use const FILTER_VALIDATE_INT;
 use const PHP_URL_PATH;
 use const PHP_URL_QUERY;
 
@@ -539,15 +543,15 @@ final class Request implements ProvidesRequestData
 	 */
 	public function getInputInt( string $key, ?int $default = null ) : int
 	{
-		$value    = $this->mergedParams[ $key ] ?? (string)$default;
-		$intValue = (int)$value;
+		$value    = $this->mergedParams[ $key ] ?? $default;
+		$intValue = filter_var( $value, FILTER_VALIDATE_INT );
 
-		if ( (string)$intValue !== $value )
+		if ( is_bool( $value ) || false === $intValue )
 		{
 			throw new UnexpectedValueException( sprintf( 'Input for key "%s" is not castable as integer', $key ) );
 		}
 
-		return $intValue;
+		return (int)$intValue;
 	}
 
 	/**
@@ -559,14 +563,14 @@ final class Request implements ProvidesRequestData
 	 */
 	public function getInputFloat( string $key, ?float $default = null ) : float
 	{
-		$value      = $this->mergedParams[ $key ] ?? (string)$default;
-		$floatValue = (float)$value;
+		$value      = $this->mergedParams[ $key ] ?? $default;
+		$floatValue = filter_var( $value, FILTER_VALIDATE_FLOAT );
 
-		if ( (string)$floatValue !== $value )
+		if ( is_bool( $value ) || false === $floatValue )
 		{
 			throw new UnexpectedValueException( sprintf( 'Input for key "%s" is not castable as float', $key ) );
 		}
 
-		return $floatValue;
+		return (float)$floatValue;
 	}
 }

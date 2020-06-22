@@ -824,6 +824,31 @@ final class RequestTest extends TestCase
 	}
 
 	/**
+	 * @param string $value
+	 * @param float  $expectedFloat
+	 *
+	 * @throws ExpectationFailedException
+	 * @throws UnexpectedValueException
+	 * @dataProvider validFloatInputProvider
+	 */
+	public function testGetInputFloat( string $value, float $expectedFloat ) : void
+	{
+		$_REQUEST['foo'] = $value;
+
+		$this->assertSame( $expectedFloat, Request::fromGlobals()->getInputFloat( 'foo' ) );
+	}
+
+	public function validFloatInputProvider() : array
+	{
+		return [
+			[
+				'value'         => '45.00',
+				'expectedFloat' => 45.00,
+			],
+		];
+	}
+
+	/**
 	 * @param mixed $value
 	 *
 	 * @throws UnexpectedValueException
@@ -852,7 +877,6 @@ final class RequestTest extends TestCase
 		yield [true];
 		yield [''];
 		yield ['test'];
-		yield [123];
 		yield [PHP_FLOAT_MAX . '1'];
 		yield [PHP_FLOAT_MIN . '1'];
 	}

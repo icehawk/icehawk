@@ -39,6 +39,7 @@ final class IceHawk
 	 * @param ServerRequestInterface $request
 	 *
 	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
 	 */
 	public function handleRequest( ServerRequestInterface $request ) : void
 	{

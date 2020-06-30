@@ -3,14 +3,18 @@
 namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
 use IceHawk\IceHawk\Messages\Stream;
+use IceHawk\IceHawk\Messages\StreamAction;
 use InvalidArgumentException;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use function file_exists;
 use function is_resource;
 use function sys_get_temp_dir;
 use function tempnam;
+use function unlink;
 
 final class StreamTest extends TestCase
 {
@@ -420,5 +424,60 @@ final class StreamTest extends TestCase
 
 		/** @noinspection PhpParamsInspection */
 		new Stream( ['stream'] );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 */
+	public function testNewFromFile() : void
+	{
+		$stream = Stream::newFromFile( __DIR__ . '/_files/StreamTest.txt' );
+
+		$this->assertSame( 'Unit-Test', $stream->getContents() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 */
+	public function testCanAddStreamActionForClosingTheStream() : void
+	{
+		$tempFile = (string)tempnam( sys_get_temp_dir(), 'StreamTest_' );
+
+		$stream = Stream::newFromFile( $tempFile, 'w+b' );
+		$stream->write( 'Unit-Test' );
+
+		$onClosingAction = StreamAction::onClosing(
+			static function ( StreamInterface $stream )
+			{
+				echo "Stream is closing\n";
+			}
+		);
+
+		$onClosedAction = StreamAction::onClosed(
+			static function ( StreamInterface $stream ) use ( $tempFile )
+			{
+				if ( file_exists( $tempFile ) )
+				{
+					@unlink( $tempFile );
+				}
+			}
+		);
+
+		$stream->addStreamAction( $onClosingAction );
+		$stream->addStreamAction( $onClosingAction );
+
+		$stream->addStreamAction( $onClosedAction );
+
+		$this->assertFileExists( $tempFile );
+
+		$this->expectOutputString( "Stream is closing\nStream is closing\n" );
+
+		$stream->close();
+
+		$this->assertFileDoesNotExist( $tempFile );
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace IceHawk\IceHawk\Messages;
 
+use IceHawk\IceHawk\Messages\Interfaces\HandlesStreamAction;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
@@ -26,8 +27,15 @@ use function strpos;
 
 final class Stream implements StreamInterface
 {
+	private const ACTION_ON_CLOSING = 'onClosing';
+
+	private const ACTION_ON_CLOSED  = 'onClosed';
+
 	/** @var resource|false|null */
 	private $resource;
+
+	/** @var array<string, array<HandlesStreamAction>> */
+	private array $streamActions;
 
 	/**
 	 * @param string|resource $stream
@@ -37,6 +45,8 @@ final class Stream implements StreamInterface
 	 */
 	public function __construct( $stream, string $mode = 'rb' )
 	{
+		$this->streamActions = [];
+
 		if ( is_resource( $stream ) && 'stream' === get_resource_type( $stream ) )
 		{
 			$this->resource = $stream;
@@ -83,6 +93,30 @@ final class Stream implements StreamInterface
 	}
 
 	/**
+	 * @param string $filepath
+	 * @param string $mode
+	 *
+	 * @return Stream
+	 * @throws InvalidArgumentException
+	 */
+	public static function newFromFile( string $filepath, string $mode = 'rb' ) : self
+	{
+		return new self( $filepath, $mode );
+	}
+
+	public function addStreamAction( HandlesStreamAction $streamAction ) : void
+	{
+		$key = $streamAction->getEventName();
+
+		if ( !isset( $this->streamActions[ $key ] ) )
+		{
+			$this->streamActions[ $key ] = [];
+		}
+
+		$this->streamActions[ $key ][] = $streamAction;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function __toString() : string
@@ -106,8 +140,12 @@ final class Stream implements StreamInterface
 
 	public function close() : void
 	{
+		$this->executeStreamActions( self::ACTION_ON_CLOSING );
+
 		if ( !$this->resource )
 		{
+			$this->executeStreamActions( self::ACTION_ON_CLOSED );
+
 			return;
 		}
 
@@ -116,6 +154,17 @@ final class Stream implements StreamInterface
 		if ( is_resource( $resource ) )
 		{
 			fclose( $resource );
+		}
+
+		$this->executeStreamActions( self::ACTION_ON_CLOSED );
+	}
+
+	private function executeStreamActions( string $eventName ) : void
+	{
+		/** @var HandlesStreamAction $streamAction */
+		foreach ( $this->streamActions[ $eventName ] ?? [] as $streamAction )
+		{
+			$streamAction->execute( $this );
 		}
 	}
 

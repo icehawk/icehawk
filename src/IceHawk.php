@@ -153,7 +153,11 @@ final class IceHawk
 			header( "{$headerName}: {$response->getHeaderLine($headerName)}", true );
 		}
 
-		echo $response->getBody();
+		$bodyStream = $response->getBody();
+
+		echo $bodyStream;
 		flush();
+
+		$bodyStream->close();
 	}
 }

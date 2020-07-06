@@ -2,12 +2,14 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\RequestHandlers;
 
+use IceHawk\IceHawk\Exceptions\RequestHandlingFailedException;
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Response;
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -25,7 +27,7 @@ final class QueueRequestHandlerTest extends TestCase
 	public function testAdd() : void
 	{
 		$requestHandler = QueueRequestHandler::newWithFallbackHandler(
-			FallbackRequestHandler::newWithMessage( 'Fallback active' )
+			FallbackRequestHandler::newWithException( new LogicException( 'No responder found.', 404 ) )
 		);
 
 		$requestHandler->add(
@@ -78,9 +80,9 @@ final class QueueRequestHandlerTest extends TestCase
 	 */
 	public function testHandleUsesFallbackRequestHandlerIfNoMiddlewaresWereAdded() : void
 	{
-		$message        = 'Fallback active';
+		$exception      = new LogicException( 'No responder found.', 404 );
 		$requestHandler = QueueRequestHandler::newWithFallbackHandler(
-			FallbackRequestHandler::newWithMessage( $message )
+			FallbackRequestHandler::newWithException( $exception )
 		);
 
 		$_SERVER['HTTPS'] = true;
@@ -88,19 +90,20 @@ final class QueueRequestHandlerTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/unit/test/fallback';
 
-		$response = $requestHandler->handle( Request::fromGlobals() );
+		$request = Request::fromGlobals();
 
-		$expectedHeaders = [
-			'Content-Type' => [
-				'text/plain; charset=utf-8',
-			],
-		];
-
-		$expectedBody = "Fallback active\nTried to handle request for URI: https://example.com/unit/test/fallback";
-
-		$this->assertSame( 404, $response->getStatusCode() );
-		$this->assertSame( 'Not Found', $response->getReasonPhrase() );
-		$this->assertSame( $expectedHeaders, $response->getHeaders() );
-		$this->assertSame( $expectedBody, (string)$response->getBody() );
+		try
+		{
+			/** @noinspection UnusedFunctionResultInspection */
+			$requestHandler->handle( $request );
+		}
+			/** @noinspection PhpRedundantCatchClauseInspection */
+		catch ( RequestHandlingFailedException $e )
+		{
+			$this->assertSame( 'No responder found.', $e->getMessage() );
+			$this->assertSame( 404, $e->getCode() );
+			$this->assertSame( $request, $e->getRequest() );
+			$this->assertSame( $exception, $e->getPrevious() );
+		}
 	}
 }

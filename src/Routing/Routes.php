@@ -3,7 +3,6 @@
 namespace IceHawk\IceHawk\Routing;
 
 use Countable;
-use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
 use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
 use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
@@ -59,7 +58,6 @@ final class Routes implements Countable, IteratorAggregate
 	 *
 	 * @return ResolvesRouteToMiddlewares
 	 * @throws InvalidArgumentException
-	 * @throws RouteNotFoundException
 	 */
 	public function findMatchingRouteForRequest( ServerRequestInterface $request ) : ResolvesRouteToMiddlewares
 	{
@@ -71,7 +69,7 @@ final class Routes implements Countable, IteratorAggregate
 			}
 		}
 
-		throw RouteNotFoundException::newFromRequest( $request );
+		return NullRoute::new( $request );
 	}
 
 	/**

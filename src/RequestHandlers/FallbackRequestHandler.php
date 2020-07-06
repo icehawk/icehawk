@@ -2,46 +2,34 @@
 
 namespace IceHawk\IceHawk\RequestHandlers;
 
-use IceHawk\IceHawk\Messages\Response;
-use IceHawk\IceHawk\Messages\Stream;
-use InvalidArgumentException;
+use IceHawk\IceHawk\Exceptions\RequestHandlingFailedException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use RuntimeException;
+use Throwable;
 
 final class FallbackRequestHandler implements RequestHandlerInterface
 {
-	private string $message;
+	private Throwable $exception;
 
-	private function __construct( string $message )
+	private function __construct( Throwable $exception )
 	{
-		$this->message = $message;
+		$this->exception = $exception;
 	}
 
-	public static function newWithMessage( string $message ) : self
+	public static function newWithException( Throwable $exception ) : self
 	{
-		return new self( $message );
+		return new self( $exception );
 	}
 
 	/**
 	 * @param ServerRequestInterface $request
 	 *
 	 * @return ResponseInterface
-	 * @throws RuntimeException
-	 * @throws InvalidArgumentException
+	 * @throws RequestHandlingFailedException
 	 */
 	public function handle( ServerRequestInterface $request ) : ResponseInterface
 	{
-		$message = sprintf(
-			"%s\nTried to handle request for URI: %s",
-			$this->message,
-			(string)$request->getUri()
-		);
-
-		return Response::new()
-		               ->withStatus( 404, 'Not Found' )
-		               ->withHeader( 'Content-Type', 'text/plain; charset=utf-8' )
-		               ->withBody( Stream::newWithContent( $message ) );
+		throw RequestHandlingFailedException::newFromPrevious( $this->exception, $request );
 	}
 }

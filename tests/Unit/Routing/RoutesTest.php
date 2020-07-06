@@ -2,9 +2,9 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
-use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Uri;
+use IceHawk\IceHawk\Routing\NullRoute;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Routing\Routes;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
@@ -123,10 +123,10 @@ final class RoutesTest extends TestCase
 	}
 
 	/**
+	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
-	 * @throws RuntimeException
 	 */
-	public function testFindMatchingRouteForRequestThrowsExceptionIfNoRouteWasFound() : void
+	public function testFindMatchingRouteForRequestReturnsNullRouteIfNoRouteWasFound() : void
 	{
 		$routes = Routes::new();
 
@@ -138,13 +138,7 @@ final class RoutesTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->expectException( RouteNotFoundException::class );
-		$this->expectExceptionMessage(
-			'Could not find route for requested method (GET) and URI: https://example.com/unit/test'
-		);
-
-		/** @noinspection UnusedFunctionResultInspection */
-		$routes->findMatchingRouteForRequest( $request );
+		$this->assertEquals( NullRoute::new( $request ), $routes->findMatchingRouteForRequest( $request ) );
 	}
 
 	/**

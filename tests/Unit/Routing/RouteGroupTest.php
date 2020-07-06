@@ -10,6 +10,7 @@ use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Types\HttpMethods;
 use IceHawk\IceHawk\Types\MiddlewareClassName;
 use InvalidArgumentException;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -267,5 +268,17 @@ final class RouteGroupTest extends TestCase
 				$routeGroup->getMiddlewareClassNames()->getIterator()->current()
 			)
 		);
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws Exception
+	 */
+	public function testGetMiddlewareClassNamesIsEmptyIfNoRouteWasFound() : void
+	{
+		$routeGroup = $this->getRouteGroup();
+
+		$this->assertCount( 0, $routeGroup->getMiddlewareClassNames() );
 	}
 }

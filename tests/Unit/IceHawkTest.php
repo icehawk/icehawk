@@ -2,6 +2,7 @@
 
 namespace IceHawk\IceHawk\Tests\Unit;
 
+use IceHawk\IceHawk\Exceptions\RequestHandlingFailedException;
 use IceHawk\IceHawk\IceHawk;
 use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
 use IceHawk\IceHawk\Messages\Request;
@@ -20,6 +21,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use RuntimeException;
 use function function_exists;
 use function http_response_code;
+use function session_id;
 use function session_start;
 use function session_status;
 use function xdebug_get_headers;
@@ -30,9 +32,7 @@ final class IceHawkTest extends TestCase
 {
 	/**
 	 * @throws InvalidArgumentException
-	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
-	 * @runInSeparateProcess
 	 */
 	public function testHandleRequestUsesFallbackRequestHandlerIfNoRoutesWereSet() : void
 	{
@@ -44,19 +44,11 @@ final class IceHawkTest extends TestCase
 
 		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithNoRoutes() );
 
-		$this->expectOutputString(
-			"Not Found.\n"
-			. 'Tried to handle request for URI: https://example.com/unit/test'
-		);
+		$this->expectException( RequestHandlingFailedException::class );
+		$this->expectExceptionMessage( 'No responder found.' );
+		$this->expectExceptionCode( 404 );
 
 		$iceHawk->handleRequest( Request::fromGlobals() );
-
-		$expectedHeaders = [
-			'Content-Type: text/plain; charset=utf-8',
-		];
-
-		$this->assertHeaders( $expectedHeaders );
-		$this->assertSame( 404, http_response_code() );
 	}
 
 	/**
@@ -94,10 +86,8 @@ final class IceHawkTest extends TestCase
 	}
 
 	/**
-	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
-	 * @runInSeparateProcess
 	 */
 	public function testCanHandleGetRequestWithRouteDefaults() : void
 	{
@@ -107,24 +97,16 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
+		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutes() );
 
-		$this->expectOutputString(
-			"Not Found.\n"
-			. 'Tried to handle request for URI: https://example.com/get/unit/test/defaults'
-		);
+		$this->expectException( RequestHandlingFailedException::class );
+		$this->expectExceptionMessage( 'No responder found.' );
+		$this->expectExceptionCode( 404 );
 
 		$iceHawk->handleRequest( Request::fromGlobals() );
-
-		$expectedHeaders = [
-			'Content-Type: text/plain; charset=utf-8',
-		];
-
-		$this->assertHeaders( $expectedHeaders );
-		$this->assertSame( 404, http_response_code() );
 	}
 
-	private function getDepsWithRoutesFromConfigArray() : ResolvesDependencies
+	private function getDepsWithRoutes() : ResolvesDependencies
 	{
 		return new class implements ResolvesDependencies {
 			public function getRoutes() : Routes
@@ -132,7 +114,8 @@ final class IceHawkTest extends TestCase
 				return Routes::new(
 					Route::get( '/get/unit/test/defaults' ),
 					Route::post( '/post/unit/test/defaults' ),
-					Route::post( '/post/unit/test/one-middleware', MiddlewareImplementation::class )
+					Route::post( '/post/unit/test/one-middleware', MiddlewareImplementation::class ),
+					Route::get( '/get/unit/test/one-middleware', MiddlewareImplementation::class )
 				);
 			}
 
@@ -149,10 +132,8 @@ final class IceHawkTest extends TestCase
 	}
 
 	/**
-	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
-	 * @runInSeparateProcess
 	 */
 	public function testCanHandlePostRequestWithRouteDefaults() : void
 	{
@@ -162,21 +143,13 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/post/unit/test/defaults';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
+		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutes() );
 
-		$this->expectOutputString(
-			"Not Found.\n"
-			. 'Tried to handle request for URI: https://example.com/post/unit/test/defaults'
-		);
+		$this->expectException( RequestHandlingFailedException::class );
+		$this->expectExceptionMessage( 'No responder found.' );
+		$this->expectExceptionCode( 404 );
 
 		$iceHawk->handleRequest( Request::fromGlobals() );
-
-		$expectedHeaders = [
-			'Content-Type: text/plain; charset=utf-8',
-		];
-
-		$this->assertHeaders( $expectedHeaders );
-		$this->assertSame( 404, http_response_code() );
 	}
 
 	/**
@@ -193,7 +166,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/post/unit/test/one-middleware';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
+		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutes() );
 
 		$this->expectOutputString( '' );
 
@@ -221,7 +194,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() );
+		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutes() );
 
 		$this->expectOutputString( '' );
 
@@ -301,6 +274,7 @@ final class IceHawkTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
 	 * @runInSeparateProcess
 	 */
 	public function testSessionIsWrittenAndClosedBeforeResponding() : void
@@ -309,19 +283,25 @@ final class IceHawkTest extends TestCase
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		/** @noinspection HostnameSubstitutionInspection */
 		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
+		$_SERVER['REQUEST_URI'] = '/get/unit/test/one-middleware';
 
 		session_start();
+		$sessionId = session_id();
 
 		$this->assertSame( PHP_SESSION_ACTIVE, session_status() );
 
-		$this->expectOutputString(
-			"Not Found.\n"
-			. 'Tried to handle request for URI: https://example.com/get/unit/test/defaults'
-		);
-
-		IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() )
+		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
 		       ->handleRequest( Request::fromGlobals() );
+
+		$this->assertHeaders(
+			[
+				"Set-Cookie: PHPSESSID={$sessionId}; path=/",
+				'Expires: Thu, 19 Nov 1981 08:52:00 GMT',
+				'Cache-Control: no-store, no-cache, must-revalidate',
+				'Pragma: no-cache',
+				'X-ID: IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation',
+			]
+		);
 
 		$this->assertSame( PHP_SESSION_NONE, session_status() );
 	}
@@ -329,6 +309,7 @@ final class IceHawkTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
 	 * @runInSeparateProcess
 	 */
 	public function testHeadRequestsDoNotProduceOutput() : void
@@ -337,24 +318,24 @@ final class IceHawkTest extends TestCase
 		$_SERVER['REQUEST_METHOD'] = 'HEAD';
 		/** @noinspection HostnameSubstitutionInspection */
 		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
+		$_SERVER['REQUEST_URI'] = '/get/unit/test/one-middleware';
 
 		$this->expectOutputString( '' );
 
-		IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() )
+		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
 		       ->handleRequest( Request::fromGlobals() );
 
 		$this->assertHeaders(
 			[
-				'Content-Type: text/plain; charset=utf-8',
-				'Content-Length: 86',
+				'X-ID: ' . MiddlewareImplementation::class,
+				'Content-Length: 0',
 			]
 		);
-		$this->assertSame( 404, http_response_code() );
+
+		$this->assertSame( 200, http_response_code() );
 	}
 
 	/**
-	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 * @runInSeparateProcess
@@ -365,20 +346,12 @@ final class IceHawkTest extends TestCase
 		$_SERVER['REQUEST_METHOD'] = 'TRACE';
 		/** @noinspection HostnameSubstitutionInspection */
 		$_SERVER['HTTP_HOST']   = 'example.com';
-		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
+		$_SERVER['REQUEST_URI'] = '/get/unit/test/one-middleware';
 
 		$this->expectOutputString( 'Unit-Test' );
 
-		IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() )
+		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
 		       ->handleRequest( Request::fromGlobals()->withBody( Stream::newWithContent( 'Unit-Test' ) ) );
-
-		$this->assertHeaders(
-			[
-				'Content-Type: message/http',
-				'X-IceHawk-Trace: ' . OptionsMiddleware::class,
-			]
-		);
-		$this->assertSame( 200, http_response_code() );
 	}
 
 	/**
@@ -397,7 +370,7 @@ final class IceHawkTest extends TestCase
 
 		$this->expectOutputString( 'Unit-Test' );
 
-		IceHawk::newWithDependencies( $this->getDepsWithRoutesFromConfigArray() )
+		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
 		       ->handleRequest( Request::fromGlobals()->withBody( Stream::newWithContent( 'Unit-Test' ) ) );
 
 		$this->assertHeaders(

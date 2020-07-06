@@ -2,7 +2,6 @@
 
 namespace IceHawk\IceHawk\Routing;
 
-use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
 use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
 use IceHawk\IceHawk\Types\HttpMethods;
 use IceHawk\IceHawk\Types\MiddlewareClassNames;
@@ -62,27 +61,26 @@ final class RouteGroup implements ResolvesRouteToMiddlewares
 			return false;
 		}
 
-		try
-		{
-			$this->foundRoute         = $this->routes->findMatchingRouteForRequest( $request );
-			$modifiedRequestFromRoute = $this->foundRoute->getModifiedRequest();
+		$this->foundRoute = $this->routes->findMatchingRouteForRequest( $request );
 
-			if ( $modifiedRequestFromRoute instanceof ServerRequestInterface )
-			{
-				$this->modifiedRequest = $modifiedRequestFromRoute->withQueryParams(
-					array_merge(
-						$modifiedRequestFromRoute->getQueryParams(),
-						$this->groupPattern->getMatches()
-					)
-				);
-			}
-
-			return true;
-		}
-		catch ( RouteNotFoundException $e )
+		if ( $this->foundRoute instanceof NullRoute )
 		{
 			return false;
 		}
+
+		$modifiedRequestFromRoute = $this->foundRoute->getModifiedRequest();
+
+		if ( $modifiedRequestFromRoute instanceof ServerRequestInterface )
+		{
+			$this->modifiedRequest = $modifiedRequestFromRoute->withQueryParams(
+				array_merge(
+					$modifiedRequestFromRoute->getQueryParams(),
+					$this->groupPattern->getMatches()
+				)
+			);
+		}
+
+		return true;
 	}
 
 	public function matchesUri( UriInterface $uri ) : bool

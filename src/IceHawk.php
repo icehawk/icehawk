@@ -2,7 +2,6 @@
 
 namespace IceHawk\IceHawk;
 
-use IceHawk\IceHawk\Exceptions\RouteNotFoundException;
 use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\Middlewares\OptionsMiddleware;
@@ -10,6 +9,7 @@ use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
+use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -63,7 +63,9 @@ final class IceHawk
 	{
 		$routes       = $this->dependencies->getRoutes();
 		$routeHandler = QueueRequestHandler::newWithFallbackHandler(
-			FallbackRequestHandler::newWithMessage( 'Not Found.' )
+			FallbackRequestHandler::newWithException(
+				new LogicException( 'No responder found.', 404 )
+			)
 		);
 
 		$appHandler = QueueRequestHandler::newWithFallbackHandler( $routeHandler );
@@ -74,20 +76,14 @@ final class IceHawk
 			$appHandler->add( $this->dependencies->resolveMiddleware( $middlewareClassName ) );
 		}
 
-		try
-		{
-			$route = $routes->findMatchingRouteForRequest( $request );
+		$route = $routes->findMatchingRouteForRequest( $request );
 
-			foreach ( $route->getMiddlewareClassNames() as $middlewareClassName )
-			{
-				$routeHandler->add( $this->dependencies->resolveMiddleware( $middlewareClassName ) );
-			}
-
-			$request = $route->getModifiedRequest() ?? $request;
-		}
-		catch ( RouteNotFoundException $e )
+		foreach ( $route->getMiddlewareClassNames() as $middlewareClassName )
 		{
+			$routeHandler->add( $this->dependencies->resolveMiddleware( $middlewareClassName ) );
 		}
+
+		$request = $route->getModifiedRequest() ?? $request;
 
 		return $appHandler->handle( $request );
 	}

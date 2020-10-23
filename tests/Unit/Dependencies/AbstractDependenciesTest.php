@@ -37,10 +37,21 @@ final class AbstractDependenciesTest extends TestCase
 
 			public function getAnObject() : stdClass
 			{
-				return $this->getInstance( __METHOD__, fn() => new stdClass() );
+				return $this->getInstance( fn() => new stdClass() );
+			}
+
+			public function getAnObjectByIdentifier() : stdClass
+			{
+				return $this->getInstance( fn() => new stdClass(), 'Identifier' );
+			}
+
+			public function getSameObjectByIdentifier() : stdClass
+			{
+				return $this->getInstance( fn() => new stdClass(), 'Identifier' );
 			}
 		};
 
-		$this->assertSame( $deps->getAnObject(), $deps->getAnObject() );
+		self::assertSame( $deps->getAnObject(), $deps->getAnObject() );
+		self::assertSame( $deps->getAnObjectByIdentifier(), $deps->getSameObjectByIdentifier() );
 	}
 }

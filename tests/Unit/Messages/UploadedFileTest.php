@@ -54,11 +54,11 @@ final class UploadedFileTest extends TestCase
 	 */
 	public function testItCanBeCreatedFromPrimitiveArray() : void
 	{
-		$this->assertEquals( 'text/plain', $this->uploadedFile->getClientMediaType() );
-		$this->assertEquals( 'test.txt', $this->uploadedFile->getClientFilename() );
-		$this->assertEquals( 563, $this->uploadedFile->getSize() );
-		$this->assertEquals( UPLOAD_ERR_OK, $this->uploadedFile->getError() );
-		$this->assertEquals( $this->tempName, $this->uploadedFile->getStream()->getMetadata( 'uri' ) );
+		self::assertEquals( 'text/plain', $this->uploadedFile->getClientMediaType() );
+		self::assertEquals( 'test.txt', $this->uploadedFile->getClientFilename() );
+		self::assertEquals( 563, $this->uploadedFile->getSize() );
+		self::assertEquals( UPLOAD_ERR_OK, $this->uploadedFile->getError() );
+		self::assertEquals( $this->tempName, $this->uploadedFile->getStream()->getMetadata( 'uri' ) );
 	}
 
 	/**
@@ -107,8 +107,8 @@ final class UploadedFileTest extends TestCase
 		$this->files[] = $to;
 
 		$this->uploadedFile->moveTo( $to );
-		$this->assertFileExists( $to );
-		$this->assertEquals( (string)$stream, file_get_contents( $to ) );
+		self::assertFileExists( $to );
+		self::assertEquals( (string)$stream, file_get_contents( $to ) );
 	}
 
 	/**

@@ -14,7 +14,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testHead() : void
 	{
-		$this->assertSame( 'HEAD', HttpMethod::head()->toString() );
+		self::assertSame( 'HEAD', HttpMethod::head()->toString() );
 	}
 
 	/**
@@ -22,7 +22,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testPut() : void
 	{
-		$this->assertSame( 'PUT', HttpMethod::put()->toString() );
+		self::assertSame( 'PUT', HttpMethod::put()->toString() );
 	}
 
 	/**
@@ -30,7 +30,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testTrace() : void
 	{
-		$this->assertSame( 'TRACE', HttpMethod::trace()->toString() );
+		self::assertSame( 'TRACE', HttpMethod::trace()->toString() );
 	}
 
 	/**
@@ -39,9 +39,9 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testToString() : void
 	{
-		$this->assertSame( 'HEAD', HttpMethod::newFromString( 'head' )->toString() );
-		$this->assertSame( 'GET', HttpMethod::newFromString( 'Get' )->toString() );
-		$this->assertSame( 'POST', HttpMethod::newFromString( 'poST' )->toString() );
+		self::assertSame( 'HEAD', HttpMethod::newFromString( 'head' )->toString() );
+		self::assertSame( 'GET', HttpMethod::newFromString( 'Get' )->toString() );
+		self::assertSame( 'POST', HttpMethod::newFromString( 'poST' )->toString() );
 	}
 
 	/**
@@ -49,7 +49,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testOptions() : void
 	{
-		$this->assertSame( 'OPTIONS', HttpMethod::options()->toString() );
+		self::assertSame( 'OPTIONS', HttpMethod::options()->toString() );
 	}
 
 	/**
@@ -57,7 +57,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testPatch() : void
 	{
-		$this->assertSame( 'PATCH', HttpMethod::patch()->toString() );
+		self::assertSame( 'PATCH', HttpMethod::patch()->toString() );
 	}
 
 	/**
@@ -65,7 +65,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testConnect() : void
 	{
-		$this->assertSame( 'CONNECT', HttpMethod::connect()->toString() );
+		self::assertSame( 'CONNECT', HttpMethod::connect()->toString() );
 	}
 
 	/**
@@ -74,9 +74,9 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testNewFromString() : void
 	{
-		$this->assertSame( 'HEAD', HttpMethod::newFromString( 'head' )->toString() );
-		$this->assertSame( 'GET', HttpMethod::newFromString( 'Get' )->toString() );
-		$this->assertSame( 'POST', HttpMethod::newFromString( 'poST' )->toString() );
+		self::assertSame( 'HEAD', HttpMethod::newFromString( 'head' )->toString() );
+		self::assertSame( 'GET', HttpMethod::newFromString( 'Get' )->toString() );
+		self::assertSame( 'POST', HttpMethod::newFromString( 'poST' )->toString() );
 	}
 
 	/**
@@ -95,7 +95,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testDelete() : void
 	{
-		$this->assertSame( 'DELETE', HttpMethod::delete()->toString() );
+		self::assertSame( 'DELETE', HttpMethod::delete()->toString() );
 	}
 
 	/**
@@ -104,8 +104,8 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testEquals() : void
 	{
-		$this->assertTrue( HttpMethod::delete()->equalsOneOf( HttpMethod::newFromString( 'delete' ) ) );
-		$this->assertFalse( HttpMethod::delete()->equalsOneOf( HttpMethod::newFromString( 'post' ) ) );
+		self::assertTrue( HttpMethod::delete()->equalsOneOf( HttpMethod::newFromString( 'delete' ) ) );
+		self::assertFalse( HttpMethod::delete()->equalsOneOf( HttpMethod::newFromString( 'post' ) ) );
 	}
 
 	/**
@@ -113,8 +113,8 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testEqualsOneOfMultiple() : void
 	{
-		$this->assertTrue( HttpMethod::delete()->equalsOneOf( HttpMethod::get(), HttpMethod::delete() ) );
-		$this->assertFalse( HttpMethod::delete()->equalsOneOf( HttpMethod::post(), HttpMethod::get() ) );
+		self::assertTrue( HttpMethod::delete()->equalsOneOf( HttpMethod::get(), HttpMethod::delete() ) );
+		self::assertFalse( HttpMethod::delete()->equalsOneOf( HttpMethod::post(), HttpMethod::get() ) );
 	}
 
 	/**
@@ -122,7 +122,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testGet() : void
 	{
-		$this->assertSame( 'GET', HttpMethod::get()->toString() );
+		self::assertSame( 'GET', HttpMethod::get()->toString() );
 	}
 
 	/**
@@ -130,7 +130,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testPost() : void
 	{
-		$this->assertSame( 'POST', HttpMethod::post()->toString() );
+		self::assertSame( 'POST', HttpMethod::post()->toString() );
 	}
 
 	/**
@@ -139,9 +139,9 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testCanCastInstanceToString() : void
 	{
-		$this->assertSame( 'HEAD', (string)HttpMethod::newFromString( 'head' ) );
-		$this->assertSame( 'GET', (string)HttpMethod::newFromString( 'Get' ) );
-		$this->assertSame( 'POST', (string)HttpMethod::newFromString( 'poST' ) );
+		self::assertSame( 'HEAD', (string)HttpMethod::newFromString( 'head' ) );
+		self::assertSame( 'GET', (string)HttpMethod::newFromString( 'Get' ) );
+		self::assertSame( 'POST', (string)HttpMethod::newFromString( 'poST' ) );
 	}
 
 	/**
@@ -150,8 +150,8 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testEqualsString() : void
 	{
-		$this->assertTrue( HttpMethod::newFromString( 'head' )->equalsString( 'HEAD' ) );
-		$this->assertTrue( HttpMethod::newFromString( 'Get' )->equalsString( 'get' ) );
-		$this->assertTrue( HttpMethod::post()->equalsString( 'POsT' ) );
+		self::assertTrue( HttpMethod::newFromString( 'head' )->equalsString( 'HEAD' ) );
+		self::assertTrue( HttpMethod::newFromString( 'Get' )->equalsString( 'get' ) );
+		self::assertTrue( HttpMethod::post()->equalsString( 'POsT' ) );
 	}
 }

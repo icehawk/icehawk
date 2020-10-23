@@ -24,7 +24,7 @@ final class HttpStatusTest extends TestCase
 
 		if ( !is_resource( $handle ) )
 		{
-			$this->fail( 'Could not open file handle.' );
+			self::fail( 'Could not open file handle.' );
 
 			return;
 		}
@@ -38,9 +38,9 @@ final class HttpStatusTest extends TestCase
 
 			$httpStatus = HttpStatus::fromCode( (int)$line[0] );
 
-			$this->assertSame( (int)$line[0], $httpStatus->getCode() );
-			$this->assertSame( (string)$line[1], $httpStatus->getPhrase() );
-			$this->assertSame( $line[0] . ' ' . $line[1], $httpStatus->toString() );
+			self::assertSame( (int)$line[0], $httpStatus->getCode() );
+			self::assertSame( (string)$line[1], $httpStatus->getPhrase() );
+			self::assertSame( $line[0] . ' ' . $line[1], $httpStatus->toString() );
 		}
 
 		fclose( $handle );

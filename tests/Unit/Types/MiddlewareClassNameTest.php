@@ -18,7 +18,7 @@ final class MiddlewareClassNameTest extends TestCase
 	 */
 	public function testToString() : void
 	{
-		$this->assertSame(
+		self::assertSame(
 			MiddlewareImplementation::class,
 			MiddlewareClassName::newFromString( MiddlewareImplementation::class )->toString()
 		);
@@ -58,10 +58,10 @@ final class MiddlewareClassNameTest extends TestCase
 		$className2 = MiddlewareClassName::newFromString( MiddlewareImplementation::class );
 		$className3 = MiddlewareClassName::newFromString( FallbackMiddleware::class );
 
-		$this->assertTrue( $className1->equals( $className2 ) );
-		$this->assertTrue( $className2->equals( $className1 ) );
-		$this->assertFalse( $className1->equals( $className3 ) );
-		$this->assertFalse( $className2->equals( $className3 ) );
+		self::assertTrue( $className1->equals( $className2 ) );
+		self::assertTrue( $className2->equals( $className1 ) );
+		self::assertFalse( $className1->equals( $className3 ) );
+		self::assertFalse( $className2->equals( $className3 ) );
 	}
 
 	/**
@@ -72,7 +72,7 @@ final class MiddlewareClassNameTest extends TestCase
 	{
 		$className1 = MiddlewareClassName::newFromString( MiddlewareImplementation::class );
 
-		$this->assertTrue( $className1->equalsString( MiddlewareImplementation::class ) );
-		$this->assertFalse( $className1->equalsString( FallbackMiddleware::class ) );
+		self::assertTrue( $className1->equalsString( MiddlewareImplementation::class ) );
+		self::assertFalse( $className1->equalsString( FallbackMiddleware::class ) );
 	}
 }

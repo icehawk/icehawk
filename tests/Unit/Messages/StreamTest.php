@@ -28,7 +28,7 @@ final class StreamTest extends TestCase
 		$stream->write( 'Unit-Test' );
 		$stream->rewind();
 
-		$this->assertSame( 'Unit-Test', $stream->read( 1024 ) );
+		self::assertSame( 'Unit-Test', $stream->read( 1024 ) );
 
 		$stream->close();
 	}
@@ -72,7 +72,7 @@ final class StreamTest extends TestCase
 		$stream->write( 'Unit-Test' );
 		$stream->seek( 5 );
 
-		$this->assertSame( 'Test', $stream->read( 1024 ) );
+		self::assertSame( 'Test', $stream->read( 1024 ) );
 	}
 
 	/**
@@ -124,11 +124,11 @@ final class StreamTest extends TestCase
 		$stream = new Stream( 'php://memory', 'w+b' );
 		$stream->write( 'Unit-Test' );
 
-		$this->assertSame( 9, $stream->getSize() );
+		self::assertSame( 9, $stream->getSize() );
 
 		$stream->close();
 
-		$this->assertNull( $stream->getSize() );
+		self::assertNull( $stream->getSize() );
 	}
 
 	/**
@@ -150,13 +150,13 @@ final class StreamTest extends TestCase
 			'mode'         => 'w+b',
 		];
 
-		$this->assertEquals( $expectedMetaData, $stream->getMetadata() );
-		$this->assertSame( 'PHP', $stream->getMetadata( 'wrapper_type' ) );
-		$this->assertNull( $stream->getMetadata( 'no-meta-data-key' ) );
+		self::assertEquals( $expectedMetaData, $stream->getMetadata() );
+		self::assertSame( 'PHP', $stream->getMetadata( 'wrapper_type' ) );
+		self::assertNull( $stream->getMetadata( 'no-meta-data-key' ) );
 
 		$stream->close();
 
-		$this->assertNull( $stream->getMetadata() );
+		self::assertNull( $stream->getMetadata() );
 	}
 
 	/**
@@ -168,14 +168,14 @@ final class StreamTest extends TestCase
 		$stream = new Stream( 'php://memory', 'w+b' );
 		$stream->write( 'Unit-Test' );
 
-		$this->assertSame( 'Unit-Test', (string)$stream );
-		$this->assertSame( 'Unit-Test', $stream->__toString() );
+		self::assertSame( 'Unit-Test', (string)$stream );
+		self::assertSame( 'Unit-Test', $stream->__toString() );
 
 		$nonReadableStream = new Stream( 'php://stdout', 'wb' );
 		$nonReadableStream->write( 'Unit-Test' );
 
-		$this->assertSame( '', (string)$nonReadableStream );
-		$this->assertSame( '', $nonReadableStream->__toString() );
+		self::assertSame( '', (string)$nonReadableStream );
+		self::assertSame( '', $nonReadableStream->__toString() );
 	}
 
 	/**
@@ -188,7 +188,7 @@ final class StreamTest extends TestCase
 		$stream->write( 'Unit-Test' );
 		$stream->rewind();
 
-		$this->assertFalse( $stream->eof() );
+		self::assertFalse( $stream->eof() );
 
 		while ( !$stream->eof() )
 		{
@@ -196,11 +196,11 @@ final class StreamTest extends TestCase
 			$stream->read( 11 );
 		}
 
-		$this->assertTrue( $stream->eof() );
+		self::assertTrue( $stream->eof() );
 
 		$stream->close();
 
-		$this->assertTrue( $stream->eof() );
+		self::assertTrue( $stream->eof() );
 	}
 
 	/**
@@ -212,15 +212,15 @@ final class StreamTest extends TestCase
 		$tempFile       = (string)tempnam( sys_get_temp_dir(), 'Unit-Test-OutputStream-' );
 		$writableStream = new Stream( $tempFile, 'w+b' );
 
-		$this->assertTrue( $writableStream->isWritable() );
+		self::assertTrue( $writableStream->isWritable() );
 
 		$writableStream->close();
 
-		$this->assertFalse( $writableStream->isWritable() );
+		self::assertFalse( $writableStream->isWritable() );
 
 		$nonWritableStream = new Stream( 'php://input', 'rb' );
 
-		$this->assertFalse( $nonWritableStream->isWritable() );
+		self::assertFalse( $nonWritableStream->isWritable() );
 
 		@unlink( $tempFile );
 	}
@@ -234,11 +234,11 @@ final class StreamTest extends TestCase
 		$stream = new Stream( 'php://memory', 'w+b' );
 		$stream->write( 'Unit-Test' );
 
-		$this->assertSame( 9, $stream->tell() );
+		self::assertSame( 9, $stream->tell() );
 
 		$stream->rewind();
 
-		$this->assertSame( 0, $stream->tell() );
+		self::assertSame( 0, $stream->tell() );
 	}
 
 	/**
@@ -249,11 +249,11 @@ final class StreamTest extends TestCase
 		$stream = new Stream( 'php://memory', 'w+b' );
 		$stream->close();
 
-		$this->assertNull( $stream->detach() );
+		self::assertNull( $stream->detach() );
 
 		$stream->close();
 
-		$this->assertNull( $stream->detach() );
+		self::assertNull( $stream->detach() );
 	}
 
 	/**
@@ -265,11 +265,11 @@ final class StreamTest extends TestCase
 		$stream = new Stream( 'php://memory', 'w+b' );
 		$stream->write( 'Unit-Test' );
 
-		$this->assertSame( 9, $stream->tell() );
+		self::assertSame( 9, $stream->tell() );
 
 		$stream->seek( 3 );
 
-		$this->assertSame( 3, $stream->tell() );
+		self::assertSame( 3, $stream->tell() );
 	}
 
 	/**
@@ -297,9 +297,9 @@ final class StreamTest extends TestCase
 
 		$resource = $stream->detach();
 
-		$this->assertIsResource( $resource );
+		self::assertIsResource( $resource );
 
-		$this->assertNull( $stream->detach() );
+		self::assertNull( $stream->detach() );
 	}
 
 	/**
@@ -313,15 +313,15 @@ final class StreamTest extends TestCase
 
 		$stream->seek( 5 );
 
-		$this->assertSame( 'Test', $stream->getContents() );
+		self::assertSame( 'Test', $stream->getContents() );
 
 		$stream->rewind();
 
-		$this->assertSame( 'Unit-Test', $stream->getContents() );
+		self::assertSame( 'Unit-Test', $stream->getContents() );
 
 		$stream->close();
 
-		$this->assertSame( '', $stream->getContents() );
+		self::assertSame( '', $stream->getContents() );
 	}
 
 	/**
@@ -331,15 +331,15 @@ final class StreamTest extends TestCase
 	{
 		$readableStream = new Stream( 'php://memory', 'w+b' );
 
-		$this->assertTrue( $readableStream->isReadable() );
+		self::assertTrue( $readableStream->isReadable() );
 
 		$readableStream->close();
 
-		$this->assertFalse( $readableStream->isReadable() );
+		self::assertFalse( $readableStream->isReadable() );
 
 		$nonReadableStream = new Stream( 'php://output', 'wb' );
 
-		$this->assertFalse( $nonReadableStream->isReadable() );
+		self::assertFalse( $nonReadableStream->isReadable() );
 	}
 
 	/**
@@ -350,7 +350,7 @@ final class StreamTest extends TestCase
 	{
 		$stream = new Stream( 'php://memory', 'w+b' );
 
-		$this->assertSame( 9, $stream->write( 'Unit-Test' ) );
+		self::assertSame( 9, $stream->write( 'Unit-Test' ) );
 	}
 
 	/**
@@ -374,11 +374,11 @@ final class StreamTest extends TestCase
 	{
 		$seekableStream = new Stream( 'php://input', 'rb' );
 
-		$this->assertTrue( $seekableStream->isSeekable() );
+		self::assertTrue( $seekableStream->isSeekable() );
 
 		$seekableStream->close();
 
-		$this->assertFalse( $seekableStream->isSeekable() );
+		self::assertFalse( $seekableStream->isSeekable() );
 	}
 
 	/**
@@ -392,14 +392,14 @@ final class StreamTest extends TestCase
 
 		if ( !is_resource( $resource ) )
 		{
-			$this->fail( 'Could not open memory stream' );
+			self::fail( 'Could not open memory stream' );
 
 			return;
 		}
 
 		$stream = new Stream( $resource );
 
-		$this->assertSame( $resource, $stream->detach() );
+		self::assertSame( $resource, $stream->detach() );
 	}
 
 	public function testThrowsExceptionForInvalidStream() : void
@@ -435,7 +435,7 @@ final class StreamTest extends TestCase
 	{
 		$stream = Stream::newFromFile( __DIR__ . '/_files/StreamTest.txt' );
 
-		$this->assertSame( 'Unit-Test', $stream->getContents() );
+		self::assertSame( 'Unit-Test', $stream->getContents() );
 	}
 
 	/**
@@ -472,12 +472,12 @@ final class StreamTest extends TestCase
 
 		$stream->addStreamAction( $onClosedAction );
 
-		$this->assertFileExists( $tempFile );
+		self::assertFileExists( $tempFile );
 
 		$this->expectOutputString( "Stream is closing\nStream is closing\n" );
 
 		$stream->close();
 
-		$this->assertFileDoesNotExist( $tempFile );
+		self::assertFileDoesNotExist( $tempFile );
 	}
 }

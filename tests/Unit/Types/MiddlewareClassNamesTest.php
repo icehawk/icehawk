@@ -22,16 +22,16 @@ final class MiddlewareClassNamesTest extends TestCase
 	public function testAdd() : void
 	{
 		$classNames = MiddlewareClassNames::new();
-		$this->assertCount( 0, $classNames );
+		self::assertCount( 0, $classNames );
 
 		$classNames->add( MiddlewareClassName::newFromString( MiddlewareImplementation::class ) );
-		$this->assertCount( 1, $classNames );
+		self::assertCount( 1, $classNames );
 
 		$classNames->add(
 			MiddlewareClassName::newFromString( FallbackMiddleware::class ),
 			MiddlewareClassName::newFromString( PassThroughMiddleware::class )
 		);
-		$this->assertCount( 3, $classNames );
+		self::assertCount( 3, $classNames );
 	}
 
 	/**
@@ -40,7 +40,7 @@ final class MiddlewareClassNamesTest extends TestCase
 	 */
 	public function testCount() : void
 	{
-		$this->assertCount(
+		self::assertCount(
 			2,
 			MiddlewareClassNames::newFromStrings(
 				PassThroughMiddleware::class,
@@ -55,7 +55,7 @@ final class MiddlewareClassNamesTest extends TestCase
 	 */
 	public function testNewFromStrings() : void
 	{
-		$this->assertEquals(
+		self::assertEquals(
 			MiddlewareClassNames::new(
 				MiddlewareClassName::newFromString( PassThroughMiddleware::class ),
 				MiddlewareClassName::newFromString( MiddlewareImplementation::class )
@@ -74,14 +74,14 @@ final class MiddlewareClassNamesTest extends TestCase
 	 */
 	public function testNew() : void
 	{
-		$this->assertCount( 0, MiddlewareClassNames::new() );
-		$this->assertCount(
+		self::assertCount( 0, MiddlewareClassNames::new() );
+		self::assertCount(
 			1,
 			MiddlewareClassNames::new(
 				MiddlewareClassName::newFromString( MiddlewareImplementation::class )
 			)
 		);
-		$this->assertCount(
+		self::assertCount(
 			2,
 			MiddlewareClassNames::new(
 				MiddlewareClassName::newFromString( PassThroughMiddleware::class ),
@@ -101,20 +101,20 @@ final class MiddlewareClassNamesTest extends TestCase
 			MiddlewareImplementation::class
 		)->getIterator();
 
-		$this->assertEquals(
+		self::assertEquals(
 			MiddlewareClassName::newFromString( PassThroughMiddleware::class ),
 			$classNames->current()
 		);
 
 		$classNames->next();
 
-		$this->assertEquals(
+		self::assertEquals(
 			MiddlewareClassName::newFromString( MiddlewareImplementation::class ),
 			$classNames->current()
 		);
 
 		$classNames->next();
 
-		$this->assertFalse( $classNames->valid() );
+		self::assertFalse( $classNames->valid() );
 	}
 }

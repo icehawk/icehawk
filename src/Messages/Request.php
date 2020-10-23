@@ -326,7 +326,7 @@ final class Request implements ProvidesRequestData
 		[
 			$request->serverParams['HTTP_AUTH_USER'],
 			$request->serverParams['HTTP_AUTH_PW'],
-		] = explode( ':', $uri->getUserInfo() );
+		] = explode( ':', $uri->getUserInfo() ) + ['', ''];
 
 		if ( $preserveHost && empty( $request->serverParams['HTTP_HOST'] ?? '' ) && $uri->getHost() )
 		{

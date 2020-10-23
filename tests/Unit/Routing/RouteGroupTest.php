@@ -34,14 +34,14 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getFullUriRouteGroup()->matchAgainstFullUri();
 
-		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
+		self::assertTrue( $routeGroup->matchesRequest( $request ) );
 
 		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $routeGroup->getModifiedRequest();
 
-		$this->assertSame( 'v1', $modifiedRequest->getQueryParams()['version'] );
-		$this->assertSame( 'get', $modifiedRequest->getQueryParams()['method'] );
-		$this->assertSame( 'testvalue', $modifiedRequest->getQueryParams()['testkey'] );
+		self::assertSame( 'v1', $modifiedRequest->getQueryParams()['version'] );
+		self::assertSame( 'get', $modifiedRequest->getQueryParams()['method'] );
+		self::assertSame( 'testvalue', $modifiedRequest->getQueryParams()['testkey'] );
 	}
 
 	/**
@@ -60,12 +60,12 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getFullUriRouteGroup()->matchAgainstFullUri();
 
-		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
+		self::assertTrue( $routeGroup->matchesRequest( $request ) );
 
 		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $routeGroup->getModifiedRequest();
 
-		$this->assertSame( 'v2', $modifiedRequest->getQueryParams()['version'] );
+		self::assertSame( 'v2', $modifiedRequest->getQueryParams()['version'] );
 	}
 
 	/**
@@ -84,8 +84,8 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getFullUriRouteGroup()->matchAgainstFullUri();
 
-		$this->assertFalse( $routeGroup->matchesRequest( $request ) );
-		$this->assertNull( $routeGroup->getModifiedRequest() );
+		self::assertFalse( $routeGroup->matchesRequest( $request ) );
+		self::assertNull( $routeGroup->getModifiedRequest() );
 	}
 
 	/**
@@ -137,14 +137,14 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getRouteGroup();
 
-		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
+		self::assertTrue( $routeGroup->matchesRequest( $request ) );
 
 		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $routeGroup->getModifiedRequest();
 
-		$this->assertSame( 'v1', $modifiedRequest->getQueryParams()['version'] );
-		$this->assertSame( 'get', $modifiedRequest->getQueryParams()['method'] );
-		$this->assertSame( 'testvalue', $modifiedRequest->getQueryParams()['testkey'] );
+		self::assertSame( 'v1', $modifiedRequest->getQueryParams()['version'] );
+		self::assertSame( 'get', $modifiedRequest->getQueryParams()['method'] );
+		self::assertSame( 'testvalue', $modifiedRequest->getQueryParams()['testkey'] );
 	}
 
 	/**
@@ -163,12 +163,12 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getRouteGroup();
 
-		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
+		self::assertTrue( $routeGroup->matchesRequest( $request ) );
 
 		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $routeGroup->getModifiedRequest();
 
-		$this->assertSame( 'v2', $modifiedRequest->getQueryParams()['version'] );
+		self::assertSame( 'v2', $modifiedRequest->getQueryParams()['version'] );
 	}
 
 	/**
@@ -187,8 +187,8 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getRouteGroup();
 
-		$this->assertFalse( $routeGroup->matchesRequest( $request ) );
-		$this->assertNull( $routeGroup->getModifiedRequest() );
+		self::assertFalse( $routeGroup->matchesRequest( $request ) );
+		self::assertNull( $routeGroup->getModifiedRequest() );
 	}
 
 	/**
@@ -200,7 +200,7 @@ final class RouteGroupTest extends TestCase
 		$routeGroup = $this->getFullUriRouteGroup()->matchAgainstFullUri();
 		$uri        = Uri::fromString( 'https://example.com/api/v2/post-request' );
 
-		$this->assertTrue( $routeGroup->matchesUri( $uri ) );
+		self::assertTrue( $routeGroup->matchesUri( $uri ) );
 	}
 
 	/**
@@ -212,7 +212,7 @@ final class RouteGroupTest extends TestCase
 		$routeGroup = $this->getRouteGroup();
 		$uri        = Uri::fromString( 'https://example.com/api/v2/post-request' );
 
-		$this->assertTrue( $routeGroup->matchesUri( $uri ) );
+		self::assertTrue( $routeGroup->matchesUri( $uri ) );
 	}
 
 	/**
@@ -226,13 +226,13 @@ final class RouteGroupTest extends TestCase
 		$routeGroup = $this->getFullUriRouteGroup();
 		$uri        = Uri::fromString( 'http://example.com/api/v2/post-request' );
 
-		$this->assertFalse( $routeGroup->matchesUri( $uri ) );
+		self::assertFalse( $routeGroup->matchesUri( $uri ) );
 
 		# Route does not match, wrong API version
 
 		$uri = Uri::fromString( 'https://example.com/api/v1/post-request' );
 
-		$this->assertFalse( $routeGroup->matchesUri( $uri ) );
+		self::assertFalse( $routeGroup->matchesUri( $uri ) );
 	}
 
 	/**
@@ -243,7 +243,7 @@ final class RouteGroupTest extends TestCase
 	{
 		$routeGroup = $this->getRouteGroup();
 
-		$this->assertEquals( HttpMethods::all(), $routeGroup->getAcceptedHttpMethods() );
+		self::assertEquals( HttpMethods::all(), $routeGroup->getAcceptedHttpMethods() );
 	}
 
 	/**
@@ -262,8 +262,8 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getRouteGroup();
 
-		$this->assertTrue( $routeGroup->matchesRequest( $request ) );
-		$this->assertTrue(
+		self::assertTrue( $routeGroup->matchesRequest( $request ) );
+		self::assertTrue(
 			MiddlewareClassName::newFromString( MiddlewareImplementation::class )->equals(
 				$routeGroup->getMiddlewareClassNames()->getIterator()->current()
 			)
@@ -279,6 +279,6 @@ final class RouteGroupTest extends TestCase
 	{
 		$routeGroup = $this->getRouteGroup();
 
-		$this->assertCount( 0, $routeGroup->getMiddlewareClassNames() );
+		self::assertCount( 0, $routeGroup->getMiddlewareClassNames() );
 	}
 }

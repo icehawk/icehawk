@@ -10,6 +10,7 @@ use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Types\HttpMethod;
 use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -30,11 +31,11 @@ final class RouteTest extends TestCase
 			...$middlewareClassNames
 		);
 
-		$this->assertEquals(
+		self::assertEquals(
 			MiddlewareClassNames::newFromStrings( ...$middlewareClassNames ),
 			$route->getMiddlewareClassNames()
 		);
-		$this->assertNull( $route->getModifiedRequest() );
+		self::assertNull( $route->getModifiedRequest() );
 	}
 
 	/**
@@ -57,7 +58,7 @@ final class RouteTest extends TestCase
 			MiddlewareImplementation::class
 		);
 
-		$this->assertTrue( $route->matchesRequest( $request ) );
+		self::assertTrue( $route->matchesRequest( $request ) );
 	}
 
 	/**
@@ -80,7 +81,7 @@ final class RouteTest extends TestCase
 			MiddlewareImplementation::class
 		);
 
-		$this->assertFalse( $route->matchesRequest( $request ) );
+		self::assertFalse( $route->matchesRequest( $request ) );
 	}
 
 	/**
@@ -103,12 +104,13 @@ final class RouteTest extends TestCase
 			MiddlewareImplementation::class,
 		);
 
-		$this->assertFalse( $route->matchesRequest( $request ) );
+		self::assertFalse( $route->matchesRequest( $request ) );
 	}
 
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
+	 * @throws Exception
 	 */
 	public function testGetModifiedRequest() : void
 	{
@@ -125,17 +127,17 @@ final class RouteTest extends TestCase
 			MiddlewareImplementation::class,
 		);
 
-		$this->assertTrue( $route->matchesRequest( $request ) );
+		self::assertTrue( $route->matchesRequest( $request ) );
 
 		/** @var ServerRequestInterface $modifiedRequest */
 		$modifiedRequest = $route->getModifiedRequest();
 
-		$this->assertSame( 'test', $modifiedRequest->getQueryParams()['testKey'] );
+		self::assertSame( 'test', $modifiedRequest->getQueryParams()['testKey'] );
 
 		/** @var array<string, mixed> $parsedBody */
 		$parsedBody = $modifiedRequest->getParsedBody();
 
-		$this->assertNull( $parsedBody['testKey'] );
+		self::assertArrayNotHasKey( 'testKey', $parsedBody );
 	}
 
 	/**
@@ -152,20 +154,20 @@ final class RouteTest extends TestCase
 
 		$route = Route::get( '^/unit/test$' );
 
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Also matches HEAD, OPTIONS, CONNECT & TRACE requests
 		$_SERVER['REQUEST_METHOD'] = 'HEAD';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'OPTIONS';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'CONNECT';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'TRACE';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 	}
 
 	/**
@@ -182,21 +184,21 @@ final class RouteTest extends TestCase
 
 		$route = Route::post( '^/unit/test$' );
 
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Does not match HEAD request
 		$_SERVER['REQUEST_METHOD'] = 'HEAD';
-		$this->assertFalse( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertFalse( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Also matches OPTIONS, CONNECT & TRACE requests
 		$_SERVER['REQUEST_METHOD'] = 'OPTIONS';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'CONNECT';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'TRACE';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 	}
 
 	/**
@@ -213,21 +215,21 @@ final class RouteTest extends TestCase
 
 		$route = Route::put( '^/unit/test$' );
 
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Does not match HEAD request
 		$_SERVER['REQUEST_METHOD'] = 'HEAD';
-		$this->assertFalse( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertFalse( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Also matches OPTIONS, CONNECT & TRACE requests
 		$_SERVER['REQUEST_METHOD'] = 'OPTIONS';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'CONNECT';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'TRACE';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 	}
 
 	/**
@@ -244,21 +246,21 @@ final class RouteTest extends TestCase
 
 		$route = Route::patch( '^/unit/test$' );
 
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Does not match HEAD request
 		$_SERVER['REQUEST_METHOD'] = 'HEAD';
-		$this->assertFalse( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertFalse( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Also matches OPTIONS, CONNECT & TRACE requests
 		$_SERVER['REQUEST_METHOD'] = 'OPTIONS';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'CONNECT';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'TRACE';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 	}
 
 	/**
@@ -275,21 +277,21 @@ final class RouteTest extends TestCase
 
 		$route = Route::delete( '/unit/test' );
 
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Does not match HEAD request
 		$_SERVER['REQUEST_METHOD'] = 'HEAD';
-		$this->assertFalse( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertFalse( $route->matchesRequest( Request::fromGlobals() ) );
 
 		# Also matches OPTIONS, CONNECT & TRACE requests
 		$_SERVER['REQUEST_METHOD'] = 'OPTIONS';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'CONNECT';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 
 		$_SERVER['REQUEST_METHOD'] = 'TRACE';
-		$this->assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
+		self::assertTrue( $route->matchesRequest( Request::fromGlobals() ) );
 	}
 
 	/**
@@ -305,7 +307,7 @@ final class RouteTest extends TestCase
 		sort( $routeMethods );
 		sort( $acceptedMethods );
 
-		$this->assertEquals( $acceptedMethods, $routeMethods );
+		self::assertEquals( $acceptedMethods, $routeMethods );
 	}
 
 	/**
@@ -373,10 +375,10 @@ final class RouteTest extends TestCase
 		$uri   = Uri::fromString( 'https://example.com/unit/test?uri=match' );
 		$route = Route::get( '/unit/test\?uri=(?<uri>.+)$' )->matchAgainstFullUri();
 
-		$this->assertTrue( $route->matchesUri( $uri ) );
+		self::assertTrue( $route->matchesUri( $uri ) );
 
 		$route = Route::get( '/unit/test\?match=(?<match>.+)$' )->matchAgainstFullUri();
 
-		$this->assertFalse( $route->matchesUri( $uri ) );
+		self::assertFalse( $route->matchesUri( $uri ) );
 	}
 }

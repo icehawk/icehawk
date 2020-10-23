@@ -17,7 +17,7 @@ final class Uri implements UriInterface
 	 */
 	private function __construct( array $components )
 	{
-		$components['path'] = strtok( (string)$components['path'], '?' );
+		$components['path'] = strtok( (string)($components['path'] ?? ''), '?' );
 
 		$this->components = $components;
 	}

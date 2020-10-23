@@ -18,7 +18,7 @@ final class NullRouteTest extends TestCase
 	 */
 	public function testGetAcceptedHttpMethods() : void
 	{
-		$this->assertEquals( HttpMethods::all(), NullRoute::new( Request::fromGlobals() )->getAcceptedHttpMethods() );
+		self::assertEquals( HttpMethods::all(), NullRoute::new( Request::fromGlobals() )->getAcceptedHttpMethods() );
 	}
 
 	/**
@@ -28,7 +28,7 @@ final class NullRouteTest extends TestCase
 	{
 		$request = Request::fromGlobals();
 
-		$this->assertSame( $request, NullRoute::new( $request )->getModifiedRequest() );
+		self::assertSame( $request, NullRoute::new( $request )->getModifiedRequest() );
 	}
 
 	/**
@@ -37,7 +37,7 @@ final class NullRouteTest extends TestCase
 	 */
 	public function testMatchesUri() : void
 	{
-		$this->assertFalse(
+		self::assertFalse(
 			NullRoute::new( Request::fromGlobals() )->matchesUri( Uri::fromString( 'https://example.com' ) )
 		);
 	}
@@ -49,7 +49,7 @@ final class NullRouteTest extends TestCase
 	{
 		$nullRoute = NullRoute::new( Request::fromGlobals() );
 
-		$this->assertSame( $nullRoute, $nullRoute->matchAgainstFullUri() );
+		self::assertSame( $nullRoute, $nullRoute->matchAgainstFullUri() );
 	}
 
 	/**
@@ -60,7 +60,7 @@ final class NullRouteTest extends TestCase
 	{
 		$request = Request::fromGlobals();
 
-		$this->assertFalse( NullRoute::new( $request )->matchesRequest( $request ) );
+		self::assertFalse( NullRoute::new( $request )->matchesRequest( $request ) );
 	}
 
 	/**
@@ -69,6 +69,6 @@ final class NullRouteTest extends TestCase
 	 */
 	public function testGetMiddlewareClassNames() : void
 	{
-		$this->assertCount( 0, NullRoute::new( Request::fromGlobals() )->getMiddlewareClassNames() );
+		self::assertCount( 0, NullRoute::new( Request::fromGlobals() )->getMiddlewareClassNames() );
 	}
 }

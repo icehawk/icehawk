@@ -21,7 +21,7 @@ final class IceHawkTest extends TestCase
 	 */
 	public function testCanCreateInstanceWithDependencies() : void
 	{
-		$this->assertInstanceOf( IceHawk::class, IceHawk::newWithDependencies( $this->getDeps() ) );
+		self::assertInstanceOf( IceHawk::class, IceHawk::newWithDependencies( $this->getDeps() ) );
 	}
 
 	private function getDeps() : ResolvesDependencies

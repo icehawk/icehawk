@@ -5,7 +5,7 @@ parameters:
     level: max
     bootstrapFiles:
         - ./vendor/bin/phpunit.phar
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
     ignoreErrors:
         -
             message: '#resource\|string, array<int, string> given#'

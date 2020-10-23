@@ -22,7 +22,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( $expectedAuthority, $uri->getAuthority() );
+		self::assertSame( $expectedAuthority, $uri->getAuthority() );
 	}
 
 	/**
@@ -68,13 +68,13 @@ final class UriTest extends TestCase
 		$url = 'https://example.com';
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( 'example.com', $uri->getHost() );
+		self::assertSame( 'example.com', $uri->getHost() );
 
 		$newUri = $uri->withHost( 'phpunit.de' );
 
-		$this->assertNotSame( $uri, $newUri );
-		$this->assertNotEquals( $uri, $newUri );
-		$this->assertSame( 'phpunit.de', $newUri->getHost() );
+		self::assertNotSame( $uri, $newUri );
+		self::assertNotEquals( $uri, $newUri );
+		self::assertSame( 'phpunit.de', $newUri->getHost() );
 	}
 
 	/**
@@ -90,7 +90,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( $expectedPath, $uri->getPath() );
+		self::assertSame( $expectedPath, $uri->getPath() );
 	}
 
 	/**
@@ -132,13 +132,13 @@ final class UriTest extends TestCase
 		$url = 'https://example.com';
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( '', $uri->getPath() );
+		self::assertSame( '', $uri->getPath() );
 
 		$newUri = $uri->withPath( '/some/path' );
 
-		$this->assertNotSame( $uri, $newUri );
-		$this->assertNotEquals( $uri, $newUri );
-		$this->assertSame( '/some/path', $newUri->getPath() );
+		self::assertNotSame( $uri, $newUri );
+		self::assertNotEquals( $uri, $newUri );
+		self::assertSame( '/some/path', $newUri->getPath() );
 	}
 
 	/**
@@ -154,7 +154,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( $expectedPort, $uri->getPort() );
+		self::assertSame( $expectedPort, $uri->getPort() );
 	}
 
 	/**
@@ -182,7 +182,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( 'https://example.com/test.html' );
 
-		$this->assertSame( 'example.com', $uri->getHost() );
+		self::assertSame( 'example.com', $uri->getHost() );
 	}
 
 	/**
@@ -193,13 +193,13 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( 'https://example.com/test.html' );
 
-		$this->assertSame( '', $uri->getFragment() );
+		self::assertSame( '', $uri->getFragment() );
 
 		$newUri = $uri->withFragment( 'anchor' );
 
-		$this->assertNotSame( $uri, $newUri );
-		$this->assertNotEquals( $uri, $newUri );
-		$this->assertSame( 'anchor', $newUri->getFragment() );
+		self::assertNotSame( $uri, $newUri );
+		self::assertNotEquals( $uri, $newUri );
+		self::assertSame( 'anchor', $newUri->getFragment() );
 	}
 
 	/**
@@ -215,7 +215,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( $expectedFragment, $uri->getFragment() );
+		self::assertSame( $expectedFragment, $uri->getFragment() );
 	}
 
 	/**
@@ -256,7 +256,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( $expectedUserInfo, $uri->getUserInfo() );
+		self::assertSame( $expectedUserInfo, $uri->getUserInfo() );
 	}
 
 	/**
@@ -297,7 +297,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( $expectedScheme, $uri->getScheme() );
+		self::assertSame( $expectedScheme, $uri->getScheme() );
 	}
 
 	/**
@@ -334,7 +334,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromComponents( $components );
 
-		$this->assertSame( $expectedUrl, (string)$uri );
+		self::assertSame( $expectedUrl, (string)$uri );
 	}
 
 	/**
@@ -534,14 +534,14 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( 'https://user:pass@example.com' );
 
-		$this->assertSame( 'user:pass', $uri->getUserInfo() );
+		self::assertSame( 'user:pass', $uri->getUserInfo() );
 
 		$newUri = $uri->withUserInfo( 'me', 'testing' );
 
-		$this->assertNotSame( $uri, $newUri );
-		$this->assertNotEquals( $uri, $newUri );
+		self::assertNotSame( $uri, $newUri );
+		self::assertNotEquals( $uri, $newUri );
 
-		$this->assertSame( 'me:testing', $newUri->getUserInfo() );
+		self::assertSame( 'me:testing', $newUri->getUserInfo() );
 	}
 
 	/**
@@ -557,7 +557,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( $url );
 
-		$this->assertSame( $expectedQuery, $uri->getQuery() );
+		self::assertSame( $expectedQuery, $uri->getQuery() );
 	}
 
 	/**
@@ -590,7 +590,7 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromComponents( $components );
 
-		$this->assertSame( $expectedUrl, (string)$uri );
+		self::assertSame( $expectedUrl, (string)$uri );
 	}
 
 	/**
@@ -602,13 +602,13 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( 'https://example.com:80' );
 
-		$this->assertSame( 80, $uri->getPort() );
+		self::assertSame( 80, $uri->getPort() );
 
 		$newUri = $uri->withPort( null );
 
-		$this->assertNotSame( $uri, $newUri );
-		$this->assertNotEquals( $uri, $newUri );
-		$this->assertNull( $newUri->getPort() );
+		self::assertNotSame( $uri, $newUri );
+		self::assertNotEquals( $uri, $newUri );
+		self::assertNull( $newUri->getPort() );
 	}
 
 	/**
@@ -620,13 +620,13 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( 'https://example.com?var=value' );
 
-		$this->assertSame( 'var=value', $uri->getQuery() );
+		self::assertSame( 'var=value', $uri->getQuery() );
 
 		$newUri = $uri->withQuery( 'var=value&foo=bar' );
 
-		$this->assertNotSame( $uri, $newUri );
-		$this->assertNotEquals( $uri, $newUri );
-		$this->assertSame( 'var=value&foo=bar', $newUri->getQuery() );
+		self::assertNotSame( $uri, $newUri );
+		self::assertNotEquals( $uri, $newUri );
+		self::assertSame( 'var=value&foo=bar', $newUri->getQuery() );
 	}
 
 	/**
@@ -637,14 +637,14 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( 'https://user:pass@example.com:8080/some/path/?var=value#anchor' );
 
-		$this->assertSame( 'https', $uri->getScheme() );
-		$this->assertSame( 'user:pass', $uri->getUserInfo() );
-		$this->assertSame( 'user:pass@example.com:8080', $uri->getAuthority() );
-		$this->assertSame( 'example.com', $uri->getHost() );
-		$this->assertSame( 8080, $uri->getPort() );
-		$this->assertSame( '/some/path/', $uri->getPath() );
-		$this->assertSame( 'var=value', $uri->getQuery() );
-		$this->assertSame( 'anchor', $uri->getFragment() );
+		self::assertSame( 'https', $uri->getScheme() );
+		self::assertSame( 'user:pass', $uri->getUserInfo() );
+		self::assertSame( 'user:pass@example.com:8080', $uri->getAuthority() );
+		self::assertSame( 'example.com', $uri->getHost() );
+		self::assertSame( 8080, $uri->getPort() );
+		self::assertSame( '/some/path/', $uri->getPath() );
+		self::assertSame( 'var=value', $uri->getQuery() );
+		self::assertSame( 'anchor', $uri->getFragment() );
 	}
 
 	/**
@@ -656,12 +656,12 @@ final class UriTest extends TestCase
 	{
 		$uri = Uri::fromString( '//example.com?var=value' );
 
-		$this->assertSame( '', $uri->getScheme() );
+		self::assertSame( '', $uri->getScheme() );
 
 		$newUri = $uri->withScheme( 'https' );
 
-		$this->assertNotSame( $uri, $newUri );
-		$this->assertNotEquals( $uri, $newUri );
-		$this->assertSame( 'https', $newUri->getScheme() );
+		self::assertNotSame( $uri, $newUri );
+		self::assertNotEquals( $uri, $newUri );
+		self::assertSame( 'https', $newUri->getScheme() );
 	}
 }

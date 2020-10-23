@@ -70,7 +70,7 @@ final class QueueRequestHandlerTest extends TestCase
 
 		$expectedBody = 'first => middleware, second => middleware';
 
-		$this->assertSame( $expectedBody, (string)$response->getBody() );
+		self::assertSame( $expectedBody, (string)$response->getBody() );
 	}
 
 	/**
@@ -100,10 +100,10 @@ final class QueueRequestHandlerTest extends TestCase
 			/** @noinspection PhpRedundantCatchClauseInspection */
 		catch ( RequestHandlingFailedException $e )
 		{
-			$this->assertSame( 'No responder found.', $e->getMessage() );
-			$this->assertSame( 404, $e->getCode() );
-			$this->assertSame( $request, $e->getRequest() );
-			$this->assertSame( $exception, $e->getPrevious() );
+			self::assertSame( 'No responder found.', $e->getMessage() );
+			self::assertSame( 404, $e->getCode() );
+			self::assertSame( $request, $e->getRequest() );
+			self::assertSame( $exception, $e->getPrevious() );
 		}
 	}
 }

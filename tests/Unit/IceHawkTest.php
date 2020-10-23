@@ -61,7 +61,7 @@ final class IceHawkTest extends TestCase
 		if ( function_exists( 'xdebug_get_headers' ) )
 		{
 			/** @noinspection ForgottenDebugOutputInspection */
-			$this->assertSame( $expectedHeaders, xdebug_get_headers() );
+			self::assertSame( $expectedHeaders, xdebug_get_headers() );
 		}
 	}
 
@@ -177,7 +177,7 @@ final class IceHawkTest extends TestCase
 		];
 
 		$this->assertHeaders( $expectedHeaders );
-		$this->assertSame( 200, http_response_code() );
+		self::assertSame( 200, http_response_code() );
 	}
 
 	/**
@@ -205,7 +205,7 @@ final class IceHawkTest extends TestCase
 		];
 
 		$this->assertHeaders( $expectedHeaders );
-		$this->assertSame( 204, http_response_code() );
+		self::assertSame( 204, http_response_code() );
 	}
 
 	/**
@@ -233,7 +233,7 @@ final class IceHawkTest extends TestCase
 		];
 
 		$this->assertHeaders( $expectedHeaders );
-		$this->assertSame( 200, http_response_code() );
+		self::assertSame( 200, http_response_code() );
 	}
 
 	private function getDependenciesWithAppMiddlewares() : ResolvesDependencies
@@ -288,7 +288,7 @@ final class IceHawkTest extends TestCase
 		session_start();
 		$sessionId = session_id();
 
-		$this->assertSame( PHP_SESSION_ACTIVE, session_status() );
+		self::assertSame( PHP_SESSION_ACTIVE, session_status() );
 
 		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
 		       ->handleRequest( Request::fromGlobals() );
@@ -303,7 +303,7 @@ final class IceHawkTest extends TestCase
 			]
 		);
 
-		$this->assertSame( PHP_SESSION_NONE, session_status() );
+		self::assertSame( PHP_SESSION_NONE, session_status() );
 	}
 
 	/**
@@ -332,7 +332,7 @@ final class IceHawkTest extends TestCase
 			]
 		);
 
-		$this->assertSame( 200, http_response_code() );
+		self::assertSame( 200, http_response_code() );
 	}
 
 	/**
@@ -380,6 +380,6 @@ final class IceHawkTest extends TestCase
 				'Content-Type: message/http',
 			]
 		);
-		$this->assertSame( 200, http_response_code() );
+		self::assertSame( 200, http_response_code() );
 	}
 }

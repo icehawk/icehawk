@@ -31,7 +31,7 @@ final class RoutesTest extends TestCase
 
 		$routes = Routes::new( $route );
 
-		$this->assertSame( $route, $routes->getIterator()->current() );
+		self::assertSame( $route, $routes->getIterator()->current() );
 	}
 
 	/**
@@ -49,15 +49,15 @@ final class RoutesTest extends TestCase
 
 		$routes = Routes::new();
 
-		$this->assertCount( 0, $routes );
-		$this->assertCount( 0, $routes->getIterator() );
+		self::assertCount( 0, $routes );
+		self::assertCount( 0, $routes->getIterator() );
 
 		$routes->add( $route );
 
-		$this->assertCount( 1, $routes );
-		$this->assertCount( 1, $routes->getIterator() );
+		self::assertCount( 1, $routes );
+		self::assertCount( 1, $routes->getIterator() );
 
-		$this->assertSame( $route, $routes->getIterator()->current() );
+		self::assertSame( $route, $routes->getIterator()->current() );
 	}
 
 	/**
@@ -82,8 +82,8 @@ final class RoutesTest extends TestCase
 		$routes = Routes::new();
 		$routes->add( $route1, $route2 );
 
-		$this->assertCount( 2, $routes );
-		$this->assertCount( 2, $routes->getIterator() );
+		self::assertCount( 2, $routes );
+		self::assertCount( 2, $routes->getIterator() );
 	}
 
 	/**
@@ -92,8 +92,8 @@ final class RoutesTest extends TestCase
 	 */
 	public function testCount() : void
 	{
-		$this->assertCount( 0, Routes::new() );
-		$this->assertSame( 0, Routes::new()->count() );
+		self::assertCount( 0, Routes::new() );
+		self::assertSame( 0, Routes::new()->count() );
 	}
 
 	/**
@@ -119,7 +119,7 @@ final class RoutesTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->assertSame( $route, $routes->findMatchingRouteForRequest( $request ) );
+		self::assertSame( $route, $routes->findMatchingRouteForRequest( $request ) );
 	}
 
 	/**
@@ -138,7 +138,7 @@ final class RoutesTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->assertEquals( NullRoute::new( $request ), $routes->findMatchingRouteForRequest( $request ) );
+		self::assertEquals( NullRoute::new( $request ), $routes->findMatchingRouteForRequest( $request ) );
 	}
 
 	/**
@@ -148,8 +148,8 @@ final class RoutesTest extends TestCase
 	public function testNew() : void
 	{
 		$routes = Routes::new();
-		$this->assertCount( 0, $routes );
-		$this->assertCount( 0, $routes->getIterator() );
+		self::assertCount( 0, $routes );
+		self::assertCount( 0, $routes->getIterator() );
 	}
 
 	/**
@@ -181,6 +181,6 @@ final class RoutesTest extends TestCase
 		sort( $expectedHttpMethods );
 		sort( $acceptedMethods );
 
-		$this->assertEquals( $expectedHttpMethods, $acceptedMethods );
+		self::assertEquals( $expectedHttpMethods, $acceptedMethods );
 	}
 }

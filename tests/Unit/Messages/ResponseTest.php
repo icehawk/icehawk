@@ -36,11 +36,11 @@ final class ResponseTest extends TestCase
 		$expectedHeaderLineXTest     = 'Unit-Test';
 		$expectedHeaderLineXMultiple = 'Unit-Test,Test-Unit';
 
-		$this->assertSame( $expectedHeaders, $response->getHeaders() );
-		$this->assertSame( $expectedHeaders['X-Test'], $response->getHeader( 'X-Test' ) );
-		$this->assertSame( $expectedHeaders['X-Multiple'], $response->getHeader( 'X-Multiple' ) );
-		$this->assertSame( $expectedHeaderLineXTest, $response->getHeaderLine( 'X-Test' ) );
-		$this->assertSame( $expectedHeaderLineXMultiple, $response->getHeaderLine( 'X-Multiple' ) );
+		self::assertSame( $expectedHeaders, $response->getHeaders() );
+		self::assertSame( $expectedHeaders['X-Test'], $response->getHeader( 'X-Test' ) );
+		self::assertSame( $expectedHeaders['X-Multiple'], $response->getHeader( 'X-Multiple' ) );
+		self::assertSame( $expectedHeaderLineXTest, $response->getHeaderLine( 'X-Test' ) );
+		self::assertSame( $expectedHeaderLineXMultiple, $response->getHeaderLine( 'X-Multiple' ) );
 	}
 
 	/**
@@ -67,9 +67,9 @@ final class ResponseTest extends TestCase
 
 		$expectedHeaderLineXTest = 'Unit-Test,Test-Unit';
 
-		$this->assertSame( $expectedHeaders, $response->getHeaders() );
-		$this->assertSame( $expectedHeaders['X-Test'], $response->getHeader( 'X-Test' ) );
-		$this->assertSame( $expectedHeaderLineXTest, $response->getHeaderLine( 'X-Test' ) );
+		self::assertSame( $expectedHeaders, $response->getHeaders() );
+		self::assertSame( $expectedHeaders['X-Test'], $response->getHeader( 'X-Test' ) );
+		self::assertSame( $expectedHeaderLineXTest, $response->getHeaderLine( 'X-Test' ) );
 	}
 
 	/**
@@ -80,9 +80,9 @@ final class ResponseTest extends TestCase
 	{
 		$response = Response::new()->withoutHeader( 'Status' );
 
-		$this->assertSame( [], $response->getHeaders() );
-		$this->assertSame( [], $response->getHeader( 'Status' ) );
-		$this->assertSame( '', $response->getHeaderLine( 'Status' ) );
+		self::assertSame( [], $response->getHeaders() );
+		self::assertSame( [], $response->getHeader( 'Status' ) );
+		self::assertSame( '', $response->getHeaderLine( 'Status' ) );
 	}
 
 	/**
@@ -95,7 +95,7 @@ final class ResponseTest extends TestCase
 		$body     = Stream::newWithContent( 'Content' );
 		$response = Response::new()->withBody( $body );
 
-		$this->assertSame( 'Content', (string)$response->getBody() );
+		self::assertSame( 'Content', (string)$response->getBody() );
 	}
 
 	/**
@@ -106,9 +106,9 @@ final class ResponseTest extends TestCase
 	{
 		$response = Response::new()->withProtocolVersion( 'HTTP/2' );
 
-		$this->assertSame( 'HTTP/2', $response->getProtocolVersion() );
-		$this->assertSame( 200, $response->getStatusCode() );
-		$this->assertSame( 'OK', $response->getReasonPhrase() );
+		self::assertSame( 'HTTP/2', $response->getProtocolVersion() );
+		self::assertSame( 200, $response->getStatusCode() );
+		self::assertSame( 'OK', $response->getReasonPhrase() );
 	}
 
 	/**
@@ -120,11 +120,11 @@ final class ResponseTest extends TestCase
 		$response = Response::new();
 
 		# Check for default values after instantiation
-		$this->assertSame( 'HTTP/1.1', $response->getProtocolVersion() );
-		$this->assertSame( 200, $response->getStatusCode() );
-		$this->assertSame( 'OK', $response->getReasonPhrase() );
-		$this->assertSame( '', $response->getHeaderLine( 'UnknownHeaderKey' ) );
-		$this->assertSame( '', (string)$response->getBody() );
+		self::assertSame( 'HTTP/1.1', $response->getProtocolVersion() );
+		self::assertSame( 200, $response->getStatusCode() );
+		self::assertSame( 'OK', $response->getReasonPhrase() );
+		self::assertSame( '', $response->getHeaderLine( 'UnknownHeaderKey' ) );
+		self::assertSame( '', (string)$response->getBody() );
 	}
 
 	/**
@@ -136,9 +136,9 @@ final class ResponseTest extends TestCase
 	{
 		$response = Response::new()->withStatus( 404, 'Not Found' );
 
-		$this->assertSame( 'HTTP/1.1', $response->getProtocolVersion() );
-		$this->assertSame( 404, $response->getStatusCode() );
-		$this->assertSame( 'Not Found', $response->getReasonPhrase() );
+		self::assertSame( 'HTTP/1.1', $response->getProtocolVersion() );
+		self::assertSame( 404, $response->getStatusCode() );
+		self::assertSame( 'Not Found', $response->getReasonPhrase() );
 	}
 
 	/**
@@ -150,9 +150,9 @@ final class ResponseTest extends TestCase
 	{
 		$response = Response::newWithContent( 'Unit-Test' );
 
-		$this->assertSame( 200, $response->getStatusCode() );
-		$this->assertSame( 'OK', $response->getReasonPhrase() );
-		$this->assertSame( 'Unit-Test', (string)$response->getBody() );
+		self::assertSame( 200, $response->getStatusCode() );
+		self::assertSame( 'OK', $response->getReasonPhrase() );
+		self::assertSame( 'Unit-Test', (string)$response->getBody() );
 	}
 
 	/**
@@ -178,10 +178,10 @@ final class ResponseTest extends TestCase
 						</html>
 						EOF;
 
-		$this->assertSame( 302, $response->getStatusCode() );
-		$this->assertSame( 'Found', $response->getReasonPhrase() );
-		$this->assertSame( 'https://example.com/unit/test', $response->getHeaderLine( 'Location' ) );
-		$this->assertSame( 'text/html; charset=utf-8', $response->getHeaderLine( 'Content-Type' ) );
-		$this->assertSame( $expectedBody, (string)$response->getBody() );
+		self::assertSame( 302, $response->getStatusCode() );
+		self::assertSame( 'Found', $response->getReasonPhrase() );
+		self::assertSame( 'https://example.com/unit/test', $response->getHeaderLine( 'Location' ) );
+		self::assertSame( 'text/html; charset=utf-8', $response->getHeaderLine( 'Content-Type' ) );
+		self::assertSame( $expectedBody, (string)$response->getBody() );
 	}
 }

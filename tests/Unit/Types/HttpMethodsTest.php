@@ -17,11 +17,11 @@ final class HttpMethodsTest extends TestCase
 	{
 		$methods = HttpMethods::new( HttpMethod::get(), HttpMethod::post() )->getIterator();
 
-		$this->assertTrue( HttpMethod::get()->equalsOneOf( $methods->current() ) );
+		self::assertTrue( HttpMethod::get()->equalsOneOf( $methods->current() ) );
 
 		$methods->next();
 
-		$this->assertTrue( HttpMethod::post()->equalsOneOf( $methods->current() ) );
+		self::assertTrue( HttpMethod::post()->equalsOneOf( $methods->current() ) );
 	}
 
 	/**
@@ -30,7 +30,7 @@ final class HttpMethodsTest extends TestCase
 	 */
 	public function testCount() : void
 	{
-		$this->assertCount( 2, HttpMethods::new( HttpMethod::get(), HttpMethod::post() ) );
+		self::assertCount( 2, HttpMethods::new( HttpMethod::get(), HttpMethod::post() ) );
 	}
 
 	/**
@@ -39,9 +39,9 @@ final class HttpMethodsTest extends TestCase
 	 */
 	public function testNew() : void
 	{
-		$this->assertCount( 0, HttpMethods::new() );
-		$this->assertCount( 1, HttpMethods::new( HttpMethod::get() ) );
-		$this->assertCount( 2, HttpMethods::new( HttpMethod::get(), HttpMethod::post() ) );
+		self::assertCount( 0, HttpMethods::new() );
+		self::assertCount( 1, HttpMethods::new( HttpMethod::get() ) );
+		self::assertCount( 2, HttpMethods::new( HttpMethod::get(), HttpMethod::post() ) );
 	}
 
 	/**
@@ -51,13 +51,13 @@ final class HttpMethodsTest extends TestCase
 	public function testAdd() : void
 	{
 		$methods = HttpMethods::new();
-		$this->assertCount( 0, $methods );
+		self::assertCount( 0, $methods );
 
 		$methods->add( HttpMethod::get() );
-		$this->assertCount( 1, $methods );
+		self::assertCount( 1, $methods );
 
 		$methods->add( HttpMethod::post(), HttpMethod::head() );
-		$this->assertCount( 3, $methods );
+		self::assertCount( 3, $methods );
 	}
 
 	/**
@@ -66,16 +66,16 @@ final class HttpMethodsTest extends TestCase
 	 */
 	public function testAll() : void
 	{
-		$this->assertCount( 9, HttpMethods::all() );
+		self::assertCount( 9, HttpMethods::all() );
 
-		$this->assertTrue( HttpMethod::trace()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
-		$this->assertTrue( HttpMethod::connect()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
-		$this->assertTrue( HttpMethod::options()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
-		$this->assertTrue( HttpMethod::get()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
-		$this->assertTrue( HttpMethod::head()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
-		$this->assertTrue( HttpMethod::post()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
-		$this->assertTrue( HttpMethod::put()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
-		$this->assertTrue( HttpMethod::patch()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
-		$this->assertTrue( HttpMethod::delete()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::trace()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::connect()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::options()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::get()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::head()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::post()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::put()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::patch()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
+		self::assertTrue( HttpMethod::delete()->equalsOneOf( ...HttpMethods::all()->getIterator() ) );
 	}
 }

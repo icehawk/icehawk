@@ -16,9 +16,9 @@ final class RoutePatternTest extends TestCase
 	 */
 	public function testNewFromString() : void
 	{
-		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$' )->toString() );
-		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$!' )->toString() );
-		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$!i' )->toString() );
+		self::assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$' )->toString() );
+		self::assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$!' )->toString() );
+		self::assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$!i' )->toString() );
 	}
 
 	/**
@@ -41,8 +41,8 @@ final class RoutePatternTest extends TestCase
 		$uri     = Uri::fromString( 'https://example.com/unit/test' );
 		$pattern = RoutePattern::newFromString( '/unit/(?<testKey>[^/]+)' );
 
-		$this->assertTrue( $pattern->matchesUri( $uri ) );
-		$this->assertSame( ['testKey' => 'test'], $pattern->getMatches() );
+		self::assertTrue( $pattern->matchesUri( $uri ) );
+		self::assertSame( ['testKey' => 'test'], $pattern->getMatches() );
 	}
 
 	/**
@@ -55,8 +55,8 @@ final class RoutePatternTest extends TestCase
 		$validPattern   = RoutePattern::newFromString( '^/unit/(?<testKey>[^/]+)$' );
 		$invalidPattern = RoutePattern::newFromString( '^/unit/(?<testKey>\d+)$' );
 
-		$this->assertTrue( $validPattern->matchesUri( $uri ) );
-		$this->assertFalse( $invalidPattern->matchesUri( $uri ) );
+		self::assertTrue( $validPattern->matchesUri( $uri ) );
+		self::assertFalse( $invalidPattern->matchesUri( $uri ) );
 	}
 
 	/**
@@ -72,11 +72,11 @@ final class RoutePatternTest extends TestCase
 		$invalidPattern = RoutePattern::newFromString( 'example.de/unit/(?<testKey>\d+)\?unit=(?<unitKey>.+)$' );
 		$invalidPattern->matchAgainstFullUri();
 
-		$this->assertTrue( $validPattern->matchesUri( $uri ) );
-		$this->assertSame( ['testKey' => 'test', 'unitKey' => 'test'], $validPattern->getMatches() );
+		self::assertTrue( $validPattern->matchesUri( $uri ) );
+		self::assertSame( ['testKey' => 'test', 'unitKey' => 'test'], $validPattern->getMatches() );
 
-		$this->assertFalse( $invalidPattern->matchesUri( $uri ) );
-		$this->assertSame( [], $invalidPattern->getMatches() );
+		self::assertFalse( $invalidPattern->matchesUri( $uri ) );
+		self::assertSame( [], $invalidPattern->getMatches() );
 	}
 
 	/**
@@ -85,8 +85,8 @@ final class RoutePatternTest extends TestCase
 	 */
 	public function testToString() : void
 	{
-		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$' )->toString() );
-		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$' )->toString() );
-		$this->assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$!i' )->toString() );
+		self::assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$' )->toString() );
+		self::assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '!^/unit/test$' )->toString() );
+		self::assertSame( '!^/unit/test$!i', RoutePattern::newFromString( '^/unit/test$!i' )->toString() );
 	}
 }

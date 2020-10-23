@@ -25,12 +25,12 @@ final class UploadedFilesTest extends TestCase
 		$files         = [];
 		$uploadedFiles = UploadedFiles::fromUploadedFilesArray( $files );
 
-		$this->assertEmpty( $uploadedFiles->toArray() );
+		self::assertEmpty( $uploadedFiles->toArray() );
 
 		$files         = $this->uploadedFilesArray();
 		$uploadedFiles = UploadedFiles::fromUploadedFilesArray( $files );
 
-		$this->assertCount( self::EXPECTED_FILES_COUNT, $uploadedFiles->toArray()['test'] );
+		self::assertCount( self::EXPECTED_FILES_COUNT, $uploadedFiles->toArray()['test'] );
 	}
 
 	/**
@@ -42,12 +42,12 @@ final class UploadedFilesTest extends TestCase
 		$files         = [];
 		$uploadedFiles = UploadedFiles::fromFilesArray( $files );
 
-		$this->assertEmpty( $uploadedFiles->toArray() );
+		self::assertEmpty( $uploadedFiles->toArray() );
 
 		$files         = $this->filesArray();
 		$uploadedFiles = UploadedFiles::fromFilesArray( $files );
 
-		$this->assertCount( self::EXPECTED_FILES_COUNT, $uploadedFiles );
+		self::assertCount( self::EXPECTED_FILES_COUNT, $uploadedFiles );
 	}
 
 	/**
@@ -59,7 +59,7 @@ final class UploadedFilesTest extends TestCase
 		$files         = $this->nestedFilesArray();
 		$uploadedFiles = UploadedFiles::fromFilesArray( $files );
 
-		$this->assertCount( self::EXPECTED_FILES_COUNT, $uploadedFiles );
+		self::assertCount( self::EXPECTED_FILES_COUNT, $uploadedFiles );
 	}
 
 	/**
@@ -70,12 +70,12 @@ final class UploadedFilesTest extends TestCase
 	{
 		$_FILES = [];
 
-		$this->assertEmpty( UploadedFiles::fromGlobals()->toArray() );
+		self::assertEmpty( UploadedFiles::fromGlobals()->toArray() );
 
 		$_FILES = $this->filesArray();
 
-		$this->assertCount( self::EXPECTED_FILES_COUNT, UploadedFiles::fromGlobals() );
-		$this->assertCount( self::EXPECTED_FILES_COUNT, UploadedFiles::fromGlobals()->toArray() );
+		self::assertCount( self::EXPECTED_FILES_COUNT, UploadedFiles::fromGlobals() );
+		self::assertCount( self::EXPECTED_FILES_COUNT, UploadedFiles::fromGlobals()->toArray() );
 	}
 
 	/**
@@ -88,14 +88,14 @@ final class UploadedFilesTest extends TestCase
 
 		$uploadedFiles = UploadedFiles::fromFilesArray( $_FILES );
 
-		$this->assertCount( self::EXPECTED_FILES_COUNT, iterator_to_array( $uploadedFiles->getIterator(), false ) );
-		$this->assertInstanceOf( UploadedFile::class, $uploadedFiles->getIterator()->current() );
+		self::assertCount( self::EXPECTED_FILES_COUNT, iterator_to_array( $uploadedFiles->getIterator(), false ) );
+		self::assertInstanceOf( UploadedFile::class, $uploadedFiles->getIterator()->current() );
 
 		$_FILES = $this->nestedFilesArray();
 
 		$uploadedFiles = UploadedFiles::fromFilesArray( $_FILES );
 
-		$this->assertCount( self::EXPECTED_FILES_COUNT, iterator_to_array( $uploadedFiles->getIterator(), false ) );
-		$this->assertInstanceOf( UploadedFile::class, $uploadedFiles->getIterator()->current() );
+		self::assertCount( self::EXPECTED_FILES_COUNT, iterator_to_array( $uploadedFiles->getIterator(), false ) );
+		self::assertInstanceOf( UploadedFile::class, $uploadedFiles->getIterator()->current() );
 	}
 }

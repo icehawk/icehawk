@@ -47,9 +47,9 @@ final class RequestTest extends TestCase
 		$request            = Request::fromGlobals();
 		$expectedParameters = ['foo' => 'bar'];
 
-		$this->assertEquals( $expectedParameters, $request->getParsedBody() );
-		$this->assertEquals( $expectedParameters, $request->getCookieParams() );
-		$this->assertCount( 1, $request->getUploadedFiles() );
+		self::assertEquals( $expectedParameters, $request->getParsedBody() );
+		self::assertEquals( $expectedParameters, $request->getCookieParams() );
+		self::assertCount( 1, $request->getUploadedFiles() );
 	}
 
 	/**
@@ -61,13 +61,13 @@ final class RequestTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->assertEquals( 'test', $request->getProtocolVersion() );
+		self::assertEquals( 'test', $request->getProtocolVersion() );
 
 		unset( $_SERVER['SERVER_PROTOCOL'] );
 
 		$request = Request::fromGlobals();
 
-		$this->assertEquals( 'HTTP/1.1', $request->getProtocolVersion() );
+		self::assertEquals( 'HTTP/1.1', $request->getProtocolVersion() );
 	}
 
 	/**
@@ -78,7 +78,7 @@ final class RequestTest extends TestCase
 		$protocolVersion = 'HTTP/1.2';
 		$request         = Request::fromGlobals()->withProtocolVersion( $protocolVersion );
 
-		$this->assertEquals( $protocolVersion, $request->getProtocolVersion() );
+		self::assertEquals( $protocolVersion, $request->getProtocolVersion() );
 	}
 
 	/**
@@ -90,8 +90,8 @@ final class RequestTest extends TestCase
 		$_SERVER['HTTP_AUTHORIZATION'] = $headerValueArray;
 		$request                       = Request::fromGlobals();
 
-		$this->assertEquals( $headerValueArray, $request->getHeaderLine( self::VALID_HEADER_NAME ) );
-		$this->assertEmpty( $request->getHeaderLine( 'foo' ) );
+		self::assertEquals( $headerValueArray, $request->getHeaderLine( self::VALID_HEADER_NAME ) );
+		self::assertEmpty( $request->getHeaderLine( 'foo' ) );
 	}
 
 	/**
@@ -105,11 +105,11 @@ final class RequestTest extends TestCase
 
 		$request = Request::fromGlobals()->withHeader( self::VALID_HEADER_NAME, $headerValue );
 		$headers = $request->getHeaders();
-		$this->assertIsArray( $headers );
-		$this->assertCount( 1, $headers );
+		self::assertIsArray( $headers );
+		self::assertCount( 1, $headers );
 
 		$header = $request->getHeader( self::VALID_HEADER_NAME );
-		$this->assertEquals( $headerValue, array_shift( $header ) );
+		self::assertEquals( $headerValue, array_shift( $header ) );
 	}
 
 	/**
@@ -119,13 +119,13 @@ final class RequestTest extends TestCase
 	{
 		$request = Request::fromGlobals();
 
-		$this->assertFalse( $request->hasHeader( 'X-Test' ) );
+		self::assertFalse( $request->hasHeader( 'X-Test' ) );
 
 		$newRequest = $request->withAddedHeader( 'X-Test', 'Unit' );
 
 		$expectedHeaders = ['X-Test' => ['Unit']];
 
-		$this->assertSame( $expectedHeaders, $newRequest->getHeaders() );
+		self::assertSame( $expectedHeaders, $newRequest->getHeaders() );
 	}
 
 	/**
@@ -136,14 +136,14 @@ final class RequestTest extends TestCase
 		$_SERVER['HTTP_X_TEST'] = 'First Unit';
 		$request                = Request::fromGlobals();
 
-		$this->assertTrue( $request->hasHeader( 'X-Test' ) );
-		$this->assertSame( ['First Unit'], $request->getHeader( 'X-Test' ) );
+		self::assertTrue( $request->hasHeader( 'X-Test' ) );
+		self::assertSame( ['First Unit'], $request->getHeader( 'X-Test' ) );
 
 		$newRequest = $request->withAddedHeader( 'X-Test', 'Second Unit' );
 
 		$expectedHeaders = ['X-Test' => ['First Unit', 'Second Unit']];
 
-		$this->assertSame( $expectedHeaders, $newRequest->getHeaders() );
+		self::assertSame( $expectedHeaders, $newRequest->getHeaders() );
 	}
 
 	/**
@@ -154,18 +154,18 @@ final class RequestTest extends TestCase
 		$_SERVER['HTTP_X_TEST'] = 'First Unit';
 		$request                = Request::fromGlobals();
 
-		$this->assertTrue( $request->hasHeader( 'X-Test' ) );
-		$this->assertSame( ['First Unit'], $request->getHeader( 'X-Test' ) );
+		self::assertTrue( $request->hasHeader( 'X-Test' ) );
+		self::assertSame( ['First Unit'], $request->getHeader( 'X-Test' ) );
 
 		$newRequest = $request->withAddedHeader( 'X-Test', 'Second Unit' );
 
 		$expectedHeaders = ['X-Test' => ['First Unit', 'Second Unit']];
 
-		$this->assertSame( $expectedHeaders, $newRequest->getHeaders() );
+		self::assertSame( $expectedHeaders, $newRequest->getHeaders() );
 
 		$newerRequest = $newRequest->withAddedHeader( 'X-Test', 'Second Unit' );
 
-		$this->assertSame( $expectedHeaders, $newerRequest->getHeaders() );
+		self::assertSame( $expectedHeaders, $newerRequest->getHeaders() );
 	}
 
 	/**
@@ -182,16 +182,16 @@ final class RequestTest extends TestCase
 		$clonedInstance = $request->withoutHeader( 'User-Agent' );
 		$headers        = $clonedInstance->getHeaders();
 
-		$this->assertCount( 1, $headers );
-		$this->assertFalse( $clonedInstance->hasHeader( 'User-Agent' ) );
+		self::assertCount( 1, $headers );
+		self::assertFalse( $clonedInstance->hasHeader( 'User-Agent' ) );
 
 		$headers = $request->withoutHeader( 'foo' )->getHeaders();
 
-		$this->assertIsArray( $headers );
-		$this->assertCount( 2, $headers );
+		self::assertIsArray( $headers );
+		self::assertCount( 2, $headers );
 
 		$header = $request->getHeader( self::VALID_HEADER_NAME );
-		$this->assertEquals( $headerValue, array_shift( $header ) );
+		self::assertEquals( $headerValue, array_shift( $header ) );
 	}
 
 	/**
@@ -205,7 +205,7 @@ final class RequestTest extends TestCase
 		$stream->write( 'Unit-Test' );
 
 		$anotherServerRequest = $request->withBody( $stream );
-		$this->assertSame( (string)$anotherServerRequest->getBody(), (string)$stream );
+		self::assertSame( (string)$anotherServerRequest->getBody(), (string)$stream );
 	}
 
 	/**
@@ -223,7 +223,7 @@ final class RequestTest extends TestCase
 		$_SERVER['QUERY_STRING'] = $queryString;
 		$request                 = Request::fromGlobals();
 
-		$this->assertEquals( $expected, $request->getRequestTarget() );
+		self::assertEquals( $expected, $request->getRequestTarget() );
 	}
 
 	/**
@@ -249,11 +249,11 @@ final class RequestTest extends TestCase
 		$uri     = 'https://api.localhost/api/v1/streams/mega-stream/events?eventName=OrderPlaced&limit=2';
 		$request = Request::fromGlobals()->withRequestTarget( $uri );
 
-		$this->assertEquals(
+		self::assertEquals(
 			$expectedServerParameters['REQUEST_URI'],
 			$request->getServerParams()['REQUEST_URI']
 		);
-		$this->assertEquals(
+		self::assertEquals(
 			$expectedServerParameters['QUERY_STRING'],
 			$request->getServerParams()['QUERY_STRING']
 		);
@@ -265,11 +265,11 @@ final class RequestTest extends TestCase
 	public function testItReturnsRequestMethod() : void
 	{
 		$request = Request::fromGlobals();
-		$this->assertEquals( 'UNKNOWN', $request->getMethod() );
+		self::assertEquals( 'UNKNOWN', $request->getMethod() );
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$request                   = Request::fromGlobals();
-		$this->assertEquals( 'GET', $request->getMethod() );
+		self::assertEquals( 'GET', $request->getMethod() );
 	}
 
 	/**
@@ -280,7 +280,7 @@ final class RequestTest extends TestCase
 		$requestMethod = 'GET';
 		$request       = Request::fromGlobals()->withMethod( $requestMethod );
 
-		$this->assertEquals( $requestMethod, $request->getMethod() );
+		self::assertEquals( $requestMethod, $request->getMethod() );
 	}
 
 	/**
@@ -324,8 +324,8 @@ final class RequestTest extends TestCase
 
 		$uri = Request::fromGlobals()->getUri();
 
-		$this->assertInstanceOf( Uri::class, $uri );
-		$this->assertEquals( $expected, (string)$uri );
+		self::assertInstanceOf( Uri::class, $uri );
+		self::assertEquals( $expected, (string)$uri );
 	}
 
 	/**
@@ -407,15 +407,15 @@ final class RequestTest extends TestCase
 	/**
 	 * @dataProvider withUriDataProvider
 	 *
-	 * @param string $https
-	 * @param string $authUser
-	 * @param string $authPassword
-	 * @param string $host
-	 * @param string $port
-	 * @param string $requestUri
-	 * @param string $queryString
-	 * @param string $fragment
-	 * @param string $expected
+	 * @param string          $https
+	 * @param string          $authUser
+	 * @param string          $authPassword
+	 * @param string          $host
+	 * @param null|string|int $port
+	 * @param string          $requestUri
+	 * @param string          $queryString
+	 * @param string          $fragment
+	 * @param string          $expected
 	 *
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
@@ -425,7 +425,7 @@ final class RequestTest extends TestCase
 		string $authUser,
 		string $authPassword,
 		string $host,
-		$port,
+		null|string|int $port,
 		string $requestUri,
 		string $queryString,
 		string $fragment,
@@ -447,7 +447,7 @@ final class RequestTest extends TestCase
 
 		$request = Request::fromGlobals()->withUri( $uri, true );
 
-		$this->assertSame( $expected, (string)$request->getUri() );
+		self::assertSame( $expected, (string)$request->getUri() );
 	}
 
 	/**
@@ -523,8 +523,8 @@ final class RequestTest extends TestCase
 		$_COOKIE['foo'] = 'bar';
 		$request        = Request::fromGlobals();
 
-		$this->assertNotEmpty( $request->getCookieParams() );
-		$this->assertEquals( 'bar', $request->getCookieParams()['foo'] );
+		self::assertNotEmpty( $request->getCookieParams() );
+		self::assertEquals( 'bar', $request->getCookieParams()['foo'] );
 	}
 
 	/**
@@ -535,7 +535,7 @@ final class RequestTest extends TestCase
 		$cookieParameters = ['unit' => 'test'];
 		$request          = Request::fromGlobals()->withCookieParams( $cookieParameters );
 
-		$this->assertEquals( $cookieParameters, $request->getCookieParams() );
+		self::assertEquals( $cookieParameters, $request->getCookieParams() );
 	}
 
 	/**
@@ -545,7 +545,7 @@ final class RequestTest extends TestCase
 	{
 		$_GET['foo'] = 'bar';
 
-		$this->assertEquals( ['foo' => 'bar'], Request::fromGlobals()->getQueryParams() );
+		self::assertEquals( ['foo' => 'bar'], Request::fromGlobals()->getQueryParams() );
 	}
 
 	/**
@@ -556,7 +556,7 @@ final class RequestTest extends TestCase
 		$queryParameters = ['foo' => 'bar'];
 		$request         = Request::fromGlobals()->withQueryParams( $queryParameters );
 
-		$this->assertEquals( $queryParameters, $request->getQueryParams() );
+		self::assertEquals( $queryParameters, $request->getQueryParams() );
 	}
 
 	/**
@@ -569,8 +569,8 @@ final class RequestTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->assertNotEmpty( $request->getUploadedFiles() );
-		$this->assertContainsOnlyInstancesOf(
+		self::assertNotEmpty( $request->getUploadedFiles() );
+		self::assertContainsOnlyInstancesOf(
 			UploadedFile::class,
 			$request->getUploadedFiles()[ $fileKey ]
 		);
@@ -584,8 +584,8 @@ final class RequestTest extends TestCase
 	{
 		$request = Request::fromGlobals()->withUploadedFiles( $this->uploadedFilesArray() );
 
-		$this->assertCount( 2, $request->getUploadedFiles()['test'] );
-		$this->assertContainsOnlyInstancesOf(
+		self::assertCount( 2, $request->getUploadedFiles()['test'] );
+		self::assertContainsOnlyInstancesOf(
 			UploadedFile::class,
 			$request->getUploadedFiles()['test']
 		);
@@ -598,7 +598,7 @@ final class RequestTest extends TestCase
 	{
 		$_POST['foo'] = 'bar';
 
-		$this->assertEquals( ['foo' => 'bar'], Request::fromGlobals()->getParsedBody() );
+		self::assertEquals( ['foo' => 'bar'], Request::fromGlobals()->getParsedBody() );
 	}
 
 	/**
@@ -609,7 +609,7 @@ final class RequestTest extends TestCase
 		$parsedBody = ['foo' => 'bar'];
 		$request    = Request::fromGlobals()->withParsedBody( $parsedBody );
 
-		$this->assertEquals( $parsedBody, $request->getParsedBody() );
+		self::assertEquals( $parsedBody, $request->getParsedBody() );
 	}
 
 	/**
@@ -619,8 +619,8 @@ final class RequestTest extends TestCase
 	{
 		$attributes = Request::fromGlobals()->getAttributes();
 
-		$this->assertIsArray( $attributes );
-		$this->assertEmpty( $attributes );
+		self::assertIsArray( $attributes );
+		self::assertEmpty( $attributes );
 	}
 
 	/**
@@ -631,8 +631,8 @@ final class RequestTest extends TestCase
 	{
 		$request = Request::fromGlobals()->withAttribute( 'foo', 'bar' );
 
-		$this->assertCount( 1, $request->getAttributes() );
-		$this->assertEquals( 'bar', $request->getAttribute( 'foo' ) );
+		self::assertCount( 1, $request->getAttributes() );
+		self::assertEquals( 'bar', $request->getAttribute( 'foo' ) );
 	}
 
 	/**
@@ -643,15 +643,15 @@ final class RequestTest extends TestCase
 	{
 		$request = Request::fromGlobals()->withAttribute( 'foo', 'bar' );
 
-		$this->assertCount( 1, $request->getAttributes() );
-		$this->assertEquals( 'bar', $request->getAttribute( 'foo' ) );
+		self::assertCount( 1, $request->getAttributes() );
+		self::assertEquals( 'bar', $request->getAttribute( 'foo' ) );
 
 		$clonedInstance = $request->withoutAttribute( 'test' );
-		$this->assertCount( 1, $clonedInstance->getAttributes() );
-		$this->assertEquals( 'bar', $clonedInstance->getAttribute( 'foo' ) );
+		self::assertCount( 1, $clonedInstance->getAttributes() );
+		self::assertEquals( 'bar', $clonedInstance->getAttribute( 'foo' ) );
 
 		$anotherClonedInstance = $clonedInstance->withoutAttribute( 'foo' );
-		$this->assertEmpty( $anotherClonedInstance->getAttributes() );
+		self::assertEmpty( $anotherClonedInstance->getAttributes() );
 	}
 
 	/**
@@ -694,7 +694,7 @@ final class RequestTest extends TestCase
 		$_REQUEST['foo'] = 'bar';
 		$request         = Request::fromGlobals();
 
-		$this->assertEquals( 'bar', $request->getInputString( 'foo' ) );
+		self::assertEquals( 'bar', $request->getInputString( 'foo' ) );
 	}
 
 	/**
@@ -706,7 +706,7 @@ final class RequestTest extends TestCase
 		$defaultValue = 'test';
 		$request      = Request::fromGlobals();
 
-		$this->assertEquals( $defaultValue, $request->getInputString( 'unit', $defaultValue ) );
+		self::assertEquals( $defaultValue, $request->getInputString( 'unit', $defaultValue ) );
 	}
 
 	/**
@@ -751,7 +751,7 @@ final class RequestTest extends TestCase
 		$_REQUEST['foo'] = $value;
 		$request         = Request::fromGlobals();
 
-		$this->assertEquals( $value, $request->getInputArray( 'foo' ) );
+		self::assertEquals( $value, $request->getInputArray( 'foo' ) );
 	}
 
 	/**
@@ -763,7 +763,7 @@ final class RequestTest extends TestCase
 		$defaultValue = ['unit' => 'test'];
 		$request      = Request::fromGlobals();
 
-		$this->assertEquals( $defaultValue, $request->getInputArray( 'unit', $defaultValue ) );
+		self::assertEquals( $defaultValue, $request->getInputArray( 'unit', $defaultValue ) );
 	}
 
 	/**
@@ -809,7 +809,7 @@ final class RequestTest extends TestCase
 		$this->expectException( UnexpectedValueException::class );
 		$this->expectExceptionMessage( 'Input for key "foo" is not castable as integer' );
 
-		Request::fromGlobals()->getInputInt( 'foo', null );
+		Request::fromGlobals()->getInputInt( 'foo' );
 	}
 
 	/**
@@ -820,7 +820,7 @@ final class RequestTest extends TestCase
 	{
 		unset( $_REQUEST['foo'] );
 
-		$this->assertSame( 123, Request::fromGlobals()->getInputInt( 'foo', 123 ) );
+		self::assertSame( 123, Request::fromGlobals()->getInputInt( 'foo', 123 ) );
 	}
 
 	/**
@@ -835,7 +835,7 @@ final class RequestTest extends TestCase
 	{
 		$_REQUEST['foo'] = $value;
 
-		$this->assertSame( $expectedFloat, Request::fromGlobals()->getInputFloat( 'foo' ) );
+		self::assertSame( $expectedFloat, Request::fromGlobals()->getInputFloat( 'foo' ) );
 	}
 
 	/**
@@ -895,7 +895,7 @@ final class RequestTest extends TestCase
 		$this->expectExceptionMessage( 'Input for key "foo" is not castable as float' );
 
 		/** @noinspection UnusedFunctionResultInspection */
-		Request::fromGlobals()->getInputFloat( 'foo', null );
+		Request::fromGlobals()->getInputFloat( 'foo' );
 	}
 
 	/**
@@ -906,7 +906,7 @@ final class RequestTest extends TestCase
 	{
 		unset( $_REQUEST['foo'] );
 
-		$this->assertSame( 12.3, Request::fromGlobals()->getInputFloat( 'foo', 12.3 ) );
+		self::assertSame( 12.3, Request::fromGlobals()->getInputFloat( 'foo', 12.3 ) );
 	}
 
 	/**
@@ -920,11 +920,11 @@ final class RequestTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->assertTrue( $request->hasInputKey( 'foo' ) );
-		$this->assertTrue( $request->hasInputKey( 'bar' ) );
-		$this->assertTrue( $request->hasInputKey( 'baz' ) );
+		self::assertTrue( $request->hasInputKey( 'foo' ) );
+		self::assertTrue( $request->hasInputKey( 'bar' ) );
+		self::assertTrue( $request->hasInputKey( 'baz' ) );
 
-		$this->assertFalse( $request->hasInputKey( 'foo-bar-baz' ) );
+		self::assertFalse( $request->hasInputKey( 'foo-bar-baz' ) );
 	}
 
 	/**
@@ -936,7 +936,7 @@ final class RequestTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		$this->assertTrue( $request->isInputNull( 'foo' ) );
-		$this->assertFalse( $request->isInputNull( 'bar' ) );
+		self::assertTrue( $request->isInputNull( 'foo' ) );
+		self::assertFalse( $request->isInputNull( 'bar' ) );
 	}
 }

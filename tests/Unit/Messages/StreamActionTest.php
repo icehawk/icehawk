@@ -35,7 +35,7 @@ final class StreamActionTest extends TestCase
 			}
 		);
 
-		$this->assertSame( 'onClosing', $action->getEventName() );
+		self::assertSame( 'onClosing', $action->getEventName() );
 
 		$this->expectOutputString( 'Unit-Test' );
 
@@ -56,7 +56,7 @@ final class StreamActionTest extends TestCase
 			}
 		);
 
-		$this->assertSame( 'onClosed', $action->getEventName() );
+		self::assertSame( 'onClosed', $action->getEventName() );
 
 		$this->expectOutputString( 'Unit-Test' );
 

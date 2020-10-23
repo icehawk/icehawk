@@ -32,10 +32,10 @@ final class FallbackRequestHandlerTest extends TestCase
 		}
 		catch ( RequestHandlingFailedException $e )
 		{
-			$this->assertSame( 'Something is wrong.', $e->getMessage() );
-			$this->assertSame( 500, $e->getCode() );
-			$this->assertSame( $request, $e->getRequest() );
-			$this->assertSame( $exception, $e->getPrevious() );
+			self::assertSame( 'Something is wrong.', $e->getMessage() );
+			self::assertSame( 500, $e->getCode() );
+			self::assertSame( $request, $e->getRequest() );
+			self::assertSame( $exception, $e->getPrevious() );
 		}
 	}
 }

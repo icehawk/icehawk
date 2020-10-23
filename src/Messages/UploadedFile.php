@@ -9,6 +9,7 @@ use RuntimeException;
 use function move_uploaded_file;
 use function rename;
 use const PHP_SAPI;
+use const UPLOAD_ERR_NO_FILE;
 
 final class UploadedFile implements UploadedFileInterface
 {
@@ -39,11 +40,11 @@ final class UploadedFile implements UploadedFileInterface
 	public static function fromArray( array $fileData ) : UploadedFileInterface
 	{
 		return new self(
-			(string)$fileData['name'],
-			(string)$fileData['type'],
-			(string)$fileData['tmp_name'],
-			(int)$fileData['error'],
-			(int)$fileData['size']
+			(string)($fileData['name'] ?? 'unknown'),
+			(string)($fileData['type'] ?? 'unknown'),
+			(string)($fileData['tmp_name'] ?? 'unknown'),
+			(int)($fileData['error'] ?? UPLOAD_ERR_NO_FILE),
+			(int)($fileData['size'] ?? 0)
 		);
 	}
 

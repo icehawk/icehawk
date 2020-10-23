@@ -20,8 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Build docker image
+        run: docker build --pull -t icehawk_php -f .docker/php/8.0/Dockerfile .docker/php/8.0
+
       - name: Check for PHP parse errors
-        run: docker run --rm -v $(pwd):/app php:7.4-cli -c 'find /app/src -type f -name "*.php" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )'
+        run: docker run --rm -v $(pwd):/app icehawk_php -c 'find /app/src -type f -name "*.php" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )'
 
       - name: Composer validate
         run: docker run --rm -v $(pwd):/app composer validate
@@ -30,7 +33,7 @@ jobs:
         run: docker run --rm -v $(pwd):/app composer update -o -v --ignore-platform-reqs
 
       - name: Run PHPStan
-        run: docker run --rm -v $(pwd):/app phpstan/phpstan analyze
+        run: docker run --rm -v $(pwd):/app icehawk_php php -dmemory_limit=-1 /app/vendor/bin/phpstan.phar analyze
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -39,7 +42,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build docker image
-        run: docker build --pull -t icehawk_php -f .docker/php/7.4/Dockerfile .docker/php/7.4
+        run: docker build --pull -t icehawk_php -f .docker/php/8.0/Dockerfile .docker/php/8.0
 
       - name: Composer update
         run: docker run --rm -v $(pwd):/app composer update -o -v --ignore-platform-reqs

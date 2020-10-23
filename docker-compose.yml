@@ -3,21 +3,14 @@ version: "3.7"
 services:
   php:
     build:
-      context: .docker/php/7.4
+      context: .docker/php/8.0
     container_name: icehawk_php
     volumes:
       - ./:/app
 
   composer:
-    image: composer
+    image: library/composer:2
     container_name: icehawk_composer
     volumes:
       - ./:/app
     command: update -o -v --ignore-platform-reqs
-
-  phpstan:
-    image: phpstan/phpstan
-    container_name: icehawk_phpstan
-    volumes:
-      - ./:/app
-    command: analyze

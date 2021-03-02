@@ -1,5 +1,5 @@
-FROM php:8.0-rc-cli-alpine
-ENV XDEBUG_VERSION "3.0.0beta1"
+FROM php:8.0-cli-alpine
+ENV XDEBUG_VERSION "3.0.3"
 # Update system
 RUN set -ex && apk update && apk upgrade --available && apk add --no-cache $PHPIZE_DEPS
 # Install Xdebug

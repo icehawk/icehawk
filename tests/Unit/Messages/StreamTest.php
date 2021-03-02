@@ -393,8 +393,6 @@ final class StreamTest extends TestCase
 		if ( !is_resource( $resource ) )
 		{
 			self::fail( 'Could not open memory stream' );
-
-			return;
 		}
 
 		$stream = new Stream( $resource );

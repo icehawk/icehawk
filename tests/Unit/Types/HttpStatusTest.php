@@ -25,8 +25,6 @@ final class HttpStatusTest extends TestCase
 		if ( !is_resource( $handle ) )
 		{
 			self::fail( 'Could not open file handle.' );
-
-			return;
 		}
 
 		while ( $line = fgetcsv( $handle ) )

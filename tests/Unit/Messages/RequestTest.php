@@ -19,6 +19,8 @@ use const PHP_FLOAT_MAX;
 use const PHP_FLOAT_MIN;
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
+use const UPLOAD_ERR_NO_FILE;
+use const UPLOAD_ERR_OK;
 
 final class RequestTest extends TestCase
 {
@@ -573,6 +575,40 @@ final class RequestTest extends TestCase
 		self::assertContainsOnlyInstancesOf(
 			UploadedFile::class,
 			$request->getUploadedFiles()[ $fileKey ]
+		);
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws UnexpectedValueException
+	 */
+	public function testGetUploadedFilesByName() : void
+	{
+		$request = Request::fromGlobals()->withUploadedFiles( $this->uploadedFilesArray() );
+
+		self::assertNotEmpty( $request->getUploadedFiles() );
+		self::assertContainsOnlyInstancesOf(
+			UploadedFile::class,
+			$request->getUploadedFilesByName( 'test' )
+		);
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws UnexpectedValueException
+	 */
+	public function testGetUploadedFileByNameAndIndex() : void
+	{
+		$request = Request::fromGlobals()->withUploadedFiles( $this->uploadedFilesArray() );
+
+		self::assertNotEmpty( $request->getUploadedFiles() );
+		self::assertSame(
+			UPLOAD_ERR_OK,
+			$request->getUploadedFile( 'test' )->getError()
+		);
+		self::assertSame(
+			UPLOAD_ERR_NO_FILE,
+			$request->getUploadedFile( 'test', 1 )->getError()
 		);
 	}
 

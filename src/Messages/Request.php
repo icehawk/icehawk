@@ -573,4 +573,32 @@ final class Request implements ProvidesRequestData
 
 		return (float)$floatValue;
 	}
+
+	/**
+	 * @param string $name
+	 * @param int    $index
+	 *
+	 * @return UploadedFileInterface
+	 * @throws UnexpectedValueException
+	 */
+	public function getUploadedFile( string $name, int $index = 0 ) : UploadedFileInterface
+	{
+		return $this->getUploadedFiles()[ $name ][ $index ] ?? throw new UnexpectedValueException(
+				sprintf( 'Could not find uploaded file for name "%s" at index "%d"', $name, $index )
+			);
+	}
+
+	/**
+	 * @param string $name
+	 *
+	 * @return UploadedFileInterface[]
+	 * @throws UnexpectedValueException
+	 */
+	public function getUploadedFilesByName( string $name ) : array
+	{
+		return $this->getUploadedFiles()[ $name ] ?? throw new UnexpectedValueException(
+				sprintf( 'Could not find uploaded files for name "%s"', $name )
+			);
+	}
+
 }

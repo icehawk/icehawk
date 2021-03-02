@@ -3,6 +3,7 @@
 namespace IceHawk\IceHawk\Messages\Interfaces;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use UnexpectedValueException;
 
 interface ProvidesRequestData extends ServerRequestInterface
@@ -46,4 +47,21 @@ interface ProvidesRequestData extends ServerRequestInterface
 	public function hasInputKey( string $key ) : bool;
 
 	public function isInputNull( string $key ) : bool;
+
+	/**
+	 * @param string $name
+	 * @param int    $index
+	 *
+	 * @return UploadedFileInterface
+	 * @throws UnexpectedValueException if no file was found for the given name or at the given index
+	 */
+	public function getUploadedFile( string $name, int $index = 0 ) : UploadedFileInterface;
+
+	/**
+	 * @param string $name
+	 *
+	 * @return array<UploadedFileInterface>
+	 * @throws UnexpectedValueException if no files were found for the given name
+	 */
+	public function getUploadedFilesByName( string $name ) : array;
 }

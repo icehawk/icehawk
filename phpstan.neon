@@ -4,7 +4,7 @@ parameters:
         - tests
     level: max
     bootstrapFiles:
-        - ./vendor/bin/phpunit.phar
+        - ./.tools/phpunit.phar
     reportUnmatchedIgnoredErrors: true
     ignoreErrors:
         -

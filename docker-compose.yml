@@ -14,3 +14,14 @@ services:
     volumes:
       - ./:/app
     command: update -o -v --ignore-platform-reqs
+
+  phive:
+    image: hyperized/phive:latest
+    restart: 'no'
+    volumes:
+      - ./:/app
+      - phive:/root/.phive
+    working_dir: /app
+
+volumes:
+  phive:

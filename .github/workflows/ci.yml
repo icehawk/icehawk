@@ -29,9 +29,6 @@ jobs:
       - name: PHP linting, PHPStan, PHPUnit
         run: make tests
 
-      - name: PHPStan
-        run: make phpstan
-
   release:
     needs:
       - tests

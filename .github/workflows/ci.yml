@@ -21,7 +21,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install environment
-        run: make install
+        run: |
+          mkdir ./.tools
+          chmod 0777 ./.tools
+          make install
 
       - name: PHP linting, PHPStan, PHPUnit
         run: make tests

@@ -1,4 +1,4 @@
-
+.SILENT:
 .PHONY: help
 
 # Based on https://gist.github.com/prwhite/8168133#comment-1313022
@@ -70,6 +70,9 @@ install-tools:
 ## Update & start complete docker-compose setup
 update: dccomposer update-tools
 .PHONY: update
+
+install: dccomposer install-tools
+.PHONY: install
 
 ## Run composer
 dccomposer: dcpull

@@ -1,4 +1,4 @@
-name: IceHawk CI PHP 7.4
+name: IceHawk CI PHP 8.0
 
 on:
   push:
@@ -14,49 +14,24 @@ on:
   pull_request:
 
 jobs:
-  static-analyzers:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build docker image
-        run: docker build --pull -t icehawk_php -f .docker/php/8.0/Dockerfile .docker/php/8.0
+      - name: Install environment
+        run: make install
 
-      - name: Check for PHP parse errors
-        run: docker run --rm -v $(pwd):/app icehawk_php -c 'find /app/src -type f -name "*.php" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )'
+      - name: PHP linting, PHPStan, PHPUnit
+        run: make tests
 
-      - name: Composer validate
-        run: docker run --rm -v $(pwd):/app composer validate
-
-      - name: Composer update
-        run: docker run --rm -v $(pwd):/app composer update -o -v --ignore-platform-reqs
-
-      - name: Run PHPStan
-        run: docker run --rm -v $(pwd):/app icehawk_php php -dmemory_limit=-1 /app/vendor/bin/phpstan.phar analyze
-
-  unit-tests:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Build docker image
-        run: docker build --pull -t icehawk_php -f .docker/php/8.0/Dockerfile .docker/php/8.0
-
-      - name: Composer update
-        run: docker run --rm -v $(pwd):/app composer update -o -v --ignore-platform-reqs
-
-      - name: Run unit tests
-        run: docker run --rm -v $(pwd):/app icehawk_php /app/vendor/bin/phpunit.phar -c /app/build/phpunit.xml --coverage-clover=/app/coverage.xml
-
-      - name: Upload code coverage to codecov.io
-        run: bash <(curl -s https://codecov.io/bash)
+      - name: PHPStan
+        run: make phpstan
 
   release:
     needs:
-      - unit-tests
-      - static-analyzers
+      - tests
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'

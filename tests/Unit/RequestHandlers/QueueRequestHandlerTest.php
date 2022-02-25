@@ -17,21 +17,25 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
+use stdClass;
+use Throwable;
 
 final class QueueRequestHandlerTest extends TestCase
 {
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
+	 * @throws RequestHandlingFailedException
 	 */
 	public function testAdd() : void
 	{
-		$requestHandler = QueueRequestHandler::newWithFallbackHandler(
-			FallbackRequestHandler::newWithException( new LogicException( 'No responder found.', 404 ) )
+		$requestHandler = QueueRequestHandler::new(
+			FallbackRequestHandler::new( new LogicException( 'No responder found.', 404 ) )
 		);
 
 		$requestHandler->add(
-			new class implements MiddlewareInterface {
+			fn() => new class implements MiddlewareInterface
+			{
 				public function process(
 					ServerRequestInterface $request,
 					RequestHandlerInterface $handler
@@ -40,7 +44,8 @@ final class QueueRequestHandlerTest extends TestCase
 					return $handler->handle( $request->withAttribute( 'first', 'middleware' ) );
 				}
 			},
-			new class implements MiddlewareInterface {
+			fn() => new class implements MiddlewareInterface
+			{
 				public function process(
 					ServerRequestInterface $request,
 					RequestHandlerInterface $handler
@@ -49,7 +54,8 @@ final class QueueRequestHandlerTest extends TestCase
 					return $handler->handle( $request->withAttribute( 'second', 'middleware' ) );
 				}
 			},
-			new class implements MiddlewareInterface {
+			fn() => new class implements MiddlewareInterface
+			{
 				public function process(
 					ServerRequestInterface $request,
 					RequestHandlerInterface $handler
@@ -81,8 +87,8 @@ final class QueueRequestHandlerTest extends TestCase
 	public function testHandleUsesFallbackRequestHandlerIfNoMiddlewaresWereAdded() : void
 	{
 		$exception      = new LogicException( 'No responder found.', 404 );
-		$requestHandler = QueueRequestHandler::newWithFallbackHandler(
-			FallbackRequestHandler::newWithException( $exception )
+		$requestHandler = QueueRequestHandler::new(
+			FallbackRequestHandler::new( $exception )
 		);
 
 		$_SERVER['HTTPS'] = true;
@@ -97,13 +103,43 @@ final class QueueRequestHandlerTest extends TestCase
 			/** @noinspection UnusedFunctionResultInspection */
 			$requestHandler->handle( $request );
 		}
-			/** @noinspection PhpRedundantCatchClauseInspection */
-		catch ( RequestHandlingFailedException $e )
+		catch ( Throwable $e )
 		{
+			self::assertInstanceOf( RequestHandlingFailedException::class, $e );
 			self::assertSame( 'No responder found.', $e->getMessage() );
 			self::assertSame( 404, $e->getCode() );
+
+			/** @var RequestHandlingFailedException $e */
 			self::assertSame( $request, $e->getRequest() );
 			self::assertSame( $exception, $e->getPrevious() );
 		}
+	}
+
+	/**
+	 * @throws InvalidArgumentException
+	 */
+	public function testHandleThrowsExceptionIfMiddlewareDoesNotImplementMiddlewareInterface() : void
+	{
+		$exception      = new LogicException( 'No responder found.', 404 );
+		$requestHandler = QueueRequestHandler::new(
+			FallbackRequestHandler::new( $exception )
+		);
+
+		$requestHandler->add( fn() => new stdClass() );
+
+		$_SERVER['HTTPS'] = true;
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test/fallback';
+
+		$request = Request::fromGlobals();
+
+		$this->expectException( RequestHandlingFailedException::class );
+		$this->expectExceptionMessage(
+			'Instance did not resolve to a class implementing ' . MiddlewareInterface::class
+		);
+
+		/** @noinspection UnusedFunctionResultInspection */
+		$requestHandler->handle( $request );
 	}
 }

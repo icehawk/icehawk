@@ -2,37 +2,36 @@
 
 namespace IceHawk\IceHawk\RequestHandlers;
 
+use IceHawk\IceHawk\Exceptions\RequestHandlingFailedException;
 use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use function array_merge;
 use function array_shift;
 use function get_class;
 
 final class QueueRequestHandler implements RequestHandlerInterface
 {
-	private RequestHandlerInterface $fallbackHandler;
-
-	/** @var array<int, MiddlewareInterface> */
+	/** @var array<int, callable> */
 	private array $middlewares;
 
-	private function __construct( RequestHandlerInterface $fallbackHandler )
+	private function __construct( private RequestHandlerInterface $fallbackHandler )
 	{
-		$this->fallbackHandler = $fallbackHandler;
-		$this->middlewares     = [];
+		$this->middlewares = [];
 	}
 
-	public static function newWithFallbackHandler( RequestHandlerInterface $fallbackHandler ) : self
+	#[Pure]
+	public static function new( RequestHandlerInterface $fallbackHandler ) : self
 	{
 		return new self( $fallbackHandler );
 	}
 
-	public function add( MiddlewareInterface ...$middlewares ) : void
+	public function add( callable ...$middlewares ) : void
 	{
-		$this->middlewares = array_merge( $this->middlewares, $middlewares );
+		array_push( $this->middlewares, ...array_values( $middlewares ) );
 	}
 
 	/**
@@ -40,6 +39,7 @@ final class QueueRequestHandler implements RequestHandlerInterface
 	 *
 	 * @return ResponseInterface
 	 * @throws InvalidArgumentException
+	 * @throws RequestHandlingFailedException
 	 */
 	public function handle( ServerRequestInterface $request ) : ResponseInterface
 	{
@@ -48,12 +48,21 @@ final class QueueRequestHandler implements RequestHandlerInterface
 			return $this->fallbackHandler->handle( $request );
 		}
 
-		/** @var MiddlewareInterface $middleware */
-		$middleware = array_shift( $this->middlewares );
+		/** @var callable $middlewareConstructor */
+		$middlewareConstructor = array_shift( $this->middlewares );
+		$middleware            = $middlewareConstructor();
+
+		if ( !($middleware instanceof MiddlewareInterface) )
+		{
+			throw RequestHandlingFailedException::new(
+				$request,
+				'Instance did not resolve to a class implementing ' . MiddlewareInterface::class
+			);
+		}
 
 		$response = $middleware->process( $request, $this );
 
-		if ( HttpMethod::trace()->equalsString( $request->getMethod() ) )
+		if ( HttpMethod::TRACE->equalsString( $request->getMethod() ) )
 		{
 			return $response->withAddedHeader( 'X-IceHawk-Trace', get_class( $middleware ) );
 		}

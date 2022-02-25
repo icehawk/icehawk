@@ -28,7 +28,7 @@ final class FallbackRequestHandlerTest extends TestCase
 		try
 		{
 			/** @noinspection UnusedFunctionResultInspection */
-			FallbackRequestHandler::newWithException( $exception )->handle( $request );
+			FallbackRequestHandler::new( $exception )->handle( $request );
 		}
 		catch ( RequestHandlingFailedException $e )
 		{

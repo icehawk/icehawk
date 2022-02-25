@@ -3,6 +3,7 @@
 namespace IceHawk\IceHawk\RequestHandlers;
 
 use IceHawk\IceHawk\Exceptions\RequestHandlingFailedException;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -10,17 +11,13 @@ use Throwable;
 
 final class FallbackRequestHandler implements RequestHandlerInterface
 {
-	private Throwable $exception;
-
-	private function __construct( Throwable $exception )
-	{
-		$this->exception = $exception;
-	}
-
-	public static function newWithException( Throwable $exception ) : self
+	#[Pure]
+	public static function new( Throwable $exception ) : self
 	{
 		return new self( $exception );
 	}
+
+	private function __construct( private Throwable $exception ) { }
 
 	/**
 	 * @param ServerRequestInterface $request
@@ -30,6 +27,6 @@ final class FallbackRequestHandler implements RequestHandlerInterface
 	 */
 	public function handle( ServerRequestInterface $request ) : ResponseInterface
 	{
-		throw RequestHandlingFailedException::newFromPrevious( $this->exception, $request );
+		throw RequestHandlingFailedException::fromPrevious( $this->exception, $request );
 	}
 }

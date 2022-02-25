@@ -3,25 +3,20 @@
 namespace IceHawk\IceHawk\Types;
 
 use InvalidArgumentException;
-use Psr\Http\Server\MiddlewareInterface;
+use JetBrains\PhpStorm\Pure;
+use Stringable;
 use function class_exists;
-use function class_implements;
-use function in_array;
 
-final class MiddlewareClassName
+final class MiddlewareClassName implements Stringable
 {
-	private string $middlewareClassName;
-
 	/**
 	 * @param string $middlewareClassName
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	private function __construct( string $middlewareClassName )
+	private function __construct( private string $middlewareClassName )
 	{
 		$this->guardMiddlewareClassNameIsValid( $middlewareClassName );
-
-		$this->middlewareClassName = $middlewareClassName;
 	}
 
 	/**
@@ -35,18 +30,6 @@ final class MiddlewareClassName
 		{
 			throw new InvalidArgumentException( 'Middleware class does not exist: ' . $middlewareClassName );
 		}
-
-		$implementations = class_implements( $middlewareClassName );
-
-		if ( !$implementations || !in_array( MiddlewareInterface::class, $implementations, true ) )
-		{
-			throw new InvalidArgumentException(
-				'Middleware class does not implement '
-				. MiddlewareInterface::class
-				. ': '
-				. $middlewareClassName
-			);
-		}
 	}
 
 	/**
@@ -55,9 +38,9 @@ final class MiddlewareClassName
 	 * @return MiddlewareClassName
 	 * @throws InvalidArgumentException
 	 */
-	public static function newFromString( string $middlewareClassName ) : self
+	public static function new( string $middlewareClassName ) : self
 	{
-		return new self( $middlewareClassName );
+		return new self( trim( $middlewareClassName ) );
 	}
 
 	public function toString() : string
@@ -70,8 +53,9 @@ final class MiddlewareClassName
 		return $other->middlewareClassName === $this->middlewareClassName;
 	}
 
-	public function equalsString( string $otherClassName ) : bool
+	#[Pure]
+	public function __toString() : string
 	{
-		return $otherClassName === $this->middlewareClassName;
+		return $this->toString();
 	}
 }

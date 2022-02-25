@@ -3,9 +3,9 @@
 namespace IceHawk\IceHawk\Tests\Unit\Types;
 
 use IceHawk\IceHawk\Types\HttpMethod;
-use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use ValueError;
 
 final class HttpMethodTest extends TestCase
 {
@@ -14,7 +14,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testHead() : void
 	{
-		self::assertSame( 'HEAD', HttpMethod::head()->toString() );
+		self::assertSame( 'HEAD', HttpMethod::HEAD->toString() );
 	}
 
 	/**
@@ -22,7 +22,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testPut() : void
 	{
-		self::assertSame( 'PUT', HttpMethod::put()->toString() );
+		self::assertSame( 'PUT', HttpMethod::PUT->toString() );
 	}
 
 	/**
@@ -30,18 +30,17 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testTrace() : void
 	{
-		self::assertSame( 'TRACE', HttpMethod::trace()->toString() );
+		self::assertSame( 'TRACE', HttpMethod::TRACE->toString() );
 	}
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testToString() : void
 	{
-		self::assertSame( 'HEAD', HttpMethod::newFromString( 'head' )->toString() );
-		self::assertSame( 'GET', HttpMethod::newFromString( 'Get' )->toString() );
-		self::assertSame( 'POST', HttpMethod::newFromString( 'poST' )->toString() );
+		self::assertSame( 'HEAD', HttpMethod::from( 'HEAD' )->toString() );
+		self::assertSame( 'GET', HttpMethod::from( 'GET' )->toString() );
+		self::assertSame( 'POST', HttpMethod::from( 'POST' )->toString() );
 	}
 
 	/**
@@ -49,7 +48,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testOptions() : void
 	{
-		self::assertSame( 'OPTIONS', HttpMethod::options()->toString() );
+		self::assertSame( 'OPTIONS', HttpMethod::OPTIONS->toString() );
 	}
 
 	/**
@@ -57,7 +56,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testPatch() : void
 	{
-		self::assertSame( 'PATCH', HttpMethod::patch()->toString() );
+		self::assertSame( 'PATCH', HttpMethod::PATCH->toString() );
 	}
 
 	/**
@@ -65,29 +64,16 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testConnect() : void
 	{
-		self::assertSame( 'CONNECT', HttpMethod::connect()->toString() );
+		self::assertSame( 'CONNECT', HttpMethod::CONNECT->toString() );
 	}
 
-	/**
-	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
-	 */
-	public function testNewFromString() : void
-	{
-		self::assertSame( 'HEAD', HttpMethod::newFromString( 'head' )->toString() );
-		self::assertSame( 'GET', HttpMethod::newFromString( 'Get' )->toString() );
-		self::assertSame( 'POST', HttpMethod::newFromString( 'poST' )->toString() );
-	}
-
-	/**
-	 * @throws InvalidArgumentException
-	 */
 	public function testNewFromStringThrowsExceptionForInvalidHttpMethod() : void
 	{
-		$this->expectException( InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Invalid value for HttpMethod: unknown' );
+		$this->expectException( ValueError::class );
 
-		HttpMethod::newFromString( 'unknown' );
+		/** @noinspection PhpCaseWithValueNotFoundInEnumInspection */
+		/** @noinspection UnusedFunctionResultInspection */
+		HttpMethod::from( 'unknown' );
 	}
 
 	/**
@@ -95,17 +81,16 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testDelete() : void
 	{
-		self::assertSame( 'DELETE', HttpMethod::delete()->toString() );
+		self::assertSame( 'DELETE', HttpMethod::DELETE->toString() );
 	}
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testEquals() : void
 	{
-		self::assertTrue( HttpMethod::delete()->equalsOneOf( HttpMethod::newFromString( 'delete' ) ) );
-		self::assertFalse( HttpMethod::delete()->equalsOneOf( HttpMethod::newFromString( 'post' ) ) );
+		self::assertTrue( HttpMethod::DELETE->equalsOneOf( HttpMethod::from( 'DELETE' ) ) );
+		self::assertFalse( HttpMethod::DELETE->equalsOneOf( HttpMethod::from( 'POST' ) ) );
 	}
 
 	/**
@@ -113,8 +98,8 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testEqualsOneOfMultiple() : void
 	{
-		self::assertTrue( HttpMethod::delete()->equalsOneOf( HttpMethod::get(), HttpMethod::delete() ) );
-		self::assertFalse( HttpMethod::delete()->equalsOneOf( HttpMethod::post(), HttpMethod::get() ) );
+		self::assertTrue( HttpMethod::DELETE->equalsOneOf( HttpMethod::GET, HttpMethod::DELETE ) );
+		self::assertFalse( HttpMethod::DELETE->equalsOneOf( HttpMethod::POST, HttpMethod::GET ) );
 	}
 
 	/**
@@ -122,7 +107,7 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testGet() : void
 	{
-		self::assertSame( 'GET', HttpMethod::get()->toString() );
+		self::assertSame( 'GET', HttpMethod::GET->toString() );
 	}
 
 	/**
@@ -130,28 +115,16 @@ final class HttpMethodTest extends TestCase
 	 */
 	public function testPost() : void
 	{
-		self::assertSame( 'POST', HttpMethod::post()->toString() );
+		self::assertSame( 'POST', HttpMethod::POST->toString() );
 	}
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
-	 */
-	public function testCanCastInstanceToString() : void
-	{
-		self::assertSame( 'HEAD', (string)HttpMethod::newFromString( 'head' ) );
-		self::assertSame( 'GET', (string)HttpMethod::newFromString( 'Get' ) );
-		self::assertSame( 'POST', (string)HttpMethod::newFromString( 'poST' ) );
-	}
-
-	/**
-	 * @throws ExpectationFailedException
-	 * @throws InvalidArgumentException
 	 */
 	public function testEqualsString() : void
 	{
-		self::assertTrue( HttpMethod::newFromString( 'head' )->equalsString( 'HEAD' ) );
-		self::assertTrue( HttpMethod::newFromString( 'Get' )->equalsString( 'get' ) );
-		self::assertTrue( HttpMethod::post()->equalsString( 'POsT' ) );
+		self::assertTrue( HttpMethod::from( 'HEAD' )->equalsString( 'HEAD' ) );
+		self::assertTrue( HttpMethod::from( 'GET' )->equalsString( 'get' ) );
+		self::assertTrue( HttpMethod::POST->equalsString( 'POsT' ) );
 	}
 }

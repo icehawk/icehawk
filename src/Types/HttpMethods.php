@@ -2,50 +2,38 @@
 
 namespace IceHawk\IceHawk\Types;
 
-use Countable;
+use IceHawk\IceHawk\Interfaces\HttpMethodsInterface;
 use Iterator;
-use IteratorAggregate;
+use JetBrains\PhpStorm\Pure;
+use function array_values;
 use function count;
 
-/**
- * @implements IteratorAggregate<int, HttpMethod>
- */
-final class HttpMethods implements Countable, IteratorAggregate
+final class HttpMethods implements HttpMethodsInterface
 {
-	/** @var array<int, HttpMethod> */
-	private array $items;
+	/**
+	 * @param array<int, HttpMethod> $httpMethods
+	 */
+	private function __construct( private array $httpMethods ) { }
 
-	private function __construct( HttpMethod ...$httpMethods )
+	#[Pure]
+	public static function new( HttpMethod ...$httpMethods ) : HttpMethodsInterface
 	{
-		$this->items = $httpMethods;
+		return new self( array_values( $httpMethods ) );
 	}
 
-	public static function new( HttpMethod ...$httpMethods ) : self
+	public static function all() : HttpMethodsInterface
 	{
-		return new self( ...$httpMethods );
-	}
-
-	public static function all() : self
-	{
-		return new self(
-			HttpMethod::get(),
-			HttpMethod::head(),
-			HttpMethod::post(),
-			HttpMethod::put(),
-			HttpMethod::patch(),
-			HttpMethod::delete(),
-			HttpMethod::options(),
-			HttpMethod::connect(),
-			HttpMethod::trace(),
-		);
+		return self::new( ...HttpMethod::cases() );
 	}
 
 	public function add( HttpMethod $httpMethod, HttpMethod ...$httpMethods ) : void
 	{
-		$this->items[] = $httpMethod;
-		foreach ( $httpMethods as $httpMethodLoop )
+		foreach ( [$httpMethod, ...$httpMethods] as $method )
 		{
-			$this->items[] = $httpMethodLoop;
+			if ( !in_array( $method, $this->httpMethods, true ) )
+			{
+				$this->httpMethods[] = $method;
+			}
 		}
 	}
 
@@ -54,11 +42,19 @@ final class HttpMethods implements Countable, IteratorAggregate
 	 */
 	public function getIterator() : Iterator
 	{
-		yield from $this->items;
+		yield from $this->httpMethods;
 	}
 
 	public function count() : int
 	{
-		return count( $this->items );
+		return count( $this->httpMethods );
+	}
+
+	/**
+	 * @return array<string>
+	 */
+	public function asStringArray() : array
+	{
+		return array_map( static fn( HttpMethod $method ) : string => $method->toString(), $this->httpMethods );
 	}
 }

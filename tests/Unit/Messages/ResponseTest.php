@@ -113,22 +113,6 @@ final class ResponseTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
-	 * @throws RuntimeException
-	 */
-	public function testNew() : void
-	{
-		$response = Response::new();
-
-		# Check for default values after instantiation
-		self::assertSame( 'HTTP/1.1', $response->getProtocolVersion() );
-		self::assertSame( 200, $response->getStatusCode() );
-		self::assertSame( 'OK', $response->getReasonPhrase() );
-		self::assertSame( '', $response->getHeaderLine( 'UnknownHeaderKey' ) );
-		self::assertSame( '', (string)$response->getBody() );
-	}
-
-	/**
-	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
@@ -146,9 +130,19 @@ final class ResponseTest extends TestCase
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
-	public function testNewWithContent() : void
+	public function testNew() : void
 	{
-		$response = Response::newWithContent( 'Unit-Test' );
+		$response = Response::new();
+
+		# Check for default values after instantiation
+		self::assertSame( 'HTTP/1.1', $response->getProtocolVersion() );
+		self::assertSame( 200, $response->getStatusCode() );
+		self::assertSame( 'OK', $response->getReasonPhrase() );
+		self::assertSame( [], $response->getHeaders() );
+		self::assertSame( '', $response->getHeaderLine( 'UnknownHeaderKey' ) );
+		self::assertSame( '', (string)$response->getBody() );
+
+		$response = Response::new( 'Unit-Test' );
 
 		self::assertSame( 200, $response->getStatusCode() );
 		self::assertSame( 'OK', $response->getReasonPhrase() );
@@ -183,5 +177,19 @@ final class ResponseTest extends TestCase
 		self::assertSame( 'https://example.com/unit/test', $response->getHeaderLine( 'Location' ) );
 		self::assertSame( 'text/html; charset=utf-8', $response->getHeaderLine( 'Content-Type' ) );
 		self::assertSame( $expectedBody, (string)$response->getBody() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
+	 */
+	public function testJson() : void
+	{
+		$response = Response::json( ['Unit' => 'Test', 2, 3 => 'four'] );
+
+		self::assertSame( 200, $response->getStatusCode() );
+		self::assertSame( 'application/json', $response->getHeaderLine( 'Content-Type' ) );
+		self::assertSame( '{"Unit":"Test","0":2,"3":"four"}', (string)$response->getBody() );
 	}
 }

@@ -4,6 +4,8 @@ namespace IceHawk\IceHawk\Messages;
 
 use IceHawk\IceHawk\Types\HttpStatus;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -11,11 +13,11 @@ use RuntimeException;
 use function array_merge;
 use function implode;
 use function is_array;
+use function json_encode;
+use const JSON_THROW_ON_ERROR;
 
 class Response implements ResponseInterface
 {
-	private const DEFAULT_STATUS_CODE      = 200;
-
 	private const DEFAULT_PROTOCOL_VERSION = 'HTTP/1.1';
 
 	private HttpStatus $status;
@@ -28,35 +30,44 @@ class Response implements ResponseInterface
 	private StreamInterface $body;
 
 	/**
-	 * @throws RuntimeException
+	 * @param string $content
+	 *
 	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
 	 */
-	final private function __construct()
+	final private function __construct( string $content )
 	{
-		$this->status          = HttpStatus::fromCode( self::DEFAULT_STATUS_CODE );
+		$this->status          = HttpStatus::CODE_200;
 		$this->protocolVersion = self::DEFAULT_PROTOCOL_VERSION;
 		$this->headers         = [];
-		$this->body            = Stream::newWithContent( '' );
-	}
-
-	/**
-	 * @return static
-	 */
-	public static function new() : ResponseInterface
-	{
-		return new static();
+		$this->body            = Stream::newWithContent( $content );
 	}
 
 	/**
 	 * @param string $content
 	 *
 	 * @return static
-	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
-	public static function newWithContent( string $content ) : ResponseInterface
+	public static function new( string $content = '' ) : static
 	{
-		return static::new()->withBody( Stream::newWithContent( $content ) );
+		return new static( $content );
+	}
+
+	/**
+	 * @param mixed $content
+	 * @param int   $jsonFlags
+	 *
+	 * @return static
+	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
+	 * @throws JsonException
+	 */
+	public static function json( mixed $content, int $jsonFlags = JSON_THROW_ON_ERROR ) : static
+	{
+		return static::new( (string)json_encode( $content, $jsonFlags ) )
+		             ->withHeader( 'Content-Type', 'application/json' );
 	}
 
 	/**
@@ -66,7 +77,7 @@ class Response implements ResponseInterface
 	 * @return static
 	 * @throws InvalidArgumentException|RuntimeException
 	 */
-	public static function redirect( UriInterface $redirectUri, int $statusCode = 301 ) : self
+	public static function redirect( UriInterface $redirectUri, int $statusCode = 301 ) : static
 	{
 		return static::new()
 		             ->withStatus( $statusCode )
@@ -78,13 +89,13 @@ class Response implements ResponseInterface
 							<!DOCTYPE html>
 							<html lang="en">
 							<head>
-							   <title>Redirect {$statusCode}</title>
+							   <title>Redirect $statusCode</title>
 							   <meta http-equiv="refresh" content="0; 
-							   url={$redirectUri}">
+							   url=$redirectUri">
 							</head>
 							<body>
 							   <p>Redirecting to:
-							   <a href="{$redirectUri}">{$redirectUri}</a></p>
+							   <a href="$redirectUri">$redirectUri</a></p>
 							</body>
 							</html>
 							EOF
@@ -100,9 +111,9 @@ class Response implements ResponseInterface
 	/**
 	 * @param string $version
 	 *
-	 * @return $this
+	 * @return static
 	 */
-	public function withProtocolVersion( $version ) : ResponseInterface
+	public function withProtocolVersion( $version ) : static
 	{
 		$response = clone $this;
 
@@ -158,9 +169,9 @@ class Response implements ResponseInterface
 	 * @param string               $name
 	 * @param string|array<string> $value
 	 *
-	 * @return $this
+	 * @return static
 	 */
-	public function withHeader( $name, $value ) : ResponseInterface
+	public function withHeader( $name, $value ) : static
 	{
 		$response = clone $this;
 
@@ -173,9 +184,9 @@ class Response implements ResponseInterface
 	 * @param string               $name
 	 * @param string|array<string> $value
 	 *
-	 * @return $this
+	 * @return static
 	 */
-	public function withAddedHeader( $name, $value ) : ResponseInterface
+	public function withAddedHeader( $name, $value ) : static
 	{
 		$response = clone $this;
 
@@ -196,12 +207,7 @@ class Response implements ResponseInterface
 		return $response;
 	}
 
-	/**
-	 * @param string $name
-	 *
-	 * @return $this
-	 */
-	public function withoutHeader( $name ) : ResponseInterface
+	public function withoutHeader( $name ) : static
 	{
 		$response = clone $this;
 
@@ -210,20 +216,12 @@ class Response implements ResponseInterface
 		return $response;
 	}
 
-	/**
-	 * @return StreamInterface
-	 */
 	public function getBody() : StreamInterface
 	{
 		return $this->body;
 	}
 
-	/**
-	 * @param StreamInterface $body
-	 *
-	 * @return $this
-	 */
-	public function withBody( StreamInterface $body ) : ResponseInterface
+	public function withBody( StreamInterface $body ) : static
 	{
 		$response       = clone $this;
 		$response->body = $body;
@@ -231,9 +229,7 @@ class Response implements ResponseInterface
 		return $response;
 	}
 
-	/**
-	 * @return int
-	 */
+	#[Pure]
 	public function getStatusCode() : int
 	{
 		return $this->status->getCode();
@@ -243,10 +239,10 @@ class Response implements ResponseInterface
 	 * @param int    $code
 	 * @param string $reasonPhrase
 	 *
-	 * @return $this
+	 * @return static
 	 * @throws InvalidArgumentException
 	 */
-	public function withStatus( $code, $reasonPhrase = '' ) : ResponseInterface
+	public function withStatus( $code, $reasonPhrase = '' ) : static
 	{
 		$response         = clone $this;
 		$response->status = HttpStatus::fromCode( (int)$code );
@@ -254,9 +250,7 @@ class Response implements ResponseInterface
 		return $response;
 	}
 
-	/**
-	 * @return string
-	 */
+	#[Pure]
 	public function getReasonPhrase() : string
 	{
 		return $this->status->getPhrase();

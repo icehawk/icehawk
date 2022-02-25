@@ -2,17 +2,13 @@
 
 namespace IceHawk\IceHawk\Messages;
 
-use Countable;
+use IceHawk\IceHawk\Messages\Interfaces\UploadedFilesInterface;
 use Iterator;
-use IteratorAggregate;
 use Psr\Http\Message\UploadedFileInterface;
 use function count;
 use function is_array;
 
-/**
- * @implements IteratorAggregate<int, UploadedFileInterface>
- */
-final class UploadedFiles implements Countable, IteratorAggregate
+final class UploadedFiles implements UploadedFilesInterface
 {
 	/** @var array<int|string, array<int, UploadedFileInterface>> */
 	private array $uploadedFiles;
@@ -23,7 +19,7 @@ final class UploadedFiles implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * @param array<string, string|int|array<mixed>> $filesArray
+	 * @param array<string, mixed> $filesArray
 	 *
 	 * @return UploadedFiles
 	 */
@@ -70,7 +66,7 @@ final class UploadedFiles implements Countable, IteratorAggregate
 
 	public static function fromGlobals() : self
 	{
-		return self::fromFilesArray( $_FILES ?? [] );
+		return self::fromFilesArray( $_FILES );
 	}
 
 	/**
@@ -115,7 +111,7 @@ final class UploadedFiles implements Countable, IteratorAggregate
 	 */
 	public function getIterator() : Iterator
 	{
-		foreach ( $this->uploadedFiles as $field => $files )
+		foreach ( $this->uploadedFiles as $files )
 		{
 			yield from $files;
 		}
@@ -124,7 +120,7 @@ final class UploadedFiles implements Countable, IteratorAggregate
 	public function count() : int
 	{
 		$count = 0;
-		foreach ( $this->uploadedFiles as $field => $files )
+		foreach ( $this->uploadedFiles as $files )
 		{
 			$count += count( $files );
 		}

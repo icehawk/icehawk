@@ -3,6 +3,7 @@
 namespace IceHawk\IceHawk\Messages;
 
 use IceHawk\IceHawk\Messages\Interfaces\RequestInterface;
+use IceHawk\IceHawk\Messages\Interfaces\UploadedFilesInterface;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
@@ -29,6 +30,9 @@ final class Request implements RequestInterface
 	/** @var array<string, array<string>> */
 	private array $headers = [];
 
+	/** @var array<string, mixed> */
+	private array $attributes = [];
+
 	/**
 	 * @param array<string, string>                $serverParams
 	 * @param array<string, mixed>                 $queryParams
@@ -36,8 +40,7 @@ final class Request implements RequestInterface
 	 * @param null|array<int|string, mixed>|object $parsedBody
 	 * @param array<string, mixed>                 $cookieParams
 	 * @param array<int|string, mixed>             $mergedParams
-	 * @param UploadedFiles                        $uploadedFiles
-	 * @param array<string, mixed>                 $attributes
+	 * @param UploadedFilesInterface               $uploadedFiles
 	 */
 	private function __construct(
 		private array $serverParams,
@@ -46,8 +49,8 @@ final class Request implements RequestInterface
 		private null|array|object $parsedBody,
 		private array $cookieParams,
 		private array $mergedParams,
-		private UploadedFiles $uploadedFiles,
-		private array $attributes
+		private UploadedFilesInterface $uploadedFiles,
+
 	)
 	{
 		$this->parseHeadersFromServerParams();
@@ -87,7 +90,6 @@ final class Request implements RequestInterface
 			$_COOKIE,
 			$_REQUEST,
 			UploadedFiles::fromGlobals(),
-			[]
 		);
 	}
 

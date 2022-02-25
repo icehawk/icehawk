@@ -3,6 +3,7 @@
 namespace IceHawk\IceHawk\Messages;
 
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
@@ -13,30 +14,12 @@ use const UPLOAD_ERR_NO_FILE;
 
 final class UploadedFile implements UploadedFileInterface
 {
-	private string $name;
-
-	private string $type;
-
-	private string $tempName;
-
-	private int $error;
-
-	private int $size;
-
-	private function __construct( string $name, string $type, string $tempName, int $error, int $size )
-	{
-		$this->name     = $name;
-		$this->type     = $type;
-		$this->tempName = $tempName;
-		$this->error    = $error;
-		$this->size     = $size;
-	}
-
 	/**
 	 * @param array<string, string|int> $fileData
 	 *
 	 * @return UploadedFileInterface
 	 */
+	#[Pure]
 	public static function fromArray( array $fileData ) : UploadedFileInterface
 	{
 		return new self(
@@ -48,13 +31,23 @@ final class UploadedFile implements UploadedFileInterface
 		);
 	}
 
+	private function __construct(
+		private string $name,
+		private string $type,
+		private string $tempName,
+		private int $error,
+		private int $size
+	)
+	{
+	}
+
 	/**
 	 * @return StreamInterface
 	 * @throws InvalidArgumentException
 	 */
 	public function getStream() : StreamInterface
 	{
-		return new Stream( $this->tempName, 'rb' );
+		return Stream::fromFile( $this->tempName );
 	}
 
 	/**
@@ -82,7 +75,7 @@ final class UploadedFile implements UploadedFileInterface
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	private function guardTargetPathIsValid( $targetPath ) : void
+	private function guardTargetPathIsValid( mixed $targetPath ) : void
 	{
 		if ( !is_string( $targetPath ) || '' === trim( $targetPath ) )
 		{

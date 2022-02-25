@@ -62,35 +62,15 @@ final class UploadedFileTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider invalidPathsDataProvider
-	 *
-	 * @param mixed $path
-	 *
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
 	 */
-	public function testMoveToRaisesExceptionForInvalidPath( $path ) : void
+	public function testMoveToRaisesExceptionForInvalidPath() : void
 	{
 		$this->expectException( InvalidArgumentException::class );
 		$this->expectExceptionMessage( 'Target path is empty' );
 
-		$this->uploadedFile->moveTo( $path );
-	}
-
-	/**
-	 * @return array<string, array<mixed>>
-	 */
-	public function invalidPathsDataProvider() : array
-	{
-		return [
-			'empty' => [''],
-			'null'  => [null],
-			'int'   => [143],
-			'true'  => [true],
-			'false' => [false],
-			'float' => [14.14],
-			'array' => [['test']],
-		];
+		$this->uploadedFile->moveTo( '' );
 	}
 
 	/**
@@ -100,7 +80,7 @@ final class UploadedFileTest extends TestCase
 	 */
 	public function testSuccessFullMoveTo() : void
 	{
-		$stream = new Stream( $this->tempName, 'w+b' );
+		$stream = Stream::fromFile( $this->tempName, 'w+b' );
 		$stream->write( 'foo bar.' );
 
 		$to            = $this->tempName;

@@ -2,47 +2,47 @@
 
 namespace IceHawk\IceHawk\Types;
 
-use Countable;
+use IceHawk\IceHawk\Interfaces\MiddlewareClassNamesInterface;
+use InvalidArgumentException;
 use Iterator;
-use IteratorAggregate;
+use JetBrains\PhpStorm\Pure;
 use function array_map;
+use function array_push;
+use function array_values;
 use function count;
 
-/**
- * @implements IteratorAggregate<int, MiddlewareClassName>
- */
-final class MiddlewareClassNames implements Countable, IteratorAggregate
+final class MiddlewareClassNames implements MiddlewareClassNamesInterface
 {
-	/** @var array<int, MiddlewareClassName> */
-	private array $items;
+	/**
+	 * @param array<int, MiddlewareClassName> $classNames
+	 */
+	private function __construct( private array $classNames ) { }
 
-	private function __construct( MiddlewareClassName ...$middlewareClassNames )
+	#[Pure]
+	public static function new( MiddlewareClassName ...$classNames ) : self
 	{
-		$this->items = $middlewareClassNames;
+		return new self( array_values( $classNames ) );
 	}
 
-	public static function new( MiddlewareClassName ...$middlewareClassNames ) : self
+	/**
+	 * @param string ...$classNames
+	 *
+	 * @return MiddlewareClassNames
+	 * @throws InvalidArgumentException
+	 */
+	public static function newFromStrings( string ...$classNames ) : self
 	{
-		return new self( ...$middlewareClassNames );
-	}
-
-	public static function newFromStrings( string ...$middlewareClassNames ) : self
-	{
-		return new self(
+		return self::new(
 			...array_map(
-				   fn( string $className ) : MiddlewareClassName => MiddlewareClassName::newFromString( $className ),
-				   $middlewareClassNames
-			   )
+				static fn( string $className ) : MiddlewareClassName => MiddlewareClassName::new( $className ),
+				$classNames
+			)
 		);
 	}
 
-	public function add( MiddlewareClassName $middlewareClassName, MiddlewareClassName ...$middlewareClassNames ) : void
+	public function add( MiddlewareClassName $className, MiddlewareClassName ...$classNames ) : void
 	{
-		$this->items[] = $middlewareClassName;
-		foreach ( $middlewareClassNames as $middlewareClassNameLoop )
-		{
-			$this->items[] = $middlewareClassNameLoop;
-		}
+		array_push( $this->classNames, $className, ...array_values( $classNames ) );
 	}
 
 	/**
@@ -50,11 +50,11 @@ final class MiddlewareClassNames implements Countable, IteratorAggregate
 	 */
 	public function getIterator() : Iterator
 	{
-		yield from $this->items;
+		yield from $this->classNames;
 	}
 
 	public function count() : int
 	{
-		return count( $this->items );
+		return count( $this->classNames );
 	}
 }

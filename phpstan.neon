@@ -3,11 +3,13 @@ parameters:
         - src
         - tests
     level: max
+    phpVersion: 80100
     bootstrapFiles:
         - ./.tools/phpunit.phar
     reportUnmatchedIgnoredErrors: true
     ignoreErrors:
+        - '#^Attribute class JetBrains\\PhpStorm\\.+ does not exist\.#'
         -
-            message: '#resource\|string, array<int, string> given#'
+            message: '#expects resource, array<int, string> given#'
             paths:
                 - tests/Unit/Messages/StreamTest.php

@@ -3,84 +3,27 @@
 namespace IceHawk\IceHawk\Messages;
 
 use Closure;
-use IceHawk\IceHawk\Messages\Interfaces\HandlesStreamAction;
-use InvalidArgumentException;
+use IceHawk\IceHawk\Messages\Interfaces\StreamActionInterface;
+use IceHawk\IceHawk\Types\StreamEvent;
 use Psr\Http\Message\StreamInterface;
 
-final class StreamAction implements Interfaces\HandlesStreamAction
+final class StreamAction implements StreamActionInterface
 {
-	private const   ON_CLOSING = 'onClosing';
-
-	private const   ON_CLOSED  = 'onClosed';
-
-	private const   ALL        = [
-		self::ON_CLOSING,
-		self::ON_CLOSED,
-	];
-
-	private string $eventName;
-
-	private Closure $action;
-
-	/**
-	 * @param string  $eventName
-	 * @param Closure $action
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	private function __construct( string $eventName, Closure $action )
+	public static function new( StreamEvent $event, callable $action ) : StreamActionInterface
 	{
-		$this->guardEventNameIsValid( $eventName );
-
-		$this->eventName = $eventName;
-		$this->action    = $action;
+		return new self( $event, $action(...) );
 	}
 
-	/**
-	 * @param string $eventName
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	private function guardEventNameIsValid( string $eventName ) : void
+	private function __construct( private StreamEvent $event, private Closure $action ) { }
+
+	public static function onClosing( callable $action ) : StreamActionInterface
 	{
-		if ( !in_array( $eventName, self::ALL, true ) )
-		{
-			throw new InvalidArgumentException( 'Invalid event name for stream action: ' . $eventName );
-		}
+		return self::new( StreamEvent::CLOSING, $action(...) );
 	}
 
-	/**
-	 * @param string   $eventName
-	 * @param callable $action
-	 *
-	 * @return HandlesStreamAction
-	 * @throws InvalidArgumentException
-	 */
-	public static function new( string $eventName, callable $action ) : HandlesStreamAction
+	public static function onClosed( callable $action ) : StreamActionInterface
 	{
-		return new self( $eventName, Closure::fromCallable( $action ) );
-	}
-
-	/**
-	 * @param callable $action
-	 *
-	 * @return HandlesStreamAction
-	 * @throws InvalidArgumentException
-	 */
-	public static function onClosing( callable $action ) : HandlesStreamAction
-	{
-		return new self( self::ON_CLOSING, Closure::fromCallable( $action ) );
-	}
-
-	/**
-	 * @param callable $action
-	 *
-	 * @return HandlesStreamAction
-	 * @throws InvalidArgumentException
-	 */
-	public static function onClosed( callable $action ) : HandlesStreamAction
-	{
-		return new self( self::ON_CLOSED, Closure::fromCallable( $action ) );
+		return self::new( StreamEvent::CLOSED, $action(...) );
 	}
 
 	public function execute( StreamInterface $stream ) : void
@@ -90,8 +33,8 @@ final class StreamAction implements Interfaces\HandlesStreamAction
 		$action( $stream );
 	}
 
-	public function getEventName() : string
+	public function getEvent() : StreamEvent
 	{
-		return $this->eventName;
+		return $this->event;
 	}
 }

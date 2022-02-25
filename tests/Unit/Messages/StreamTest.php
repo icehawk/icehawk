@@ -21,10 +21,11 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testRead() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 		$stream->rewind();
 
@@ -35,10 +36,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testReadThrowsExceptionWhenNoResourceIsAvailable() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->close();
 
 		$this->expectException( RuntimeException::class );
@@ -50,10 +52,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testReadThrowsExceptionForNonReadableStreams() : void
 	{
-		$nonReadableStream = new Stream( 'php://output', 'wb' );
+		$nonReadableStream = Stream::output();
 
 		$this->expectException( RuntimeException::class );
 		$this->expectExceptionMessage( 'Stream is not readable' );
@@ -65,10 +68,11 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testSeek() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 		$stream->seek( 5 );
 
@@ -77,10 +81,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testSeekThrowsExceptionIfNoResourceIsAvailable() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->close();
 
 		$this->expectException( RuntimeException::class );
@@ -91,10 +96,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testSeekThrowsExceptionOnErrorSeekingWithinStream() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 
 		$this->expectException( RuntimeException::class );
 		$this->expectExceptionMessage( 'Error seeking within stream' );
@@ -104,10 +110,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testSeekThrowsExceptionForNonSeekableStreams() : void
 	{
-		$stream = new Stream( 'php://output', 'wb' );
+		$stream = Stream::output();
 
 		$this->expectException( RuntimeException::class );
 		$this->expectExceptionMessage( 'Stream is not seekable' );
@@ -118,10 +125,11 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetSize() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 
 		self::assertSame( 9, $stream->getSize() );
@@ -133,10 +141,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetMetadata() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 
 		$expectedMetaData = [
 			'eof'          => false,
@@ -147,7 +156,7 @@ final class StreamTest extends TestCase
 			'blocked'      => true,
 			'wrapper_type' => 'PHP',
 			'stream_type'  => 'MEMORY',
-			'mode'         => 'w+b',
+			'mode'         => 'a+b',
 		];
 
 		self::assertEquals( $expectedMetaData, $stream->getMetadata() );
@@ -162,16 +171,17 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function test__toString() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 
 		self::assertSame( 'Unit-Test', (string)$stream );
 		self::assertSame( 'Unit-Test', $stream->__toString() );
 
-		$nonReadableStream = new Stream( 'php://stdout', 'wb' );
+		$nonReadableStream = Stream::stdout();
 		$nonReadableStream->write( 'Unit-Test' );
 
 		self::assertSame( '', (string)$nonReadableStream );
@@ -181,10 +191,11 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testEof() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 		$stream->rewind();
 
@@ -210,7 +221,7 @@ final class StreamTest extends TestCase
 	public function testIsWritable() : void
 	{
 		$tempFile       = (string)tempnam( sys_get_temp_dir(), 'Unit-Test-OutputStream-' );
-		$writableStream = new Stream( $tempFile, 'w+b' );
+		$writableStream = Stream::fromFile( $tempFile, 'w+b' );
 
 		self::assertTrue( $writableStream->isWritable() );
 
@@ -218,7 +229,7 @@ final class StreamTest extends TestCase
 
 		self::assertFalse( $writableStream->isWritable() );
 
-		$nonWritableStream = new Stream( 'php://input', 'rb' );
+		$nonWritableStream = Stream::input();
 
 		self::assertFalse( $nonWritableStream->isWritable() );
 
@@ -228,10 +239,11 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testRewind() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 
 		self::assertSame( 9, $stream->tell() );
@@ -243,10 +255,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testClose() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->close();
 
 		self::assertNull( $stream->detach() );
@@ -259,10 +272,11 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testTell() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 
 		self::assertSame( 9, $stream->tell() );
@@ -274,10 +288,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testTellThrowsExceptionIfNoResourceIsAvailable() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->close();
 
 		$this->expectException( RuntimeException::class );
@@ -289,10 +304,11 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testDetach() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 
 		$resource = $stream->detach();
@@ -305,10 +321,11 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetContents() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->write( 'Unit-Test' );
 
 		$stream->seek( 5 );
@@ -326,10 +343,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testIsReadable() : void
 	{
-		$readableStream = new Stream( 'php://memory', 'w+b' );
+		$readableStream = Stream::memory();
 
 		self::assertTrue( $readableStream->isReadable() );
 
@@ -337,7 +355,7 @@ final class StreamTest extends TestCase
 
 		self::assertFalse( $readableStream->isReadable() );
 
-		$nonReadableStream = new Stream( 'php://output', 'wb' );
+		$nonReadableStream = Stream::output();
 
 		self::assertFalse( $nonReadableStream->isReadable() );
 	}
@@ -345,20 +363,22 @@ final class StreamTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWrite() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 
 		self::assertSame( 9, $stream->write( 'Unit-Test' ) );
 	}
 
 	/**
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWriteThrowsExceptionIfNoResourceIsAvailable() : void
 	{
-		$stream = new Stream( 'php://memory', 'w+b' );
+		$stream = Stream::memory();
 		$stream->close();
 
 		$this->expectException( RuntimeException::class );
@@ -369,10 +389,11 @@ final class StreamTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testIsSeekable() : void
 	{
-		$seekableStream = new Stream( 'php://input', 'rb' );
+		$seekableStream = Stream::input();
 
 		self::assertTrue( $seekableStream->isSeekable() );
 
@@ -395,33 +416,32 @@ final class StreamTest extends TestCase
 			self::fail( 'Could not open memory stream' );
 		}
 
-		$stream = new Stream( $resource );
+		$stream = Stream::fromResource( $resource );
 
 		self::assertSame( $resource, $stream->detach() );
 	}
 
-	public function testThrowsExceptionForInvalidStream() : void
+	public function testFromFileThrowsExceptionForInvalidFile() : void
 	{
 		$this->expectException( InvalidArgumentException::class );
 		$this->expectExceptionMessage(
 			'Invalid file provided for stream; must be a valid path with valid permissions'
 		);
 
-		new Stream( 'file:///does/not/exist' );
+		Stream::fromFile( 'file:///does/not/exist' );
 	}
 
 	/**
 	 * @throws InvalidArgumentException
 	 */
-	public function testThrowsExceptionForInvalidStreamType() : void
+	public function testFromResourceThrowsExceptionForInvalidStreamType() : void
 	{
 		$this->expectException( InvalidArgumentException::class );
 		$this->expectExceptionMessage(
 			'Invalid stream provided; must be a string stream identifier or stream resource'
 		);
 
-		/** @noinspection PhpParamsInspection */
-		new Stream( ['stream'] );
+		Stream::fromResource( ['stream'] );
 	}
 
 	/**
@@ -431,7 +451,7 @@ final class StreamTest extends TestCase
 	 */
 	public function testNewFromFile() : void
 	{
-		$stream = Stream::newFromFile( __DIR__ . '/_files/StreamTest.txt' );
+		$stream = Stream::fromFile( __DIR__ . '/_files/StreamTest.txt' );
 
 		self::assertSame( 'Unit-Test', $stream->getContents() );
 	}
@@ -445,7 +465,7 @@ final class StreamTest extends TestCase
 	{
 		$tempFile = (string)tempnam( sys_get_temp_dir(), 'StreamTest_' );
 
-		$stream = Stream::newFromFile( $tempFile, 'w+b' );
+		$stream = Stream::fromFile( $tempFile, 'w+b' );
 		$stream->write( 'Unit-Test' );
 
 		$onClosingAction = StreamAction::onClosing(
@@ -477,5 +497,82 @@ final class StreamTest extends TestCase
 		$stream->close();
 
 		self::assertFileDoesNotExist( $tempFile );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testStdin() : void
+	{
+		self::assertTrue( Stream::stdin()->isReadable() );
+		self::assertFalse( Stream::stdin()->isWritable() );
+		self::assertFalse( Stream::stdin()->isSeekable() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testStdout() : void
+	{
+		self::assertFalse( Stream::stdout()->isReadable() );
+		self::assertTrue( Stream::stdout()->isWritable() );
+		self::assertFalse( Stream::stdout()->isSeekable() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testStderr() : void
+	{
+		self::assertFalse( Stream::stderr()->isReadable() );
+		self::assertTrue( Stream::stderr()->isWritable() );
+		self::assertFalse( Stream::stderr()->isSeekable() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testTemp() : void
+	{
+		self::assertTrue( Stream::temp()->isReadable() );
+		self::assertTrue( Stream::temp()->isWritable() );
+		self::assertTrue( Stream::temp()->isSeekable() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testMemory() : void
+	{
+		self::assertTrue( Stream::memory()->isReadable() );
+		self::assertTrue( Stream::memory()->isWritable() );
+		self::assertTrue( Stream::memory()->isSeekable() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testInput() : void
+	{
+		self::assertTrue( Stream::input()->isReadable() );
+		self::assertFalse( Stream::input()->isWritable() );
+		self::assertTrue( Stream::input()->isSeekable() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testOutput() : void
+	{
+		self::assertFalse( Stream::output()->isReadable() );
+		self::assertTrue( Stream::output()->isWritable() );
+		self::assertFalse( Stream::output()->isSeekable() );
 	}
 }

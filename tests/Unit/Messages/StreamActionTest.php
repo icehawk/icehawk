@@ -4,6 +4,7 @@ namespace IceHawk\IceHawk\Tests\Unit\Messages;
 
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\Messages\StreamAction;
+use IceHawk\IceHawk\Types\StreamEvent;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
@@ -12,15 +13,6 @@ use RuntimeException;
 
 final class StreamActionTest extends TestCase
 {
-	public function testThrowsExceptionForInvalidEventName() : void
-	{
-		$this->expectException( InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Invalid event name for stream action: onInvalid' );
-
-		/** @noinspection UnusedFunctionResultInspection */
-		StreamAction::new( 'onInvalid', fn() => false );
-	}
-
 	/**
 	 * @throws InvalidArgumentException
 	 * @throws ExpectationFailedException
@@ -35,7 +27,7 @@ final class StreamActionTest extends TestCase
 			}
 		);
 
-		self::assertSame( 'onClosing', $action->getEventName() );
+		self::assertSame( StreamEvent::CLOSING, $action->getEvent() );
 
 		$this->expectOutputString( 'Unit-Test' );
 
@@ -56,7 +48,7 @@ final class StreamActionTest extends TestCase
 			}
 		);
 
-		self::assertSame( 'onClosed', $action->getEventName() );
+		self::assertSame( StreamEvent::CLOSED, $action->getEvent() );
 
 		$this->expectOutputString( 'Unit-Test' );
 

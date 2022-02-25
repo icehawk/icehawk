@@ -2,10 +2,12 @@
 
 namespace IceHawk\IceHawk\Messages;
 
-use IceHawk\IceHawk\Messages\Interfaces\HandlesStreamAction;
+use IceHawk\IceHawk\Messages\Interfaces\StreamActionInterface;
+use IceHawk\IceHawk\Types\StreamEvent;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Throwable;
 use function array_slice;
 use function fclose;
 use function feof;
@@ -15,67 +17,43 @@ use function fseek;
 use function fstat;
 use function ftell;
 use function fwrite;
+use function get_resource_type;
 use function is_int;
 use function is_resource;
-use function is_string;
-use function is_writable;
 use function restore_error_handler;
 use function set_error_handler;
 use function stream_get_contents;
 use function stream_get_meta_data;
-use function strpos;
+use const E_WARNING;
 
 final class Stream implements StreamInterface
 {
-	private const ACTION_ON_CLOSING = 'onClosing';
-
-	private const ACTION_ON_CLOSED  = 'onClosed';
-
-	/** @var resource|false|null */
-	private $resource;
-
-	/** @var array<string, array<HandlesStreamAction>> */
+	/** @var array<StreamActionInterface> */
 	private array $streamActions;
 
 	/**
-	 * @param string|resource $stream
-	 * @param string          $mode
+	 * @param resource|false|null $resource
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public function __construct( $stream, string $mode = 'rb' )
+	private function __construct( private mixed $resource )
 	{
+		$this->guardResourceIsValid();
+
 		$this->streamActions = [];
+	}
 
-		if ( is_resource( $stream ) && 'stream' === get_resource_type( $stream ) )
+	/**
+	 * @throws InvalidArgumentException
+	 */
+	private function guardResourceIsValid() : void
+	{
+		if ( !is_resource( $this->resource ) || 'stream' !== get_resource_type( $this->resource ) )
 		{
-			$this->resource = $stream;
-
-			return;
-		}
-
-		if ( is_string( $stream ) )
-		{
-			set_error_handler(
-				static function ()
-				{
-					throw new InvalidArgumentException(
-						'Invalid file provided for stream; must be a valid path with valid permissions'
-					);
-				},
-				E_WARNING
+			throw new InvalidArgumentException(
+				'Invalid stream provided; must be a string stream identifier or stream resource'
 			);
-
-			$this->resource = fopen( $stream, $mode );
-
-			restore_error_handler();
-
-			return;
 		}
-
-		throw new InvalidArgumentException(
-			'Invalid stream provided; must be a string stream identifier or stream resource'
-		);
 	}
 
 	/**
@@ -83,13 +61,77 @@ final class Stream implements StreamInterface
 	 *
 	 * @return Stream
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public static function newWithContent( string $content ) : self
 	{
-		$stream = new self( 'php://temp', 'ab' );
+		$stream = self::temp();
 		$stream->write( $content );
 
 		return $stream;
+	}
+
+	/**
+	 * @return Stream
+	 * @throws InvalidArgumentException
+	 */
+	public static function stdin() : self
+	{
+		return self::fromFile( 'php://stdin' );
+	}
+
+	/**
+	 * @return Stream
+	 * @throws InvalidArgumentException
+	 */
+	public static function stdout() : self
+	{
+		return self::fromFile( 'php://stdout', 'ab' );
+	}
+
+	/**
+	 * @return Stream
+	 * @throws InvalidArgumentException
+	 */
+	public static function stderr() : self
+	{
+		return self::fromFile( 'php://stderr', 'ab' );
+	}
+
+	/**
+	 * @return Stream
+	 * @throws InvalidArgumentException
+	 */
+	public static function temp() : self
+	{
+		return self::fromFile( 'php://temp', 'a+b' );
+	}
+
+	/**
+	 * @return Stream
+	 * @throws InvalidArgumentException
+	 */
+	public static function memory() : self
+	{
+		return self::fromFile( 'php://memory', 'a+b' );
+	}
+
+	/**
+	 * @return static
+	 * @throws InvalidArgumentException
+	 */
+	public static function input() : self
+	{
+		return self::fromFile( 'php://input' );
+	}
+
+	/**
+	 * @return static
+	 * @throws InvalidArgumentException
+	 */
+	public static function output() : self
+	{
+		return self::fromFile( 'php://output', 'ab' );
 	}
 
 	/**
@@ -99,21 +141,36 @@ final class Stream implements StreamInterface
 	 * @return Stream
 	 * @throws InvalidArgumentException
 	 */
-	public static function newFromFile( string $filepath, string $mode = 'rb' ) : self
+	public static function fromFile( string $filepath, string $mode = 'rb' ) : self
 	{
-		return new self( $filepath, $mode );
+		set_error_handler(
+			static fn() => throw new InvalidArgumentException(
+				'Invalid file provided for stream; must be a valid path with valid permissions'
+			),
+			E_WARNING
+		);
+
+		$resource = fopen( $filepath, $mode );
+
+		restore_error_handler();
+
+		return new self( $resource );
 	}
 
-	public function addStreamAction( HandlesStreamAction $streamAction ) : void
+	/**
+	 * @param resource $resource
+	 *
+	 * @return Stream
+	 * @throws InvalidArgumentException
+	 */
+	public static function fromResource( mixed $resource ) : self
 	{
-		$key = $streamAction->getEventName();
+		return new self( $resource );
+	}
 
-		if ( !isset( $this->streamActions[ $key ] ) )
-		{
-			$this->streamActions[ $key ] = [];
-		}
-
-		$this->streamActions[ $key ][] = $streamAction;
+	public function addStreamAction( StreamActionInterface $streamAction ) : void
+	{
+		$this->streamActions[] = $streamAction;
 	}
 
 	/**
@@ -132,7 +189,7 @@ final class Stream implements StreamInterface
 
 			return $this->getContents();
 		}
-		catch ( RuntimeException $e )
+		catch ( Throwable )
 		{
 			return '';
 		}
@@ -140,11 +197,11 @@ final class Stream implements StreamInterface
 
 	public function close() : void
 	{
-		$this->executeStreamActions( self::ACTION_ON_CLOSING );
+		$this->executeStreamActions( StreamEvent::CLOSING );
 
 		if ( !$this->resource )
 		{
-			$this->executeStreamActions( self::ACTION_ON_CLOSED );
+			$this->executeStreamActions( StreamEvent::CLOSED );
 
 			return;
 		}
@@ -156,22 +213,24 @@ final class Stream implements StreamInterface
 			fclose( $resource );
 		}
 
-		$this->executeStreamActions( self::ACTION_ON_CLOSED );
+		$this->executeStreamActions( StreamEvent::CLOSED );
 	}
 
-	private function executeStreamActions( string $eventName ) : void
+	private function executeStreamActions( StreamEvent $event ) : void
 	{
-		/** @var HandlesStreamAction $streamAction */
-		foreach ( $this->streamActions[ $eventName ] ?? [] as $streamAction )
+		foreach ( $this->streamActions as $streamAction )
 		{
-			$streamAction->execute( $this );
+			if ( $event === $streamAction->getEvent() )
+			{
+				$streamAction->execute( $this );
+			}
 		}
 	}
 
 	/**
 	 * @return bool|false|null|resource
 	 */
-	public function detach()
+	public function detach() : mixed
 	{
 		$resource       = $this->resource;
 		$this->resource = null;
@@ -292,8 +351,14 @@ final class Stream implements StreamInterface
 		}
 
 		$meta = stream_get_meta_data( $this->resource );
+		$mode = $meta['mode'];
 
-		return is_writable( $meta['uri'] );
+		return (
+			str_contains( $mode, 'w' )
+			|| str_contains( $mode, 'a' )
+			|| str_contains( $mode, 'c' )
+			|| str_contains( $mode, 'x' )
+		);
 	}
 
 	/**
@@ -302,7 +367,7 @@ final class Stream implements StreamInterface
 	 * @return bool|int
 	 * @throws RuntimeException
 	 */
-	public function write( $string )
+	public function write( $string ) : bool|int
 	{
 		if ( !$this->resource )
 		{
@@ -332,7 +397,7 @@ final class Stream implements StreamInterface
 		$meta = stream_get_meta_data( $this->resource );
 		$mode = $meta['mode'];
 
-		return (false !== strpos( $mode, 'r' ) || false !== strpos( $mode, '+' ));
+		return (str_contains( $mode, 'r' ) || str_contains( $mode, '+' ));
 	}
 
 	/**
@@ -353,7 +418,7 @@ final class Stream implements StreamInterface
 			throw new RuntimeException( 'Stream is not readable' );
 		}
 
-		$result = fread( $this->resource, $length );
+		$result = fread( $this->resource, (int)max( 0, $length ) );
 
 		if ( false === $result )
 		{
@@ -389,7 +454,7 @@ final class Stream implements StreamInterface
 	 *
 	 * @return array|mixed|null
 	 */
-	public function getMetadata( $key = null )
+	public function getMetadata( $key = null ) : mixed
 	{
 		if ( !is_resource( $this->resource ) )
 		{

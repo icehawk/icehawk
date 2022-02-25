@@ -1,6 +1,7 @@
 /.idea/
 /vendor/
-/build/logs/
-/build/.phpunit.result.cache
+/tests/.coverage-cache
+/tests/.phpunit.result.cache
+/tests/clover.xml
 /composer.lock
 /.tools/

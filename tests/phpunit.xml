@@ -7,13 +7,21 @@
          backupGlobals="true"
          stopOnError="true"
          stopOnFailure="true"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.4/phpunit.xsd">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd">
+  <coverage processUncoveredFiles="true" cacheDirectory=".coverage-cache">
+    <include>
+      <directory suffix=".php">../src</directory>
+    </include>
+    <report>
+      <clover outputFile="clover.xml"/>
+    </report>
+  </coverage>
   <testsuites>
     <testsuite name="Unit">
-      <directory>../tests/Unit</directory>
+      <directory>Unit</directory>
     </testsuite>
     <testsuite name="Integration">
-      <directory>../tests/Integration</directory>
+      <directory>Integration</directory>
     </testsuite>
   </testsuites>
 </phpunit>

@@ -2,14 +2,17 @@
 
 namespace IceHawk\IceHawk;
 
-use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
+use IceHawk\IceHawk\Exceptions\RequestHandlingFailedException;
+use IceHawk\IceHawk\Interfaces\ConfigInterface;
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\Middlewares\OptionsMiddleware;
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
 use IceHawk\IceHawk\Types\HttpMethod;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use LogicException;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -23,23 +26,20 @@ use const PHP_SESSION_ACTIVE;
 
 final class IceHawk
 {
-	private ResolvesDependencies $dependencies;
-
-	private function __construct( ResolvesDependencies $dependencies )
+	#[Pure]
+	public static function new( ConfigInterface $config, ContainerInterface $diContainer ) : self
 	{
-		$this->dependencies = $dependencies;
+		return new self( $config, $diContainer );
 	}
 
-	public static function newWithDependencies( ResolvesDependencies $dependencies ) : self
-	{
-		return new self( $dependencies );
-	}
+	private function __construct( private ConfigInterface $config, private ContainerInterface $diContainer ) { }
 
 	/**
 	 * @param ServerRequestInterface $request
 	 *
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws RequestHandlingFailedException
 	 */
 	public function handleRequest( ServerRequestInterface $request ) : void
 	{
@@ -58,29 +58,28 @@ final class IceHawk
 	 *
 	 * @return ResponseInterface
 	 * @throws InvalidArgumentException
+	 * @throws RequestHandlingFailedException
 	 */
 	private function getResponseForRequest( ServerRequestInterface $request ) : ResponseInterface
 	{
-		$routes       = $this->dependencies->getRoutes();
-		$routeHandler = QueueRequestHandler::newWithFallbackHandler(
-			FallbackRequestHandler::newWithException(
-				new LogicException( 'No responder found.', 404 )
-			)
+		$routes       = $this->config->getRoutes();
+		$routeHandler = QueueRequestHandler::new(
+			FallbackRequestHandler::new( new LogicException( 'No responder found.', 404 ) )
 		);
 
-		$appHandler = QueueRequestHandler::newWithFallbackHandler( $routeHandler );
-		$appHandler->add( OptionsMiddleware::newWithRoutes( $routes ) );
+		$appHandler = QueueRequestHandler::new( $routeHandler );
+		$appHandler->add( static fn() => OptionsMiddleware::new( $routes ) );
 
-		foreach ( $this->dependencies->getAppMiddlewares() as $middlewareClassName )
+		foreach ( $this->config->getAppMiddlewares() as $middlewareClassName )
 		{
-			$appHandler->add( $this->dependencies->resolveMiddleware( $middlewareClassName ) );
+			$appHandler->add( fn() => $this->diContainer->get( (string)$middlewareClassName ) );
 		}
 
 		$route = $routes->findMatchingRouteForRequest( $request );
 
 		foreach ( $route->getMiddlewareClassNames() as $middlewareClassName )
 		{
-			$routeHandler->add( $this->dependencies->resolveMiddleware( $middlewareClassName ) );
+			$routeHandler->add( fn() => $this->diContainer->get( (string)$middlewareClassName ) );
 		}
 
 		$request = $route->getModifiedRequest() ?? $request;
@@ -109,7 +108,7 @@ final class IceHawk
 		ResponseInterface $response
 	) : ResponseInterface
 	{
-		if ( HttpMethod::head()->equalsString( $request->getMethod() ) )
+		if ( HttpMethod::HEAD->equalsString( $request->getMethod() ) )
 		{
 			return $response->withHeader( 'Content-Length', (string)$response->getBody()->getSize() )
 			                ->withBody( Stream::newWithContent( '' ) );
@@ -130,7 +129,7 @@ final class IceHawk
 		ResponseInterface $response
 	) : ResponseInterface
 	{
-		if ( HttpMethod::trace()->equalsString( $request->getMethod() ) )
+		if ( HttpMethod::TRACE->equalsString( $request->getMethod() ) )
 		{
 			return $response->withBody( $request->getBody() )
 			                ->withHeader( 'Content-Type', 'message/http' )

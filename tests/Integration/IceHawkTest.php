@@ -2,16 +2,15 @@
 
 namespace IceHawk\IceHawk\Tests\Integration;
 
+use IceHawk\IceHawk\Dependencies\Container;
 use IceHawk\IceHawk\IceHawk;
-use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
+use IceHawk\IceHawk\Interfaces\ConfigInterface;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesInterface;
 use IceHawk\IceHawk\Routing\Routes;
-use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
-use IceHawk\IceHawk\Types\MiddlewareClassName;
-use IceHawk\IceHawk\Types\MiddlewareClassNames;
+use JetBrains\PhpStorm\Pure;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Server\MiddlewareInterface;
 
 final class IceHawkTest extends TestCase
 {
@@ -21,25 +20,25 @@ final class IceHawkTest extends TestCase
 	 */
 	public function testCanCreateInstanceWithDependencies() : void
 	{
-		self::assertInstanceOf( IceHawk::class, IceHawk::newWithDependencies( $this->getDeps() ) );
+		self::assertInstanceOf( IceHawk::class, IceHawk::new( $this->getConfig(), Container::new() ) );
 	}
 
-	private function getDeps() : ResolvesDependencies
+	private function getConfig() : ConfigInterface
 	{
-		return new class implements ResolvesDependencies {
-			public function getRoutes() : Routes
+		return new class implements ConfigInterface
+		{
+			#[Pure]
+			public function getRoutes() : RoutesInterface
 			{
 				return Routes::new();
 			}
 
-			public function getAppMiddlewares() : MiddlewareClassNames
+			/**
+			 * @return array<string>
+			 */
+			public function getAppMiddlewares() : array
 			{
-				return MiddlewareClassNames::new();
-			}
-
-			public function resolveMiddleware( MiddlewareClassName $middlewareClassName ) : MiddlewareInterface
-			{
-				return new MiddlewareImplementation();
+				return [];
 			}
 		};
 	}

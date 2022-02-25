@@ -2,22 +2,25 @@
 
 namespace IceHawk\IceHawk\Tests\Unit;
 
+use IceHawk\IceHawk\Dependencies\Container;
 use IceHawk\IceHawk\Exceptions\RequestHandlingFailedException;
 use IceHawk\IceHawk\IceHawk;
-use IceHawk\IceHawk\Interfaces\ResolvesDependencies;
+use IceHawk\IceHawk\Interfaces\ConfigInterface;
+use IceHawk\IceHawk\Interfaces\MiddlewareClassNamesInterface;
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\Middlewares\OptionsMiddleware;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesInterface;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Routing\Routes;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Tests\Unit\Stubs\PassThroughMiddleware;
-use IceHawk\IceHawk\Types\MiddlewareClassName;
 use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Server\MiddlewareInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use function function_exists;
 use function http_response_code;
@@ -42,7 +45,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/unit/test';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithNoRoutes() );
+		$iceHawk = IceHawk::new( $this->getConfigWithoutRoutes(), Container::new() );
 
 		$this->expectException( RequestHandlingFailedException::class );
 		$this->expectExceptionMessage( 'No responder found.' );
@@ -65,22 +68,20 @@ final class IceHawkTest extends TestCase
 		}
 	}
 
-	private function getDepsWithNoRoutes() : ResolvesDependencies
+	private function getConfigWithoutRoutes() : ConfigInterface
 	{
-		return new class implements ResolvesDependencies {
-			public function getRoutes() : Routes
+		return new class implements ConfigInterface
+		{
+			#[Pure]
+			public function getRoutes() : RoutesInterface
 			{
 				return Routes::new();
 			}
 
-			public function getAppMiddlewares() : MiddlewareClassNames
+			#[Pure]
+			public function getAppMiddlewares() : MiddlewareClassNamesInterface
 			{
 				return MiddlewareClassNames::new();
-			}
-
-			public function resolveMiddleware( MiddlewareClassName $middlewareClassName ) : MiddlewareInterface
-			{
-				return new MiddlewareImplementation();
 			}
 		};
 	}
@@ -97,7 +98,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutes() );
+		$iceHawk = IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() );
 
 		$this->expectException( RequestHandlingFailedException::class );
 		$this->expectExceptionMessage( 'No responder found.' );
@@ -106,9 +107,10 @@ final class IceHawkTest extends TestCase
 		$iceHawk->handleRequest( Request::fromGlobals() );
 	}
 
-	private function getDepsWithRoutes() : ResolvesDependencies
+	private function getConfigWithRoutes() : ConfigInterface
 	{
-		return new class implements ResolvesDependencies {
+		return new class implements ConfigInterface
+		{
 			public function getRoutes() : Routes
 			{
 				return Routes::new(
@@ -119,16 +121,24 @@ final class IceHawkTest extends TestCase
 				);
 			}
 
-			public function resolveMiddleware( MiddlewareClassName $middlewareClassName ) : MiddlewareInterface
+			/**
+			 * @return array<string>
+			 */
+			public function getAppMiddlewares() : array
 			{
-				return new MiddlewareImplementation();
-			}
-
-			public function getAppMiddlewares() : MiddlewareClassNames
-			{
-				return MiddlewareClassNames::new();
+				return [];
 			}
 		};
+	}
+
+	#[Pure]
+	private function getContainerWithMiddlewareImplementation() : ContainerInterface
+	{
+		return Container::new(
+			[
+				MiddlewareImplementation::class => fn() => new MiddlewareImplementation(),
+			]
+		);
 	}
 
 	/**
@@ -143,7 +153,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/post/unit/test/defaults';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutes() );
+		$iceHawk = IceHawk::new( $this->getConfigWithRoutes(), Container::new() );
 
 		$this->expectException( RequestHandlingFailedException::class );
 		$this->expectExceptionMessage( 'No responder found.' );
@@ -166,7 +176,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/post/unit/test/one-middleware';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutes() );
+		$iceHawk = IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() );
 
 		$this->expectOutputString( '' );
 
@@ -194,7 +204,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDepsWithRoutes() );
+		$iceHawk = IceHawk::new( $this->getConfigWithRoutes(), Container::new() );
 
 		$this->expectOutputString( '' );
 
@@ -222,7 +232,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/get/app/middlewares';
 
-		$iceHawk = IceHawk::newWithDependencies( $this->getDependenciesWithAppMiddlewares() );
+		$iceHawk = IceHawk::new( $this->getConfigWithAppMiddlewares(), $this->getContainerWithAppMiddlewares() );
 
 		$this->expectOutputString( '' );
 
@@ -236,10 +246,11 @@ final class IceHawkTest extends TestCase
 		self::assertSame( 200, http_response_code() );
 	}
 
-	private function getDependenciesWithAppMiddlewares() : ResolvesDependencies
+	private function getConfigWithAppMiddlewares() : ConfigInterface
 	{
-		return new class implements ResolvesDependencies {
-			public function getAppMiddlewares() : MiddlewareClassNames
+		return new class implements ConfigInterface
+		{
+			public function getAppMiddlewares() : MiddlewareClassNamesInterface
 			{
 				return MiddlewareClassNames::newFromStrings(
 					PassThroughMiddleware::class,
@@ -253,22 +264,18 @@ final class IceHawkTest extends TestCase
 					Route::get( '/get/app/middlewares' )
 				);
 			}
-
-			public function resolveMiddleware( MiddlewareClassName $middlewareClassName ) : MiddlewareInterface
-			{
-				switch ( true )
-				{
-					case $middlewareClassName->equalsString( PassThroughMiddleware::class ):
-						return new PassThroughMiddleware();
-
-					case $middlewareClassName->equalsString( MiddlewareImplementation::class ):
-						return new MiddlewareImplementation();
-
-					default:
-						throw new RuntimeException( 'Middleware not implemented.' );
-				}
-			}
 		};
+	}
+
+	#[Pure]
+	private function getContainerWithAppMiddlewares() : ContainerInterface
+	{
+		return Container::new(
+			[
+				PassThroughMiddleware::class    => fn() => new PassThroughMiddleware(),
+				MiddlewareImplementation::class => fn() => new MiddlewareImplementation(),
+			]
+		);
 	}
 
 	/**
@@ -290,7 +297,7 @@ final class IceHawkTest extends TestCase
 
 		self::assertSame( PHP_SESSION_ACTIVE, session_status() );
 
-		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
+		IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() )
 		       ->handleRequest( Request::fromGlobals() );
 
 		$this->assertHeaders(
@@ -322,7 +329,7 @@ final class IceHawkTest extends TestCase
 
 		$this->expectOutputString( '' );
 
-		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
+		IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() )
 		       ->handleRequest( Request::fromGlobals() );
 
 		$this->assertHeaders(
@@ -350,7 +357,7 @@ final class IceHawkTest extends TestCase
 
 		$this->expectOutputString( 'Unit-Test' );
 
-		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
+		IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() )
 		       ->handleRequest( Request::fromGlobals()->withBody( Stream::newWithContent( 'Unit-Test' ) ) );
 	}
 
@@ -370,7 +377,7 @@ final class IceHawkTest extends TestCase
 
 		$this->expectOutputString( 'Unit-Test' );
 
-		IceHawk::newWithDependencies( $this->getDepsWithRoutes() )
+		IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() )
 		       ->handleRequest( Request::fromGlobals()->withBody( Stream::newWithContent( 'Unit-Test' ) ) );
 
 		$this->assertHeaders(

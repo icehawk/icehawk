@@ -2,52 +2,42 @@
 
 namespace IceHawk\IceHawk\Middlewares;
 
-use IceHawk\IceHawk\Messages\Interfaces\ProvidesRequestData;
+use IceHawk\IceHawk\Messages\Interfaces\RequestInterface;
 use IceHawk\IceHawk\Messages\Response;
-use IceHawk\IceHawk\Routing\Routes;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesInterface;
 use IceHawk\IceHawk\Types\HttpMethod;
+use IceHawk\IceHawk\Types\HttpStatus;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use function array_map;
 
 final class OptionsMiddleware extends AbstractMiddleware
 {
-	private Routes $routes;
-
-	private function __construct( Routes $routes )
-	{
-		$this->routes = $routes;
-	}
-
-	/**
-	 * @param Routes $routes
-	 *
-	 * @return OptionsMiddleware
-	 */
-	public static function newWithRoutes( Routes $routes ) : self
+	#[Pure]
+	public static function new( RoutesInterface $routes ) : self
 	{
 		return new self( $routes );
 	}
 
+	private function __construct( private RoutesInterface $routes ) { }
+
 	/**
-	 * @param ProvidesRequestData     $request
+	 * @param RequestInterface        $request
 	 * @param RequestHandlerInterface $next
 	 *
 	 * @return ResponseInterface
 	 * @throws InvalidArgumentException
 	 */
-	protected function processRequest( ProvidesRequestData $request, RequestHandlerInterface $next ) : ResponseInterface
+	protected function processRequest( RequestInterface $request, RequestHandlerInterface $next ) : ResponseInterface
 	{
-		if ( HttpMethod::options()->equalsString( $request->getMethod() ) )
+		if ( HttpMethod::OPTIONS->equalsString( $request->getMethod() ) )
 		{
-			return Response::new()->withStatus( 204 )->withHeader(
-				'Allow',
-				array_map(
-					fn( HttpMethod $method ) : string => (string)$method,
-					$this->routes->findAcceptedHttpMethodsForUri( $request->getUri() )
-				)
-			);
+			$acceptedHttpMethods = $this->routes->findAcceptedHttpMethodsForUri( $request->getUri() );
+
+			return Response::new()
+			               ->withStatus( HttpStatus::CODE_204->getCode() )
+			               ->withHeader( 'Allow', $acceptedHttpMethods->asStringArray() );
 		}
 
 		return $next->handle( $request );

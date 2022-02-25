@@ -2,8 +2,9 @@
 
 namespace IceHawk\IceHawk\Messages;
 
-use IceHawk\IceHawk\Messages\Interfaces\ProvidesRequestData;
+use IceHawk\IceHawk\Messages\Interfaces\RequestInterface;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
@@ -23,63 +24,32 @@ use const FILTER_VALIDATE_INT;
 use const PHP_URL_PATH;
 use const PHP_URL_QUERY;
 
-final class Request implements ProvidesRequestData
+final class Request implements RequestInterface
 {
-	/** @var array<string, mixed> */
-	private array $serverParams;
-
-	/** @var array<string, array> */
-	private array $headers;
-
-	/** @var array<int|string, mixed> */
-	private array $queryParams;
-
-	private StreamInterface $body;
-
-	/** @var null|array<int|string, mixed>|object */
-	private $parsedBody;
-
-	/** @var array<string, mixed> */
-	private array $cookieParams;
-
-	/** @var array<int|string, mixed> */
-	private array $mergedParams;
-
-	private UploadedFiles $uploadedFiles;
-
-	/** @var array<string,mixed> */
-	private array $attributes;
+	/** @var array<string, array<string>> */
+	private array $headers = [];
 
 	/**
-	 * @param array<string,mixed>      $serverParams
-	 * @param array<string,mixed>      $queryParams
-	 * @param StreamInterface          $body
-	 * @param null|array<mixed>|object $parsedBody
-	 * @param array<string,mixed>      $cookieParams
-	 * @param array<string,mixed>      $mergedParams
-	 * @param UploadedFiles            $uploadedFiles
-	 * @param array<string,mixed>      $attributes
+	 * @param array<string, string>                $serverParams
+	 * @param array<string, mixed>                 $queryParams
+	 * @param StreamInterface                      $body
+	 * @param null|array<int|string, mixed>|object $parsedBody
+	 * @param array<string, mixed>                 $cookieParams
+	 * @param array<int|string, mixed>             $mergedParams
+	 * @param UploadedFiles                        $uploadedFiles
+	 * @param array<string, mixed>                 $attributes
 	 */
 	private function __construct(
-		array $serverParams,
-		array $queryParams,
-		StreamInterface $body,
-		$parsedBody,
-		array $cookieParams,
-		array $mergedParams,
-		UploadedFiles $uploadedFiles,
-		array $attributes
+		private array $serverParams,
+		private array $queryParams,
+		private StreamInterface $body,
+		private null|array|object $parsedBody,
+		private array $cookieParams,
+		private array $mergedParams,
+		private UploadedFiles $uploadedFiles,
+		private array $attributes
 	)
 	{
-		$this->serverParams  = $serverParams;
-		$this->queryParams   = $queryParams;
-		$this->body          = $body;
-		$this->parsedBody    = $parsedBody;
-		$this->cookieParams  = $cookieParams;
-		$this->mergedParams  = $mergedParams;
-		$this->uploadedFiles = $uploadedFiles;
-		$this->attributes    = $attributes;
-
 		$this->parseHeadersFromServerParams();
 	}
 
@@ -87,14 +57,14 @@ final class Request implements ProvidesRequestData
 	{
 		foreach ( $this->serverParams as $key => $value )
 		{
-			if ( strpos( $key, 'HTTP_' ) !== 0 )
+			if ( !str_starts_with( $key, 'HTTP_' ) )
 			{
 				continue;
 			}
 
 			$headerKey = $this->parseHeaderKey( $key );
 
-			$this->headers[ $headerKey ][] = $value;
+			$this->headers[ $headerKey ][] = (string)$value;
 		}
 	}
 
@@ -105,16 +75,17 @@ final class Request implements ProvidesRequestData
 
 	/**
 	 * @return Request
+	 * @throws InvalidArgumentException
 	 */
 	public static function fromGlobals() : self
 	{
 		return new self(
-			$_SERVER ?? [],
-			$_GET ?? [],
-			new Stream( 'php://input', 'rb' ),
-			$_POST ?? [],
-			$_COOKIE ?? [],
-			$_REQUEST ?? [],
+			$_SERVER,
+			$_GET,
+			Stream::input(),
+			$_POST,
+			$_COOKIE,
+			$_REQUEST,
 			UploadedFiles::fromGlobals(),
 			[]
 		);
@@ -122,7 +93,7 @@ final class Request implements ProvidesRequestData
 
 	public function getProtocolVersion() : string
 	{
-		return $this->serverParams['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
+		return (string)($this->serverParams['SERVER_PROTOCOL'] ?? 'HTTP/1.1');
 	}
 
 	/**
@@ -139,7 +110,7 @@ final class Request implements ProvidesRequestData
 	}
 
 	/**
-	 * @return array<string,array>
+	 * @return array<string, array<string>>
 	 */
 	public function getHeaders() : array
 	{
@@ -159,7 +130,7 @@ final class Request implements ProvidesRequestData
 	/**
 	 * @param string $name
 	 *
-	 * @return array<int,string>
+	 * @return array<int, string>
 	 */
 	public function getHeader( $name ) : array
 	{
@@ -262,8 +233,13 @@ final class Request implements ProvidesRequestData
 	 */
 	public function withRequestTarget( $requestTarget ) : self
 	{
-		$url         = (string)$requestTarget;
-		$path        = parse_url( $url, PHP_URL_PATH );
+		/** @var string $url */
+		$url = $requestTarget;
+
+		/** @var string $path */
+		$path = parse_url( $url, PHP_URL_PATH );
+
+		/** @var string $queryString */
 		$queryString = parse_url( $url, PHP_URL_QUERY );
 
 		$request                               = clone $this;
@@ -322,7 +298,7 @@ final class Request implements ProvidesRequestData
 	{
 		$request = clone $this;
 
-		$request->serverParams['HTTPS'] = 'https' === $uri->getScheme();
+		$request->serverParams['HTTPS'] = (string)('https' === $uri->getScheme());
 		[
 			$request->serverParams['HTTP_AUTH_USER'],
 			$request->serverParams['HTTP_AUTH_PW'],
@@ -415,9 +391,9 @@ final class Request implements ProvidesRequestData
 	}
 
 	/**
-	 * @return array<mixed>|object|null
+	 * @return array<int|string, mixed>|object|null
 	 */
-	public function getParsedBody()
+	public function getParsedBody() : null|array|object
 	{
 		return $this->parsedBody;
 	}
@@ -452,9 +428,9 @@ final class Request implements ProvidesRequestData
 	 * @param string $name
 	 * @param null   $default
 	 *
-	 * @return mixed|null
+	 * @return mixed
 	 */
-	public function getAttribute( $name, $default = null )
+	public function getAttribute( $name, $default = null ) : mixed
 	{
 		return $this->attributes[ (string)$name ] ?? $default;
 	}
@@ -506,10 +482,10 @@ final class Request implements ProvidesRequestData
 	}
 
 	/**
-	 * @param string            $key
-	 * @param array<mixed>|null $default
+	 * @param string                        $key
+	 * @param array<int|string, mixed>|null $default
 	 *
-	 * @return array<mixed>
+	 * @return array<int|string, mixed>
 	 * @throws UnexpectedValueException
 	 */
 	public function getInputArray( string $key, ?array $default = null ) : array
@@ -529,6 +505,7 @@ final class Request implements ProvidesRequestData
 		return array_key_exists( $key, $this->mergedParams );
 	}
 
+	#[Pure]
 	public function isInputNull( string $key ) : bool
 	{
 		return $this->hasInputKey( $key ) && null === $this->mergedParams[ $key ];
@@ -600,5 +577,4 @@ final class Request implements ProvidesRequestData
 				sprintf( 'Could not find uploaded files for name "%s"', $name )
 			);
 	}
-
 }

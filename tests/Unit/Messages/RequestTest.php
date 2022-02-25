@@ -199,11 +199,12 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsBody() : void
 	{
 		$request = Request::fromGlobals();
-		$stream  = new Stream( 'php://memory', 'w+b' );
+		$stream  = Stream::memory();
 		$stream->write( 'Unit-Test' );
 
 		$anotherServerRequest = $request->withBody( $stream );
@@ -409,7 +410,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @dataProvider withUriDataProvider
 	 *
-	 * @param string          $https
+	 * @param string          $scheme
 	 * @param string          $authUser
 	 * @param string          $authPassword
 	 * @param string          $host
@@ -423,7 +424,7 @@ final class RequestTest extends TestCase
 	 * @throws InvalidArgumentException
 	 */
 	public function testWithUri(
-		string $https,
+		string $scheme,
 		string $authUser,
 		string $authPassword,
 		string $host,
@@ -436,7 +437,7 @@ final class RequestTest extends TestCase
 	{
 		$uri = Uri::fromComponents(
 			[
-				'scheme'   => $https,
+				'scheme'   => $scheme,
 				'user'     => $authUser,
 				'pass'     => $authPassword,
 				'host'     => $host,

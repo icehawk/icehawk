@@ -2,11 +2,12 @@
 
 namespace IceHawk\IceHawk\Tests\Unit\Middlewares;
 
-use IceHawk\IceHawk\Messages\Interfaces\ProvidesRequestData;
+use IceHawk\IceHawk\Messages\Interfaces\RequestInterface;
 use IceHawk\IceHawk\Messages\Response;
 use IceHawk\IceHawk\Middlewares\AbstractMiddleware;
 use InvalidArgumentException;
 use PHPUnit\Framework\Exception;
+use PHPUnit\Framework\MockObject\ReflectionException;
 use PHPUnit\Framework\MockObject\RuntimeException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -19,6 +20,7 @@ final class AbstractMiddlewareTest extends TestCase
 	 * @throws InvalidArgumentException
 	 * @throws Exception
 	 * @throws RuntimeException
+	 * @throws ReflectionException
 	 */
 	public function testProcessThrowsExceptionIfRequestIsNotAnIceHawkRequest() : void
 	{
@@ -27,7 +29,7 @@ final class AbstractMiddlewareTest extends TestCase
 
 		$middleware = new class extends AbstractMiddleware {
 			protected function processRequest(
-				ProvidesRequestData $request,
+				RequestInterface $request,
 				RequestHandlerInterface $next
 			) : ResponseInterface
 			{
@@ -37,7 +39,7 @@ final class AbstractMiddlewareTest extends TestCase
 
 		$this->expectException( InvalidArgumentException::class );
 		$this->expectExceptionMessage(
-			'IceHawk middleware expects an implementation of ' . ProvidesRequestData::class . ' as request object'
+			'IceHawk middleware expects an implementation of ' . RequestInterface::class . ' as request object'
 		);
 
 		/** @var ServerRequestInterface $request */

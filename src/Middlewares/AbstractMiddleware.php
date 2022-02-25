@@ -2,7 +2,7 @@
 
 namespace IceHawk\IceHawk\Middlewares;
 
-use IceHawk\IceHawk\Messages\Interfaces\ProvidesRequestData;
+use IceHawk\IceHawk\Messages\Interfaces\RequestInterface;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -23,11 +23,11 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 		RequestHandlerInterface $handler
 	) : ResponseInterface
 	{
-		if ( !$request instanceof ProvidesRequestData )
+		if ( !($request instanceof RequestInterface) )
 		{
 			throw new InvalidArgumentException(
 				'IceHawk middleware expects an implementation of '
-				. ProvidesRequestData::class
+				. RequestInterface::class
 				. ' as request object, '
 				. get_class( $request )
 				. ' given.'
@@ -38,7 +38,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 	}
 
 	abstract protected function processRequest(
-		ProvidesRequestData $request,
+		RequestInterface $request,
 		RequestHandlerInterface $next
 	) : ResponseInterface;
 }

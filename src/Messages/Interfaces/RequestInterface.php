@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use UnexpectedValueException;
 
-interface ProvidesRequestData extends ServerRequestInterface
+interface RequestInterface extends ServerRequestInterface
 {
 	/**
 	 * @param string   $key
@@ -36,10 +36,10 @@ interface ProvidesRequestData extends ServerRequestInterface
 	public function getInputString( string $key, ?string $default = null ) : string;
 
 	/**
-	 * @param string            $key
-	 * @param array<mixed>|null $default
+	 * @param string                        $key
+	 * @param array<int|string, mixed>|null $default
 	 *
-	 * @return array<mixed>
+	 * @return array<int|string, mixed>
 	 * @throws UnexpectedValueException if key is not set and $default is null or value for key is not an array
 	 */
 	public function getInputArray( string $key, ?array $default = null ) : array;

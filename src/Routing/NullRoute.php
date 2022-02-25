@@ -2,25 +2,24 @@
 
 namespace IceHawk\IceHawk\Routing;
 
-use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
+use IceHawk\IceHawk\Interfaces\HttpMethodsInterface;
+use IceHawk\IceHawk\Interfaces\MiddlewareClassNamesInterface;
+use IceHawk\IceHawk\Routing\Interfaces\RouteInterface;
 use IceHawk\IceHawk\Types\HttpMethods;
 use IceHawk\IceHawk\Types\MiddlewareClassNames;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
-final class NullRoute implements Interfaces\ResolvesRouteToMiddlewares
+final class NullRoute implements Interfaces\RouteInterface
 {
-	private ServerRequestInterface $modifiedRequest;
-
-	private function __construct( ServerRequestInterface $request )
-	{
-		$this->modifiedRequest = $request;
-	}
-
+	#[Pure]
 	public static function new( ServerRequestInterface $request ) : self
 	{
 		return new self( $request );
 	}
+
+	private function __construct( private ServerRequestInterface $request ) { }
 
 	public function matchesRequest( ServerRequestInterface $request ) : bool
 	{
@@ -32,22 +31,23 @@ final class NullRoute implements Interfaces\ResolvesRouteToMiddlewares
 		return false;
 	}
 
-	public function getMiddlewareClassNames() : MiddlewareClassNames
+	#[Pure]
+	public function getMiddlewareClassNames() : MiddlewareClassNamesInterface
 	{
 		return MiddlewareClassNames::new();
 	}
 
 	public function getModifiedRequest() : ?ServerRequestInterface
 	{
-		return $this->modifiedRequest;
+		return $this->request;
 	}
 
-	public function getAcceptedHttpMethods() : HttpMethods
+	public function getAcceptedHttpMethods() : HttpMethodsInterface
 	{
 		return HttpMethods::all();
 	}
 
-	public function matchAgainstFullUri() : ResolvesRouteToMiddlewares
+	public function matchAgainstFullUri() : RouteInterface
 	{
 		return $this;
 	}

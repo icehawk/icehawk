@@ -2,7 +2,10 @@
 
 namespace IceHawk\IceHawk\Routing;
 
-use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
+use IceHawk\IceHawk\Interfaces\HttpMethodsInterface;
+use IceHawk\IceHawk\Interfaces\MiddlewareClassNamesInterface;
+use IceHawk\IceHawk\Routing\Interfaces\RouteInterface;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesInterface;
 use IceHawk\IceHawk\Types\HttpMethods;
 use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
@@ -10,37 +13,27 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use function array_merge;
 
-final class RouteGroup implements ResolvesRouteToMiddlewares
+final class RouteGroup implements RouteInterface
 {
-	private RoutePattern $groupPattern;
-
-	private Routes $routes;
-
 	private ?ServerRequestInterface $modifiedRequest;
 
-	private ?ResolvesRouteToMiddlewares $foundRoute;
+	private ?RouteInterface $foundRoute;
 
-	private function __construct( RoutePattern $groupPattern, Routes $routes )
+	private function __construct( private RoutePattern $groupPattern, private RoutesInterface $routes )
 	{
-		$this->groupPattern    = $groupPattern;
-		$this->routes          = $routes;
 		$this->modifiedRequest = null;
 		$this->foundRoute      = null;
 	}
 
 	/**
-	 * @param string                     $groupPattern
-	 * @param ResolvesRouteToMiddlewares $route
-	 * @param ResolvesRouteToMiddlewares ...$routes
+	 * @param string         $groupPattern
+	 * @param RouteInterface $route
+	 * @param RouteInterface ...$routes
 	 *
 	 * @return RouteGroup
 	 * @throws InvalidArgumentException
 	 */
-	public static function new(
-		string $groupPattern,
-		ResolvesRouteToMiddlewares $route,
-		ResolvesRouteToMiddlewares ...$routes
-	) : self
+	public static function new( string $groupPattern, RouteInterface $route, RouteInterface ...$routes ) : self
 	{
 		return new self(
 			RoutePattern::newFromString( $groupPattern ),
@@ -48,12 +41,6 @@ final class RouteGroup implements ResolvesRouteToMiddlewares
 		);
 	}
 
-	/**
-	 * @param ServerRequestInterface $request
-	 *
-	 * @return bool
-	 * @throws InvalidArgumentException
-	 */
 	public function matchesRequest( ServerRequestInterface $request ) : bool
 	{
 		if ( !$this->matchesUri( $request->getUri() ) )
@@ -90,7 +77,7 @@ final class RouteGroup implements ResolvesRouteToMiddlewares
 			return false;
 		}
 
-		/** @var ResolvesRouteToMiddlewares $route */
+		/** @var RouteInterface $route */
 		foreach ( $this->routes as $route )
 		{
 			if ( $route->matchesUri( $uri ) )
@@ -102,7 +89,7 @@ final class RouteGroup implements ResolvesRouteToMiddlewares
 		return false;
 	}
 
-	public function getMiddlewareClassNames() : MiddlewareClassNames
+	public function getMiddlewareClassNames() : MiddlewareClassNamesInterface
 	{
 		if ( null === $this->foundRoute )
 		{
@@ -117,16 +104,16 @@ final class RouteGroup implements ResolvesRouteToMiddlewares
 		return $this->modifiedRequest;
 	}
 
-	public function getAcceptedHttpMethods() : HttpMethods
+	public function getAcceptedHttpMethods() : HttpMethodsInterface
 	{
 		return HttpMethods::all();
 	}
 
-	public function matchAgainstFullUri() : ResolvesRouteToMiddlewares
+	public function matchAgainstFullUri() : RouteInterface
 	{
 		$this->groupPattern->matchAgainstFullUri();
 
-		/** @var ResolvesRouteToMiddlewares $route */
+		/** @var RouteInterface $route */
 		foreach ( $this->routes as $route )
 		{
 			$route->matchAgainstFullUri();

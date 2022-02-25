@@ -14,6 +14,8 @@ use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use function iterator_to_array;
+use function usort;
 
 final class RoutesTest extends TestCase
 {
@@ -24,7 +26,7 @@ final class RoutesTest extends TestCase
 	public function testGetIterator() : void
 	{
 		$route = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
 			'/unit/test',
 			MiddlewareImplementation::class,
 		);
@@ -42,7 +44,7 @@ final class RoutesTest extends TestCase
 	public function testAdd() : void
 	{
 		$route = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
 			'/unit/test',
 			MiddlewareImplementation::class
 		);
@@ -68,13 +70,13 @@ final class RoutesTest extends TestCase
 	public function testAddMultipleRoutes() : void
 	{
 		$route1 = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
 			'/unit/test',
 			MiddlewareImplementation::class
 		);
 
 		$route2 = Route::newFromStrings(
-			'POST',
+			HttpMethod::POST,
 			'/unit/test',
 			MiddlewareImplementation::class
 		);
@@ -104,7 +106,7 @@ final class RoutesTest extends TestCase
 	public function testFindMatchingRouteForRequest() : void
 	{
 		$route = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
 			'/unit/test',
 			MiddlewareImplementation::class
 		);
@@ -155,6 +157,7 @@ final class RoutesTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
+	 * @throws \Exception
 	 */
 	public function testFindAcceptedHttpMethodsForUri() : void
 	{
@@ -168,19 +171,21 @@ final class RoutesTest extends TestCase
 		);
 
 		$expectedHttpMethods = [
-			HttpMethod::get(),
-			HttpMethod::head(),
-			HttpMethod::post(),
-			HttpMethod::connect(),
-			HttpMethod::options(),
-			HttpMethod::trace(),
+			HttpMethod::GET,
+			HttpMethod::HEAD,
+			HttpMethod::POST,
+			HttpMethod::CONNECT,
+			HttpMethod::OPTIONS,
+			HttpMethod::TRACE,
 		];
 
-		$acceptedMethods = $routes->findAcceptedHttpMethodsForUri( $uri );
+		$acceptedMethods = iterator_to_array( $routes->findAcceptedHttpMethodsForUri( $uri ), false );
 
-		sort( $expectedHttpMethods );
-		sort( $acceptedMethods );
+		$sorter = static fn( HttpMethod $a, HttpMethod $b ) : int => $a->toString() <=> $b->toString();
 
-		self::assertEquals( $expectedHttpMethods, $acceptedMethods );
+		usort( $expectedHttpMethods, $sorter );
+		usort( $acceptedMethods, $sorter );
+
+		self::assertSame( $expectedHttpMethods, $acceptedMethods );
 	}
 }

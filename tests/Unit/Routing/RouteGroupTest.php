@@ -8,12 +8,12 @@ use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Routing\RouteGroup;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Types\HttpMethods;
-use IceHawk\IceHawk\Types\MiddlewareClassName;
 use InvalidArgumentException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use function iterator_to_array;
 
 final class RouteGroupTest extends TestCase
 {
@@ -249,6 +249,7 @@ final class RouteGroupTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
+	 * @throws Exception
 	 */
 	public function testGetMiddlewareClassNames() : void
 	{
@@ -262,11 +263,12 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getRouteGroup();
 
+		$classNamesIterator = static fn() => yield from $routeGroup->getMiddlewareClassNames();
+
 		self::assertTrue( $routeGroup->matchesRequest( $request ) );
-		self::assertTrue(
-			MiddlewareClassName::newFromString( MiddlewareImplementation::class )->equals(
-				$routeGroup->getMiddlewareClassNames()->getIterator()->current()
-			)
+		self::assertContains(
+			MiddlewareImplementation::class,
+			array_map( 'strval', iterator_to_array( $classNamesIterator(), false ) )
 		);
 	}
 

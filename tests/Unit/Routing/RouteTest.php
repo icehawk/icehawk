@@ -4,17 +4,19 @@ namespace IceHawk\IceHawk\Tests\Unit\Routing;
 
 use IceHawk\IceHawk\Messages\Request;
 use IceHawk\IceHawk\Messages\Uri;
-use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
+use IceHawk\IceHawk\Routing\Interfaces\RouteInterface;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Types\HttpMethod;
 use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ArrayShape;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use function iterator_to_array;
+use function usort;
 
 final class RouteTest extends TestCase
 {
@@ -26,7 +28,7 @@ final class RouteTest extends TestCase
 	{
 		$middlewareClassNames = [MiddlewareImplementation::class];
 		$route                = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
 			'^/unit/test$',
 			...$middlewareClassNames
 		);
@@ -53,7 +55,7 @@ final class RouteTest extends TestCase
 		$request = Request::fromGlobals();
 
 		$route = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
 			'^/unit/test$',
 			MiddlewareImplementation::class
 		);
@@ -76,7 +78,30 @@ final class RouteTest extends TestCase
 		$request = Request::fromGlobals();
 
 		$route = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
+			'^/unit/test$',
+			MiddlewareImplementation::class
+		);
+
+		self::assertFalse( $route->matchesRequest( $request ) );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testMatchesRequestFailsForInvalidHttpMethod() : void
+	{
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'INVALID';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/unit/test';
+
+		$request = Request::fromGlobals();
+
+		$route = Route::newFromStrings(
+			HttpMethod::GET,
 			'^/unit/test$',
 			MiddlewareImplementation::class
 		);
@@ -99,7 +124,7 @@ final class RouteTest extends TestCase
 		$request = Request::fromGlobals();
 
 		$route = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
 			'^/not-matching$',
 			MiddlewareImplementation::class,
 		);
@@ -122,7 +147,7 @@ final class RouteTest extends TestCase
 
 		$request = Request::fromGlobals();
 		$route   = Route::newFromStrings(
-			'GET',
+			HttpMethod::GET,
 			'^/unit/(?<testKey>.*)$',
 			MiddlewareImplementation::class,
 		);
@@ -295,72 +320,83 @@ final class RouteTest extends TestCase
 	}
 
 	/**
-	 * @param ResolvesRouteToMiddlewares $route
-	 * @param array<int, HttpMethod>     $acceptedMethods
+	 * @param RouteInterface         $route
+	 * @param array<int, HttpMethod> $acceptedMethods
 	 *
 	 * @dataProvider acceptedHttpMethodsRouteProvider
 	 * @throws ExpectationFailedException
+	 * @throws \Exception
 	 */
-	public function testGetAcceptedHttpMethods( ResolvesRouteToMiddlewares $route, array $acceptedMethods ) : void
+	public function testGetAcceptedHttpMethods( RouteInterface $route, array $acceptedMethods ) : void
 	{
 		$routeMethods = iterator_to_array( $route->getAcceptedHttpMethods()->getIterator(), false );
-		sort( $routeMethods );
-		sort( $acceptedMethods );
 
-		self::assertEquals( $acceptedMethods, $routeMethods );
+		$sorter = static fn( HttpMethod $a, HttpMethod $b ) : int => $a->toString() <=> $b->toString();
+
+		usort( $routeMethods, $sorter );
+		usort( $acceptedMethods, $sorter );
+
+		self::assertSame( $acceptedMethods, $routeMethods );
 	}
 
 	/**
-	 * @return array|array[]
+	 * @return array<string, array<string, mixed>>
 	 * @throws InvalidArgumentException
 	 */
+	#[ArrayShape([
+		'GET route'    => "array",
+		'POST route'   => "array",
+		'PUT route'    => "array",
+		'PATCH route'  => "array",
+		'DELETE route' => "array",
+	])]
 	public function acceptedHttpMethodsRouteProvider() : array
 	{
 		return [
 			'GET route'    => [
 				'route'           => Route::get( '/unit/test' ),
 				'acceptedMethods' => [
-					HttpMethod::get(),
-					HttpMethod::head(),
-					HttpMethod::trace(),
-					HttpMethod::options(),
-					HttpMethod::connect(),
+					HttpMethod::GET,
+					HttpMethod::HEAD,
+					HttpMethod::TRACE,
+					HttpMethod::OPTIONS,
+					HttpMethod::CONNECT,
 				],
 			],
 			'POST route'   => [
 				'route'           => Route::post( '/unit/test' ),
 				'acceptedMethods' => [
-					HttpMethod::post(),
-					HttpMethod::trace(),
-					HttpMethod::options(),
-					HttpMethod::connect(),
+					HttpMethod::POST,
+					HttpMethod::TRACE,
+					HttpMethod::OPTIONS,
+					HttpMethod::CONNECT,
 				],
 			],
 			'PUT route'    => [
 				'route'           => Route::put( '/unit/test' ),
 				'acceptedMethods' => [
-					HttpMethod::put(),
-					HttpMethod::trace(),
-					HttpMethod::options(),
-					HttpMethod::connect(),
+					HttpMethod::PUT,
+					HttpMethod::TRACE,
+					HttpMethod::OPTIONS,
+					HttpMethod::CONNECT,
 				],
 			],
 			'PATCH route'  => [
 				'route'           => Route::patch( '/unit/test' ),
 				'acceptedMethods' => [
-					HttpMethod::patch(),
-					HttpMethod::trace(),
-					HttpMethod::options(),
-					HttpMethod::connect(),
+					HttpMethod::PATCH,
+					HttpMethod::TRACE,
+					HttpMethod::OPTIONS,
+					HttpMethod::CONNECT,
 				],
 			],
 			'DELETE route' => [
 				'route'           => Route::delete( '/unit/test' ),
 				'acceptedMethods' => [
-					HttpMethod::delete(),
-					HttpMethod::trace(),
-					HttpMethod::options(),
-					HttpMethod::connect(),
+					HttpMethod::DELETE,
+					HttpMethod::TRACE,
+					HttpMethod::OPTIONS,
+					HttpMethod::CONNECT,
 				],
 			],
 		];

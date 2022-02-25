@@ -2,46 +2,40 @@
 
 namespace IceHawk\IceHawk\Routing;
 
-use Countable;
-use IceHawk\IceHawk\Routing\Interfaces\ResolvesRouteToMiddlewares;
-use IceHawk\IceHawk\Types\HttpMethod;
+use Exception;
+use IceHawk\IceHawk\Interfaces\HttpMethodsInterface;
+use IceHawk\IceHawk\Routing\Interfaces\RouteInterface;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesInterface;
+use IceHawk\IceHawk\Types\HttpMethods;
 use InvalidArgumentException;
 use Iterator;
-use IteratorAggregate;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use function array_unique;
+use function array_push;
+use function array_values;
 use function count;
 
-/**
- * @implements IteratorAggregate<int, ResolvesRouteToMiddlewares>
- */
-final class Routes implements Countable, IteratorAggregate
+final class Routes implements RoutesInterface
 {
-	/** @var array<int, ResolvesRouteToMiddlewares> */
-	private array $routes;
+	/**
+	 * @param array<int, RouteInterface> $routes
+	 */
+	private function __construct( private array $routes ) { }
 
-	private function __construct( ResolvesRouteToMiddlewares ...$routes )
+	#[Pure]
+	public static function new( RouteInterface ...$routes ) : self
 	{
-		$this->routes = $routes;
+		return new self( array_values( $routes ) );
 	}
 
-	public static function new( ResolvesRouteToMiddlewares ...$routes ) : self
+	public function add( RouteInterface $route, RouteInterface ...$routes ) : void
 	{
-		return new self( ...$routes );
-	}
-
-	public function add( ResolvesRouteToMiddlewares $route, ResolvesRouteToMiddlewares ...$routes ) : void
-	{
-		$this->routes[] = $route;
-		foreach ( $routes as $routeLoop )
-		{
-			$this->routes[] = $routeLoop;
-		}
+		array_push( $this->routes, $route, ...array_values( $routes ) );
 	}
 
 	/**
-	 * @return Iterator<int, ResolvesRouteToMiddlewares>
+	 * @return Iterator<int, RouteInterface>
 	 */
 	public function getIterator() : Iterator
 	{
@@ -56,10 +50,10 @@ final class Routes implements Countable, IteratorAggregate
 	/**
 	 * @param ServerRequestInterface $request
 	 *
-	 * @return ResolvesRouteToMiddlewares
+	 * @return RouteInterface
 	 * @throws InvalidArgumentException
 	 */
-	public function findMatchingRouteForRequest( ServerRequestInterface $request ) : ResolvesRouteToMiddlewares
+	public function findMatchingRouteForRequest( ServerRequestInterface $request ) : RouteInterface
 	{
 		foreach ( $this->routes as $route )
 		{
@@ -75,11 +69,12 @@ final class Routes implements Countable, IteratorAggregate
 	/**
 	 * @param UriInterface $uri
 	 *
-	 * @return array<int, HttpMethod>
+	 * @return HttpMethodsInterface
+	 * @throws Exception
 	 */
-	public function findAcceptedHttpMethodsForUri( UriInterface $uri ) : array
+	public function findAcceptedHttpMethodsForUri( UriInterface $uri ) : HttpMethodsInterface
 	{
-		$acceptedMethods = [];
+		$acceptedMethods = HttpMethods::new();
 
 		foreach ( $this->routes as $route )
 		{
@@ -88,12 +83,9 @@ final class Routes implements Countable, IteratorAggregate
 				continue;
 			}
 
-			foreach ( $route->getAcceptedHttpMethods() as $acceptedHttpMethod )
-			{
-				$acceptedMethods[] = $acceptedHttpMethod;
-			}
+			$acceptedMethods->add( ...$route->getAcceptedHttpMethods()->getIterator() );
 		}
 
-		return array_unique( $acceptedMethods );
+		return $acceptedMethods;
 	}
 }

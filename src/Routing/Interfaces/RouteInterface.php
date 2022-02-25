@@ -2,13 +2,13 @@
 
 namespace IceHawk\IceHawk\Routing\Interfaces;
 
-use IceHawk\IceHawk\Types\HttpMethods;
-use IceHawk\IceHawk\Types\MiddlewareClassNames;
+use IceHawk\IceHawk\Interfaces\HttpMethodsInterface;
+use IceHawk\IceHawk\Interfaces\MiddlewareClassNamesInterface;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
-interface ResolvesRouteToMiddlewares
+interface RouteInterface
 {
 	/**
 	 * @param ServerRequestInterface $request
@@ -20,11 +20,11 @@ interface ResolvesRouteToMiddlewares
 
 	public function matchesUri( UriInterface $uri ) : bool;
 
-	public function getMiddlewareClassNames() : MiddlewareClassNames;
+	public function getMiddlewareClassNames() : MiddlewareClassNamesInterface;
 
 	public function getModifiedRequest() : ?ServerRequestInterface;
 
-	public function getAcceptedHttpMethods() : HttpMethods;
+	public function getAcceptedHttpMethods() : HttpMethodsInterface;
 
-	public function matchAgainstFullUri() : ResolvesRouteToMiddlewares;
+	public function matchAgainstFullUri() : RouteInterface;
 }

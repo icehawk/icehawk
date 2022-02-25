@@ -1,4 +1,4 @@
-name: IceHawk CI PHP 8.0
+name: IceHawk CI PHP 8.1
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
         run: |
           mkdir ./.tools
           chmod 0777 ./.tools
-          make install
+          make install-dev
 
       - name: PHP linting, PHPStan, PHPUnit
         run: make tests

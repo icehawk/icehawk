@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  php:
+    build:
+      context: .docker/php/cli
+    environment:
+      XDEBUG_MODE: debug,coverage
+    volumes:
+      - ./:/repo
+
+  phive:
+    image: hyperized/phive:latest
+    restart: 'no'
+    volumes:
+      - ./:/repo
+      - phive:/root/.phive
+    working_dir: /repo
+
+volumes:
+  phive:

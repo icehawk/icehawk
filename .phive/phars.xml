@@ -2,6 +2,6 @@
 <phive xmlns="https://phar.io/phive">
   <phar name="phpunit" version="^9.5.15" installed="9.5.16" location="./.tools/phpunit.phar" copy="true"/>
   <phar name="phpstan" version="^1.4.6" installed="1.4.6" location="./.tools/phpstan.phar" copy="true"/>
-  <phar name="psalm" version="^4.21.0" installed="4.21.0" location="./.tools/psalm.phar" copy="true"/>
-  <phar name="composer" version="^2.2.6" installed="2.2.6" location="./.tools/composer.phar" copy="true"/>
+  <phar name="psalm" version="^4.22.0" installed="4.22.0" location="./.tools/psalm.phar" copy="true"/>
+  <phar name="composer" version="^2.2.7" installed="2.2.7" location="./.tools/composer.phar" copy="true"/>
 </phive>

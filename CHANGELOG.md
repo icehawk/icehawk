@@ -1,9 +1,67 @@
 # Change Log
 
-All notable changes to this project will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
+All notable changes to this project will be documented in this file. This project adheres
+to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
-## [3.0.0] - YYYY-MM-DD
+## [3.0.0-beta] - 2022-02-28
+
+* Bump minimum PHP version to 8.1
+* Replace app config and dependency interface with separate
+  * config interface for app middlewares and routes
+  * `Psr\Container` interface for dependency injection
+
+* Add dependency injection container interface and implementation incl. required exception implementations
+* Add request exception with base IceHawk exception interface
+* Refactor main class
+  * Separate config and DI container
+  * Wrap Closure around middleware resolver to construct on first need
+
+* Refactor routing classes
+  * Rename interface for routes
+  * Promote properties in constructor
+  * Use interfaces instead of classes
+  * Optimize collection code
+
+* Refactor request handlers
+  * Promote properties in constructor
+  * Construct middleware at time of first need
+
+* Refactor uploaded files
+  * Add interface for collection
+  * Promote properties in constructor
+  * Add named constructors to collection
+  * Remove unused variables
+
+* Refactor response implementation
+  * Add named constructor for JSON responses
+  * Rename newWithContent to new
+  * Create a contentful stream in constructor
+  * Fix return types of fluid methods
+
+* Refactor request implementation
+  * Rename request interface
+  * Fix PHPDoc blocks
+  * Add missing return types
+
+* Refactor stream
+  * Add stream action interface
+  * Add named constructors for PHP I/O streams
+
+* Add enum for stream event
+* Add interface for middleware class names collection
+* Refactor middleware class name
+  * Implement Stringable interface
+  * Rename named constructor
+  * Remove check for MiddlewareInterface implementation
+  * Promote properties in constructor
+
+* Refactor HttpStatus to enum
+* Refactor HttpMethod(s) to enum and proper collection
+  * Add interface for the collection
+
+## [3.0.0-alpha] - 2021-03-02
+
+* General rewrite to a PSR-15 compatible framework
 
 ## [2.2.0] - 2017-09-01
 
@@ -20,7 +78,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 ### Fixed
 
-- Wrong request info instance used for route matching, when request bypassing is used. ([#27]) 
+- Wrong request info instance used for route matching, when request bypassing is used. ([#27])
 
 ### Added
 
@@ -37,7 +95,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 
 - Method `getCustomValue(string $key) : string` to access custom values via the `RequestInfo` object. ([#15])
 - Missing getters for `$_SERVER` indices in `RequestInfo` class and interface `ProvidesRequestInfo`. ([#17])
-- Configurable wrapper for cookies with default implementation, accessible via `$request` and all events. ([#26]) 
+- Configurable wrapper for cookies with default implementation, accessible via `$request` and all events. ([#26])
 - Optional request bypassing to reroute requests to another request method without redirect ([#16])
   - `getRequestBypasses()` method added to `ConfiguresIceHawk`
   - `DefaultRequestBypassing` trait added to default IceHawkConfig
@@ -50,8 +108,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CH
 ### Changed
 
 - Declared `Options` response class as final ([#24])
-- Return value of `WriteRequestInput::getOneFile()` is no longer `NULL`, if the `$fieldKey` or the `$fileIndex` does not exist, 
-instead it now returns an empty `UploadedFile` object with the error code `UPLOAD_ERR_NO_FILE` set. ([#22])
+- Return value of `WriteRequestInput::getOneFile()` is no longer `NULL`, if the `$fieldKey` or the `$fileIndex` does not
+  exist, instead it now returns an empty `UploadedFile` object with the error code `UPLOAD_ERR_NO_FILE` set. ([#22])
 - Return type declaration of `WriteRequestInput::getOneFile()` is now `ProvidesUploadedFileData`. ([#22])
 
 ## [2.0.4] - 2016-11-12
@@ -70,7 +128,7 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 ### Fixed
 
-- Fixed bug that causes a warning when using generators or traversable implementations for routes ([#18])
+- Fixed bug that causes a warning when using generators or traversable implementations for routes ([#18])
 
 ## [2.0.1] - 2016-10-16
 
@@ -93,11 +151,13 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 ### Added
 
-- `ReadRequestInput`/`WriteRequestInput`'s get method now support an optional default value, in case it was asked for a non-existing key. ([#1])
+- `ReadRequestInput`/`WriteRequestInput`'s get method now support an optional default value, in case it was asked for a
+  non-existing key. ([#1])
 
 ### Changed
 
-- Renamed accessors for RequestInfo and InputData on `$request` object to `$request->getInfo()` and `$request->getInput()`
+- Renamed accessors for RequestInfo and InputData on `$request` object to `$request->getInfo()`
+  and `$request->getInput()`
 - All php files are setting strict types `declare(strict_types = 1);` ([#2])
 
 ## [2.0.0-rc4] - 2016-07-13
@@ -108,24 +168,25 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 - Added scalar type hints and return types to all interfaces where possible
 - Added exceptions in pub/sub context:
-	- `PubSubException`
-	- `EventSubscriberMethodNotCallable`
+  - `PubSubException`
+  - `EventSubscriberMethodNotCallable`
 - Added interfaces for event publisher
 - Added `EventPublisher`
 - Added `Defaults/IceHawkEventSubscriber`
 - Completed constants in `HttpMethod` and `HttpCode` with all available values
 - Added `Responses/AbstractHttpResponse` with optional additional headers and an abstract get Body
 - Added routing by defining route interfaces and adding routers for write, read and options requests
-- Added new Event `InitializingIceHawkEvent` that will be published after setting up global vars, but before setting up every other thing
+- Added new Event `InitializingIceHawkEvent` that will be published after setting up global vars, but before setting up
+  every other thing
 
 ### Changed
 
 - Requires php >= 7.0.0
 - Changed vendor namespace to IceHawk
 - Renamed/moved pub/sub related classes and interfaces
-	- `EventListener` => `PubSub\AbstractEventSubscriber`
-	- `Interfaces\ListensToEvents` => `PubSub\Interfaces\SubscribesToEvents`
-	- `Interfaces\ServesEventData` => `PubSub\Interfaces\CarriesEventData`
+  - `EventListener` => `PubSub\AbstractEventSubscriber`
+  - `Interfaces\ListensToEvents` => `PubSub\Interfaces\SubscribesToEvents`
+  - `Interfaces\ServesEventData` => `PubSub\Interfaces\CarriesEventData`
 - Renamed `ServeIceHawkConfig` interface to `ConfiguresIceHawk`
 - Renamed `ControlsHandlingBehaviour` interface to `SetsUpEnvironment`
 - Moved default `IceHawkConfig` to `Defaults/IceHawkConfig`
@@ -157,9 +218,10 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 
 - Added `getRequestInfo()` to interface `ServesEventData`
 - `IceHawkWasInitializedEvent` now provides the `RequestInfo` instance, too.
-- Added internal wrapper for the IceHawk config to make sure all of its provided instances were initialized only once 
+- Added internal wrapper for the IceHawk config to make sure all of its provided instances were initialized only once
 - Added `getRequestInfo()` to interface `ServesRequestData`
-- `GetRequest` and `PostRequest`, as well as the `DomainQuery` and `DomainCommand` objects now provide the `RequestInfo` instance, too.
+- `GetRequest` and `PostRequest`, as well as the `DomainQuery` and `DomainCommand` objects now provide the `RequestInfo`
+  instance, too.
 
 ### Changed
 
@@ -171,12 +233,12 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 ### Fixed
 
 - Fixed issue #1, added "ext-fileinfo": "*" to composer's require block and a hint to the README.
-- Closed issue #2, added `setUpEnvironment()` to interface `ControlsHandlingBehaviour` and default class `IceHawkDelegate`.
- Order of IceHawk initialization is now:
-	1. setUpErrorHandling()
-    2. setUpSessionHandling()
-    3. setUpEnvironment()
-    
+- Closed issue #2, added `setUpEnvironment()` to interface `ControlsHandlingBehaviour` and default
+  class `IceHawkDelegate`. Order of IceHawk initialization is now:
+  1. setUpErrorHandling()
+  2. setUpSessionHandling()
+  3. setUpEnvironment()
+
 ### Removed
 
 - Removed tool-phars from `build/tools`
@@ -194,30 +256,33 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
 - Added PHP QA tools
 - Added `getRawData()` method to `PostRequest`, serving the raw POST data (`php://input`).
 - Added the follwing protected methods to `DomainCommand` to give access to all POST request data:
-	- `getRequestData()` serves the whole POST request data array
-    - `getRequestRawData()` serves the raw post data (`php://input`)
-    - `getAllUploadedFiles()` serves all uploaded files as an assoc. array wrapped in `UploadedFile` objects.
-    - `getUploadedFiles($key)` serves all uploaded files for a certain key as num. array wrapped in `UploadedFile` objects.
-    - `getOneUploadedFile($key, $fileIndex = 0)` serves one uploaded file for a certain key and num. index wrapped in an `UploadedFile` object. Or `NULL` if there is no file at `$key` and/or `$fileIndex`.
+  - `getRequestData()` serves the whole POST request data array
+  - `getRequestRawData()` serves the raw post data (`php://input`)
+  - `getAllUploadedFiles()` serves all uploaded files as an assoc. array wrapped in `UploadedFile` objects.
+  - `getUploadedFiles($key)` serves all uploaded files for a certain key as num. array wrapped in `UploadedFile`
+    objects.
+  - `getOneUploadedFile($key, $fileIndex = 0)` serves one uploaded file for a certain key and num. index wrapped in
+    an `UploadedFile` object. Or `NULL` if there is no file at `$key` and/or `$fileIndex`.
 - Added the following protected methods to `DomainQuery` to give access to all GET request data:
-    -`getRequestData()` serves the whole GET request data array
+  -`getRequestData()` serves the whole GET request data array
 - Added `InternalServerError` response class and HTTP code in `Http` class.
 - Added the following methods to `RequestInfo` to access the basic auth data:
     - `getAuthUser()`
     - `getAuthPassword()`
 - Completed unit tests.
-   
+
 ### Changed
 
 - Restructured the project directories to fit best practice.
 - Declared `SessionRegistry` as abstract.
-- Method `IceHawk->init()` now checks the values served by the injected config object an can throw the following exceptions:
-    - `Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation`
-    - `Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation`
-    - `Fortuneglobe\IceHawk\Exceptions\InvalidRequestInfoImplementation`
-    - `Fortuneglobe\IceHawk\Exceptions\InvalidDomainNamespace`
-    - `Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection`
-   
+- Method `IceHawk->init()` now checks the values served by the injected config object an can throw the following
+  exceptions:
+  - `Fortuneglobe\IceHawk\Exceptions\InvalidUriRewriterImplementation`
+  - `Fortuneglobe\IceHawk\Exceptions\InvalidUriResolverImplementation`
+  - `Fortuneglobe\IceHawk\Exceptions\InvalidRequestInfoImplementation`
+  - `Fortuneglobe\IceHawk\Exceptions\InvalidDomainNamespace`
+  - `Fortuneglobe\IceHawk\Exceptions\InvalidEventListenerCollection`
+
 - Renamed method `getProjectNamespace` to `getDomainNamespace` in `ServesIceHawkConfig` and `IceHawkConfig`.
 - Renamed interface `HandlesIceHawkTasks` to `ControlsHandlingBehaviour`
 - Renamed interface `ListensToIceHawkEvents` to `ListensToEvents`
@@ -233,44 +298,78 @@ instead it now returns an empty `UploadedFile` object with the error code `UPLOA
     - `hasFailUrl()`
     - `getFailUrl()`
 - Removed `exit()` from `Unauthorized` response.
-- Removed hard coded default setup for error handling and session in `IceHawkDelegate`. Now these settings are based on the system's php defaults.
+- Removed hard coded default setup for error handling and session in `IceHawkDelegate`. Now these settings are based on
+  the system's php defaults.
 - Removed internal class `RequestHandler` because it is obsolete.
 
 ## 1.0.0 - 2015-03-30
 
 - First release
 
-[3.0.0]: https://github.com/icehawk/icehawk/compare/v2.2.0...v3.0.0
+[3.0.0-beta]: https://github.com/icehawk/icehawk/compare/v3.0.0-alpha...v3.0.0-beta
+
+[3.0.0-alpha]: https://github.com/icehawk/icehawk/compare/v2.2.0...v3.0.0-alpha
+
 [2.2.0]: https://github.com/icehawk/icehawk/compare/v2.1.1...v2.2.0
+
 [2.1.1]: https://github.com/icehawk/icehawk/compare/v2.1.0...v2.1.1
+
 [2.1.0]: https://github.com/icehawk/icehawk/compare/v2.0.4...v2.1.0
+
 [2.0.4]: https://github.com/icehawk/icehawk/compare/v2.0.3...v2.0.4
+
 [2.0.3]: https://github.com/icehawk/icehawk/compare/v2.0.2...v2.0.3
+
 [2.0.2]: https://github.com/icehawk/icehawk/compare/v2.0.1...v2.0.2
+
 [2.0.1]: https://github.com/icehawk/icehawk/compare/v2.0.0...v2.0.1
+
 [2.0.0]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc5...v2.0.0
+
 [2.0.0-rc5]: https://github.com/icehawk/icehawk/compare/v2.0.0-rc4...v2.0.0-rc5
+
 [2.0.0-rc4]: https://github.com/icehawk/icehawk/compare/v1.4.2...v2.0.0-rc4
+
 [1.4.2]: https://github.com/icehawk/icehawk/compare/v1.4.1...v1.4.2
+
 [1.4.1]: https://github.com/icehawk/icehawk/compare/v1.4.0...v1.4.1
+
 [1.4.0]: https://github.com/icehawk/icehawk/compare/v1.3.1...v1.4.0
+
 [1.3.1]: https://github.com/icehawk/icehawk/compare/v1.3.0...v1.3.1
+
 [1.3.0]: https://github.com/icehawk/icehawk/compare/v1.0.0...v1.3.0
 
 [#31]: https://github.com/icehawk/icehawk/issues/31
+
 [#28]: https://github.com/icehawk/icehawk/issues/28
+
 [#27]: https://github.com/icehawk/icehawk/issues/27
+
 [#26]: https://github.com/icehawk/icehawk/issues/26
+
 [#24]: https://github.com/icehawk/icehawk/issues/24
+
 [#23]: https://github.com/icehawk/icehawk/issues/23
+
 [#22]: https://github.com/icehawk/icehawk/issues/21
+
 [#20]: https://github.com/icehawk/icehawk/issues/20
+
 [#18]: https://github.com/icehawk/icehawk/issues/18
+
 [#17]: https://github.com/icehawk/icehawk/issues/17
+
 [#16]: https://github.com/icehawk/icehawk/issues/16
+
 [#15]: https://github.com/icehawk/icehawk/issues/15
+
 [#13]: https://github.com/icehawk/icehawk/issues/13
+
 [#9]: https://github.com/icehawk/icehawk/issues/9
+
 [#8]: https://github.com/icehawk/icehawk/issues/8
+
 [#2]: https://github.com/icehawk/icehawk/issues/2
+
 [#1]: https://github.com/icehawk/icehawk/issues/1

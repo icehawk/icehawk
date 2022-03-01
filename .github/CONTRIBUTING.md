@@ -14,31 +14,33 @@ We accept contributions via pull requests on [GitHub](http://github.com/icehawk/
 
 - **Document any change in behaviour** - Make sure the documentation in `README.md` and the `CHANGELOG.md` is kept up-to-date.
 
-- **Consider our release cycle** - We follow [SemVer v2.0.0](http://semver.org/). Randomly breaking public APIs is not an option.
+- **Consider our release cycle** - We follow [SemVer v2.0.0](http://semver.org/). Randomly breaking public APIs is not
+  an option.
 
 - **Create topic branches** - Do not ask us to pull from your master branch.
 
 - **One pull request per feature** - If you want to do more than one thing, please send multiple pull requests.
 
-- **Send coherent history** - Make sure each individual commit in your pull request is meaningful. If you had to make multiple intermediate commits while developing, please squash them before submitting.
+- **Send coherent history** - Make sure each individual commit in your pull request is meaningful. If you had to make
+  multiple intermediate commits while developing, please squash them before submitting.
 
+## Install dev environment
 
-## Running tests
+* Requires docker & docker-compose
+* Requires GNU make
 
 ```bash
-$ php vendor/bin/phpunit.phar -c build/
+$ make install-dev
 ```
 
-This includes a code coverage report in HTML and Clover XML.
-
-## Analyze code
+## Update dev environment
 
 ```bash
-$ php vendor/bin/phpmetrics.phar --report-html=build/logs/phpmetrics src/
+$ make update
 ```
 
-## Create API documentation
+## Run tests
 
 ```bash
-$ php vendor/bin/phpdox.phar -f build/phpdox.xml
+$ make tests
 ```

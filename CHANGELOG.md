@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
-## [3.0.0-beta] - 2022-02-28
+## [3.0.0-beta1] - 2022-02-28
 
 * Bump minimum PHP version to 8.1
 * Replace app config and dependency interface with separate
@@ -306,7 +306,7 @@ to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepa
 
 - First release
 
-[3.0.0-beta]: https://github.com/icehawk/icehawk/compare/v3.0.0-alpha...v3.0.0-beta
+[3.0.0-beta1]: https://github.com/icehawk/icehawk/compare/v3.0.0-alpha...v3.0.0-beta1
 
 [3.0.0-alpha]: https://github.com/icehawk/icehawk/compare/v2.2.0...v3.0.0-alpha
 

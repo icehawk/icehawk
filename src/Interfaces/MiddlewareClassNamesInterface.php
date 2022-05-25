@@ -12,4 +12,6 @@ use IteratorAggregate;
 interface MiddlewareClassNamesInterface extends IteratorAggregate, Countable
 {
 	public function add( MiddlewareClassName $className, MiddlewareClassName ...$classNames ) : void;
+
+	public function append( MiddlewareClassNamesInterface $middlewareClassNames ) : MiddlewareClassNamesInterface;
 }

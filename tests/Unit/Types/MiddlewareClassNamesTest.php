@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use function iterator_to_array;
 
 final class MiddlewareClassNamesTest extends TestCase
 {
@@ -116,5 +117,29 @@ final class MiddlewareClassNamesTest extends TestCase
 		$classNames->next();
 
 		self::assertFalse( $classNames->valid() );
+	}
+
+	public function testAppend() : void
+	{
+		$classNames = MiddlewareClassNames::newFromStrings(
+			PassThroughMiddleware::class,
+			MiddlewareImplementation::class
+		);
+
+		self::assertCount( 2, $classNames );
+
+		$appended = $classNames->append( $classNames );
+
+		self::assertCount( 4, $appended );
+		self::assertNotSame( $classNames, $appended );
+
+		$expectedMiddlewares = [
+			MiddlewareClassName::new( PassThroughMiddleware::class ),
+			MiddlewareClassName::new( MiddlewareImplementation::class ),
+			MiddlewareClassName::new( PassThroughMiddleware::class ),
+			MiddlewareClassName::new( MiddlewareImplementation::class ),
+		];
+
+		self::assertEquals( $expectedMiddlewares, iterator_to_array( $appended->getIterator(), false ) );
 	}
 }

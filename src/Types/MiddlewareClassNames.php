@@ -45,6 +45,11 @@ final class MiddlewareClassNames implements MiddlewareClassNamesInterface
 		array_push( $this->classNames, $className, ...array_values( $classNames ) );
 	}
 
+	public function append( MiddlewareClassNamesInterface $middlewareClassNames ) : MiddlewareClassNamesInterface
+	{
+		return new self( [...$this->classNames, ...$middlewareClassNames] );
+	}
+
 	/**
 	 * @return Iterator<int, MiddlewareClassName>
 	 */

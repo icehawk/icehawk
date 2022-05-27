@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 
 final class OptionsMiddleware extends AbstractMiddleware
 {
@@ -20,7 +21,7 @@ final class OptionsMiddleware extends AbstractMiddleware
 		return new self( $routes );
 	}
 
-	private function __construct( private RoutesInterface $routes ) { }
+	private function __construct( private readonly RoutesInterface $routes ) { }
 
 	/**
 	 * @param RequestInterface        $request
@@ -28,6 +29,7 @@ final class OptionsMiddleware extends AbstractMiddleware
 	 *
 	 * @return ResponseInterface
 	 * @throws InvalidArgumentException
+	 * @throws RuntimeException
 	 */
 	protected function processRequest( RequestInterface $request, RequestHandlerInterface $next ) : ResponseInterface
 	{

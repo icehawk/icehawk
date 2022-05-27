@@ -18,7 +18,7 @@ final class QueueRequestHandler implements RequestHandlerInterface
 	/** @var array<int, callable> */
 	private array $middlewares;
 
-	private function __construct( private RequestHandlerInterface $fallbackHandler )
+	private function __construct( private readonly RequestHandlerInterface $fallbackHandler )
 	{
 		$this->middlewares = [];
 	}

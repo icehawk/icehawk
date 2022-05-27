@@ -27,7 +27,7 @@ final class RoutePattern
 	 */
 	private function __construct( string $regexPattern )
 	{
-		$cleanPattern = (string)preg_replace( ['#^!#', '#!i?#'], '', $regexPattern );
+		$cleanPattern = (string)preg_replace( ['#^!#', '#!(\w+)?$#'], '', $regexPattern );
 		$this->guardRoutePatternIsValid( $cleanPattern );
 
 		$this->matchMode    = self::MATCH_AGAINST_PATH;
@@ -63,9 +63,8 @@ final class RoutePattern
 	{
 		$matches     = [];
 		$matchString = $this->matchMode === self::MATCH_AGAINST_FULL_URI ? (string)$uri : $uri->getPath();
-		$result      = (bool)preg_match( $this->regexPattern, $matchString, $matches );
 
-		if ( !$result )
+		if ( !preg_match( $this->regexPattern, $matchString, $matches ) )
 		{
 			return false;
 		}

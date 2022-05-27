@@ -14,7 +14,7 @@ final class StreamAction implements StreamActionInterface
 		return new self( $event, $action(...) );
 	}
 
-	private function __construct( private StreamEvent $event, private Closure $action ) { }
+	private function __construct( private readonly StreamEvent $event, private readonly Closure $action ) { }
 
 	public static function onClosing( callable $action ) : StreamActionInterface
 	{

@@ -32,11 +32,11 @@ final class UploadedFile implements UploadedFileInterface
 	}
 
 	private function __construct(
-		private string $name,
-		private string $type,
-		private string $tempName,
-		private int $error,
-		private int $size
+		private readonly string $name,
+		private readonly string $type,
+		private readonly string $tempName,
+		private readonly int $error,
+		private readonly int $size
 	)
 	{
 	}

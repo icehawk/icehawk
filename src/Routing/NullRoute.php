@@ -19,7 +19,7 @@ final class NullRoute implements Interfaces\RouteInterface
 		return new self( $request );
 	}
 
-	private function __construct( private ServerRequestInterface $request ) { }
+	private function __construct( private readonly ServerRequestInterface $request ) { }
 
 	public function matchesRequest( ServerRequestInterface $request ) : bool
 	{

@@ -16,26 +16,16 @@ use function array_merge;
 
 final class Route implements RouteInterface
 {
-	private HttpMethod $httpMethod;
-
 	private HttpMethodsInterface $acceptedHttpMethods;
-
-	private MiddlewareClassNamesInterface $middlewareClassNames;
-
-	private RoutePattern $routePattern;
 
 	private ?ServerRequestInterface $modifiedRequest;
 
 	private function __construct(
-		HttpMethod $httpMethod,
-		RoutePattern $routePattern,
-		MiddlewareClassNamesInterface $middlewareClassNames
+		private readonly HttpMethod $httpMethod,
+		private readonly RoutePattern $routePattern,
+		private readonly MiddlewareClassNamesInterface $middlewareClassNames
 	)
 	{
-		$this->httpMethod           = $httpMethod;
-		$this->middlewareClassNames = $middlewareClassNames;
-		$this->routePattern         = $routePattern;
-
 		$this->setAcceptedHttpMethods();
 	}
 

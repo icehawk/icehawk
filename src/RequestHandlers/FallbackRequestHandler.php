@@ -17,7 +17,7 @@ final class FallbackRequestHandler implements RequestHandlerInterface
 		return new self( $exception );
 	}
 
-	private function __construct( private Throwable $exception ) { }
+	private function __construct( private readonly Throwable $exception ) { }
 
 	/**
 	 * @param ServerRequestInterface $request

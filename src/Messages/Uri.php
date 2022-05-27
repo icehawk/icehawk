@@ -86,7 +86,7 @@ final class Uri implements UriInterface
 		return sprintf(
 			'%s%s',
 			$username,
-			$password ? ":{$password}" : ''
+			$password ? ":$password" : ''
 		);
 	}
 
@@ -222,7 +222,7 @@ final class Uri implements UriInterface
 
 	public function __toString() : string
 	{
-		$string = sprintf(
+		return sprintf(
 			'%s%s%s%s%s',
 			$this->getScheme() ? "{$this->getScheme()}://" : '//',
 			$this->getAuthority(),
@@ -230,7 +230,5 @@ final class Uri implements UriInterface
 			$this->getQuery() ? "?{$this->getQuery()}" : '',
 			$this->getFragment() ? "#{$this->getFragment()}" : ''
 		);
-
-		return $string;
 	}
 }

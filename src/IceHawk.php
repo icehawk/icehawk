@@ -32,7 +32,12 @@ final class IceHawk
 		return new self( $config, $diContainer );
 	}
 
-	private function __construct( private ConfigInterface $config, private ContainerInterface $diContainer ) { }
+	private function __construct(
+		private readonly ConfigInterface $config,
+		private readonly ContainerInterface $diContainer
+	)
+	{
+	}
 
 	/**
 	 * @param ServerRequestInterface $request

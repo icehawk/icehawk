@@ -9,7 +9,10 @@ to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepa
   or generally added as app middleware
 * Consider `HTTP_X_FORWARDED_PROTO`, `HTTP_X_FORWARDED_HOST` and `HTTP_X_FORWARDED_PORT`
   when building a request (URI) from globals
-*
+* Code optimizations
+  * Promote properties in constructor
+  * Make properties readonly where possible
+  * Remove redundant variables
 
 ## [3.0.0-beta1] - 2022-02-28
 

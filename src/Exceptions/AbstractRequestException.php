@@ -30,7 +30,7 @@ abstract class AbstractRequestException extends Exception implements RequestExce
 		string $message,
 		int $code,
 		?Throwable $previous,
-		private ServerRequestInterface $request
+		private readonly ServerRequestInterface $request
 	)
 	{
 		parent::__construct( $message, $code, $previous );

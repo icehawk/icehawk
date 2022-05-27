@@ -14,21 +14,19 @@ final class MiddlewareClassName implements Stringable
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	private function __construct( private string $middlewareClassName )
+	private function __construct( private readonly string $middlewareClassName )
 	{
-		$this->guardMiddlewareClassNameIsValid( $middlewareClassName );
+		$this->guardMiddlewareClassNameIsValid();
 	}
 
 	/**
-	 * @param string $middlewareClassName
-	 *
 	 * @throws InvalidArgumentException
 	 */
-	private function guardMiddlewareClassNameIsValid( string $middlewareClassName ) : void
+	private function guardMiddlewareClassNameIsValid() : void
 	{
-		if ( !class_exists( $middlewareClassName ) )
+		if ( !class_exists( $this->middlewareClassName ) )
 		{
-			throw new InvalidArgumentException( 'Middleware class does not exist: ' . $middlewareClassName );
+			throw new InvalidArgumentException( 'Middleware class does not exist: ' . $this->middlewareClassName );
 		}
 	}
 

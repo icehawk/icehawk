@@ -248,9 +248,14 @@ final class Stream implements StreamInterface
 			return null;
 		}
 
-		$stats = array_slice( (array)fstat( $this->resource ), 13 );
+		$fstat = fstat( $this->resource );
 
-		return $stats['size'] ?? null;
+		if ( false === $fstat )
+		{
+			return null;
+		}
+
+		return array_slice( $fstat, 13 )['size'];
 	}
 
 	/**

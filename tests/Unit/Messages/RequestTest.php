@@ -37,6 +37,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws Exception
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItCanBeCreatedFromGlobals() : void
 	{
@@ -56,6 +57,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsServerProtocol() : void
 	{
@@ -74,6 +76,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithProtocolVersion() : void
 	{
@@ -85,6 +88,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testHeaderLine() : void
 	{
@@ -99,6 +103,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws Exception
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithHeader() : void
 	{
@@ -116,6 +121,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithAddedHeaderCreatesHeaderIfNotExisting() : void
 	{
@@ -132,6 +138,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithAddedHeaderAddsHeaderValuesToExistingHeader() : void
 	{
@@ -150,6 +157,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithAddedHeaderKeepsHeaderValuesUnique() : void
 	{
@@ -173,6 +181,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws Exception
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithoutHeader() : void
 	{
@@ -219,6 +228,7 @@ final class RequestTest extends TestCase
 	 * @param string $expected
 	 *
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testRequestTarget( $uri, $queryString, string $expected ) : void
 	{
@@ -241,6 +251,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithRequestTarget() : void
 	{
@@ -264,6 +275,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsRequestMethod() : void
 	{
@@ -277,6 +289,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithMethod() : void
 	{
@@ -520,6 +533,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsCookieParameters() : void
 	{
@@ -532,6 +546,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithCookieParameters() : void
 	{
@@ -543,6 +558,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsQueryParameters() : void
 	{
@@ -553,6 +569,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithQueryParameters() : void
 	{
@@ -564,6 +581,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsUploadedFiles() : void
 	{
@@ -582,6 +600,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetUploadedFilesByName() : void
 	{
@@ -597,6 +616,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetUploadedFileByNameAndIndex() : void
 	{
@@ -616,6 +636,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws Exception
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithUploadedFiles() : void
 	{
@@ -630,6 +651,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsParsedBody() : void
 	{
@@ -640,6 +662,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithParsedBody() : void
 	{
@@ -651,6 +674,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsAttributes() : void
 	{
@@ -663,6 +687,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws Exception
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithAttribute() : void
 	{
@@ -675,6 +700,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws Exception
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testWithoutAttribute() : void
 	{
@@ -697,6 +723,7 @@ final class RequestTest extends TestCase
 	 * @param mixed $value
 	 *
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetInputStringThrowsExceptionIfValueIsNotAString( $value ) : void
 	{
@@ -711,7 +738,7 @@ final class RequestTest extends TestCase
 	}
 
 	/**
-	 * @return Generator<array<mixed>>
+	 * @return Generator<array<int, mixed>>
 	 */
 	public function invalidInputStringDataProvider() : Generator
 	{
@@ -725,6 +752,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsInputString() : void
 	{
@@ -737,6 +765,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsInputStringIfDefaultParameterProvided() : void
 	{
@@ -752,8 +781,9 @@ final class RequestTest extends TestCase
 	 * @param mixed $value
 	 *
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
-	public function testGetInputArrayThrowsExceptionIfValueIsNotAnArray( $value ) : void
+	public function testGetInputArrayThrowsExceptionIfValueIsNotAnArray( mixed $value ) : void
 	{
 		$_REQUEST['foo'] = $value;
 		$request         = Request::fromGlobals();
@@ -766,7 +796,7 @@ final class RequestTest extends TestCase
 	}
 
 	/**
-	 * @return Generator<array<mixed>>
+	 * @return Generator<array<int, mixed>>
 	 */
 	public function invalidInputArrayDataProvider() : Generator
 	{
@@ -781,6 +811,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsInputArray() : void
 	{
@@ -794,6 +825,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws RuntimeException
+	 * @throws InvalidArgumentException
 	 */
 	public function testItReturnsInputArrayIfDefaultParameterProvided() : void
 	{
@@ -807,10 +839,11 @@ final class RequestTest extends TestCase
 	 * @param mixed $value
 	 *
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider invalidGetInputIntProvider
 	 */
-	public function testGetInputIntThrowsExceptionIfValueIsNotCastableToInt( $value ) : void
+	public function testGetInputIntThrowsExceptionIfValueIsNotCastableToInt( mixed $value ) : void
 	{
 		$_REQUEST['foo'] = $value;
 		$request         = Request::fromGlobals();
@@ -822,7 +855,7 @@ final class RequestTest extends TestCase
 	}
 
 	/**
-	 * @return Generator<array<mixed>>
+	 * @return Generator<array<int, mixed>>
 	 */
 	public function invalidGetInputIntProvider() : Generator
 	{
@@ -838,6 +871,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetInputIntThrowsExceptionIfKeyIsNotSetAndDefaultValueIsNull() : void
 	{
@@ -852,6 +886,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetInputIntReturnsDefaultValueIfKeyIsNotSet() : void
 	{
@@ -866,6 +901,7 @@ final class RequestTest extends TestCase
 	 *
 	 * @throws ExpectationFailedException
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 * @dataProvider validFloatInputProvider
 	 */
 	public function testGetInputFloat( string $value, float $expectedFloat ) : void
@@ -892,10 +928,11 @@ final class RequestTest extends TestCase
 	 * @param mixed $value
 	 *
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 *
 	 * @dataProvider invalidGetInputFloatProvider
 	 */
-	public function testGetInputFloatThrowsExceptionIfValueIsNotCastableToFloat( $value ) : void
+	public function testGetInputFloatThrowsExceptionIfValueIsNotCastableToFloat( mixed $value ) : void
 	{
 		$this->expectException( UnexpectedValueException::class );
 		$this->expectExceptionMessage( 'Input for key "foo" is not castable as float' );
@@ -908,7 +945,7 @@ final class RequestTest extends TestCase
 	}
 
 	/**
-	 * @return Generator<array<mixed>>
+	 * @return Generator<array<int, mixed>>
 	 */
 	public function invalidGetInputFloatProvider() : Generator
 	{
@@ -923,6 +960,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetInputFloatThrowsExceptionIfKeyIsNotSetAndDefaultValueIsNull() : void
 	{
@@ -938,6 +976,7 @@ final class RequestTest extends TestCase
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 */
 	public function testGetInputFloatReturnsDefaultValueIfKeyIsNotSet() : void
 	{
@@ -948,6 +987,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testHasInputKey() : void
 	{
@@ -966,6 +1006,7 @@ final class RequestTest extends TestCase
 
 	/**
 	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
 	 */
 	public function testIsInputNull() : void
 	{
@@ -975,5 +1016,66 @@ final class RequestTest extends TestCase
 
 		self::assertTrue( $request->isInputNull( 'foo' ) );
 		self::assertFalse( $request->isInputNull( 'bar' ) );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testForwardedProtocolPrecedesHttpsFlag() : void
+	{
+		$_SERVER['HTTPS'] = null;
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST'] = 'example.com';
+
+		$expectedUri = 'http://example.com';
+
+		self::assertEquals( $expectedUri, (string)Request::fromGlobals()->getUri() );
+
+		$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+		$expectedUri                       = 'https://example.com';
+
+		self::assertEquals( $expectedUri, (string)Request::fromGlobals()->getUri() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testForwardedPortPrecedesServerPort() : void
+	{
+		$_SERVER['SERVER_PORT'] = 8080;
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST'] = 'example.com';
+
+		$expectedUri = 'http://example.com:8080';
+
+		self::assertEquals( $expectedUri, (string)Request::fromGlobals()->getUri() );
+
+		$_SERVER['HTTP_X_FORWARDED_PORT'] = 9090;
+
+		$expectedUri = 'http://example.com:9090';
+
+		self::assertEquals( $expectedUri, (string)Request::fromGlobals()->getUri() );
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testForwardedHostPrecedesHttpHost() : void
+	{
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST'] = 'example.com';
+
+		$expectedUri = 'http://example.com';
+
+		self::assertEquals( $expectedUri, (string)Request::fromGlobals()->getUri() );
+
+		$_SERVER['HTTP_X_FORWARDED_HOST'] = 'unit-test.de';
+
+		$expectedUri = 'http://unit-test.de';
+
+		self::assertEquals( $expectedUri, (string)Request::fromGlobals()->getUri() );
 	}
 }

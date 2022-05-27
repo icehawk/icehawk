@@ -3,10 +3,13 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
-## [3.0.0-beta2] - 2022-05-DD
+## [3.0.0-beta2] - 2022-05-27
 
 * Add ability to add middlewares to route groups, so middlewares have not to be repeated over multiple routes
   or generally added as app middleware
+* Consider `HTTP_X_FORWARDED_PROTO`, `HTTP_X_FORWARDED_HOST` and `HTTP_X_FORWARDED_PORT`
+  when building a request (URI) from globals
+*
 
 ## [3.0.0-beta1] - 2022-02-28
 
@@ -310,6 +313,8 @@ to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepa
 ## 1.0.0 - 2015-03-30
 
 - First release
+
+[3.0.0-beta2]: https://github.com/icehawk/icehawk/compare/v3.0.0-beta1...v3.0.0-beta2
 
 [3.0.0-beta1]: https://github.com/icehawk/icehawk/compare/v3.0.0-alpha...v3.0.0-beta1
 

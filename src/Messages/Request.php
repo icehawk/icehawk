@@ -276,13 +276,24 @@ final class Request implements RequestInterface
 	 */
 	public function getUri() : UriInterface
 	{
+		$protocol = ($this->serverParams['HTTPS'] ?? '') ? 'https' : 'http';
+
+		if ( $protocol !== ($this->serverParams['HTTP_X_FORWARDED_PROTO'] ?? $protocol) )
+		{
+			$protocol = $this->serverParams['HTTP_X_FORWARDED_PROTO'];
+		}
+
+		$host = $this->serverParams['HTTP_X_FORWARDED_HOST'] ?? ($this->serverParams['HTTP_HOST'] ?? '');
+
+		$serverPort = $this->serverParams['HTTP_X_FORWARDED_PORT'] ?? ($this->serverParams['SERVER_PORT'] ?? null);
+
 		return Uri::fromComponents(
 			[
-				'scheme'   => ($this->serverParams['HTTPS'] ?? '') ? 'https' : 'http',
+				'scheme'   => $protocol,
 				'user'     => $this->serverParams['HTTP_AUTH_USER'] ?? '',
 				'pass'     => $this->serverParams['HTTP_AUTH_PW'] ?? '',
-				'host'     => $this->serverParams['HTTP_HOST'] ?? '',
-				'port'     => $this->serverParams['SERVER_PORT'] ?? null,
+				'host'     => $host,
+				'port'     => $serverPort,
 				'path'     => $this->serverParams['REQUEST_URI'] ?? '',
 				'query'    => $this->serverParams['QUERY_STRING'] ?? '',
 				'fragment' => $this->serverParams['FRAGMENT'] ?? '',
@@ -300,13 +311,20 @@ final class Request implements RequestInterface
 	{
 		$request = clone $this;
 
+		unset(
+			$request->serverParams['HTTP_X_FORWARDED_PROTO'],
+			$request->serverParams['HTTP_X_FORWARDED_PORT'],
+			$request->serverParams['HTTP_X_FORWARDED_HOST']
+		);
+
 		$request->serverParams['HTTPS'] = (string)('https' === $uri->getScheme());
+
 		[
 			$request->serverParams['HTTP_AUTH_USER'],
 			$request->serverParams['HTTP_AUTH_PW'],
 		] = explode( ':', $uri->getUserInfo() ) + ['', ''];
 
-		if ( $preserveHost && empty( $request->serverParams['HTTP_HOST'] ?? '' ) && $uri->getHost() )
+		if ( $preserveHost && '' === ($request->serverParams['HTTP_HOST'] ?? '') && '' !== $uri->getHost() )
 		{
 			$request->serverParams['HTTP_HOST'] = $uri->getHost();
 		}

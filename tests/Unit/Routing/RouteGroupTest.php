@@ -7,7 +7,9 @@ use IceHawk\IceHawk\Messages\Uri;
 use IceHawk\IceHawk\Routing\Route;
 use IceHawk\IceHawk\Routing\RouteGroup;
 use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
+use IceHawk\IceHawk\Tests\Unit\Stubs\PassThroughMiddleware;
 use IceHawk\IceHawk\Types\HttpMethods;
+use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -282,5 +284,51 @@ final class RouteGroupTest extends TestCase
 		$routeGroup = $this->getRouteGroup();
 
 		self::assertCount( 0, $routeGroup->getMiddlewareClassNames() );
+	}
+
+	/**
+	 * @return RouteGroup
+	 * @throws InvalidArgumentException
+	 */
+	private function getRouteGroupWithGroupMiddlewares() : RouteGroup
+	{
+		return RouteGroup::newWithGroupMiddlewares(
+			'^/api/(?<version>v\d+)/',
+			[
+				PassThroughMiddleware::class,
+				PassThroughMiddleware::class,
+			],
+			Route::get( '^/api/v1/(?<method>[^/]+)-request$', MiddlewareImplementation::class ),
+			Route::post( '^/api/v2/post-request$', MiddlewareImplementation::class ),
+			Route::put( '^/api/v3/put-request$', MiddlewareImplementation::class ),
+			Route::patch( '^/api/v4/patch-request$', MiddlewareImplementation::class ),
+			Route::delete( '^/api/v5/delete-request$', MiddlewareImplementation::class ),
+		);
+	}
+
+	/**
+	 * @throws ExpectationFailedException
+	 * @throws InvalidArgumentException
+	 */
+	public function testGetMiddlewareClassNamesContainGroupMiddlewares() : void
+	{
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST']    = 'example.com';
+		$_SERVER['REQUEST_URI']  = '/api/v2/post-request';
+		$_SERVER['QUERY_STRING'] = '';
+
+		$request    = Request::fromGlobals();
+		$routeGroup = $this->getRouteGroupWithGroupMiddlewares();
+
+		$expetcedMiddlewareClassNames = MiddlewareClassNames::newFromStrings(
+			PassThroughMiddleware::class,
+			PassThroughMiddleware::class,
+			MiddlewareImplementation::class
+		);
+
+		self::assertTrue( $routeGroup->matchesRequest( $request ) );
+		self::assertEquals( $expetcedMiddlewareClassNames, $routeGroup->getMiddlewareClassNames() );
 	}
 }

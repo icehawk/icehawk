@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com).
 
+## [3.0.0-beta2] - 2022-05-DD
+
+* Add ability to add middlewares to route groups, so middlewares have not to be repeated over multiple routes
+  or generally added as app middleware
+
 ## [3.0.0-beta1] - 2022-02-28
 
 * Bump minimum PHP version to 8.1

@@ -19,7 +19,11 @@ final class RouteGroup implements RouteInterface
 
 	private ?RouteInterface $foundRoute;
 
-	private function __construct( private RoutePattern $groupPattern, private RoutesInterface $routes )
+	private function __construct(
+		private readonly RoutePattern $groupPattern,
+		private readonly MiddlewareClassNamesInterface $groupMiddlewares,
+		private readonly RoutesInterface $routes
+	)
 	{
 		$this->modifiedRequest = null;
 		$this->foundRoute      = null;
@@ -37,6 +41,30 @@ final class RouteGroup implements RouteInterface
 	{
 		return new self(
 			RoutePattern::newFromString( $groupPattern ),
+			MiddlewareClassNames::new(),
+			Routes::new( $route, ...$routes )
+		);
+	}
+
+	/**
+	 * @param string         $groupPattern
+	 * @param array<string>  $groupMiddlewares
+	 * @param RouteInterface $route
+	 * @param RouteInterface ...$routes
+	 *
+	 * @return RouteGroup
+	 * @throws InvalidArgumentException
+	 */
+	public static function newWithGroupMiddlewares(
+		string $groupPattern,
+		array $groupMiddlewares,
+		RouteInterface $route,
+		RouteInterface ...$routes
+	) : self
+	{
+		return new self(
+			RoutePattern::newFromString( $groupPattern ),
+			MiddlewareClassNames::newFromStrings( ...$groupMiddlewares ),
 			Routes::new( $route, ...$routes )
 		);
 	}
@@ -96,7 +124,7 @@ final class RouteGroup implements RouteInterface
 			return MiddlewareClassNames::new();
 		}
 
-		return $this->foundRoute->getMiddlewareClassNames();
+		return $this->groupMiddlewares->append( $this->foundRoute->getMiddlewareClassNames() );
 	}
 
 	public function getModifiedRequest() : ?ServerRequestInterface

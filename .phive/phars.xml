@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phive xmlns="https://phar.io/phive">
   <phar name="phpunit" version="^9.5.20" installed="9.5.20" location="./.tools/phpunit.phar" copy="true"/>
-  <phar name="phpstan" version="^1.7.2" installed="1.7.2" location="./.tools/phpstan.phar" copy="true"/>
+  <phar name="phpstan" version="^1.7.3" installed="1.7.3" location="./.tools/phpstan.phar" copy="true"/>
   <phar name="psalm" version="^4.23.0" installed="4.23.0" location="./.tools/psalm.phar" copy="true"/>
   <phar name="composer" version="^2.3.5" installed="2.3.5" location="./.tools/composer.phar" copy="true"/>
 </phive>

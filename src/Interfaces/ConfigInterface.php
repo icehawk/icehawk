@@ -3,14 +3,13 @@
 namespace IceHawk\IceHawk\Interfaces;
 
 use IceHawk\IceHawk\Routing\Interfaces\RoutesInterface;
-use Stringable;
+use Psr\Container\ContainerInterface;
 
 interface ConfigInterface
 {
-	/**
-	 * @return iterable<string|Stringable>
-	 */
-	public function getAppMiddlewares() : iterable;
+	public function getDiContainer() : ContainerInterface;
+
+	public function getAppMiddlewares() : MiddlewareClassNamesInterface;
 
 	public function getRoutes() : RoutesInterface;
 }

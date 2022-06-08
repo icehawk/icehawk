@@ -322,7 +322,7 @@ final class RouteGroupTest extends TestCase
 		$request    = Request::fromGlobals();
 		$routeGroup = $this->getRouteGroupWithGroupMiddlewares();
 
-		$expetcedMiddlewareClassNames = MiddlewareClassNames::newFromStrings(
+		$expetcedMiddlewareClassNames = MiddlewareClassNames::new(
 			PassThroughMiddleware::class,
 			PassThroughMiddleware::class,
 			MiddlewareImplementation::class

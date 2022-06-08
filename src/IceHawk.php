@@ -4,13 +4,17 @@ namespace IceHawk\IceHawk;
 
 use IceHawk\IceHawk\Exceptions\RequestHandlingFailedException;
 use IceHawk\IceHawk\Interfaces\ConfigInterface;
+use IceHawk\IceHawk\Interfaces\MiddlewareClassNamesInterface;
 use IceHawk\IceHawk\Messages\Stream;
 use IceHawk\IceHawk\Middlewares\OptionsMiddleware;
 use IceHawk\IceHawk\RequestHandlers\FallbackRequestHandler;
 use IceHawk\IceHawk\RequestHandlers\QueueRequestHandler;
+use IceHawk\IceHawk\Routing\Interfaces\RouteInterface;
+use IceHawk\IceHawk\Routing\Interfaces\RoutesInterface;
+use IceHawk\IceHawk\Routing\Routes;
 use IceHawk\IceHawk\Types\HttpMethod;
+use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 use LogicException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -26,17 +30,44 @@ use const PHP_SESSION_ACTIVE;
 
 final class IceHawk
 {
-	#[Pure]
-	public static function new( ConfigInterface $config, ContainerInterface $diContainer ) : self
+	public static function new( ContainerInterface $diContainer ) : self
 	{
-		return new self( $config, $diContainer );
+		return new self( $diContainer, MiddlewareClassNames::new(), Routes::new() );
+	}
+
+	public static function newFromConfig( ConfigInterface $config ) : self
+	{
+		return new self(
+			$config->getDiContainer(),
+			$config->getAppMiddlewares(),
+			$config->getRoutes()
+		);
 	}
 
 	private function __construct(
-		private readonly ConfigInterface $config,
-		private readonly ContainerInterface $diContainer
+		private readonly ContainerInterface $diContainer,
+		private readonly MiddlewareClassNamesInterface $appMiddlewares,
+		private readonly RoutesInterface $routes
 	)
 	{
+	}
+
+	public function withAppMiddlewares( string $appMiddleware, string ...$appMiddlewares ) : self
+	{
+		return new self(
+			$this->diContainer,
+			MiddlewareClassNames::new( $appMiddleware, ...$appMiddlewares ),
+			$this->routes
+		);
+	}
+
+	public function withRoutes( RouteInterface $route, RouteInterface ...$routes ) : self
+	{
+		return new self(
+			$this->diContainer,
+			$this->appMiddlewares,
+			Routes::new( $route, ...$routes )
+		);
 	}
 
 	/**
@@ -67,24 +98,23 @@ final class IceHawk
 	 */
 	private function getResponseForRequest( ServerRequestInterface $request ) : ResponseInterface
 	{
-		$routes       = $this->config->getRoutes();
 		$routeHandler = QueueRequestHandler::new(
 			FallbackRequestHandler::new( new LogicException( 'No responder found.', 404 ) )
 		);
 
 		$appHandler = QueueRequestHandler::new( $routeHandler );
-		$appHandler->add( static fn() => OptionsMiddleware::new( $routes ) );
+		$appHandler->add( fn() => OptionsMiddleware::new( $this->routes ) );
 
-		foreach ( $this->config->getAppMiddlewares() as $middlewareClassName )
+		foreach ( $this->appMiddlewares as $middlewareClassName )
 		{
-			$appHandler->add( fn() => $this->diContainer->get( (string)$middlewareClassName ) );
+			$appHandler->add( fn() => $this->diContainer->get( $middlewareClassName ) );
 		}
 
-		$route = $routes->findMatchingRouteForRequest( $request );
+		$route = $this->routes->findMatchingRouteForRequest( $request );
 
 		foreach ( $route->getMiddlewareClassNames() as $middlewareClassName )
 		{
-			$routeHandler->add( fn() => $this->diContainer->get( (string)$middlewareClassName ) );
+			$routeHandler->add( fn() => $this->diContainer->get( $middlewareClassName ) );
 		}
 
 		$request = $route->getModifiedRequest() ?? $request;
@@ -150,7 +180,7 @@ final class IceHawk
 
 		foreach ( array_keys( $response->getHeaders() ) as $headerName )
 		{
-			header( "{$headerName}: {$response->getHeaderLine($headerName)}", true );
+			header( "$headerName: {$response->getHeaderLine($headerName)}", true );
 		}
 
 		$bodyStream = $response->getBody();

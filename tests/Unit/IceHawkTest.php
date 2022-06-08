@@ -17,7 +17,6 @@ use IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation;
 use IceHawk\IceHawk\Tests\Unit\Stubs\PassThroughMiddleware;
 use IceHawk\IceHawk\Types\MiddlewareClassNames;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -45,7 +44,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/unit/test';
 
-		$iceHawk = IceHawk::new( $this->getConfigWithoutRoutes(), Container::new() );
+		$iceHawk = IceHawk::new( Container::new() );
 
 		$this->expectException( RequestHandlingFailedException::class );
 		$this->expectExceptionMessage( 'No responder found.' );
@@ -68,24 +67,6 @@ final class IceHawkTest extends TestCase
 		}
 	}
 
-	private function getConfigWithoutRoutes() : ConfigInterface
-	{
-		return new class implements ConfigInterface
-		{
-			#[Pure]
-			public function getRoutes() : RoutesInterface
-			{
-				return Routes::new();
-			}
-
-			#[Pure]
-			public function getAppMiddlewares() : MiddlewareClassNamesInterface
-			{
-				return MiddlewareClassNames::new();
-			}
-		};
-	}
-
 	/**
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
@@ -98,7 +79,7 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
 
-		$iceHawk = IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() );
+		$iceHawk = IceHawk::new( $this->getContainerWithMiddlewareImplementation() );
 
 		$this->expectException( RequestHandlingFailedException::class );
 		$this->expectExceptionMessage( 'No responder found.' );
@@ -107,31 +88,6 @@ final class IceHawkTest extends TestCase
 		$iceHawk->handleRequest( Request::fromGlobals() );
 	}
 
-	private function getConfigWithRoutes() : ConfigInterface
-	{
-		return new class implements ConfigInterface
-		{
-			public function getRoutes() : Routes
-			{
-				return Routes::new(
-					Route::get( '/get/unit/test/defaults' ),
-					Route::post( '/post/unit/test/defaults' ),
-					Route::post( '/post/unit/test/one-middleware', MiddlewareImplementation::class ),
-					Route::get( '/get/unit/test/one-middleware', MiddlewareImplementation::class )
-				);
-			}
-
-			/**
-			 * @return array<string>
-			 */
-			public function getAppMiddlewares() : array
-			{
-				return [];
-			}
-		};
-	}
-
-	#[Pure]
 	private function getContainerWithMiddlewareImplementation() : ContainerInterface
 	{
 		return Container::new(
@@ -153,7 +109,8 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/post/unit/test/defaults';
 
-		$iceHawk = IceHawk::new( $this->getConfigWithRoutes(), Container::new() );
+		$iceHawk = IceHawk::new( Container::new() )
+		                  ->withRoutes( Route::post( '/post/unit/test/defaults' ) );
 
 		$this->expectException( RequestHandlingFailedException::class );
 		$this->expectExceptionMessage( 'No responder found.' );
@@ -166,6 +123,7 @@ final class IceHawkTest extends TestCase
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws RequestHandlingFailedException
 	 * @runInSeparateProcess
 	 */
 	public function testCanHandlePostRequestWithDefaultHandlerAndOneMiddlewares() : void
@@ -176,7 +134,13 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/post/unit/test/one-middleware';
 
-		$iceHawk = IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() );
+		$iceHawk = IceHawk::new( $this->getContainerWithMiddlewareImplementation() )
+		                  ->withRoutes(
+			                  Route::post(
+				                  '/post/unit/test/one-middleware',
+				                  MiddlewareImplementation::class
+			                  )
+		                  );
 
 		$this->expectOutputString( '' );
 
@@ -194,6 +158,7 @@ final class IceHawkTest extends TestCase
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws RequestHandlingFailedException
 	 * @runInSeparateProcess
 	 */
 	public function testCanHandleOptionsRequestAndReceiveAcceptedMethods() : void
@@ -204,7 +169,13 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/get/unit/test/defaults';
 
-		$iceHawk = IceHawk::new( $this->getConfigWithRoutes(), Container::new() );
+		$iceHawk = IceHawk::new( Container::new() )
+		                  ->withRoutes(
+			                  Route::get(
+				                  '^/get/unit/test/defaults$',
+				                  MiddlewareImplementation::class
+			                  )
+		                  );
 
 		$this->expectOutputString( '' );
 
@@ -222,6 +193,7 @@ final class IceHawkTest extends TestCase
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws RequestHandlingFailedException
 	 * @runInSeparateProcess
 	 */
 	public function testCanAddAppMiddlewares() : void
@@ -232,7 +204,14 @@ final class IceHawkTest extends TestCase
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['REQUEST_URI'] = '/get/app/middlewares';
 
-		$iceHawk = IceHawk::new( $this->getConfigWithAppMiddlewares(), $this->getContainerWithAppMiddlewares() );
+		$iceHawk = IceHawk::new( $this->getContainerWithAppMiddlewares() )
+		                  ->withAppMiddlewares( PassThroughMiddleware::class )
+		                  ->withRoutes(
+			                  Route::get(
+				                  '/get/app/middlewares',
+				                  MiddlewareImplementation::class
+			                  )
+		                  );
 
 		$this->expectOutputString( '' );
 
@@ -246,28 +225,6 @@ final class IceHawkTest extends TestCase
 		self::assertSame( 200, http_response_code() );
 	}
 
-	private function getConfigWithAppMiddlewares() : ConfigInterface
-	{
-		return new class implements ConfigInterface
-		{
-			public function getAppMiddlewares() : MiddlewareClassNamesInterface
-			{
-				return MiddlewareClassNames::newFromStrings(
-					PassThroughMiddleware::class,
-					MiddlewareImplementation::class,
-				);
-			}
-
-			public function getRoutes() : Routes
-			{
-				return Routes::new(
-					Route::get( '/get/app/middlewares' )
-				);
-			}
-		};
-	}
-
-	#[Pure]
 	private function getContainerWithAppMiddlewares() : ContainerInterface
 	{
 		return Container::new(
@@ -282,6 +239,7 @@ final class IceHawkTest extends TestCase
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws RequestHandlingFailedException
 	 * @runInSeparateProcess
 	 */
 	public function testSessionIsWrittenAndClosedBeforeResponding() : void
@@ -297,16 +255,21 @@ final class IceHawkTest extends TestCase
 
 		self::assertSame( PHP_SESSION_ACTIVE, session_status() );
 
-		IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() )
-		       ->handleRequest( Request::fromGlobals() );
+		IceHawk::new( $this->getContainerWithMiddlewareImplementation() )
+		       ->withRoutes(
+			       Route::get(
+				       '^/get/unit/test/one-middleware$',
+				       MiddlewareImplementation::class
+			       )
+		       )->handleRequest( Request::fromGlobals() );
 
 		$this->assertHeaders(
 			[
-				"Set-Cookie: PHPSESSID={$sessionId}; path=/",
+				"Set-Cookie: PHPSESSID=$sessionId; path=/",
 				'Expires: Thu, 19 Nov 1981 08:52:00 GMT',
 				'Cache-Control: no-store, no-cache, must-revalidate',
 				'Pragma: no-cache',
-				'X-ID: IceHawk\IceHawk\Tests\Unit\Stubs\MiddlewareImplementation',
+				'X-ID: ' . MiddlewareImplementation::class,
 			]
 		);
 
@@ -317,6 +280,7 @@ final class IceHawkTest extends TestCase
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws RequestHandlingFailedException
 	 * @runInSeparateProcess
 	 */
 	public function testHeadRequestsDoNotProduceOutput() : void
@@ -329,8 +293,13 @@ final class IceHawkTest extends TestCase
 
 		$this->expectOutputString( '' );
 
-		IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() )
-		       ->handleRequest( Request::fromGlobals() );
+		IceHawk::new( $this->getContainerWithMiddlewareImplementation() )
+		       ->withRoutes(
+			       Route::get(
+				       '^/get/unit/test/one-middleware$',
+				       MiddlewareImplementation::class
+			       )
+		       )->handleRequest( Request::fromGlobals() );
 
 		$this->assertHeaders(
 			[
@@ -345,6 +314,7 @@ final class IceHawkTest extends TestCase
 	/**
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws RequestHandlingFailedException
 	 * @runInSeparateProcess
 	 */
 	public function testTraceRequestRespondsWithRequestBody() : void
@@ -357,14 +327,23 @@ final class IceHawkTest extends TestCase
 
 		$this->expectOutputString( 'Unit-Test' );
 
-		IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() )
-		       ->handleRequest( Request::fromGlobals()->withBody( Stream::newWithContent( 'Unit-Test' ) ) );
+		IceHawk::new( $this->getContainerWithMiddlewareImplementation() )
+		       ->withRoutes(
+			       Route::get(
+				       '^/get/unit/test/one-middleware$',
+				       MiddlewareImplementation::class
+			       )
+		       )->handleRequest(
+				Request::fromGlobals()
+				       ->withBody( Stream::newWithContent( 'Unit-Test' ) )
+			);
 	}
 
 	/**
 	 * @throws ExpectationFailedException
 	 * @throws InvalidArgumentException
 	 * @throws RuntimeException
+	 * @throws RequestHandlingFailedException
 	 * @runInSeparateProcess
 	 */
 	public function testTraceRequestListsAllProcessedMiddlewaresInHeader() : void
@@ -377,13 +356,90 @@ final class IceHawkTest extends TestCase
 
 		$this->expectOutputString( 'Unit-Test' );
 
-		IceHawk::new( $this->getConfigWithRoutes(), $this->getContainerWithMiddlewareImplementation() )
-		       ->handleRequest( Request::fromGlobals()->withBody( Stream::newWithContent( 'Unit-Test' ) ) );
+		IceHawk::new( $this->getContainerWithMiddlewareImplementation() )
+		       ->withRoutes(
+			       Route::post(
+				       '^/post/unit/test/one-middleware$',
+				       MiddlewareImplementation::class
+			       )
+		       )->handleRequest(
+				Request::fromGlobals()
+				       ->withBody( Stream::newWithContent( 'Unit-Test' ) )
+			);
 
 		$this->assertHeaders(
 			[
 				'X-ID: ' . MiddlewareImplementation::class,
-				'X-IceHawk-Trace: ' . MiddlewareImplementation::class . ',' . OptionsMiddleware::class,
+				'X-Trace: ' . MiddlewareImplementation::class . ',' . OptionsMiddleware::class,
+				'Content-Type: message/http',
+			]
+		);
+		self::assertSame( 200, http_response_code() );
+	}
+
+	/**
+	 * @throws InvalidArgumentException
+	 * @throws RequestHandlingFailedException
+	 * @throws RuntimeException
+	 * @runInSeparateProcess
+	 */
+	public function testCanInitIceHawkWithConfig() : void
+	{
+		$config = new class implements ConfigInterface
+		{
+			public function getDiContainer() : ContainerInterface
+			{
+				return Container::new(
+					[
+						PassThroughMiddleware::class    => fn() => new PassThroughMiddleware(),
+						MiddlewareImplementation::class => fn() => new MiddlewareImplementation(),
+					]
+				);
+			}
+
+			public function getAppMiddlewares() : MiddlewareClassNamesInterface
+			{
+				return MiddlewareClassNames::new(
+					PassThroughMiddleware::class
+				);
+			}
+
+			public function getRoutes() : RoutesInterface
+			{
+				return Routes::new(
+					Route::get(
+						'^/get/unit/test/with/app/middleware$',
+						MiddlewareImplementation::class
+					)
+				);
+			}
+		};
+
+		$_SERVER['HTTPS']          = 'On';
+		$_SERVER['REQUEST_METHOD'] = 'TRACE';
+		/** @noinspection HostnameSubstitutionInspection */
+		$_SERVER['HTTP_HOST']   = 'example.com';
+		$_SERVER['REQUEST_URI'] = '/get/unit/test/with/app/middleware';
+
+		IceHawk::newFromConfig( $config )->handleRequest( Request::fromGlobals() );
+
+		$this->assertHeaders(
+			[
+				'X-ID: ' . implode(
+					',',
+					[
+						PassThroughMiddleware::class,
+						MiddlewareImplementation::class,
+					]
+				),
+				'X-Trace: ' . implode(
+					',',
+					[
+						MiddlewareImplementation::class,
+						PassThroughMiddleware::class,
+						OptionsMiddleware::class,
+					]
+				),
 				'Content-Type: message/http',
 			]
 		);

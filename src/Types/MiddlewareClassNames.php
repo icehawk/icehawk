@@ -3,44 +3,24 @@
 namespace IceHawk\IceHawk\Types;
 
 use IceHawk\IceHawk\Interfaces\MiddlewareClassNamesInterface;
-use InvalidArgumentException;
 use Iterator;
-use JetBrains\PhpStorm\Pure;
-use function array_map;
 use function array_push;
 use function array_values;
 use function count;
 
 final class MiddlewareClassNames implements MiddlewareClassNamesInterface
 {
-	/**
-	 * @param array<int, MiddlewareClassName> $classNames
-	 */
-	private function __construct( private array $classNames ) { }
-
-	#[Pure]
-	public static function new( MiddlewareClassName ...$classNames ) : self
+	public static function new( string ...$classNames ) : self
 	{
 		return new self( array_values( $classNames ) );
 	}
 
 	/**
-	 * @param string ...$classNames
-	 *
-	 * @return MiddlewareClassNames
-	 * @throws InvalidArgumentException
+	 * @param array<int, string> $classNames
 	 */
-	public static function newFromStrings( string ...$classNames ) : self
-	{
-		return self::new(
-			...array_map(
-				static fn( string $className ) : MiddlewareClassName => MiddlewareClassName::new( $className ),
-				$classNames
-			)
-		);
-	}
+	private function __construct( private array $classNames ) { }
 
-	public function add( MiddlewareClassName $className, MiddlewareClassName ...$classNames ) : void
+	public function add( string $className, string ...$classNames ) : void
 	{
 		array_push( $this->classNames, $className, ...array_values( $classNames ) );
 	}
@@ -51,7 +31,7 @@ final class MiddlewareClassNames implements MiddlewareClassNamesInterface
 	}
 
 	/**
-	 * @return Iterator<int, MiddlewareClassName>
+	 * @return Iterator<int, string>
 	 */
 	public function getIterator() : Iterator
 	{

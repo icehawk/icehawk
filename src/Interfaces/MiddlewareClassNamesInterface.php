@@ -3,15 +3,14 @@
 namespace IceHawk\IceHawk\Interfaces;
 
 use Countable;
-use IceHawk\IceHawk\Types\MiddlewareClassName;
 use IteratorAggregate;
 
 /**
- * @extends IteratorAggregate<int, MiddlewareClassName>
+ * @extends IteratorAggregate<int, string>
  */
 interface MiddlewareClassNamesInterface extends IteratorAggregate, Countable
 {
-	public function add( MiddlewareClassName $className, MiddlewareClassName ...$classNames ) : void;
+	public function add( string $className, string ...$classNames ) : void;
 
 	public function append( MiddlewareClassNamesInterface $middlewareClassNames ) : MiddlewareClassNamesInterface;
 }

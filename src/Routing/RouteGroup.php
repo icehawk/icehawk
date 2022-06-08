@@ -64,7 +64,7 @@ final class RouteGroup implements RouteInterface
 	{
 		return new self(
 			RoutePattern::newFromString( $groupPattern ),
-			MiddlewareClassNames::newFromStrings( ...$groupMiddlewares ),
+			MiddlewareClassNames::new( ...$groupMiddlewares ),
 			Routes::new( $route, ...$routes )
 		);
 	}

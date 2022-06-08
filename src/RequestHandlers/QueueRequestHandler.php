@@ -64,7 +64,7 @@ final class QueueRequestHandler implements RequestHandlerInterface
 
 		if ( HttpMethod::TRACE->equalsString( $request->getMethod() ) )
 		{
-			return $response->withAddedHeader( 'X-IceHawk-Trace', get_class( $middleware ) );
+			return $response->withAddedHeader( 'X-Trace', $middleware::class );
 		}
 
 		return $response;

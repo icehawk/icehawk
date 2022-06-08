@@ -34,7 +34,7 @@ final class RouteTest extends TestCase
 		);
 
 		self::assertEquals(
-			MiddlewareClassNames::newFromStrings( ...$middlewareClassNames ),
+			MiddlewareClassNames::new( ...$middlewareClassNames ),
 			$route->getMiddlewareClassNames()
 		);
 		self::assertNull( $route->getModifiedRequest() );

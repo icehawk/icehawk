@@ -61,7 +61,7 @@ final class Route implements RouteInterface
 		return new self(
 			$httpMethod,
 			RoutePattern::newFromString( $regexPattern ),
-			MiddlewareClassNames::newFromStrings( ...$middlewareClassNames )
+			MiddlewareClassNames::new( ...$middlewareClassNames )
 		);
 	}
 
